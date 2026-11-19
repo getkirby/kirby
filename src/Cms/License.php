@@ -361,15 +361,6 @@ class License
 	}
 
 	/**
-	 * Prepares the email address to be make sure it
-	 * does not have trailing spaces and is lowercase.
-	 */
-	protected function normalizeEmail(string $email): string
-	{
-		return Str::lower(trim($email));
-	}
-
-	/**
 	 * Prepares the domain to be comparable
 	 */
 	protected function normalizeDomain(string $domain): string
@@ -397,6 +388,15 @@ class License
 		}
 
 		return $domain;
+	}
+
+	/**
+	 * Prepares the email address to be make sure it
+	 * does not have trailing spaces and is lowercase.
+	 */
+	protected function normalizeEmail(string $email): string
+	{
+		return Str::lower(trim($email));
 	}
 
 	/**

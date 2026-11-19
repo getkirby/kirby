@@ -45,6 +45,20 @@ class VersionRules
 		}
 	}
 
+	public static function delete(
+		Version $version,
+		Language $language
+	): void {
+		$lock = $version->lock('*');
+
+		if ($lock->isLocked() === true) {
+			throw new LockedContentException(
+				lock: $lock,
+				key: 'content.lock.delete'
+			);
+		}
+	}
+
 	/**
 	 * Checks if a version/language combination exists and otherwise
 	 * will throw a `NotFoundException`
@@ -63,20 +77,6 @@ class VersionRules
 		};
 
 		throw new NotFoundException($message);
-	}
-
-	public static function delete(
-		Version $version,
-		Language $language
-	): void {
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
-			throw new LockedContentException(
-				lock: $lock,
-				key: 'content.lock.delete'
-			);
-		}
 	}
 
 	public static function move(

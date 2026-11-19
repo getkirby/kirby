@@ -78,15 +78,15 @@ class Fieldset extends Item
 		return $this->registry->add(Blueprint::fieldsProps($fields));
 	}
 
-	protected function createName(array|string $name): string|null
-	{
-		$result = I18n::translate($name, $name);
-		return is_string($result) ? $result : null;
-	}
-
 	protected function createLabel(array|string|null $label = null): string|null
 	{
 		$result = I18n::translate($label, $label);
+		return is_string($result) ? $result : null;
+	}
+
+	protected function createName(array|string $name): string|null
+	{
+		$result = I18n::translate($name, $name);
 		return is_string($result) ? $result : null;
 	}
 
@@ -205,16 +205,6 @@ class Fieldset extends Item
 		return $this->tabs ??= $this->createTabs($this->params);
 	}
 
-	public function translate(): bool
-	{
-		return $this->translate;
-	}
-
-	public function type(): string
-	{
-		return $this->type;
-	}
-
 	public function toArray(): array
 	{
 		// render the fields of each tab for the Panel
@@ -239,6 +229,16 @@ class Fieldset extends Item
 			'unset'     => $this->unset(),
 			'wysiwyg'   => $this->wysiwyg(),
 		];
+	}
+
+	public function translate(): bool
+	{
+		return $this->translate;
+	}
+
+	public function type(): string
+	{
+		return $this->type;
 	}
 
 	public function unset(): bool

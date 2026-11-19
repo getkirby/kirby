@@ -9,6 +9,16 @@ use ReflectionProperty;
 #[CoversClass(Slot::class)]
 class SlotTest extends TestCase
 {
+	public function testCloseWhenNotOpen(): void
+	{
+		$slot = new Slot('test');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessageIs('The slot has not been opened');
+
+		$slot->close();
+	}
+
 	public function testConstruct(): void
 	{
 		$slot = new Slot('test');
@@ -59,16 +69,6 @@ class SlotTest extends TestCase
 
 		$this->assertFalse($slot->isOpen());
 		$this->assertSame($content, $slot->content);
-	}
-
-	public function testCloseWhenNotOpen(): void
-	{
-		$slot = new Slot('test');
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessageIs('The slot has not been opened');
-
-		$slot->close();
 	}
 
 	public function testOpenWhenAlreadyOpen(): void

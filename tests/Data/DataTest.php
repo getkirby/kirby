@@ -15,23 +15,10 @@ class DataTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Data.Data';
 
-	public function testDefaultHandlers(): void
+	public function testCustomAlias(): void
 	{
-		$this->assertInstanceOf(Json::class, Data::handler('json'));
-		$this->assertInstanceOf(PHP::class, Data::handler('php'));
-		$this->assertInstanceOf(Txt::class, Data::handler('txt'));
-		$this->assertInstanceOf(Xml::class, Data::handler('xml'));
-		$this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
-
-		// aliases
-		$this->assertInstanceOf(Txt::class, Data::handler('md'));
-		$this->assertInstanceOf(Txt::class, Data::handler('mdown'));
-		$this->assertInstanceOf(Xml::class, Data::handler('rss'));
-		$this->assertInstanceOf(Yaml::class, Data::handler('yml'));
-
-		// different case
-		$this->assertInstanceOf(Json::class, Data::handler('JSON'));
-		$this->assertInstanceOf(Json::class, Data::handler('JsOn'));
+		Data::$aliases['plaintext'] = 'txt';
+		$this->assertInstanceOf(Txt::class, Data::handler('plaintext'));
 	}
 
 	public function testCustomHandler(): void
@@ -40,42 +27,16 @@ class DataTest extends TestCase
 		$this->assertInstanceOf(CustomHandler::class, Data::handler('test'));
 	}
 
-	public function testCustomAlias(): void
+	public static function handlerProvider(): array
 	{
-		Data::$aliases['plaintext'] = 'txt';
-		$this->assertInstanceOf(Txt::class, Data::handler('plaintext'));
-	}
+		// the PHP handler doesn't support decoding and therefore cannot be
+		// tested with the test methods in this test class
+		$handlers = array_filter(
+			array_keys(Data::$handlers),
+			fn ($handler) => $handler !== 'php'
+		);
 
-	public function testMissingHandler(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
-
-		Data::handler('foo');
-	}
-
-	public function testInvalidHandler(): void
-	{
-		Data::$handlers['invalid'] = CustomInvalidHandler::class;
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Handler for type: "invalid" needs to extend Kirby\Data\Handler');
-
-		Data::handler('invalid');
-	}
-
-	#[DataProvider('handlerProvider')]
-	public function testEncodeDecode($handler): void
-	{
-		$data = [
-			'name'  => 'Homer Simpson',
-			'email' => 'homer@simpson.com'
-		];
-
-		$encoded = Data::encode($data, $handler);
-		$decoded = Data::decode($encoded, $handler);
-
-		$this->assertSame($data, $decoded);
+		return array_map(fn ($handler) => [$handler], $handlers);
 	}
 
 	#[DataProvider('handlerProvider')]
@@ -112,16 +73,69 @@ class DataTest extends TestCase
 		$this->assertSame([], $data);
 	}
 
-	public static function handlerProvider(): array
+	public function testDefaultHandlers(): void
 	{
-		// the PHP handler doesn't support decoding and therefore cannot be
-		// tested with the test methods in this test class
-		$handlers = array_filter(
-			array_keys(Data::$handlers),
-			fn ($handler) => $handler !== 'php'
-		);
+		$this->assertInstanceOf(Json::class, Data::handler('json'));
+		$this->assertInstanceOf(PHP::class, Data::handler('php'));
+		$this->assertInstanceOf(Txt::class, Data::handler('txt'));
+		$this->assertInstanceOf(Xml::class, Data::handler('xml'));
+		$this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
 
-		return array_map(fn ($handler) => [$handler], $handlers);
+		// aliases
+		$this->assertInstanceOf(Txt::class, Data::handler('md'));
+		$this->assertInstanceOf(Txt::class, Data::handler('mdown'));
+		$this->assertInstanceOf(Xml::class, Data::handler('rss'));
+		$this->assertInstanceOf(Yaml::class, Data::handler('yml'));
+
+		// different case
+		$this->assertInstanceOf(Json::class, Data::handler('JSON'));
+		$this->assertInstanceOf(Json::class, Data::handler('JsOn'));
+	}
+
+	#[DataProvider('handlerProvider')]
+	public function testEncodeDecode($handler): void
+	{
+		$data = [
+			'name'  => 'Homer Simpson',
+			'email' => 'homer@simpson.com'
+		];
+
+		$encoded = Data::encode($data, $handler);
+		$decoded = Data::decode($encoded, $handler);
+
+		$this->assertSame($data, $decoded);
+	}
+
+	public function testInvalidHandler(): void
+	{
+		Data::$handlers['invalid'] = CustomInvalidHandler::class;
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Handler for type: "invalid" needs to extend Kirby\Data\Handler');
+
+		Data::handler('invalid');
+	}
+
+	public function testMissingHandler(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
+
+		Data::handler('foo');
+	}
+
+	public function testReadInvalid(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
+
+		Data::read(static::TMP . '/data.foo');
+	}
+
+	public function testReadInvalidNoException(): void
+	{
+		$data = Data::read(static::TMP . '/data.foo', fail: false);
+		$this->assertSame([], $data);
 	}
 
 	public function testReadWrite(): void
@@ -148,20 +162,6 @@ class DataTest extends TestCase
 
 		$result = Data::read($file, 'yml');
 		$this->assertSame($data, $result);
-	}
-
-	public function testReadInvalid(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Missing handler for type: "foo"');
-
-		Data::read(static::TMP . '/data.foo');
-	}
-
-	public function testReadInvalidNoException(): void
-	{
-		$data = Data::read(static::TMP . '/data.foo', fail: false);
-		$this->assertSame([], $data);
 	}
 
 	public function testWriteInvalid(): void

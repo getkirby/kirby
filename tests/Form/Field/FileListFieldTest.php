@@ -81,114 +81,121 @@ class FileListFieldTest extends TestCase
 		]);
 	}
 
-	public function testType(): void
+	public function testAccept(): void
 	{
-		$this->assertSame('filelist', $this->filelist()->type());
+		// without a blueprint, the upload dialog accepts anything
+		$this->assertNull($this->filelist()->accept());
+
+		$field = $this->filelist(['blueprint' => 'image']);
+		$this->assertSame('*', $field->accept());
 	}
 
-	public function testHasNoValue(): void
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->filelist(['blueprint' => 'image']);
+		$this->assertSame(['image'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutBlueprint(): void
 	{
 		$field = $this->filelist();
-
-		$this->assertFalse($field->hasValue());
-		$this->assertFalse($field->props()['saveable']);
+		$this->assertSame(['default', 'image'], $field->acceptedFileBlueprints());
 	}
 
-	public function testPropsWithoutBackendOptions(): void
+	public function testApi(): void
 	{
-		$field = $this->filelist([
-			'limit'    => 5,
-			'sortable' => false,
-			'sortBy'   => 'title desc'
+		$patterns = array_column($this->filelist()->api(), 'pattern');
+		$this->assertSame(['', 'delete', 'sort'], $patterns);
+	}
+
+	public function testApiState(): void
+	{
+		$_GET['page'] = '2';
+
+		$field  = $this->filelist(['limit' => 2]);
+		$routes = array_column($field->api(), null, 'pattern');
+		$state  = $routes['']['action']();
+
+		$this->assertSame(2, $state['pagination']['page']);
+		$this->assertSame(3, $state['pagination']['total']);
+		$this->assertCount(1, $state['models']);
+		$this->assertArrayHasKey('upload', $state);
+	}
+
+	public function testBlueprint(): void
+	{
+		$this->assertNull($this->filelist()->blueprint());
+
+		$field = $this->filelist(['blueprint' => 'cover']);
+		$this->assertSame('cover', $field->blueprint());
+	}
+
+	public function testBlueprintWithAlias(): void
+	{
+		$field = $this->filelist(['template' => 'cover']);
+		$this->assertSame('cover', $field->blueprint());
+
+		// the option's own name wins
+		$field = $this->filelist(['blueprint' => 'image', 'template' => 'cover']);
+		$this->assertSame('image', $field->blueprint());
+	}
+
+	public function testCollectorDefaultOrder(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'photography',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['sort' => 3]],
+							['filename' => 'b.jpg', 'content' => ['sort' => 1]],
+							['filename' => 'c.jpg', 'content' => ['sort' => 2]]
+						]
+					]
+				]
+			]
 		]);
 
-		// limit and sorting are applied by the backend
-		$props = $field->props();
-		$this->assertArrayNotHasKey('limit', $props);
-		$this->assertArrayNotHasKey('sortable', $props);
-		$this->assertArrayNotHasKey('sortBy', $props);
+		$this->app->impersonate('kirby');
 
-		// but the options are still set
-		$this->assertSame(5, $field->limit());
-		$this->assertFalse($field->sortable());
-		$this->assertSame('title desc', $field->sortBy());
-	}
+		$this->assertSame(
+			['photography/b.jpg', 'photography/c.jpg', 'photography/a.jpg'],
+			array_column($this->filelist()->data(), 'id')
+		);
 
-	public function testData(): void
-	{
-		$data = $this->filelist()->data();
-
-		$this->assertCount(3, $data);
-		$this->assertSame('photography/a.jpg', $data[0]['id']);
-		$this->assertInstanceOf(HtmlString::class, $data[0]['text']);
-		$this->assertSame('a.jpg', (string)$data[0]['text']);
-	}
-
-	public function testTotal(): void
-	{
-		$this->assertSame(3, $this->filelist()->total());
-	}
-
-	public function testImage(): void
-	{
-		$field = $this->filelist(['image' => ['back' => 'black']]);
-
-		$this->assertSame(['back' => 'black'], $field->image());
-		$this->assertSame('black', $field->data()[0]['image']['back']);
-	}
-
-	public function testImageDisabled(): void
-	{
-		$this->assertFalse($this->filelist(['image' => false])->image());
-	}
-
-	public function testImageQuery(): void
-	{
-		// a query string is a shortcut for the image source
-		$field = $this->filelist(['image' => 'file.parent.image("b.jpg")']);
-
-		$this->assertSame(['query' => 'file.parent.image("b.jpg")'], $field->image());
-
-		// the query is resolved per entry
-		$this->assertStringContainsString(
-			'b.jpg',
-			$field->data()[0]['image']['url']
+		// a query keeps its own order
+		$this->assertSame(
+			['photography/c.jpg', 'photography/b.jpg', 'photography/a.jpg'],
+			array_column($this->filelist(['query' => 'page.files.flip'])->data(), 'id')
 		);
 	}
 
-	public function testTextDefault(): void
+	public function testCollectorWhileSearching(): void
 	{
-		$this->assertSame('{{ file.filename }}', $this->filelist()->text());
-	}
+		$_GET['searchterm'] = 'tree';
 
-	public function testTextCustom(): void
-	{
-		$field = $this->filelist(['text' => '{{ file.id }}']);
-		$this->assertSame('{{ file.id }}', $field->text());
-	}
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'photography',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['alt' => 'Old tree', 'sort' => 1]],
+							['filename' => 'b.jpg', 'content' => ['alt' => 'Tree', 'sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
 
-	public static function layoutProvider(): array
-	{
-		return [
-			[null, 'list'],
-			['list', 'list'],
-			['cards', 'cards'],
-			['cardlets', 'cardlets'],
-			['table', 'table'],
-			['does-not-exist', 'list']
-		];
-	}
+		$this->app->impersonate('kirby');
 
-	#[DataProvider('layoutProvider')]
-	public function testLayout(string|null $layout, string $expected): void
-	{
-		$field = $this->filelist(['layout' => $layout]);
-		$this->assertSame($expected, $field->layout());
-	}
-
-	public function testColumnsWithoutTableLayout(): void
-	{
-		$this->assertSame([], $this->filelist()->columns());
+		// search results keep their ranking
+		$this->assertSame(
+			['photography/b.jpg', 'photography/a.jpg'],
+			array_column($this->filelist(['search' => true])->data(), 'id')
+		);
 	}
 
 	public function testColumns(): void
@@ -196,46 +203,6 @@ class FileListFieldTest extends TestCase
 		$field = $this->filelist(['layout' => 'table']);
 
 		$this->assertSame(['image', 'title'], array_keys($field->columns()));
-	}
-
-	public function testColumnsWithoutImage(): void
-	{
-		$field = $this->filelist([
-			'image'  => false,
-			'layout' => 'table'
-		]);
-
-		$this->assertSame(['title'], array_keys($field->columns()));
-	}
-
-	public function testColumnsWithoutText(): void
-	{
-		$field = $this->filelist([
-			'layout' => 'table',
-			'text'   => ''
-		]);
-
-		$this->assertSame(['image'], array_keys($field->columns()));
-	}
-
-	public function testColumnsWithZeroAsText(): void
-	{
-		$field = $this->filelist([
-			'layout' => 'table',
-			'text'   => '0'
-		]);
-
-		$this->assertSame(['image', 'title'], array_keys($field->columns()));
-	}
-
-	public function testColumnsWithInfo(): void
-	{
-		$field = $this->filelist([
-			'info'   => '{{ file.template }}',
-			'layout' => 'table'
-		]);
-
-		$this->assertSame(['image', 'title', 'info'], array_keys($field->columns()));
 	}
 
 	public function testColumnsCustom(): void
@@ -276,6 +243,41 @@ class FileListFieldTest extends TestCase
 		$this->assertSame('Alternative text', $field->columns()['alt']['label']);
 	}
 
+	public function testColumnsWithInfo(): void
+	{
+		$field = $this->filelist([
+			'info'   => '{{ file.template }}',
+			'layout' => 'table'
+		]);
+
+		$this->assertSame(['image', 'title', 'info'], array_keys($field->columns()));
+	}
+
+	public function testColumnsWithoutImage(): void
+	{
+		$field = $this->filelist([
+			'image'  => false,
+			'layout' => 'table'
+		]);
+
+		$this->assertSame(['title'], array_keys($field->columns()));
+	}
+
+	public function testColumnsWithoutTableLayout(): void
+	{
+		$this->assertSame([], $this->filelist()->columns());
+	}
+
+	public function testColumnsWithoutText(): void
+	{
+		$field = $this->filelist([
+			'layout' => 'table',
+			'text'   => ''
+		]);
+
+		$this->assertSame(['image'], array_keys($field->columns()));
+	}
+
 	public function testColumnsWithTypes(): void
 	{
 		$field = $this->filelist([
@@ -297,6 +299,26 @@ class FileListFieldTest extends TestCase
 
 		// without entries there is no blueprint to resolve the type from
 		$this->assertArrayNotHasKey('type', $field->columns()['alt']);
+	}
+
+	public function testColumnsWithZeroAsText(): void
+	{
+		$field = $this->filelist([
+			'layout' => 'table',
+			'text'   => '0'
+		]);
+
+		$this->assertSame(['image', 'title'], array_keys($field->columns()));
+	}
+
+	public function testData(): void
+	{
+		$data = $this->filelist()->data();
+
+		$this->assertCount(3, $data);
+		$this->assertSame('photography/a.jpg', $data[0]['id']);
+		$this->assertInstanceOf(HtmlString::class, $data[0]['text']);
+		$this->assertSame('a.jpg', (string)$data[0]['text']);
 	}
 
 	public function testDataWithTableLayout(): void
@@ -413,9 +435,160 @@ class FileListFieldTest extends TestCase
 		$this->assertSame('0', $field->data()[0]['alt']);
 	}
 
+	public function testDeleteSelected(): void
+	{
+		$field = $this->filelist(['batch' => true]);
+
+		$this->assertTrue($field->deleteSelected(['photography/a.jpg']));
+		$this->assertCount(2, $this->app->page('photography')->files());
+	}
+
+	public function testDeleteSelectedBelowMin(): void
+	{
+		$field = $this->filelist([
+			'batch' => true,
+			'min'   => 3
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('The "Gallery" field requires at least 3 files');
+
+		$field->deleteSelected(['photography/a.jpg']);
+	}
+
+	public function testDeleteSelectedWithoutBatch(): void
+	{
+		$field = $this->filelist();
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessageIs('The field does not support batch actions');
+
+		$field->deleteSelected(['photography/a.jpg']);
+	}
+
+	public function testDeleteSelectedWithoutIds(): void
+	{
+		$field = $this->filelist();
+		$this->assertTrue($field->deleteSelected([]));
+	}
+
+	public function testErrorsMax(): void
+	{
+		$field = $this->filelist(['max' => 2]);
+
+		$this->assertFalse($field->validateMax());
+		$this->assertSame(
+			'You must not add more than 2 files to the "Gallery" field',
+			$field->errors()['max']
+		);
+	}
+
+	public function testErrorsMin(): void
+	{
+		$field = $this->filelist(['min' => 5]);
+
+		$this->assertFalse($field->validateMin());
+		$this->assertSame(
+			'The "Gallery" field requires at least 5 files',
+			$field->errors()['min']
+		);
+	}
+
+	public function testErrorsWhenInactive(): void
+	{
+		$field = $this->filelist([
+			'min'  => 5,
+			'when' => ['other' => 'value']
+		]);
+
+		$this->assertSame([], $field->errors());
+	}
+
+	public function testErrorsWithoutLimits(): void
+	{
+		$this->assertSame([], $this->filelist()->errors());
+	}
+
+	public function testHasNoValue(): void
+	{
+		$field = $this->filelist();
+
+		$this->assertFalse($field->hasValue());
+		$this->assertFalse($field->props()['saveable']);
+	}
+
+	public function testImage(): void
+	{
+		$field = $this->filelist(['image' => ['back' => 'black']]);
+
+		$this->assertSame(['back' => 'black'], $field->image());
+		$this->assertSame('black', $field->data()[0]['image']['back']);
+	}
+
+	public function testImageDisabled(): void
+	{
+		$this->assertFalse($this->filelist(['image' => false])->image());
+	}
+
+	public function testImageQuery(): void
+	{
+		// a query string is a shortcut for the image source
+		$field = $this->filelist(['image' => 'file.parent.image("b.jpg")']);
+
+		$this->assertSame(['query' => 'file.parent.image("b.jpg")'], $field->image());
+
+		// the query is resolved per entry
+		$this->assertStringContainsString(
+			'b.jpg',
+			$field->data()[0]['image']['url']
+		);
+	}
+
+	public function testIsFull(): void
+	{
+		$this->assertFalse($this->filelist()->isFull());
+		$this->assertTrue($this->filelist(['max' => 3])->isFull());
+	}
+
+	public static function layoutProvider(): array
+	{
+		return [
+			[null, 'list'],
+			['list', 'list'],
+			['cards', 'cards'],
+			['cardlets', 'cardlets'],
+			['table', 'table'],
+			['does-not-exist', 'list']
+		];
+	}
+
+	#[DataProvider('layoutProvider')]
+	public function testLayout(string|null $layout, string $expected): void
+	{
+		$field = $this->filelist(['layout' => $layout]);
+		$this->assertSame($expected, $field->layout());
+	}
+
 	public function testLimitDefault(): void
 	{
 		$this->assertSame(20, $this->filelist()->limit());
+	}
+
+	public function testLink(): void
+	{
+		$this->assertNull($this->filelist()->link());
+
+		$field = $this->filelist(['parent' => 'page.children.first']);
+		$this->assertSame('/pages/photography+trees', $field->link());
+	}
+
+	public function testLinkProp(): void
+	{
+		// the label only links to a parent that is not the model itself
+		$this->assertNull($this->filelist()->props()['link']);
+
+		$field = $this->filelist(['parent' => 'page.children.first']);
+		$this->assertSame('/pages/photography+trees', $field->props()['link']);
 	}
 
 	public function testPagination(): void
@@ -453,16 +626,6 @@ class FileListFieldTest extends TestCase
 		$this->assertIsPage('photography/trees', $field->parentModel());
 	}
 
-	public function testParentModelNotFound(): void
-	{
-		$field = $this->filelist(['parent' => 'site.find("does-not-exist")']);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The parent for the query "site.find("does-not-exist")" cannot be found in the field "gallery"');
-
-		$field->parentModel();
-	}
-
 	public function testParentModelInvalidType(): void
 	{
 		$field = $this->filelist(['parent' => 'site.index']);
@@ -473,21 +636,34 @@ class FileListFieldTest extends TestCase
 		$field->parentModel();
 	}
 
-	public function testLink(): void
+	public function testParentModelNotFound(): void
 	{
-		$this->assertNull($this->filelist()->link());
+		$field = $this->filelist(['parent' => 'site.find("does-not-exist")']);
 
-		$field = $this->filelist(['parent' => 'page.children.first']);
-		$this->assertSame('/pages/photography+trees', $field->link());
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('The parent for the query "site.find("does-not-exist")" cannot be found in the field "gallery"');
+
+		$field->parentModel();
 	}
 
-	public function testLinkProp(): void
+	public function testPropsWithoutBackendOptions(): void
 	{
-		// the label only links to a parent that is not the model itself
-		$this->assertNull($this->filelist()->props()['link']);
+		$field = $this->filelist([
+			'limit'    => 5,
+			'sortable' => false,
+			'sortBy'   => 'title desc'
+		]);
 
-		$field = $this->filelist(['parent' => 'page.children.first']);
-		$this->assertSame('/pages/photography+trees', $field->props()['link']);
+		// limit and sorting are applied by the backend
+		$props = $field->props();
+		$this->assertArrayNotHasKey('limit', $props);
+		$this->assertArrayNotHasKey('sortable', $props);
+		$this->assertArrayNotHasKey('sortBy', $props);
+
+		// but the options are still set
+		$this->assertSame(5, $field->limit());
+		$this->assertFalse($field->sortable());
+		$this->assertSame('title desc', $field->sortBy());
 	}
 
 	public function testSearchDisabled(): void
@@ -521,24 +697,6 @@ class FileListFieldTest extends TestCase
 		$this->assertFalse($field->sortable());
 	}
 
-	public function testSortableWithQuery(): void
-	{
-		$field = $this->filelist(['query' => 'page.images']);
-		$this->assertFalse($field->sortable());
-	}
-
-	public function testSortableWithSortBy(): void
-	{
-		$field = $this->filelist(['sortBy' => 'filename desc']);
-		$this->assertFalse($field->sortable());
-	}
-
-	public function testSortableWithFlip(): void
-	{
-		$field = $this->filelist(['flip' => true]);
-		$this->assertFalse($field->sortable());
-	}
-
 	public function testSortableWhileSearching(): void
 	{
 		$_GET['searchterm'] = 'a';
@@ -555,59 +713,43 @@ class FileListFieldTest extends TestCase
 		$this->assertFalse($field->sortable());
 	}
 
-	public function testErrorsWithoutLimits(): void
+	public function testSortableWithFlip(): void
 	{
-		$this->assertSame([], $this->filelist()->errors());
+		$field = $this->filelist(['flip' => true]);
+		$this->assertFalse($field->sortable());
 	}
 
-	public function testErrorsMin(): void
+	public function testSortableWithQuery(): void
 	{
-		$field = $this->filelist(['min' => 5]);
-
-		$this->assertFalse($field->validateMin());
-		$this->assertSame(
-			'The "Gallery" field requires at least 5 files',
-			$field->errors()['min']
-		);
+		$field = $this->filelist(['query' => 'page.images']);
+		$this->assertFalse($field->sortable());
 	}
 
-	public function testErrorsMax(): void
+	public function testSortableWithSortBy(): void
 	{
-		$field = $this->filelist(['max' => 2]);
-
-		$this->assertFalse($field->validateMax());
-		$this->assertSame(
-			'You must not add more than 2 files to the "Gallery" field',
-			$field->errors()['max']
-		);
+		$field = $this->filelist(['sortBy' => 'filename desc']);
+		$this->assertFalse($field->sortable());
 	}
 
-	public function testErrorsWhenInactive(): void
+	public function testTextCustom(): void
 	{
-		$field = $this->filelist([
-			'min'  => 5,
-			'when' => ['other' => 'value']
-		]);
-
-		$this->assertSame([], $field->errors());
+		$field = $this->filelist(['text' => '{{ file.id }}']);
+		$this->assertSame('{{ file.id }}', $field->text());
 	}
 
-	public function testAcceptedFileBlueprints(): void
+	public function testTextDefault(): void
 	{
-		$field = $this->filelist(['blueprint' => 'image']);
-		$this->assertSame(['image'], $field->acceptedFileBlueprints());
+		$this->assertSame('{{ file.filename }}', $this->filelist()->text());
 	}
 
-	public function testAcceptedFileBlueprintsWithoutBlueprint(): void
+	public function testTotal(): void
 	{
-		$field = $this->filelist();
-		$this->assertSame(['default', 'image'], $field->acceptedFileBlueprints());
+		$this->assertSame(3, $this->filelist()->total());
 	}
 
-	public function testIsFull(): void
+	public function testType(): void
 	{
-		$this->assertFalse($this->filelist()->isFull());
-		$this->assertTrue($this->filelist(['max' => 3])->isFull());
+		$this->assertSame('filelist', $this->filelist()->type());
 	}
 
 	public function testUpload(): void
@@ -625,6 +767,30 @@ class FileListFieldTest extends TestCase
 		], $this->filelist()->upload());
 	}
 
+	public function testUploadDisabled(): void
+	{
+		$this->assertFalse($this->filelist(['create' => false])->upload());
+	}
+
+	public function testUploadWhenFull(): void
+	{
+		$this->assertFalse($this->filelist(['max' => 3])->upload());
+	}
+
+	public function testUploadWhenNotSortable(): void
+	{
+		$upload = $this->filelist(['sortable' => false])->upload();
+
+		$this->assertArrayNotHasKey('sort', array_filter($upload['attributes']));
+	}
+
+	public function testUploadWithBlueprint(): void
+	{
+		$upload = $this->filelist(['blueprint' => 'image'])->upload();
+
+		$this->assertSame('image', $upload['attributes']['template']);
+	}
+
 	public function testUploadWithImageQuery(): void
 	{
 		$upload = $this->filelist(['image' => 'file.parent.image("b.jpg")'])->upload();
@@ -638,171 +804,5 @@ class FileListFieldTest extends TestCase
 
 		// only the remaining files can be uploaded
 		$this->assertSame(2, $upload['max']);
-	}
-
-	public function testUploadWithBlueprint(): void
-	{
-		$upload = $this->filelist(['blueprint' => 'image'])->upload();
-
-		$this->assertSame('image', $upload['attributes']['template']);
-	}
-
-	public function testUploadWhenNotSortable(): void
-	{
-		$upload = $this->filelist(['sortable' => false])->upload();
-
-		$this->assertArrayNotHasKey('sort', array_filter($upload['attributes']));
-	}
-
-	public function testUploadDisabled(): void
-	{
-		$this->assertFalse($this->filelist(['create' => false])->upload());
-	}
-
-	public function testUploadWhenFull(): void
-	{
-		$this->assertFalse($this->filelist(['max' => 3])->upload());
-	}
-
-	public function testAccept(): void
-	{
-		// without a blueprint, the upload dialog accepts anything
-		$this->assertNull($this->filelist()->accept());
-
-		$field = $this->filelist(['blueprint' => 'image']);
-		$this->assertSame('*', $field->accept());
-	}
-
-	public function testBlueprint(): void
-	{
-		$this->assertNull($this->filelist()->blueprint());
-
-		$field = $this->filelist(['blueprint' => 'cover']);
-		$this->assertSame('cover', $field->blueprint());
-	}
-
-	public function testBlueprintWithAlias(): void
-	{
-		$field = $this->filelist(['template' => 'cover']);
-		$this->assertSame('cover', $field->blueprint());
-
-		// the option's own name wins
-		$field = $this->filelist(['blueprint' => 'image', 'template' => 'cover']);
-		$this->assertSame('image', $field->blueprint());
-	}
-
-	public function testApi(): void
-	{
-		$patterns = array_column($this->filelist()->api(), 'pattern');
-		$this->assertSame(['', 'delete', 'sort'], $patterns);
-	}
-
-	public function testApiState(): void
-	{
-		$_GET['page'] = '2';
-
-		$field  = $this->filelist(['limit' => 2]);
-		$routes = array_column($field->api(), null, 'pattern');
-		$state  = $routes['']['action']();
-
-		$this->assertSame(2, $state['pagination']['page']);
-		$this->assertSame(3, $state['pagination']['total']);
-		$this->assertCount(1, $state['models']);
-		$this->assertArrayHasKey('upload', $state);
-	}
-
-	public function testCollectorDefaultOrder(): void
-	{
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'photography',
-						'files' => [
-							['filename' => 'a.jpg', 'content' => ['sort' => 3]],
-							['filename' => 'b.jpg', 'content' => ['sort' => 1]],
-							['filename' => 'c.jpg', 'content' => ['sort' => 2]]
-						]
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$this->assertSame(
-			['photography/b.jpg', 'photography/c.jpg', 'photography/a.jpg'],
-			array_column($this->filelist()->data(), 'id')
-		);
-
-		// a query keeps its own order
-		$this->assertSame(
-			['photography/c.jpg', 'photography/b.jpg', 'photography/a.jpg'],
-			array_column($this->filelist(['query' => 'page.files.flip'])->data(), 'id')
-		);
-	}
-
-	public function testCollectorWhileSearching(): void
-	{
-		$_GET['searchterm'] = 'tree';
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'photography',
-						'files' => [
-							['filename' => 'a.jpg', 'content' => ['alt' => 'Old tree', 'sort' => 1]],
-							['filename' => 'b.jpg', 'content' => ['alt' => 'Tree', 'sort' => 2]]
-						]
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		// search results keep their ranking
-		$this->assertSame(
-			['photography/b.jpg', 'photography/a.jpg'],
-			array_column($this->filelist(['search' => true])->data(), 'id')
-		);
-	}
-
-	public function testDeleteSelected(): void
-	{
-		$field = $this->filelist(['batch' => true]);
-
-		$this->assertTrue($field->deleteSelected(['photography/a.jpg']));
-		$this->assertCount(2, $this->app->page('photography')->files());
-	}
-
-	public function testDeleteSelectedWithoutIds(): void
-	{
-		$field = $this->filelist();
-		$this->assertTrue($field->deleteSelected([]));
-	}
-
-	public function testDeleteSelectedWithoutBatch(): void
-	{
-		$field = $this->filelist();
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessageIs('The field does not support batch actions');
-
-		$field->deleteSelected(['photography/a.jpg']);
-	}
-
-	public function testDeleteSelectedBelowMin(): void
-	{
-		$field = $this->filelist([
-			'batch' => true,
-			'min'   => 3
-		]);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('The "Gallery" field requires at least 3 files');
-
-		$field->deleteSelected(['photography/a.jpg']);
 	}
 }

@@ -90,22 +90,22 @@ class App
 	protected array $options;
 	protected Panel|null $panel = null;
 	protected string|null $path = null;
-	protected Request|null $request = null;
-	protected Responder|null $response = null;
-	protected Roles|null $roles = null;
-	protected Ingredients $roots;
-	protected array|null $routes = null;
-	protected Router|null $router = null;
-	protected Sessions|null $sessions = null;
-	protected Site|null $site = null;
-	protected System|null $system = null;
-	protected Ingredients $urls;
-	protected Visitor|null $visitor = null;
 
 	/**
 	 * @var array<string, mixed>
 	 */
 	protected array $propertyData;
+	protected Request|null $request = null;
+	protected Responder|null $response = null;
+	protected Roles|null $roles = null;
+	protected Ingredients $roots;
+	protected Router|null $router = null;
+	protected array|null $routes = null;
+	protected Sessions|null $sessions = null;
+	protected Site|null $site = null;
+	protected System|null $system = null;
+	protected Ingredients $urls;
+	protected Visitor|null $visitor = null;
 
 	/**
 	 * Creates a new App instance
@@ -578,15 +578,6 @@ class App
 	}
 
 	/**
-	 * Checks if CORS support is enabled
-	 * @since 5.2.0
-	 */
-	public function isCorsEnabled(): bool
-	{
-		return $this->option('cors', false) !== false;
-	}
-
-	/**
 	 * Returns the current language, if set by `static::setCurrentLanguage`
 	 */
 	public function currentLanguage(): Language|null
@@ -856,6 +847,15 @@ class App
 		throw new InvalidArgumentException(
 			message: 'Unexpected input'
 		);
+	}
+
+	/**
+	 * Checks if CORS support is enabled
+	 * @since 5.2.0
+	 */
+	public function isCorsEnabled(): bool
+	{
+		return $this->option('cors', false) !== false;
 	}
 
 	/**

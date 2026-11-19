@@ -24,18 +24,6 @@ class PageCreateNumTest extends ModelTestCase
 		$this->assertSame(20121212, $page->createNum());
 	}
 
-	public function testCreateDateBasedNumWithoutDate(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'blueprint' => [
-				'num' => 'date'
-			]
-		]);
-
-		$this->assertSame((int)date('Ymd'), $page->createNum());
-	}
-
 	public function testCreateDateBasedNumInMultiLanguageMode(): void
 	{
 		$this->setupMultiLanguage();
@@ -102,6 +90,28 @@ class PageCreateNumTest extends ModelTestCase
 		$this->assertSame((int)date('Ymd'), $page->createNum());
 	}
 
+	public function testCreateDateBasedNumWithoutDate(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'num' => 'date'
+			]
+		]);
+
+		$this->assertSame((int)date('Ymd'), $page->createNum());
+	}
+
+	public function testCreateDefaultNumForDraftWithoutSiblings(): void
+	{
+		$page = Page::create([
+			'slug'  => 'test',
+			'draft' => true
+		]);
+
+		$this->assertSame(1, $page->createNum());
+	}
+
 	public function testCreateDefaultNumForDraftWithSiblings(): void
 	{
 		$pageA = Page::create([
@@ -134,11 +144,11 @@ class PageCreateNumTest extends ModelTestCase
 		$this->assertSame(3, $pageC->createNum(4));
 	}
 
-	public function testCreateDefaultNumForDraftWithoutSiblings(): void
+	public function testCreateDefaultNumForPageWithoutSiblings(): void
 	{
 		$page = Page::create([
 			'slug'  => 'test',
-			'draft' => true
+			'draft' => false
 		]);
 
 		$this->assertSame(1, $page->createNum());
@@ -176,16 +186,6 @@ class PageCreateNumTest extends ModelTestCase
 		$this->assertSame(3, $pageC->createNum(4));
 	}
 
-	public function testCreateDefaultNumForPageWithoutSiblings(): void
-	{
-		$page = Page::create([
-			'slug'  => 'test',
-			'draft' => false
-		]);
-
-		$this->assertSame(1, $page->createNum());
-	}
-
 	public function testCreateQueryBasedNum(): void
 	{
 		$this->app = $this->app->clone([
@@ -202,23 +202,6 @@ class PageCreateNumTest extends ModelTestCase
 		]);
 
 		$this->assertSame(2016, $page->createNum());
-	}
-
-	public function testCreateQueryBasedNumWithoutResult(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/query-num' => ['num' => '{{ page.year }}']
-			]
-		]);
-		$this->app->impersonate('kirby');
-
-		$page = Page::create([
-			'slug'     => 'test',
-			'template' => 'query-num',
-		]);
-
-		$this->assertSame(0, $page->createNum());
 	}
 
 	public function testCreateQueryBasedNumInMultiLanguageMode(): void
@@ -248,6 +231,23 @@ class PageCreateNumTest extends ModelTestCase
 		]);
 
 		$this->assertSame(2016, $page->createNum());
+	}
+
+	public function testCreateQueryBasedNumWithoutResult(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/query-num' => ['num' => '{{ page.year }}']
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'query-num',
+		]);
+
+		$this->assertSame(0, $page->createNum());
 	}
 
 	public function testCreateZeroBasedNum(): void

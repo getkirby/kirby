@@ -24,25 +24,14 @@ class DarkroomTest extends TestCase
 		return static::FIXTURES . '/image/cat.jpg';
 	}
 
-	public function testFactory(): void
+	public function testBlurWithoutPosition(): void
 	{
-		$instance = Darkroom::factory('gd');
-		$this->assertInstanceOf(GdLib::class, $instance);
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'blur' => true,
+		]);
 
-		$instance = Darkroom::factory('imagick');
-		$this->assertInstanceOf(Imagick::class, $instance);
-
-		// TODO: remove in v7
-		$instance = Darkroom::factory('im');
-		$this->assertInstanceOf(ImageMagick::class, $instance);
-	}
-
-	public function testFactoryWithInvalidType(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Invalid Darkroom type');
-
-		Darkroom::factory('does-not-exist');
+		$this->assertSame(10, $options['blur']);
 	}
 
 	public function testCropWithoutPosition(): void
@@ -54,75 +43,6 @@ class DarkroomTest extends TestCase
 		]);
 
 		$this->assertSame('center', $options['crop']);
-	}
-
-	public function testBlurWithoutPosition(): void
-	{
-		$darkroom = new Darkroom();
-		$options  = $darkroom->preprocess($this->file(), [
-			'blur' => true,
-		]);
-
-		$this->assertSame(10, $options['blur']);
-	}
-
-	public function testQualityWithoutValue(): void
-	{
-		$darkroom = new Darkroom();
-		$options  = $darkroom->preprocess($this->file(), [
-			'quality' => null,
-		]);
-
-		$this->assertSame(90, $options['quality']);
-	}
-
-	public function testSharpenWithoutValue(): void
-	{
-		$darkroom = new Darkroom();
-		$options  = $darkroom->preprocess($this->file(), [
-			'sharpen' => true,
-			'width'   => 100
-		]);
-
-		$this->assertSame(50, $options['sharpen']);
-	}
-
-	public function testDownscale(): void
-	{
-		$darkroom = new Darkroom();
-		$method   = new ReflectionMethod($darkroom::class, 'downscale');
-
-		// landscape thumb from portrait source: fit width
-		$dimensions = $method->invoke($darkroom, [
-			'sourceWidth'  => 4000,
-			'sourceHeight' => 6000,
-			'width'        => 300,
-			'height'       => 536
-		]);
-
-		$this->assertSame(357, $dimensions->width());
-		$this->assertSame(536, $dimensions->height());
-
-		// wide thumb from portrait source: fit height
-		$dimensions = $method->invoke($darkroom, [
-			'sourceWidth'  => 4000,
-			'sourceHeight' => 6000,
-			'width'        => 800,
-			'height'       => 200
-		]);
-
-		$this->assertSame(800, $dimensions->width());
-		$this->assertSame(1200, $dimensions->height());
-	}
-
-	public function testIsAnimatable(): void
-	{
-		// drivers have to opt in to animated output
-		$darkroom = new Darkroom();
-		$method   = new ReflectionMethod($darkroom::class, 'isAnimatable');
-
-		$this->assertFalse($method->invoke($darkroom, 'image.gif', ['format' => null]));
-		$this->assertFalse($method->invoke($darkroom, 'image.jpg', ['format' => 'gif']));
 	}
 
 	public function testDefaultOptions(): void
@@ -154,6 +74,55 @@ class DarkroomTest extends TestCase
 		$this->assertSame(0, $options['width']);
 	}
 
+	public function testDownscale(): void
+	{
+		$darkroom = new Darkroom();
+		$method   = new ReflectionMethod($darkroom::class, 'downscale');
+
+		// landscape thumb from portrait source: fit width
+		$dimensions = $method->invoke($darkroom, [
+			'sourceWidth'  => 4000,
+			'sourceHeight' => 6000,
+			'width'        => 300,
+			'height'       => 536
+		]);
+
+		$this->assertSame(357, $dimensions->width());
+		$this->assertSame(536, $dimensions->height());
+
+		// wide thumb from portrait source: fit height
+		$dimensions = $method->invoke($darkroom, [
+			'sourceWidth'  => 4000,
+			'sourceHeight' => 6000,
+			'width'        => 800,
+			'height'       => 200
+		]);
+
+		$this->assertSame(800, $dimensions->width());
+		$this->assertSame(1200, $dimensions->height());
+	}
+
+	public function testFactory(): void
+	{
+		$instance = Darkroom::factory('gd');
+		$this->assertInstanceOf(GdLib::class, $instance);
+
+		$instance = Darkroom::factory('imagick');
+		$this->assertInstanceOf(Imagick::class, $instance);
+
+		// TODO: remove in v7
+		$instance = Darkroom::factory('im');
+		$this->assertInstanceOf(ImageMagick::class, $instance);
+	}
+
+	public function testFactoryWithInvalidType(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Invalid Darkroom type');
+
+		Darkroom::factory('does-not-exist');
+	}
+
 	public function testGlobalOptions(): void
 	{
 		$darkroom = new Darkroom([
@@ -163,32 +132,6 @@ class DarkroomTest extends TestCase
 		$options = $darkroom->preprocess($this->file());
 
 		$this->assertSame(20, $options['quality']);
-	}
-
-	public function testPassedOptions(): void
-	{
-		$darkroom = new Darkroom([
-			'quality' => 20
-		]);
-
-		$options = $darkroom->preprocess($this->file(), [
-			'quality' => 30
-		]);
-
-		$this->assertSame(30, $options['quality']);
-	}
-
-	public function testProcess(): void
-	{
-		$darkroom = new Darkroom([
-			'quality' => 20
-		]);
-
-		$options = $darkroom->process($this->file(), [
-			'quality' => 30
-		]);
-
-		$this->assertSame(30, $options['quality']);
 	}
 
 	public function testGrayscaleFixes(): void
@@ -217,5 +160,62 @@ class DarkroomTest extends TestCase
 
 		$this->assertTrue($options['grayscale']);
 		$this->assertFalse(isset($options['bw']));
+	}
+
+	public function testIsAnimatable(): void
+	{
+		// drivers have to opt in to animated output
+		$darkroom = new Darkroom();
+		$method   = new ReflectionMethod($darkroom::class, 'isAnimatable');
+
+		$this->assertFalse($method->invoke($darkroom, 'image.gif', ['format' => null]));
+		$this->assertFalse($method->invoke($darkroom, 'image.jpg', ['format' => 'gif']));
+	}
+
+	public function testPassedOptions(): void
+	{
+		$darkroom = new Darkroom([
+			'quality' => 20
+		]);
+
+		$options = $darkroom->preprocess($this->file(), [
+			'quality' => 30
+		]);
+
+		$this->assertSame(30, $options['quality']);
+	}
+
+	public function testProcess(): void
+	{
+		$darkroom = new Darkroom([
+			'quality' => 20
+		]);
+
+		$options = $darkroom->process($this->file(), [
+			'quality' => 30
+		]);
+
+		$this->assertSame(30, $options['quality']);
+	}
+
+	public function testQualityWithoutValue(): void
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'quality' => null,
+		]);
+
+		$this->assertSame(90, $options['quality']);
+	}
+
+	public function testSharpenWithoutValue(): void
+	{
+		$darkroom = new Darkroom();
+		$options  = $darkroom->preprocess($this->file(), [
+			'sharpen' => true,
+			'width'   => 100
+		]);
+
+		$this->assertSame(50, $options['sharpen']);
 	}
 }

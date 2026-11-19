@@ -79,6 +79,15 @@ class OptionsApiTest extends TestCase
 		}
 	}
 
+	public function testLoadNoJson(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(url: 'https://example.com');
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('Options could not be loaded from API: https://example.com');
+		$options->resolve($model);
+	}
+
 	public function testLoadTrustsBlueprintHost(): void
 	{
 		// a local or intranet host in the blueprint must not be
@@ -94,15 +103,6 @@ class OptionsApiTest extends TestCase
 		} finally {
 			Remote::$defaults = $defaults;
 		}
-	}
-
-	public function testLoadNoJson(): void
-	{
-		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(url: 'https://example.com');
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('Options could not be loaded from API: https://example.com');
-		$options->resolve($model);
 	}
 
 	public function testPolyfill(): void
@@ -129,16 +129,20 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('b', $result[1]['value']);
 	}
 
-	public function testResolveSimple(): void
+	public function testResolveApplyFieldMethods(): void
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
+		$options = new OptionsApi(
+			url: static::FIXTURES . '/data.json',
+			text: '{{ item.name }}',
+			value: '{{ item.name.slug }}'
+		);
 		$result  = $options->render($model);
 
-		$this->assertSame('A', (string)$result[0]['text']);
-		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', (string)$result[1]['text']);
-		$this->assertSame('b', $result[1]['value']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
+		$this->assertSame('company-a', $result[0]['value']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
+		$this->assertSame('company-b', $result[1]['value']);
 	}
 
 	public function testResolveCustomKeys(): void
@@ -155,21 +159,6 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('info@company-a.com', $result[0]['value']);
 		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('info@company-b.com', $result[1]['value']);
-	}
-
-	public function testResolveQuery(): void
-	{
-		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(
-			url: static::FIXTURES . '/data-nested.json',
-			query: 'Directory.Companies'
-		);
-		$result  = $options->render($model);
-
-		$this->assertSame('A', (string)$result[0]['text']);
-		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', (string)$result[1]['text']);
-		$this->assertSame('b', $result[1]['value']);
 	}
 
 	public function testResolveCustomKeysAndQuery(): void
@@ -283,20 +272,31 @@ class OptionsApiTest extends TestCase
 		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
 	}
 
-	public function testResolveApplyFieldMethods(): void
+	public function testResolveQuery(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: static::FIXTURES . '/data.json',
-			text: '{{ item.name }}',
-			value: '{{ item.name.slug }}'
+			url: static::FIXTURES . '/data-nested.json',
+			query: 'Directory.Companies'
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', (string)$result[0]['text']);
-		$this->assertSame('company-a', $result[0]['value']);
-		$this->assertSame('Company B', (string)$result[1]['text']);
-		$this->assertSame('company-b', $result[1]['value']);
+		$this->assertSame('A', (string)$result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', (string)$result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
+	}
+
+	public function testResolveSimple(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
+		$result  = $options->render($model);
+
+		$this->assertSame('A', (string)$result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', (string)$result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
 	}
 
 	public function testResolveSimpleArrays(): void

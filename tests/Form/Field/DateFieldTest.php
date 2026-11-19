@@ -248,6 +248,15 @@ class DateFieldTest extends TestCase
 		$this->assertSame($now, $field->default());
 	}
 
+	public function testTimeWithTimes(): void
+	{
+		$field = $this->field('date', [
+			'time' => ['times' => false]
+		]);
+
+		$this->assertFalse($field->time()['times']);
+	}
+
 	public function testToStoredValue(): void
 	{
 		// default value

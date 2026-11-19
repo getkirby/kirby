@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Form\Mixin;
 use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -43,8 +44,13 @@ class StructureField extends InputField implements ProvidesNestedForm
 			$value = $value->toArray(fn ($row) => $row->content()->toArray());
 		}
 
+		$rows = A::filter(
+			Data::decode($value, 'yaml'),
+			fn ($row) => is_array($row)
+		);
+
 		return parent::fill(
-			value: Data::decode($value, 'yaml')
+			value: array_values($rows)
 		);
 	}
 
@@ -102,15 +108,6 @@ class StructureField extends InputField implements ProvidesNestedForm
 		return $data;
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'min',
-			'max',
-			'structure' => fn ($value) => $this->validateRows($value)
-		];
-	}
-
 	protected function validateRows(array $value): void
 	{
 		if ($value === []) {
@@ -134,5 +131,14 @@ class StructureField extends InputField implements ProvidesNestedForm
 				}
 			}
 		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'min',
+			'max',
+			'structure' => fn ($value) => $this->validateRows($value)
+		];
 	}
 }

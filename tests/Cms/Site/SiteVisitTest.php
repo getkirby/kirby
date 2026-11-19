@@ -11,38 +11,6 @@ class SiteVisitTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteVisit';
 
-	public function testVisitWithPageObject(): void
-	{
-		$site = new Site();
-		$page = $site->visit(new Page(['slug' => 'test']));
-
-		$this->assertIsPage('test', $site->page());
-		$this->assertIsPage($page, $site->page());
-	}
-
-	public function testVisitWithId(): void
-	{
-		$site = new Site([
-			'children' => [
-				['slug' => 'test']
-			]
-		]);
-
-		$page = $site->visit('test');
-
-		$this->assertIsPage('test', $site->page());
-		$this->assertIsPage($page, $site->page());
-	}
-
-	public function testVisitInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid page object');
-
-		$site = new Site();
-		$site->visit('nonexists');
-	}
-
 	public static function visitMultilangProvider(): array
 	{
 		return [
@@ -94,6 +62,29 @@ class SiteVisitTest extends ModelTestCase
 		$this->assertSame($pageTitle, $page->title()->value());
 	}
 
+	public function testVisitInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid page object');
+
+		$site = new Site();
+		$site->visit('nonexists');
+	}
+
+	public function testVisitWithId(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'test']
+			]
+		]);
+
+		$page = $site->visit('test');
+
+		$this->assertIsPage('test', $site->page());
+		$this->assertIsPage($page, $site->page());
+	}
+
 	public function testVisitWithoutLanguageCode(): void
 	{
 		// create app with locale option
@@ -121,5 +112,14 @@ class SiteVisitTest extends ModelTestCase
 				['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']
 			)
 		);
+	}
+
+	public function testVisitWithPageObject(): void
+	{
+		$site = new Site();
+		$page = $site->visit(new Page(['slug' => 'test']));
+
+		$this->assertIsPage('test', $site->page());
+		$this->assertIsPage($page, $site->page());
 	}
 }

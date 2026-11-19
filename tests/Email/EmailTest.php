@@ -15,118 +15,6 @@ class EmailTest extends TestCase
 		return parent::_email($props, $mailer);
 	}
 
-	public function testProperties(): void
-	{
-		$email = $this->_email([
-			'from' => $from = 'no-reply@supercompany.com',
-			'fromName' => $fromName = 'Super Company NoReply',
-			'to' => $to = 'someone@gmail.com',
-			'replyTo' => $replyTo = 'reply@supercompany.com',
-			'replyToName' => $replyToName = 'Super Company Reply',
-			'subject' => $subject = 'Thank you for your contact request',
-			'body' => $body = 'We will never reply',
-			'cc' => $cc = [
-				'marketing@supercompany.com',
-				'sales@supercompany.com' => 'Super Company Sales'
-			],
-			'bcc' => $cc
-		]);
-
-		$expectedCc = [
-			'marketing@supercompany.com' => null,
-			'sales@supercompany.com'     => 'Super Company Sales'
-		];
-
-		$this->assertSame($from, $email->from());
-		$this->assertSame($fromName, $email->fromName());
-		$this->assertSame([$to => null], $email->to());
-		$this->assertSame($replyTo, $email->replyTo());
-		$this->assertSame($replyToName, $email->replyToName());
-		$this->assertSame($subject, $email->subject());
-		$this->assertSame($expectedCc, $email->cc());
-		$this->assertSame($expectedCc, $email->bcc());
-
-		$this->assertInstanceOf(Body::class, $email->body());
-		$this->assertSame($body, $email->body()->text());
-		$this->assertSame('', $email->body()->html());
-		$this->assertFalse($email->isHtml());
-
-		$this->assertSame(['type' => 'mail'], $email->transport());
-	}
-
-	public function testRequiredProperty(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('The property "from" is required');
-
-		$this->_email(['from' => null]);
-	}
-
-	public function testOptionalAddresses(): void
-	{
-		$email = $this->_email([
-			'replyTo' => null,
-			'cc' => null,
-			'bcc' => null,
-		]);
-
-		$this->assertSame('', $email->replyTo());
-		$this->assertSame([], $email->cc());
-		$this->assertSame([], $email->bcc());
-	}
-
-	public function testInvalidAddress(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('"not-valid" is not a valid email address');
-
-		$this->_email([
-			'to' => [
-				'valid@company.com',
-				'not-valid'
-			]
-		]);
-	}
-
-	public function testIsSent(): void
-	{
-		$email = $this->_email([]);
-		$this->assertFalse($email->isSent());
-		$email->send();
-		$this->assertTrue($email->isSent());
-	}
-
-	public function testBody(): void
-	{
-		$email = $this->_email([
-			'body' => $body = [
-				'text' => 'Plain text, yeah!',
-				'html' => 'HTML is even <b>better</b>'
-			]
-		]);
-
-		$this->assertInstanceOf(Body::class, $email->body());
-		$this->assertSame($body['text'], $email->body()->text());
-		$this->assertSame($body['html'], $email->body()->html());
-
-		$this->assertTrue($email->isHtml());
-	}
-
-	public function testBodyHtmlOnly(): void
-	{
-		$email = $this->_email([
-			'body' => $body = [
-				'html' => 'HTML is even <b>better</b>'
-			]
-		]);
-
-		$this->assertInstanceOf(Body::class, $email->body());
-		$this->assertSame('', $email->body()->text());
-		$this->assertSame($body['html'], $email->body()->html());
-
-		$this->assertTrue($email->isHtml());
-	}
-
 	public function testAttachments(): void
 	{
 		$email = $this->_email([
@@ -217,5 +105,117 @@ class EmailTest extends TestCase
 		$this->assertInstanceOf('Closure', $mail->beforeSend());
 
 		$mail->send(true);
+	}
+
+	public function testBody(): void
+	{
+		$email = $this->_email([
+			'body' => $body = [
+				'text' => 'Plain text, yeah!',
+				'html' => 'HTML is even <b>better</b>'
+			]
+		]);
+
+		$this->assertInstanceOf(Body::class, $email->body());
+		$this->assertSame($body['text'], $email->body()->text());
+		$this->assertSame($body['html'], $email->body()->html());
+
+		$this->assertTrue($email->isHtml());
+	}
+
+	public function testBodyHtmlOnly(): void
+	{
+		$email = $this->_email([
+			'body' => $body = [
+				'html' => 'HTML is even <b>better</b>'
+			]
+		]);
+
+		$this->assertInstanceOf(Body::class, $email->body());
+		$this->assertSame('', $email->body()->text());
+		$this->assertSame($body['html'], $email->body()->html());
+
+		$this->assertTrue($email->isHtml());
+	}
+
+	public function testInvalidAddress(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('"not-valid" is not a valid email address');
+
+		$this->_email([
+			'to' => [
+				'valid@company.com',
+				'not-valid'
+			]
+		]);
+	}
+
+	public function testIsSent(): void
+	{
+		$email = $this->_email([]);
+		$this->assertFalse($email->isSent());
+		$email->send();
+		$this->assertTrue($email->isSent());
+	}
+
+	public function testOptionalAddresses(): void
+	{
+		$email = $this->_email([
+			'replyTo' => null,
+			'cc' => null,
+			'bcc' => null,
+		]);
+
+		$this->assertSame('', $email->replyTo());
+		$this->assertSame([], $email->cc());
+		$this->assertSame([], $email->bcc());
+	}
+
+	public function testProperties(): void
+	{
+		$email = $this->_email([
+			'from' => $from = 'no-reply@supercompany.com',
+			'fromName' => $fromName = 'Super Company NoReply',
+			'to' => $to = 'someone@gmail.com',
+			'replyTo' => $replyTo = 'reply@supercompany.com',
+			'replyToName' => $replyToName = 'Super Company Reply',
+			'subject' => $subject = 'Thank you for your contact request',
+			'body' => $body = 'We will never reply',
+			'cc' => $cc = [
+				'marketing@supercompany.com',
+				'sales@supercompany.com' => 'Super Company Sales'
+			],
+			'bcc' => $cc
+		]);
+
+		$expectedCc = [
+			'marketing@supercompany.com' => null,
+			'sales@supercompany.com'     => 'Super Company Sales'
+		];
+
+		$this->assertSame($from, $email->from());
+		$this->assertSame($fromName, $email->fromName());
+		$this->assertSame([$to => null], $email->to());
+		$this->assertSame($replyTo, $email->replyTo());
+		$this->assertSame($replyToName, $email->replyToName());
+		$this->assertSame($subject, $email->subject());
+		$this->assertSame($expectedCc, $email->cc());
+		$this->assertSame($expectedCc, $email->bcc());
+
+		$this->assertInstanceOf(Body::class, $email->body());
+		$this->assertSame($body, $email->body()->text());
+		$this->assertSame('', $email->body()->html());
+		$this->assertFalse($email->isHtml());
+
+		$this->assertSame(['type' => 'mail'], $email->transport());
+	}
+
+	public function testRequiredProperty(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('The property "from" is required');
+
+		$this->_email(['from' => null]);
 	}
 }

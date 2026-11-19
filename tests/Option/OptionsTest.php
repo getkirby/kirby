@@ -47,6 +47,33 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text['en']);
 	}
 
+	public function testFactoryResolve(): void
+	{
+		$model = new Page(['slug' => 'test']);
+
+		// resolves by default
+		$options = Options::factory([
+			['value' => 'a', 'text' => '{{ page.slug }}'],
+			['value' => 'b', 'text' => '{{ page.slug }}'],
+		]);
+
+		$result = $options->render($model);
+
+		$this->assertSame('test', (string)$result[0]['text']);
+		$this->assertSame('test', (string)$result[1]['text']);
+
+		// disabled resolving
+		$options = Options::factory([
+			['value' => 'a', 'text' => '{{ page.slug }}'],
+			['value' => 'b', 'text' => '{{ page.slug }}'],
+		], resolve: false);
+
+		$result = $options->render($model);
+
+		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[1]['text']);
+	}
+
 	public function testFactoryWithAssocArray(): void
 	{
 		$options = Options::factory([
@@ -101,33 +128,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->value);
 		$this->assertSame('Option B', $options->last()->text['en']);
 		$this->assertSame('Variante B', $options->last()->text['de']);
-	}
-
-	public function testFactoryResolve(): void
-	{
-		$model = new Page(['slug' => 'test']);
-
-		// resolves by default
-		$options = Options::factory([
-			['value' => 'a', 'text' => '{{ page.slug }}'],
-			['value' => 'b', 'text' => '{{ page.slug }}'],
-		]);
-
-		$result = $options->render($model);
-
-		$this->assertSame('test', (string)$result[0]['text']);
-		$this->assertSame('test', (string)$result[1]['text']);
-
-		// disabled resolving
-		$options = Options::factory([
-			['value' => 'a', 'text' => '{{ page.slug }}'],
-			['value' => 'b', 'text' => '{{ page.slug }}'],
-		], resolve: false);
-
-		$result = $options->render($model);
-
-		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
-		$this->assertSame('{{ page.slug }}', (string)$result[1]['text']);
 	}
 
 	public function testRender(): void

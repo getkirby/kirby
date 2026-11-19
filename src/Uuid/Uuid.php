@@ -106,6 +106,14 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
+	 * @see self::toString()
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
+	/**
 	 * Removes the current UUID from cache
 	 */
 	public function clear(): bool
@@ -447,14 +455,6 @@ abstract class Uuid implements Stringable
 		}
 
 		return $url;
-	}
-
-	/**
-	 * @see self::toString()
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 
 	/**

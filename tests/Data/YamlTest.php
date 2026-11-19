@@ -12,6 +12,22 @@ use stdClass;
 #[CoversClass(YamlSpyc::class)]
 class YamlTest extends TestCase
 {
+	public function testDecodeInvalid1(): void
+	{
+		// pass invalid object
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
+		Yaml::decode(new stdClass());
+	}
+
+	public function testDecodeInvalid2(): void
+	{
+		// pass invalid int
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
+		Yaml::decode(1);
+	}
+
 	public function testEncodeDecode(): void
 	{
 		$array = [
@@ -33,22 +49,6 @@ class YamlTest extends TestCase
 
 		$this->assertSame([], Yaml::decode(null));
 		$this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
-	}
-
-	public function testDecodeInvalid1(): void
-	{
-		// pass invalid object
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
-		Yaml::decode(new stdClass());
-	}
-
-	public function testDecodeInvalid2(): void
-	{
-		// pass invalid int
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid YAML data; please pass a string');
-		Yaml::decode(1);
 	}
 
 	public function testEncodeFloat(): void

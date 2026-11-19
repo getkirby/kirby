@@ -50,30 +50,6 @@ class PasswordMethodTest extends TestCase
 		]], $login);
 	}
 
-	public function testAuthenticateWithoutEmail(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Missing email');
-
-		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth, type: 'password');
-		$method->authenticate(null, 'secret123');
-	}
-
-	public function testForm(): void
-	{
-		$auth   = $this->createStub(Auth::class);
-		$method = new PasswordMethod(auth: $auth, type: 'password');
-		$form   = $method->form();
-
-		$this->assertInstanceOf(Component::class, $form);
-
-		$rendered = $form->render();
-		$this->assertSame('k-login-password-method-form', $rendered['component']);
-		$this->assertSame('key', $rendered['props']['submit']['icon']);
-		$this->assertSame('Log in', $rendered['props']['submit']['label']);
-	}
-
 	public function testAuthenticateWith2FA(): void
 	{
 		$status       = $this->createStub(Status::class);
@@ -98,6 +74,26 @@ class PasswordMethodTest extends TestCase
 		$this->assertSame($status, $result);
 		$this->assertSame(['marge@simpsons.com', 'springfield123'], $validate);
 		$this->assertSame(['marge@simpsons.com', false, '2fa'], $challenge);
+	}
+
+	public function testAuthenticateWithoutEmail(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Missing email');
+
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
+		$method->authenticate(null, 'secret123');
+	}
+
+	public function testAuthenticateWithoutPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Missing password');
+
+		$auth   = $this->createStub(Auth::class);
+		$method = new PasswordMethod(auth: $auth, type: 'password');
+		$method->authenticate('marge@simpsons.com');
 	}
 
 	public function testAuthenticateWithoutSecondFactor(): void
@@ -169,14 +165,18 @@ class PasswordMethodTest extends TestCase
 		$this->assertSame(['marge@simpsons.com', false, '2fa'], $challenge);
 	}
 
-	public function testAuthenticateWithoutPassword(): void
+	public function testForm(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Missing password');
-
 		$auth   = $this->createStub(Auth::class);
 		$method = new PasswordMethod(auth: $auth, type: 'password');
-		$method->authenticate('marge@simpsons.com');
+		$form   = $method->form();
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-password-method-form', $rendered['component']);
+		$this->assertSame('key', $rendered['props']['submit']['icon']);
+		$this->assertSame('Log in', $rendered['props']['submit']['label']);
 	}
 
 	public function testIcon(): void

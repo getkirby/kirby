@@ -24,6 +24,17 @@ class View implements Stringable
 	}
 
 	/**
+	 * Magic string converter to enable
+	 * converting view objects to string
+	 *
+	 * @see self::render()
+	 */
+	public function __toString(): string
+	{
+		return $this->render();
+	}
+
+	/**
 	 * Returns the view's data array without globals
 	 */
 	public function data(): array
@@ -71,17 +82,6 @@ class View implements Stringable
 	 * @see self::render()
 	 */
 	public function toString(): string
-	{
-		return $this->render();
-	}
-
-	/**
-	 * Magic string converter to enable
-	 * converting view objects to string
-	 *
-	 * @see self::render()
-	 */
-	public function __toString(): string
 	{
 		return $this->render();
 	}

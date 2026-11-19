@@ -4,7 +4,7 @@ namespace Kirby\Toolkit;
 
 class CollectionPaginatorTest extends TestCase
 {
-	public function testSlice(): void
+	public function testChunk(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',
@@ -14,21 +14,9 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertSame('drei', $collection->slice(2)->first());
-		$this->assertSame('vier', $collection->slice(2, 2)->last());
-	}
-
-	public function testSliceNotReally(): void
-	{
-		$collection = new Collection([
-			'one'   => 'eins',
-			'two'   => 'zwei',
-			'three' => 'drei',
-			'four'  => 'vier',
-			'five'  => 'fünf'
-		]);
-
-		$this->assertSame($collection, $collection->slice());
+		$this->assertCount(3, $collection->chunk(2));
+		$this->assertSame('eins', $collection->chunk(2)->first()->first());
+		$this->assertSame('fünf', $collection->chunk(2)->last()->first());
 	}
 
 	public function testLimit(): void
@@ -84,7 +72,7 @@ class CollectionPaginatorTest extends TestCase
 		$this->assertSame(3, $collection->pagination()->page());
 	}
 
-	public function testChunk(): void
+	public function testSlice(): void
 	{
 		$collection = new Collection([
 			'one'   => 'eins',
@@ -94,8 +82,20 @@ class CollectionPaginatorTest extends TestCase
 			'five'  => 'fünf'
 		]);
 
-		$this->assertCount(3, $collection->chunk(2));
-		$this->assertSame('eins', $collection->chunk(2)->first()->first());
-		$this->assertSame('fünf', $collection->chunk(2)->last()->first());
+		$this->assertSame('drei', $collection->slice(2)->first());
+		$this->assertSame('vier', $collection->slice(2, 2)->last());
+	}
+
+	public function testSliceNotReally(): void
+	{
+		$collection = new Collection([
+			'one'   => 'eins',
+			'two'   => 'zwei',
+			'three' => 'drei',
+			'four'  => 'vier',
+			'five'  => 'fünf'
+		]);
+
+		$this->assertSame($collection, $collection->slice());
 	}
 }

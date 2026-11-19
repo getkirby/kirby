@@ -108,39 +108,12 @@ class DefaultVisitorTest extends TestCase
 		$this->assertFalse($visitor->comparison(3, '>=', 5));
 	}
 
-	public function testComparisonWithStrings(): void
+	public function testComparisonInvalidOperator(): void
 	{
 		$visitor = new DefaultVisitor();
-
-		$this->assertTrue($visitor->comparison('abc', '==', 'abc'));
-		$this->assertTrue($visitor->comparison('abc', '===', 'abc'));
-		$this->assertFalse($visitor->comparison('abc', '==', 'def'));
-		$this->assertTrue($visitor->comparison('abc', '<', 'def'));
-		$this->assertTrue($visitor->comparison('abc', '<=', 'abc'));
-		$this->assertTrue($visitor->comparison('def', '>', 'abc'));
-		$this->assertTrue($visitor->comparison('abc', '>=', 'abc'));
-	}
-
-	public function testComparisonWithNull(): void
-	{
-		$visitor = new DefaultVisitor();
-
-		$this->assertTrue($visitor->comparison(null, '==', null));
-		$this->assertTrue($visitor->comparison(null, '===', null));
-		$this->assertTrue($visitor->comparison(null, '==', 0)); // null == 0 is true in PHP
-		$this->assertFalse($visitor->comparison(null, '!=', 0)); // null != 0 is false in PHP
-		$this->assertTrue($visitor->comparison(null, '!==', 0)); // null !== 0 is true in PHP
-	}
-
-	public function testComparisonWithBooleans(): void
-	{
-		$visitor = new DefaultVisitor();
-
-		$this->assertTrue($visitor->comparison(true, '==', true));
-		$this->assertTrue($visitor->comparison(true, '===', true));
-		$this->assertFalse($visitor->comparison(true, '==', false));
-		$this->assertTrue($visitor->comparison(true, '!=', false));
-		$this->assertTrue($visitor->comparison(true, '!==', false));
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Unknown comparison operator: <=>');
+		$visitor->comparison(5, '<=>', 6);
 	}
 
 	public function testComparisonWithArrays(): void
@@ -157,12 +130,39 @@ class DefaultVisitorTest extends TestCase
 		$this->assertTrue($visitor->comparison($arr1, '!=', $arr3));
 	}
 
-	public function testComparisonInvalidOperator(): void
+	public function testComparisonWithBooleans(): void
 	{
 		$visitor = new DefaultVisitor();
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Unknown comparison operator: <=>');
-		$visitor->comparison(5, '<=>', 6);
+
+		$this->assertTrue($visitor->comparison(true, '==', true));
+		$this->assertTrue($visitor->comparison(true, '===', true));
+		$this->assertFalse($visitor->comparison(true, '==', false));
+		$this->assertTrue($visitor->comparison(true, '!=', false));
+		$this->assertTrue($visitor->comparison(true, '!==', false));
+	}
+
+	public function testComparisonWithNull(): void
+	{
+		$visitor = new DefaultVisitor();
+
+		$this->assertTrue($visitor->comparison(null, '==', null));
+		$this->assertTrue($visitor->comparison(null, '===', null));
+		$this->assertTrue($visitor->comparison(null, '==', 0)); // null == 0 is true in PHP
+		$this->assertFalse($visitor->comparison(null, '!=', 0)); // null != 0 is false in PHP
+		$this->assertTrue($visitor->comparison(null, '!==', 0)); // null !== 0 is true in PHP
+	}
+
+	public function testComparisonWithStrings(): void
+	{
+		$visitor = new DefaultVisitor();
+
+		$this->assertTrue($visitor->comparison('abc', '==', 'abc'));
+		$this->assertTrue($visitor->comparison('abc', '===', 'abc'));
+		$this->assertFalse($visitor->comparison('abc', '==', 'def'));
+		$this->assertTrue($visitor->comparison('abc', '<', 'def'));
+		$this->assertTrue($visitor->comparison('abc', '<=', 'abc'));
+		$this->assertTrue($visitor->comparison('def', '>', 'abc'));
+		$this->assertTrue($visitor->comparison('abc', '>=', 'abc'));
 	}
 
 	public function testGlobalFunction(): void

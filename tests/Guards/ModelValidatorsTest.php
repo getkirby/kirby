@@ -29,14 +29,6 @@ class ModelValidatorsTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.ModelValidators';
 
-	protected function validators(): ExtendedModelValidators
-	{
-		return new ExtendedModelValidators(
-			model: new Page(['slug' => 'test']),
-			user: new User(['id' => 'test'])
-		);
-	}
-
 	public function testEnsure(): void
 	{
 		$this->assertNull($this->validators()->ensure('changeTitle', 'New title'));
@@ -66,16 +58,6 @@ class ModelValidatorsTest extends ModelTestCase
 		$method->invoke($validators, 'page.slug.invalid');
 	}
 
-	public function testMay(): void
-	{
-		$this->assertTrue($this->validators()->may('changeTitle', 'New title'));
-	}
-
-	public function testMayWithFailingValidator(): void
-	{
-		$this->assertFalse($this->validators()->may('changeTitle', ''));
-	}
-
 	public function testErrorWithData(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -88,6 +70,24 @@ class ModelValidatorsTest extends ModelTestCase
 			$validators,
 			key: 'page.slug.maxlength',
 			data: ['length' => 10]
+		);
+	}
+
+	public function testMay(): void
+	{
+		$this->assertTrue($this->validators()->may('changeTitle', 'New title'));
+	}
+
+	public function testMayWithFailingValidator(): void
+	{
+		$this->assertFalse($this->validators()->may('changeTitle', ''));
+	}
+
+	protected function validators(): ExtendedModelValidators
+	{
+		return new ExtendedModelValidators(
+			model: new Page(['slug' => 'test']),
+			user: new User(['id' => 'test'])
 		);
 	}
 }

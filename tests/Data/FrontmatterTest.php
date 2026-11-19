@@ -16,45 +16,6 @@ class FrontmatterTest extends TestCase
 		$this->assertSame([], Frontmatter::decode(''));
 	}
 
-	public function testDecodeWithArray(): void
-	{
-		$this->assertSame(
-			['this is' => 'an array'],
-			Frontmatter::decode(['this is' => 'an array'])
-		);
-	}
-
-	public function testDecodeStandardFrontmatter(): void
-	{
-		$string = "---\ntitle: My Title\nuuid: abc123\n---\n";
-
-		$this->assertSame([
-			'title' => 'My Title',
-			'uuid'  => 'abc123'
-		], Frontmatter::decode($string));
-	}
-
-	public function testDecodeWithBody(): void
-	{
-		$string = "---\ntitle: My Title\n---\nThis is the body text.\nIt can contain **Markdown**.\n";
-
-		$this->assertSame([
-			'title' => 'My Title',
-			'text'  => "This is the body text.\nIt can contain **Markdown**."
-		], Frontmatter::decode($string));
-	}
-
-	public function testDecodeWithBodyAndTextField(): void
-	{
-		// body after closing --- wins over text field in YAML block
-		$string = "---\ntitle: My Title\ntext: from yaml\n---\nThis is the body.\n";
-
-		$this->assertSame([
-			'title' => 'My Title',
-			'text'  => 'This is the body.'
-		], Frontmatter::decode($string));
-	}
-
 	public function testDecodeEmptyBody(): void
 	{
 		// empty body should not produce a text key
@@ -97,6 +58,45 @@ class FrontmatterTest extends TestCase
 		$this->expectExceptionMessage('Invalid frontmatter data; please pass a string');
 
 		Frontmatter::decode(new stdClass());
+	}
+
+	public function testDecodeStandardFrontmatter(): void
+	{
+		$string = "---\ntitle: My Title\nuuid: abc123\n---\n";
+
+		$this->assertSame([
+			'title' => 'My Title',
+			'uuid'  => 'abc123'
+		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeWithArray(): void
+	{
+		$this->assertSame(
+			['this is' => 'an array'],
+			Frontmatter::decode(['this is' => 'an array'])
+		);
+	}
+
+	public function testDecodeWithBody(): void
+	{
+		$string = "---\ntitle: My Title\n---\nThis is the body text.\nIt can contain **Markdown**.\n";
+
+		$this->assertSame([
+			'title' => 'My Title',
+			'text'  => "This is the body text.\nIt can contain **Markdown**."
+		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeWithBodyAndTextField(): void
+	{
+		// body after closing --- wins over text field in YAML block
+		$string = "---\ntitle: My Title\ntext: from yaml\n---\nThis is the body.\n";
+
+		$this->assertSame([
+			'title' => 'My Title',
+			'text'  => 'This is the body.'
+		], Frontmatter::decode($string));
 	}
 
 	public function testDecodeWithWhitespaceOnlyBody(): void

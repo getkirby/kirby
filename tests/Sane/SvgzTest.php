@@ -13,6 +13,11 @@ class SvgzTest extends TestCase
 
 	protected static string $type = 'svgz';
 
+	public static function allowedProvider(): array
+	{
+		return static::fixtureList('allowed', 'svgz');
+	}
+
 	#[DataProvider('allowedProvider')]
 	public function testAllowed(string $file): void
 	{
@@ -26,25 +31,6 @@ class SvgzTest extends TestCase
 
 		$this->assertIsString($decoded);
 		$this->assertSame(gzdecode($input), gzdecode($sanitized));
-	}
-
-	public static function allowedProvider(): array
-	{
-		return static::fixtureList('allowed', 'svgz');
-	}
-
-	#[DataProvider('invalidProvider')]
-	public function testInvalid(string $file): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Could not uncompress gzip data');
-
-		Svgz::validateFile($this->fixture($file));
-	}
-
-	public static function invalidProvider(): array
-	{
-		return static::fixtureList('invalid', 'svgz');
 	}
 
 	public function testDisallowedDoctypeEntityAttack(): void
@@ -71,5 +57,19 @@ class SvgzTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): The URL points outside of the site index URL');
 		Svgz::validateFile($fixtureZ);
+	}
+
+	public static function invalidProvider(): array
+	{
+		return static::fixtureList('invalid', 'svgz');
+	}
+
+	#[DataProvider('invalidProvider')]
+	public function testInvalid(string $file): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Could not uncompress gzip data');
+
+		Svgz::validateFile($this->fixture($file));
 	}
 }

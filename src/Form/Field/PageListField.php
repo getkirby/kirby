@@ -28,8 +28,13 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 {
 	public const string TYPE = 'pages';
 
-	#[Prop(export: false)]
-	protected array|string|null $text = '{{ model.title }}';
+	/**
+	 * Filters the list by one or more blueprints, which are also
+	 * the options for new pages. With `except`, all other
+	 * blueprints are listed and offered instead.
+	 */
+	#[Prop(aliases: ['templates', 'template'], export: false)]
+	protected array|string|null $blueprints = null;
 
 	/**
 	 * Blueprints that may be added or `false` to disable page creation
@@ -44,18 +49,13 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 	protected string $status = 'all';
 
 	/**
-	 * Filters the list by one or more blueprints, which are also
-	 * the options for new pages. With `except`, all other
-	 * blueprints are listed and offered instead.
-	 */
-	#[Prop(aliases: ['templates', 'template'], export: false)]
-	protected array|string|null $blueprints = null;
-
-	/**
 	 * Alias for the `except` list of the `blueprints` option
 	 */
 	#[Prop(export: false)]
 	protected array|string $templatesIgnore = [];
+
+	#[Prop(export: false)]
+	protected array|string|null $text = '{{ model.title }}';
 
 	/**
 	 * Accepts pages with the blueprints from `create`,

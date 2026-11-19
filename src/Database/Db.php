@@ -14,6 +14,11 @@ use Kirby\Toolkit\Config;
 class Db
 {
 	/**
+	 * The singleton Database object
+	 */
+	public static Database|null $connection = null;
+
+	/**
 	 * Query shortcuts
 	 *
 	 * @var array<string, \Closure>
@@ -21,9 +26,29 @@ class Db
 	public static array $queries = [];
 
 	/**
-	 * The singleton Database object
+	 * Magic calls for other static Db methods are
+	 * redirected to either a predefined query or
+	 * the respective method of the Database object
+	 *
+	 * @throws InvalidArgumentException
 	 */
-	public static Database|null $connection = null;
+	public static function __callStatic(string $method, array $arguments)
+	{
+		if (isset(static::$queries[$method]) === true) {
+			return (static::$queries[$method])(...$arguments);
+		}
+
+		if (
+			static::$connection !== null &&
+			method_exists(static::$connection, $method) === true
+		) {
+			return static::$connection->$method(...$arguments);
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Invalid static Db method: ' . $method
+		);
+	}
 
 	/**
 	 * (Re)connect the database
@@ -62,14 +87,13 @@ class Db
 	}
 
 	/**
-	 * Sets the current table which should be queried. Returns a
-	 * Query object, which can be used to build a full query for
-	 * that table.
+	 * Executes a raw SQL query which expects
+	 * no set of results (i.e. update, insert, delete)
 	 */
-	public static function table(string $table): Query
+	public static function execute(string $query, array $bindings = []): bool
 	{
 		$db = static::connect();
-		return $db->table($table);
+		return $db->execute($query, $bindings);
 	}
 
 	/**
@@ -82,38 +106,14 @@ class Db
 	}
 
 	/**
-	 * Executes a raw SQL query which expects
-	 * no set of results (i.e. update, insert, delete)
+	 * Sets the current table which should be queried. Returns a
+	 * Query object, which can be used to build a full query for
+	 * that table.
 	 */
-	public static function execute(string $query, array $bindings = []): bool
+	public static function table(string $table): Query
 	{
 		$db = static::connect();
-		return $db->execute($query, $bindings);
-	}
-
-	/**
-	 * Magic calls for other static Db methods are
-	 * redirected to either a predefined query or
-	 * the respective method of the Database object
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	public static function __callStatic(string $method, array $arguments)
-	{
-		if (isset(static::$queries[$method]) === true) {
-			return (static::$queries[$method])(...$arguments);
-		}
-
-		if (
-			static::$connection !== null &&
-			method_exists(static::$connection, $method) === true
-		) {
-			return static::$connection->$method(...$arguments);
-		}
-
-		throw new InvalidArgumentException(
-			message: 'Invalid static Db method: ' . $method
-		);
+		return $db->table($table);
 	}
 }
 

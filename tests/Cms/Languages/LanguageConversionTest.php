@@ -21,50 +21,6 @@ class LanguageConversionTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testConvertFromSingleLanguageToMultiLanguage(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
-		// create the page model
-		Data::write($app->root('content') . '/test/test.txt', [
-			'title' => 'Title'
-		]);
-
-		$this->assertCount(0, $app->languages());
-		$this->assertFalse($app->multilang());
-
-		// get the page model
-		$page = $app->page('test');
-
-		// and check if the content is loadable
-		$this->assertSame('Title', $page->content()->title()->value());
-
-		// create a new Language to switch to multi-language mode
-		$app->impersonate('kirby', function () {
-			Language::create([
-				'code' => 'en',
-			]);
-		});
-
-		// make sure that Kirby actually switched to multi-language mode
-		$this->assertCount(1, $app->languages());
-		$this->assertTrue($app->multilang());
-
-		// the content file should now have been moved to .en
-		$this->assertFileExists($page->root() . '/test.en.txt');
-		$this->assertFileDoesNotExist($page->root() . '/test.txt');
-
-		// the content should still be loadable for the page
-		$this->assertSame('Title', $page->content()->title()->value());
-		$this->assertSame('Title', $page->content('en')->title()->value());
-
-		$this->assertSame('Title', Data::read($page->root() . '/test.en.txt')['title']);
-	}
-
 	public function testConvertFromMultiLanguageToSingleLanguage(): void
 	{
 		$app = new App([
@@ -130,6 +86,50 @@ class LanguageConversionTest extends TestCase
 		// the page should still load the english content
 		$this->assertSame('English Title', $page->content()->title()->value());
 		$this->assertSame('English Title', Data::read($page->root() . '/test.txt')['title']);
+	}
+
+	public function testConvertFromSingleLanguageToMultiLanguage(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		// create the page model
+		Data::write($app->root('content') . '/test/test.txt', [
+			'title' => 'Title'
+		]);
+
+		$this->assertCount(0, $app->languages());
+		$this->assertFalse($app->multilang());
+
+		// get the page model
+		$page = $app->page('test');
+
+		// and check if the content is loadable
+		$this->assertSame('Title', $page->content()->title()->value());
+
+		// create a new Language to switch to multi-language mode
+		$app->impersonate('kirby', function () {
+			Language::create([
+				'code' => 'en',
+			]);
+		});
+
+		// make sure that Kirby actually switched to multi-language mode
+		$this->assertCount(1, $app->languages());
+		$this->assertTrue($app->multilang());
+
+		// the content file should now have been moved to .en
+		$this->assertFileExists($page->root() . '/test.en.txt');
+		$this->assertFileDoesNotExist($page->root() . '/test.txt');
+
+		// the content should still be loadable for the page
+		$this->assertSame('Title', $page->content()->title()->value());
+		$this->assertSame('Title', $page->content('en')->title()->value());
+
+		$this->assertSame('Title', Data::read($page->root() . '/test.en.txt')['title']);
 	}
 
 	public function testDeleteLanguageInLastPosition(): void

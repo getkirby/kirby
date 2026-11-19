@@ -21,25 +21,12 @@ use RuntimeException;
 class DummyChallenge extends Challenge
 {
 	public static bool $available = true;
-	public static bool $enabled = true;
-	public static bool $singleUse = false;
 	public static array $created  = [];
-	public static array $verified = [];
+	public static bool $enabled = true;
 	public static Pending|null $pending = null;
+	public static bool $singleUse = false;
 	public static \Throwable|null $throw = null;
-
-	public static function isEnabled(
-		Auth $auth,
-		string $type,
-		array $options = []
-	): bool {
-		return static::$enabled;
-	}
-
-	public function isSingleUse(): bool
-	{
-		return static::$singleUse;
-	}
+	public static array $verified = [];
 
 	public function create(): Pending|null
 	{
@@ -60,6 +47,19 @@ class DummyChallenge extends Challenge
 		return static::$available;
 	}
 
+	public static function isEnabled(
+		Auth $auth,
+		string $type,
+		array $options = []
+	): bool {
+		return static::$enabled;
+	}
+
+	public function isSingleUse(): bool
+	{
+		return static::$singleUse;
+	}
+
 	public function verify(mixed $input, Pending $data): bool
 	{
 		static::$verified[] = ['input' => $input, 'data' => $data->toArray()];
@@ -71,14 +71,14 @@ class DummyChallenge2 extends Challenge
 {
 	public static bool $available = true;
 
-	public function isAvailable(): bool
-	{
-		return static::$available;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
+	}
+
+	public function isAvailable(): bool
+	{
+		return static::$available;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -136,6 +136,11 @@ class ProviderChallenge extends Challenge
 {
 	public static array $checked = [];
 
+	public function create(): Pending|null
+	{
+		return null;
+	}
+
 	public static function isEnabled(
 		Auth $auth,
 		string $type,
@@ -143,11 +148,6 @@ class ProviderChallenge extends Challenge
 	): bool {
 		static::$checked[$type] = $options;
 		return $type !== 'sms-vonage';
-	}
-
-	public function create(): Pending|null
-	{
-		return null;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -390,35 +390,6 @@ class ChallengesTest extends TestCase
 		);
 	}
 
-	public function testCreateUnavailable(): void
-	{
-		DummyChallenge::$available = false;
-		$session = $this->session();
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessageIs('Could not find a suitable authentication challenge');
-
-		$this->challenges->create($session, 'marge@simpsons.com', 'login');
-	}
-
-	public static function unknownUserProvider(): array
-	{
-		return [
-			['unknown@example.com'],
-			['marge'],
-			['user://marge'],
-		];
-	}
-
-	#[DataProvider('unknownUserProvider')]
-	public function testCreateInvalidUser(string $email): void
-	{
-		$session = $this->session();
-
-		$this->expectException(UserNotFoundException::class);
-		$this->challenges->create($session, $email, 'login');
-	}
-
 	public function testCreateClearsPreviousChallengeOnFailure(): void
 	{
 		$session = $this->session();
@@ -473,6 +444,35 @@ class ChallengesTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
+	public static function unknownUserProvider(): array
+	{
+		return [
+			['unknown@example.com'],
+			['marge'],
+			['user://marge'],
+		];
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testCreateInvalidUser(string $email): void
+	{
+		$session = $this->session();
+
+		$this->expectException(UserNotFoundException::class);
+		$this->challenges->create($session, $email, 'login');
+	}
+
+	public function testCreateUnavailable(): void
+	{
+		DummyChallenge::$available = false;
+		$session = $this->session();
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessageIs('Could not find a suitable authentication challenge');
+
+		$this->challenges->create($session, 'marge@simpsons.com', 'login');
+	}
+
 	public function testCreateWithType(): void
 	{
 		// a plugin may register a class under a type
@@ -492,12 +492,10 @@ class ChallengesTest extends TestCase
 		$this->assertSame('sms', $challenges->verify($session, 'ok')->type());
 	}
 
-	public function testEnabledDefaults(): void
+	public function testEnabledClassDisabled(): void
 	{
-		$app        = new App(['roots' => ['index' => static::TMP]]);
-		$challenges = new Challenges($app->auth(), $app);
-
-		$this->assertSame(['webauthn', 'totp', 'email'], $challenges->enabled());
+		DummyChallenge::$enabled = false;
+		$this->assertSame([], $this->challenges->enabled());
 	}
 
 	public function testEnabledConfig(): void
@@ -505,10 +503,12 @@ class ChallengesTest extends TestCase
 		$this->assertSame(['dummy'], $this->challenges->enabled());
 	}
 
-	public function testEnabledClassDisabled(): void
+	public function testEnabledDefaults(): void
 	{
-		DummyChallenge::$enabled = false;
-		$this->assertSame([], $this->challenges->enabled());
+		$app        = new App(['roots' => ['index' => static::TMP]]);
+		$challenges = new Challenges($app->auth(), $app);
+
+		$this->assertSame(['webauthn', 'totp', 'email'], $challenges->enabled());
 	}
 
 	public function testEnabledPerType(): void
@@ -692,6 +692,39 @@ class ChallengesTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
+	public function testSwitchNoActiveChallenge(): void
+	{
+		$session = $this->session();
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$this->challenges->switch($session, 'dummy');
+	}
+
+	public function testSwitchRateLimited(): void
+	{
+		// switching consumes rate-limit budget even for a missing
+		// user, so that the endpoint cannot be used for enumeration
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+
+		$this->challenges = new Challenges($this->app->auth(), $this->app);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'unknown@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		// first attempt tracks the trial and keeps the session pending
+		$this->assertNull($this->challenges->switch($session, 'dummy2'));
+
+		// second attempt is blocked by the rate limit
+		$this->expectException(RateLimitException::class);
+		$this->challenges->switch($session, 'dummy2');
+	}
+
 	public function testSwitchSameType(): void
 	{
 		$session = $this->session();
@@ -751,15 +784,6 @@ class ChallengesTest extends TestCase
 		$session->set('kirby.challenge.timeout', time() - 10);
 
 		$this->expectException(ChallengeTimeoutException::class);
-
-		$this->challenges->switch($session, 'dummy');
-	}
-
-	public function testSwitchNoActiveChallenge(): void
-	{
-		$session = $this->session();
-
-		$this->expectException(InvalidArgumentException::class);
 
 		$this->challenges->switch($session, 'dummy');
 	}
@@ -835,30 +859,6 @@ class ChallengesTest extends TestCase
 		$this->assertNull($session->get('kirby.challenge.data'));
 	}
 
-	public function testSwitchRateLimited(): void
-	{
-		// switching consumes rate-limit budget even for a missing
-		// user, so that the endpoint cannot be used for enumeration
-		$this->app = $this->app->clone([
-			'options' => ['auth' => ['trials' => 1]]
-		]);
-
-		$this->challenges = new Challenges($this->app->auth(), $this->app);
-
-		$session = $this->app->session();
-		$session->set('kirby.challenge.email', 'unknown@example.com');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.type', 'dummy');
-		$session->set('kirby.challenge.timeout', time() + 1000);
-
-		// first attempt tracks the trial and keeps the session pending
-		$this->assertNull($this->challenges->switch($session, 'dummy2'));
-
-		// second attempt is blocked by the rate limit
-		$this->expectException(RateLimitException::class);
-		$this->challenges->switch($session, 'dummy2');
-	}
-
 	public function testVerify(): void
 	{
 		$session = $this->session();
@@ -872,22 +872,6 @@ class ChallengesTest extends TestCase
 
 		$this->assertInstanceOf(DummyChallenge::class, $result);
 		$this->assertSame([['input' => 'ok', 'data' => ['public' => 'x', 'secret' => 'secret']]], DummyChallenge::$verified);
-	}
-
-	public function testVerifyLifetime(): void
-	{
-		$session = $this->session();
-		$session->set('kirby.challenge.type', 'dummy');
-		$session->set('kirby.challenge.email', 'marge@simpsons.com');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.timeout', time() + 1000);
-		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
-
-		$result = $this->challenges->verify($session, 'ok');
-
-		// the challenge gets its lifetime in seconds, not the
-		// absolute expiry timestamp stored in the session
-		$this->assertSame($this->challenges->timeout(), $result->timeout());
 	}
 
 	public function testVerifyInvalid(): void
@@ -951,6 +935,30 @@ class ChallengesTest extends TestCase
 		$this->assertSame(['public' => 'x', 'secret' => 'secret'], $session->get('kirby.challenge.data'));
 	}
 
+	public function testVerifyLifetime(): void
+	{
+		$session = $this->session();
+		$session->set('kirby.challenge.type', 'dummy');
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['public' => 'x', 'secret' => 'secret']);
+
+		$result = $this->challenges->verify($session, 'ok');
+
+		// the challenge gets its lifetime in seconds, not the
+		// absolute expiry timestamp stored in the session
+		$this->assertSame($this->challenges->timeout(), $result->timeout());
+	}
+
+	public function testVerifyNoChallenge(): void
+	{
+		$session = $this->session();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->challenges->verify($session, 'ok');
+	}
+
 	public function testVerifyTimeout(): void
 	{
 		$session = $this->session();
@@ -975,14 +983,6 @@ class ChallengesTest extends TestCase
 
 		$this->expectException(UserNotFoundException::class);
 
-		$this->challenges->verify($session, 'ok');
-	}
-
-	public function testVerifyNoChallenge(): void
-	{
-		$session = $this->session();
-
-		$this->expectException(InvalidArgumentException::class);
 		$this->challenges->verify($session, 'ok');
 	}
 }

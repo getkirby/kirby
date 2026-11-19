@@ -15,8 +15,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FileGuards::class)]
 class FileGuardsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Guards.FileGuards';
 	public const FIXTURES = __DIR__ . '/../Cms/File/fixtures/files';
+	public const TMP = KIRBY_TMP_DIR . '/Guards.FileGuards';
 
 	protected function file(string $filename): File
 	{
@@ -52,11 +52,6 @@ class FileGuardsTest extends ModelTestCase
 			model: $file,
 			user: $this->user()
 		);
-	}
-
-	protected function user(): User
-	{
-		return $this->app->user() ?? new User(['id' => 'test']);
 	}
 
 	public function testChangeSort(): void
@@ -113,5 +108,10 @@ class FileGuardsTest extends ModelTestCase
 
 		$this->assertTrue($file->isIdentical($upload));
 		$this->assertNull($this->guards($file)->ensureExecutable('create', $upload));
+	}
+
+	protected function user(): User
+	{
+		return $this->app->user() ?? new User(['id' => 'test']);
 	}
 }

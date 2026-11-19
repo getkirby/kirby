@@ -23,8 +23,8 @@ use TypeError;
 
 enum Priority: int
 {
-	case Low = 1;
 	case High = 2;
+	case Low = 1;
 }
 
 enum Status: string
@@ -52,35 +52,6 @@ class FieldMethodsTest extends FieldTest
 
 		$field  = $this->field('value');
 		$field->methodDoesNotExist();
-	}
-
-	public function testFieldMethodCaseInsensitivity(): void
-	{
-		$field = $this->field('test');
-		$this->assertSame('TEST', $field->upper()->value());
-		$this->assertSame('TEST', $field->UPPER()->value());
-	}
-
-	public function testFieldMethodChained(): void
-	{
-		$field = $this->field('test')->upper()->short(3);
-		$this->assertSame('TES…', $field->value());
-	}
-
-	public function testFieldMethodImmutable(): void
-	{
-		Field::$methods = [
-			'test' => function ($field) {
-				$field->value = 'Test';
-				return $field;
-			}
-		];
-
-		$original = $this->field('Title');
-		$modified = $original->test();
-
-		$this->assertSame('Title', $original->value());
-		$this->assertSame('Test', $modified->value());
 	}
 
 	public function testCallback(): void
@@ -118,6 +89,35 @@ class FieldMethodsTest extends FieldTest
 		$expected = 'This is a long text with …';
 
 		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
+	}
+
+	public function testFieldMethodCaseInsensitivity(): void
+	{
+		$field = $this->field('test');
+		$this->assertSame('TEST', $field->upper()->value());
+		$this->assertSame('TEST', $field->UPPER()->value());
+	}
+
+	public function testFieldMethodChained(): void
+	{
+		$field = $this->field('test')->upper()->short(3);
+		$this->assertSame('TES…', $field->value());
+	}
+
+	public function testFieldMethodImmutable(): void
+	{
+		Field::$methods = [
+			'test' => function ($field) {
+				$field->value = 'Test';
+				return $field;
+			}
+		];
+
+		$original = $this->field('Title');
+		$modified = $original->test();
+
+		$this->assertSame('Title', $original->value());
+		$this->assertSame('Test', $modified->value());
 	}
 
 	public function testHtml(): void
@@ -216,14 +216,6 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($expected, $this->field($kirbytext)->kt()->value());
 	}
 
-	public function testKirbytextWithSafeMode(): void
-	{
-		$kirbytext = '<h1>Test</h1>';
-		$expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
-	}
-
 	public function testKirbytextInline(): void
 	{
 		$kirbytext = '(link: # text: Test)';
@@ -241,6 +233,14 @@ class FieldMethodsTest extends FieldTest
 		$expected  = '&lt;b&gt;Test&lt;/b&gt;';
 
 		$this->assertSame($expected, $this->field($kirbytext)->kirbytextInline(['markdown' => ['safe' => true]])->value());
+	}
+
+	public function testKirbytextWithSafeMode(): void
+	{
+		$kirbytext = '<h1>Test</h1>';
+		$expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
 	}
 
 	public function testLength(): void
@@ -602,6 +602,13 @@ class FieldMethodsTest extends FieldTest
 		$this->assertFalse($this->field('false')->bool());
 	}
 
+	public function testToDataJson(): void
+	{
+		$data = ['a', 'b'];
+
+		$this->assertSame(['a', 'b'], $this->field(json_encode($data))->toData('json'));
+	}
+
 	public function testToDataSplit(): void
 	{
 		$this->assertSame(['a', 'b'], $this->field('a, b')->toData());
@@ -617,13 +624,6 @@ class FieldMethodsTest extends FieldTest
 		$data = ['a', 'b'];
 
 		$this->assertSame(['a', 'b'], $this->field(Yaml::encode($data))->toData('yaml'));
-	}
-
-	public function testToDataJson(): void
-	{
-		$data = ['a', 'b'];
-
-		$this->assertSame(['a', 'b'], $this->field(json_encode($data))->toData('json'));
 	}
 
 	public function testToDate(): void
@@ -655,6 +655,12 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($date, $field->toDate('%d.%m.%Y'));
 	}
 
+	public function testToDateWithEmptyValueAndNoFallback(): void
+	{
+		$field = $this->field(null);
+		$this->assertNull($field->toDate('d.m.Y'));
+	}
+
 	public function testToDateWithFallback(): void
 	{
 		$field = $this->field(null);
@@ -662,12 +668,6 @@ class FieldMethodsTest extends FieldTest
 
 		$this->assertSame($date, $field->toDate('d.m.Y', '2012-12-12'));
 		$this->assertSame(date('d.m.Y'), $field->toDate('d.m.Y', 'today'));
-	}
-
-	public function testToDateWithEmptyValueAndNoFallback(): void
-	{
-		$field = $this->field(null);
-		$this->assertNull($field->toDate('d.m.Y'));
 	}
 
 	public function testToEntries(): void
@@ -727,12 +727,6 @@ class FieldMethodsTest extends FieldTest
 		$this->assertNull($this->field(null)->toEnum(Status::class));
 	}
 
-	public function testToEnumWithInvalidValue(): void
-	{
-		$this->assertNull($this->field('unlisted')->toEnum(Status::class));
-		$this->assertNull($this->field('Draft')->toEnum(Status::class));
-	}
-
 	public function testToEnumWithIntBackedEnum(): void
 	{
 		$this->assertSame(Priority::Low, $this->field('1')->toEnum(Priority::class));
@@ -750,6 +744,12 @@ class FieldMethodsTest extends FieldTest
 	{
 		$this->expectException(TypeError::class);
 		$this->field('high')->toEnum(Priority::class);
+	}
+
+	public function testToEnumWithInvalidValue(): void
+	{
+		$this->assertNull($this->field('unlisted')->toEnum(Status::class));
+		$this->assertNull($this->field('Draft')->toEnum(Status::class));
 	}
 
 	public function testToFile(): void
@@ -943,20 +943,6 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($expected, $page->title()->link());
 	}
 
-	public function testToLinkWithHref(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'content' => [
-				'title' => 'Test'
-			]
-		]);
-
-		$expected = '<a class="test" href="https://getkirby.com">Test</a>';
-
-		$this->assertSame($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
-	}
-
 	public function testToLinkWithActivePage(): void
 	{
 		$site = new Site([
@@ -974,6 +960,20 @@ class FieldMethodsTest extends FieldTest
 		$expected = '<a aria-current="page" href="/test">Test</a>';
 
 		$this->assertSame($expected, $page->title()->toLink());
+	}
+
+	public function testToLinkWithHref(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => [
+				'title' => 'Test'
+			]
+		]);
+
+		$expected = '<a class="test" href="https://getkirby.com">Test</a>';
+
+		$this->assertSame($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
 	}
 
 	public function testToObject(): void
@@ -1180,14 +1180,6 @@ class FieldMethodsTest extends FieldTest
 		$this->assertFalse($this->field(null)->toTimestamp());
 	}
 
-	public function testToUrlDefault(): void
-	{
-		$field    = $this->field('super/cool');
-		$expected = '/super/cool';
-
-		$this->assertSame($expected, $field->toUrl());
-	}
-
 	public function testToUrlCustom(): void
 	{
 		$app = new App([
@@ -1205,9 +1197,26 @@ class FieldMethodsTest extends FieldTest
 		$this->assertSame($expected, $field->toUrl());
 	}
 
+	public function testToUrlDefault(): void
+	{
+		$field    = $this->field('super/cool');
+		$expected = '/super/cool';
+
+		$this->assertSame($expected, $field->toUrl());
+	}
+
 	public function testToUrlEmpty(): void
 	{
 		$field = $this->field();
+		$this->assertNull($field->toUrl());
+	}
+
+	public function testToUrlInvalidUuid(): void
+	{
+		$field = $this->field('page://invalid');
+		$this->assertNull($field->toUrl());
+
+		$field = $this->field('file://invalid');
 		$this->assertNull($field->toUrl());
 	}
 
@@ -1247,15 +1256,6 @@ class FieldMethodsTest extends FieldTest
 		$field = $this->field('file://my-file-uuid');
 		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.jpg', $field->toUrl());
 		$this->assertSame($file->url(), $field->toUrl());
-	}
-
-	public function testToUrlInvalidUuid(): void
-	{
-		$field = $this->field('page://invalid');
-		$this->assertNull($field->toUrl());
-
-		$field = $this->field('file://invalid');
-		$this->assertNull($field->toUrl());
 	}
 
 	public function testToUser(): void

@@ -24,19 +24,6 @@ class Layout extends Item
 	protected LayoutColumns $columns;
 
 	/**
-	 * Proxy for attrs
-	 */
-	public function __call(string $method, array $args = []): mixed
-	{
-		// layout methods
-		if ($this->hasMethod($method) === true) {
-			return $this->callMethod($method, $args);
-		}
-
-		return $this->attrs()->get($method);
-	}
-
-	/**
 	 * Creates a new Layout object
 	 */
 	public function __construct(array $params = [])
@@ -50,6 +37,19 @@ class Layout extends Item
 
 		// create the attrs object
 		$this->attrs = new Content($params['attrs'] ?? [], $this->parent);
+	}
+
+	/**
+	 * Proxy for attrs
+	 */
+	public function __call(string $method, array $args = []): mixed
+	{
+		// layout methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
+
+		return $this->attrs()->get($method);
 	}
 
 	/**

@@ -64,11 +64,6 @@ class Page extends ModelWithContent
 	protected string|null $diruri = null;
 
 	/**
-	 * Draft status flag
-	 */
-	protected bool $isDraft;
-
-	/**
 	 * The Page id
 	 */
 	protected string|null $id = null;
@@ -79,6 +74,11 @@ class Page extends ModelWithContent
 	 */
 	protected Template|null $intendedTemplate = null;
 	protected Inventory|null $inventory = null;
+
+	/**
+	 * Draft status flag
+	 */
+	protected bool $isDraft;
 
 	/**
 	 * The sorting number
@@ -682,14 +682,6 @@ class Page extends ModelWithContent
 	}
 
 	/**
-	 * Checks if the page is the home page
-	 */
-	public function isHomePage(): bool
-	{
-		return $this->id() === $this->site()->homePageId();
-	}
-
-	/**
 	 * It's often required to check for the
 	 * home and error page to stop certain
 	 * actions. That's why there's a shortcut.
@@ -697,6 +689,14 @@ class Page extends ModelWithContent
 	public function isHomeOrErrorPage(): bool
 	{
 		return $this->isHomePage() === true || $this->isErrorPage() === true;
+	}
+
+	/**
+	 * Checks if the page is the home page
+	 */
+	public function isHomePage(): bool
+	{
+		return $this->id() === $this->site()->homePageId();
 	}
 
 	/**

@@ -88,20 +88,6 @@ class ApiTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testConstruct(): void
-	{
-		$api = new Api([]);
-
-		$this->assertNull($api->authentication());
-		$this->assertSame([], $api->collections());
-		$this->assertSame([], $api->data());
-		$this->assertFalse($api->debug());
-		$this->assertSame([], $api->models());
-		$this->assertSame(['query' => [], 'body' => [], 'files' => []], $api->requestData());
-		$this->assertSame('GET', $api->requestMethod());
-		$this->assertSame([], $api->routes());
-	}
-
 	public function test__call(): void
 	{
 		$api = new Api([
@@ -255,26 +241,6 @@ class ApiTest extends TestCase
 		$this->assertTrue(in_array(setlocale(LC_CTYPE, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
 	}
 
-	public function testCallLocaleSingleLang1(): void
-	{
-		$this->assertSame('C', setlocale(LC_ALL, 0));
-		$this->assertSame('something', $this->api->call('foo'));
-		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
-	}
-
-	public function testCallLocaleSingleLang2(): void
-	{
-		setlocale(LC_ALL, 'C');
-		$this->assertSame('C', setlocale(LC_ALL, 0));
-
-		$_GET['language'] = 'en';
-
-		$this->assertSame('something', $this->api->call('foo'));
-		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
-
-		$_GET = [];
-	}
-
 	public function testCallLocaleMultiLang1(): void
 	{
 		setlocale(LC_ALL, 'C');
@@ -331,6 +297,26 @@ class ApiTest extends TestCase
 			'query' => ['language' => 'de']
 		]));
 		$this->assertSame('de_AT.UTF-8', setlocale(LC_ALL, 0));
+
+		$_GET = [];
+	}
+
+	public function testCallLocaleSingleLang1(): void
+	{
+		$this->assertSame('C', setlocale(LC_ALL, 0));
+		$this->assertSame('something', $this->api->call('foo'));
+		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
+	}
+
+	public function testCallLocaleSingleLang2(): void
+	{
+		setlocale(LC_ALL, 'C');
+		$this->assertSame('C', setlocale(LC_ALL, 0));
+
+		$_GET['language'] = 'en';
+
+		$this->assertSame('something', $this->api->call('foo'));
+		$this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
 
 		$_GET = [];
 	}
@@ -507,6 +493,20 @@ class ApiTest extends TestCase
 		$api->collection('not-available', $instance);
 	}
 
+	public function testConstruct(): void
+	{
+		$api = new Api([]);
+
+		$this->assertNull($api->authentication());
+		$this->assertSame([], $api->collections());
+		$this->assertSame([], $api->data());
+		$this->assertFalse($api->debug());
+		$this->assertSame([], $api->models());
+		$this->assertSame(['query' => [], 'body' => [], 'files' => []], $api->requestData());
+		$this->assertSame('GET', $api->requestMethod());
+		$this->assertSame([], $api->routes());
+	}
+
 	public function testData(): void
 	{
 		$api = new Api([
@@ -580,23 +580,6 @@ class ApiTest extends TestCase
 		$this->assertSame('b.jpg', $response[1]['filename']);
 	}
 
-	public function testFieldApiInvalidField(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The field could not be found');
-
-		$page = $app->page('test');
-		$app->api()->fieldApi($page, 'nonexists');
-	}
-
 	public function testFieldApiEmptyField(): void
 	{
 		$app = $this->app->clone([
@@ -612,6 +595,23 @@ class ApiTest extends TestCase
 
 		$page = $app->page('test');
 		$app->api()->fieldApi($page, '');
+	}
+
+	public function testFieldApiInvalidField(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The field could not be found');
+
+		$page = $app->page('test');
+		$app->api()->fieldApi($page, 'nonexists');
 	}
 
 	public function testFile(): void
@@ -655,6 +655,59 @@ class ApiTest extends TestCase
 		$this->assertSame('test.jpg', $api->file('pages/a', 'test.jpg')->filename());
 		$this->assertSame('test.jpg', $api->file('pages/a+a', 'test.jpg')->filename());
 		$this->assertSame('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
+	}
+
+	public function testFileGetRoute(): void
+	{
+		// regular
+		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
+
+		$this->assertSame(200, $result['code']);
+		$this->assertSame('a-regular-file.jpg', $result['data']['filename']);
+
+		// with spaces in filename
+		$result = $this->api->call('pages/a/files/a filename with spaces.jpg', 'GET');
+
+		$this->assertSame(200, $result['code']);
+		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
+	}
+
+	public function testFileNotFound(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "nope.jpg" cannot be found');
+
+		$this->api->file('site', 'nope.jpg');
+	}
+
+	public function testFileNotReadable(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.file.notFound');
+		$this->expectExceptionMessageIs('The file "protected.jpg" cannot be found');
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'files/protected' => [
+					'options' => ['read' => false]
+				]
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'protected.jpg', 'template' => 'protected']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('admin@getkirby.com');
+		$this->api->file('site', 'protected.jpg');
 	}
 
 	public function testFiles(): void
@@ -717,59 +770,6 @@ class ApiTest extends TestCase
 		$api->files('pages/a/files/a.jpg');
 	}
 
-	public function testFileGetRoute(): void
-	{
-		// regular
-		$result = $this->api->call('pages/a/files/a-regular-file.jpg', 'GET');
-
-		$this->assertSame(200, $result['code']);
-		$this->assertSame('a-regular-file.jpg', $result['data']['filename']);
-
-		// with spaces in filename
-		$result = $this->api->call('pages/a/files/a filename with spaces.jpg', 'GET');
-
-		$this->assertSame(200, $result['code']);
-		$this->assertSame('a filename with spaces.jpg', $result['data']['filename']);
-	}
-
-	public function testFileNotFound(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.file.notFound');
-		$this->expectExceptionMessageIs('The file "nope.jpg" cannot be found');
-
-		$this->api->file('site', 'nope.jpg');
-	}
-
-	public function testFileNotReadable(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.file.notFound');
-		$this->expectExceptionMessageIs('The file "protected.jpg" cannot be found');
-
-		$app = $this->app->clone([
-			'blueprints' => [
-				'files/protected' => [
-					'options' => ['read' => false]
-				]
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'protected.jpg', 'template' => 'protected']
-				]
-			],
-			'users' => [
-				[
-					'email' => 'admin@getkirby.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$app->impersonate('admin@getkirby.com');
-		$this->api->file('site', 'protected.jpg');
-	}
-
 	public function testLanguage(): void
 	{
 		$api = $this->api->clone([
@@ -781,33 +781,6 @@ class ApiTest extends TestCase
 		]);
 
 		$this->assertSame('de', $api->language());
-	}
-
-	public function testModels(): void
-	{
-		$api = new Api([
-			'models' => [
-				'test' => [
-					'fields' => [
-						'id' => fn ($object) => $object->id()
-					],
-					'type' => Obj::class
-				]
-			]
-		]);
-
-		$instance = new Obj(['id' => 'a']);
-		$model    = $api->model('test', $instance);
-		$data     = $model->toArray();
-		$expected = ['id' => 'a'];
-
-		$this->assertSame($expected, $data);
-
-		// missing model
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The model "not-available" does not exist');
-
-		$api->model('not-available', $instance);
 	}
 
 	public function testModelResolver(): void
@@ -851,6 +824,33 @@ class ApiTest extends TestCase
 
 		$api = new Api([]);
 		$api->resolve('foo');
+	}
+
+	public function testModels(): void
+	{
+		$api = new Api([
+			'models' => [
+				'test' => [
+					'fields' => [
+						'id' => fn ($object) => $object->id()
+					],
+					'type' => Obj::class
+				]
+			]
+		]);
+
+		$instance = new Obj(['id' => 'a']);
+		$model    = $api->model('test', $instance);
+		$data     = $model->toArray();
+		$expected = ['id' => 'a'];
+
+		$this->assertSame($expected, $data);
+
+		// missing model
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The model "not-available" does not exist');
+
+		$api->model('not-available', $instance);
 	}
 
 	public function testPage(): void
@@ -944,63 +944,6 @@ class ApiTest extends TestCase
 		$this->assertNull($api->parent('something/something'));
 	}
 
-	public function testRequestData(): void
-	{
-		$api = new Api([
-			'requestData' => $requestData = [
-				'query'   => $query   = ['a' => 'A'],
-				'body'    => $body    = ['b' => 'B'],
-				'files'   => $files   = ['c' => 'C'],
-				'headers' => $headers = ['d' => 'D'],
-			]
-		]);
-
-		$this->assertSame($requestData, $api->requestData());
-
-		$this->assertSame($query, $api->requestData('query'));
-		$this->assertSame($query, $api->requestQuery());
-		$this->assertSame('A', $api->requestData('query', 'a'));
-		$this->assertSame('A', $api->requestQuery('a'));
-		$this->assertSame('fallback', $api->requestData('query', 'x', 'fallback'));
-		$this->assertSame('fallback', $api->requestQuery('x', 'fallback'));
-
-		$this->assertSame($body, $api->requestData('body'));
-		$this->assertSame($body, $api->requestBody());
-		$this->assertSame('B', $api->requestData('body', 'b'));
-		$this->assertSame('B', $api->requestBody('b'));
-		$this->assertSame('fallback', $api->requestData('body', 'x', 'fallback'));
-		$this->assertSame('fallback', $api->requestBody('x', 'fallback'));
-
-		$this->assertSame($files, $api->requestData('files'));
-		$this->assertSame($files, $api->requestFiles());
-		$this->assertSame('C', $api->requestData('files', 'c'));
-		$this->assertSame('C', $api->requestFiles('c'));
-		$this->assertSame('fallback', $api->requestData('files', 'x', 'fallback'));
-		$this->assertSame('fallback', $api->requestFiles('x', 'fallback'));
-
-		$this->assertSame($headers, $api->requestData('headers'));
-		$this->assertSame($headers, $api->requestHeaders());
-		$this->assertSame('D', $api->requestData('headers', 'd'));
-		$this->assertSame('D', $api->requestHeaders('d'));
-		$this->assertSame('fallback', $api->requestData('headers', 'x', 'fallback'));
-		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
-	}
-
-	public function testRenderString(): void
-	{
-		$api = new Api([
-			'routes' => [
-				[
-					'pattern' => 'test',
-					'method'  => 'POST',
-					'action'  => fn () => 'test'
-				]
-			]
-		]);
-
-		$this->assertSame('test', $api->render('test', 'POST'));
-	}
-
 	public function testRenderArray(): void
 	{
 		$api = new Api([
@@ -1066,78 +1009,6 @@ class ApiTest extends TestCase
 			json_encode(['text' => '<b>trusted</b>', 'info' => 'plain']),
 			$result->body()
 		);
-	}
-
-	public function testRenderTrue(): void
-	{
-		$api = new Api([
-			'routes' => [
-				[
-					'pattern' => 'test',
-					'method'  => 'POST',
-					'action'  => fn () => true
-				]
-			]
-		]);
-
-		$result = $api->render('test', 'POST');
-
-		$expected = [
-			'status'  => 'ok',
-			'message' => 'ok',
-			'code'    => 200
-		];
-
-		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertSame(json_encode($expected), $result->body());
-	}
-
-	public function testRenderFalse(): void
-	{
-		$api = new Api([
-			'routes' => [
-				[
-					'pattern' => 'test',
-					'method'  => 'POST',
-					'action'  => fn () => false
-				]
-			]
-		]);
-
-		$result = $api->render('test', 'POST');
-
-		$expected = [
-			'status'  => 'error',
-			'message' => 'bad request',
-			'code'    => 400
-		];
-
-		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertSame(json_encode($expected), $result->body());
-	}
-
-	public function testRenderNull(): void
-	{
-		$api = new Api([
-			'routes' => [
-				[
-					'pattern' => 'test',
-					'method'  => 'POST',
-					'action'  => fn () => null
-				]
-			]
-		]);
-
-		$result = $api->render('test', 'POST');
-
-		$expected = [
-			'status'  => 'error',
-			'message' => 'not found',
-			'code'    => 404
-		];
-
-		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderException(): void
@@ -1247,38 +1118,6 @@ class ApiTest extends TestCase
 		$this->assertSame(json_encode($expected), $result->body());
 	}
 
-	public function testRenderExceptionWithoutDebugging(): void
-	{
-		$api = new Api([
-			'kirby' => $this->app,
-			'routes' => [
-				[
-					'pattern' => 'test',
-					'method'  => 'POST',
-					'action'  => function () {
-						// the exception message leaks an absolute path
-						throw new Exception('Could not open ' . __FILE__);
-					}
-				]
-			]
-		]);
-
-		$result = $api->render('test', 'POST');
-
-		// without debugging, the actual message
-		// (and the leaked path) is replaced by a generic message
-		$expected = [
-			'status'  => 'error',
-			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
-			'code'    => 500,
-			'key'     => null,
-			'details' => []
-		];
-
-		$this->assertInstanceOf(HttpResponse::class, $result);
-		$this->assertSame(json_encode($expected), $result->body());
-	}
-
 	public function testRenderExceptionWithDebuggingDisguisesFilePath(): void
 	{
 		$app = $this->app->clone([
@@ -1315,6 +1154,62 @@ class ApiTest extends TestCase
 		);
 		$this->assertStringNotContainsString($app->root('index'), $body['message']);
 		$this->assertStringContainsString('{index}', $body['message']);
+	}
+
+	public function testRenderExceptionWithoutDebugging(): void
+	{
+		$api = new Api([
+			'kirby' => $this->app,
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => function () {
+						// the exception message leaks an absolute path
+						throw new Exception('Could not open ' . __FILE__);
+					}
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		// without debugging, the actual message
+		// (and the leaked path) is replaced by a generic message
+		$expected = [
+			'status'  => 'error',
+			'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug',
+			'code'    => 500,
+			'key'     => null,
+			'details' => []
+		];
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame(json_encode($expected), $result->body());
+	}
+
+	public function testRenderFalse(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => false
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		$expected = [
+			'status'  => 'error',
+			'message' => 'bad request',
+			'code'    => 400
+		];
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame(json_encode($expected), $result->body());
 	}
 
 	public function testRenderKirbyException(): void
@@ -1391,6 +1286,69 @@ class ApiTest extends TestCase
 		unset($_SERVER['DOCUMENT_ROOT']);
 	}
 
+	public function testRenderNull(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => null
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		$expected = [
+			'status'  => 'error',
+			'message' => 'not found',
+			'code'    => 404
+		];
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame(json_encode($expected), $result->body());
+	}
+
+	public function testRenderString(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => 'test'
+				]
+			]
+		]);
+
+		$this->assertSame('test', $api->render('test', 'POST'));
+	}
+
+	public function testRenderTrue(): void
+	{
+		$api = new Api([
+			'routes' => [
+				[
+					'pattern' => 'test',
+					'method'  => 'POST',
+					'action'  => fn () => true
+				]
+			]
+		]);
+
+		$result = $api->render('test', 'POST');
+
+		$expected = [
+			'status'  => 'ok',
+			'message' => 'ok',
+			'code'    => 200
+		];
+
+		$this->assertInstanceOf(HttpResponse::class, $result);
+		$this->assertSame(json_encode($expected), $result->body());
+	}
+
 	public function testRenderWithSanitizedErrorCode(): void
 	{
 		$api = new Api([
@@ -1408,6 +1366,48 @@ class ApiTest extends TestCase
 		$result = $api->render('test', 'POST');
 
 		$this->assertSame(500, $result->code());
+	}
+
+	public function testRequestData(): void
+	{
+		$api = new Api([
+			'requestData' => $requestData = [
+				'query'   => $query   = ['a' => 'A'],
+				'body'    => $body    = ['b' => 'B'],
+				'files'   => $files   = ['c' => 'C'],
+				'headers' => $headers = ['d' => 'D'],
+			]
+		]);
+
+		$this->assertSame($requestData, $api->requestData());
+
+		$this->assertSame($query, $api->requestData('query'));
+		$this->assertSame($query, $api->requestQuery());
+		$this->assertSame('A', $api->requestData('query', 'a'));
+		$this->assertSame('A', $api->requestQuery('a'));
+		$this->assertSame('fallback', $api->requestData('query', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestQuery('x', 'fallback'));
+
+		$this->assertSame($body, $api->requestData('body'));
+		$this->assertSame($body, $api->requestBody());
+		$this->assertSame('B', $api->requestData('body', 'b'));
+		$this->assertSame('B', $api->requestBody('b'));
+		$this->assertSame('fallback', $api->requestData('body', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestBody('x', 'fallback'));
+
+		$this->assertSame($files, $api->requestData('files'));
+		$this->assertSame($files, $api->requestFiles());
+		$this->assertSame('C', $api->requestData('files', 'c'));
+		$this->assertSame('C', $api->requestFiles('c'));
+		$this->assertSame('fallback', $api->requestData('files', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestFiles('x', 'fallback'));
+
+		$this->assertSame($headers, $api->requestData('headers'));
+		$this->assertSame($headers, $api->requestHeaders());
+		$this->assertSame('D', $api->requestData('headers', 'd'));
+		$this->assertSame('D', $api->requestHeaders('d'));
+		$this->assertSame('fallback', $api->requestData('headers', 'x', 'fallback'));
+		$this->assertSame('fallback', $api->requestHeaders('x', 'fallback'));
 	}
 
 	public function testRequestMethod(): void

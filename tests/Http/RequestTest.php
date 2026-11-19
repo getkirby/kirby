@@ -20,6 +20,87 @@ class RequestTest extends TestCase
 		App::destroy();
 	}
 
+	public function test__debuginfo(): void
+	{
+		$request = new Request();
+		$info    = $request->__debugInfo();
+
+		$this->assertArrayHasKey('body', $info);
+		$this->assertArrayHasKey('query', $info);
+		$this->assertArrayHasKey('files', $info);
+		$this->assertArrayHasKey('method', $info);
+		$this->assertArrayHasKey('url', $info);
+	}
+
+	public function testAuthMissing(): void
+	{
+		$request = new Request();
+		$this->assertFalse($request->auth());
+	}
+
+	public function testAuthTrack(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		$this->assertFalse($app->response()->usesAuth());
+
+		$request = new Request();
+		$request->auth();
+
+		$this->assertTrue($app->response()->usesAuth());
+	}
+
+	public function testBasicAuth(): void
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($credentials = 'testuser:testpass')
+			]
+		]);
+
+		$request = new Request();
+
+		$this->assertInstanceOf(BasicAuth::class, $request->auth());
+		$this->assertSame('testuser', $request->auth()->username());
+		$this->assertSame('testpass', $request->auth()->password());
+	}
+
+	public function testBearerAuth(): void
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Bearer abcd'
+			]
+		]);
+
+		$request = new Request();
+
+		$this->assertInstanceOf(BearerAuth::class, $request->auth());
+		$this->assertSame('abcd', $request->auth()->token());
+	}
+
+	public function testBody(): void
+	{
+		$request = new Request();
+		$this->assertInstanceOf(Body::class, $request->body());
+	}
+
+	public function testCli(): void
+	{
+		$request = new Request();
+		$this->assertTrue($request->cli());
+
+		$request = new Request(['cli' => true]);
+		$this->assertTrue($request->cli());
+
+		$request = new Request(['cli' => false]);
+		$this->assertFalse($request->cli());
+	}
+
 	public function testCustomProps(): void
 	{
 		$file = [
@@ -92,92 +173,40 @@ class RequestTest extends TestCase
 		$this->assertSame('c', $request->get('2'));
 	}
 
-	public function test__debuginfo(): void
+	public function testDomain(): void
 	{
-		$request = new Request();
-		$info    = $request->__debugInfo();
-
-		$this->assertArrayHasKey('body', $info);
-		$this->assertArrayHasKey('query', $info);
-		$this->assertArrayHasKey('files', $info);
-		$this->assertArrayHasKey('method', $info);
-		$this->assertArrayHasKey('url', $info);
-	}
-
-	public function testAuthMissing(): void
-	{
-		$request = new Request();
-		$this->assertFalse($request->auth());
-	}
-
-	public function testBasicAuth(): void
-	{
-		new App([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode($credentials = 'testuser:testpass')
-			]
+		$request = new Request([
+			'url' => 'https://getkirby.com/a/b'
 		]);
 
-		$request = new Request();
-
-		$this->assertInstanceOf(BasicAuth::class, $request->auth());
-		$this->assertSame('testuser', $request->auth()->username());
-		$this->assertSame('testpass', $request->auth()->password());
+		$this->assertSame('getkirby.com', $request->domain());
 	}
 
-	public function testBearerAuth(): void
+	public function testFile(): void
 	{
-		new App([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Bearer abcd'
-			]
-		]);
-
 		$request = new Request();
-
-		$this->assertInstanceOf(BearerAuth::class, $request->auth());
-		$this->assertSame('abcd', $request->auth()->token());
+		$this->assertNull($request->file('test'));
 	}
 
-	public function testCli(): void
+	public function testFiles(): void
 	{
 		$request = new Request();
-		$this->assertTrue($request->cli());
-
-		$request = new Request(['cli' => true]);
-		$this->assertTrue($request->cli());
-
-		$request = new Request(['cli' => false]);
-		$this->assertFalse($request->cli());
+		$this->assertInstanceOf(Files::class, $request->files());
 	}
 
-	public function testUnknownAuth(): void
+	public static function hasAuthProvider(): array
 	{
-		new App([
-			'server' => [
-				'HTTP_AUTHORIZATION' => 'Unknown abcd'
-			]
-		]);
-
-		$request = new Request();
-
-		$this->assertFalse($request->auth());
-	}
-
-	public function testAuthTrack(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			]
-		]);
-
-		$this->assertFalse($app->response()->usesAuth());
-
-		$request = new Request();
-		$request->auth();
-
-		$this->assertTrue($app->response()->usesAuth());
+		return [
+			[null, null, false],
+			[null, '', false],
+			['', null, false],
+			['', '', false],
+			['Basic abc', '', true],
+			['', 'Basic abc', true],
+			['Basic abc', null, true],
+			[null, 'Basic abc', true],
+			['Basic abc', 'Basic def', true],
+		];
 	}
 
 	#[DataProvider('hasAuthProvider')]
@@ -196,21 +225,6 @@ class RequestTest extends TestCase
 		$this->assertSame($expected, $request->hasAuth());
 	}
 
-	public static function hasAuthProvider(): array
-	{
-		return [
-			[null, null, false],
-			[null, '', false],
-			['', null, false],
-			['', '', false],
-			['Basic abc', '', true],
-			['', 'Basic abc', true],
-			['Basic abc', null, true],
-			[null, 'Basic abc', true],
-			['Basic abc', 'Basic def', true],
-		];
-	}
-
 	public function testHeaders(): void
 	{
 		new App([
@@ -226,39 +240,6 @@ class RequestTest extends TestCase
 		$this->assertSame('bar', $headers['X-Foo']);
 	}
 
-	public function testMethod(): void
-	{
-		$request = new Request();
-
-		$this->assertInstanceOf(Query::class, $request->query());
-		$this->assertInstanceOf(Body::class, $request->body());
-		$this->assertInstanceOf(Files::class, $request->files());
-	}
-
-	public function testQuery(): void
-	{
-		$request = new Request();
-		$this->assertInstanceOf(Query::class, $request->query());
-	}
-
-	public function testBody(): void
-	{
-		$request = new Request();
-		$this->assertInstanceOf(Body::class, $request->body());
-	}
-
-	public function testFiles(): void
-	{
-		$request = new Request();
-		$this->assertInstanceOf(Files::class, $request->files());
-	}
-
-	public function testFile(): void
-	{
-		$request = new Request();
-		$this->assertNull($request->file('test'));
-	}
-
 	public function testIs(): void
 	{
 		$request = new Request();
@@ -269,6 +250,40 @@ class RequestTest extends TestCase
 	{
 		$request = new Request();
 		$this->assertTrue($request->is('get'));
+	}
+
+	public function testMethod(): void
+	{
+		$request = new Request();
+
+		$this->assertInstanceOf(Query::class, $request->query());
+		$this->assertInstanceOf(Body::class, $request->body());
+		$this->assertInstanceOf(Files::class, $request->files());
+	}
+
+	public function testPath(): void
+	{
+		$request = new Request();
+		$this->assertInstanceOf(Path::class, $request->path());
+	}
+
+	public function testQuery(): void
+	{
+		$request = new Request();
+		$this->assertInstanceOf(Query::class, $request->query());
+	}
+
+	public function testUnknownAuth(): void
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => 'Unknown abcd'
+			]
+		]);
+
+		$request = new Request();
+
+		$this->assertFalse($request->auth());
 	}
 
 	public function testUrl(): void
@@ -295,20 +310,5 @@ class RequestTest extends TestCase
 		$this->assertNotSame($uriBefore, $clone);
 		$this->assertSame($uriBefore, $uriAfter);
 		$this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
-	}
-
-	public function testPath(): void
-	{
-		$request = new Request();
-		$this->assertInstanceOf(Path::class, $request->path());
-	}
-
-	public function testDomain(): void
-	{
-		$request = new Request([
-			'url' => 'https://getkirby.com/a/b'
-		]);
-
-		$this->assertSame('getkirby.com', $request->domain());
 	}
 }

@@ -96,41 +96,6 @@ class WebauthnMethodTest extends TestCase
 		return json_encode($payload);
 	}
 
-	public function testIcon(): void
-	{
-		$this->assertSame('fingerprint', $this->method()->icon());
-	}
-
-	public function testSettings(): void
-	{
-		$settings = $this->method()->settings($this->app->user('marge'));
-
-		$this->assertCount(1, $settings);
-		$this->assertInstanceOf(Button::class, $settings[0]);
-		$this->assertStringContainsString(
-			'/security/method/webauthn',
-			$settings[0]->render()['props']['drawer']
-		);
-	}
-
-	public function testForm(): void
-	{
-		$method = $this->method();
-		$form   = $method->form();
-
-		$this->assertInstanceOf(Component::class, $form);
-
-		$rendered = $form->render();
-		$this->assertSame('k-login-webauthn-method-form', $rendered['component']);
-		$this->assertSame('example.com', $rendered['props']['publicKey']['rpId']);
-
-		// the challenge is persisted for the follow-up verification
-		$this->assertSame(
-			$rendered['props']['publicKey']['challenge'],
-			$this->app->session()->get('kirby.method.data')
-		);
-	}
-
 	public function testAuthenticate(): void
 	{
 		$payload = $this->register('marge');
@@ -140,27 +105,18 @@ class WebauthnMethodTest extends TestCase
 		$this->assertTrue($result->isLoggedIn());
 	}
 
-	public function testAuthenticateWithoutUserHandle(): void
+	public function testAuthenticateBlockedByRateLimit(): void
 	{
-		// no user handle → we no longer scan all accounts, so the
-		// assertion cannot be tied to a user and login is rejected
-		$payload = $this->register('marge', withHandle: false);
+		$limits = $this->app->auth()->limits();
 
-		$this->expectException(UserNotFoundException::class);
+		// exhaust the IP-based trial budget (default: 10)
+		for ($i = 0; $i < 10; $i++) {
+			$limits->track(null, triggerHook: false);
+		}
 
-		$this->method()->authenticate(null, $payload);
-	}
-
-	public function testAuthenticateUpdatesCounter(): void
-	{
-		// a non-zero signature counter is written back to the credential;
-		// impersonate an admin so the secret write is permitted
-		$payload = $this->register('marge', signCount: 7);
-		$this->app->impersonate('kirby');
-
-		$this->method()->authenticate(null, $payload);
-
-		$this->assertSame(7, $this->app->user('marge')->secret('webauthn')[0]['counter']);
+		// a blocked IP is rejected before any verification runs
+		$this->expectException(RateLimitException::class);
+		$this->method()->authenticate(null, $this->register('marge'));
 	}
 
 	public function testAuthenticateFailsVerification(): void
@@ -171,23 +127,6 @@ class WebauthnMethodTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.user.webauthn.failed');
 
-		$this->method()->authenticate(null, $payload);
-	}
-
-	public function testAuthenticateUnknownUser(): void
-	{
-		$this->expectException(UserNotFoundException::class);
-		$this->method()->authenticate(null, '{"id":"unknown"}');
-	}
-
-	public function testAuthenticateUnknownHandle(): void
-	{
-		$webauthn = Webauthn::site($this->app);
-		$payload  = json_encode([
-			'response' => ['userHandle' => $webauthn->encode('ghost')]
-		]);
-
-		$this->expectException(UserNotFoundException::class);
 		$this->method()->authenticate(null, $payload);
 	}
 
@@ -215,17 +154,78 @@ class WebauthnMethodTest extends TestCase
 		$this->assertSame(1, array_values($log['by-ip'])[0]['trials']);
 	}
 
-	public function testAuthenticateBlockedByRateLimit(): void
+	public function testAuthenticateUnknownHandle(): void
 	{
-		$limits = $this->app->auth()->limits();
+		$webauthn = Webauthn::site($this->app);
+		$payload  = json_encode([
+			'response' => ['userHandle' => $webauthn->encode('ghost')]
+		]);
 
-		// exhaust the IP-based trial budget (default: 10)
-		for ($i = 0; $i < 10; $i++) {
-			$limits->track(null, triggerHook: false);
-		}
+		$this->expectException(UserNotFoundException::class);
+		$this->method()->authenticate(null, $payload);
+	}
 
-		// a blocked IP is rejected before any verification runs
-		$this->expectException(RateLimitException::class);
-		$this->method()->authenticate(null, $this->register('marge'));
+	public function testAuthenticateUnknownUser(): void
+	{
+		$this->expectException(UserNotFoundException::class);
+		$this->method()->authenticate(null, '{"id":"unknown"}');
+	}
+
+	public function testAuthenticateUpdatesCounter(): void
+	{
+		// a non-zero signature counter is written back to the credential;
+		// impersonate an admin so the secret write is permitted
+		$payload = $this->register('marge', signCount: 7);
+		$this->app->impersonate('kirby');
+
+		$this->method()->authenticate(null, $payload);
+
+		$this->assertSame(7, $this->app->user('marge')->secret('webauthn')[0]['counter']);
+	}
+
+	public function testAuthenticateWithoutUserHandle(): void
+	{
+		// no user handle → we no longer scan all accounts, so the
+		// assertion cannot be tied to a user and login is rejected
+		$payload = $this->register('marge', withHandle: false);
+
+		$this->expectException(UserNotFoundException::class);
+
+		$this->method()->authenticate(null, $payload);
+	}
+
+	public function testForm(): void
+	{
+		$method = $this->method();
+		$form   = $method->form();
+
+		$this->assertInstanceOf(Component::class, $form);
+
+		$rendered = $form->render();
+		$this->assertSame('k-login-webauthn-method-form', $rendered['component']);
+		$this->assertSame('example.com', $rendered['props']['publicKey']['rpId']);
+
+		// the challenge is persisted for the follow-up verification
+		$this->assertSame(
+			$rendered['props']['publicKey']['challenge'],
+			$this->app->session()->get('kirby.method.data')
+		);
+	}
+
+	public function testIcon(): void
+	{
+		$this->assertSame('fingerprint', $this->method()->icon());
+	}
+
+	public function testSettings(): void
+	{
+		$settings = $this->method()->settings($this->app->user('marge'));
+
+		$this->assertCount(1, $settings);
+		$this->assertInstanceOf(Button::class, $settings[0]);
+		$this->assertStringContainsString(
+			'/security/method/webauthn',
+			$settings[0]->render()['props']['drawer']
+		);
 	}
 }

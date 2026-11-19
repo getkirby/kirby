@@ -42,15 +42,6 @@ trait HasMethods
 	}
 
 	/**
-	 * Checks if the object has a registered custom method
-	 */
-	#[BlockCollectionAccess]
-	public function hasMethod(string $method): bool
-	{
-		return $this->getMethod($method) !== null;
-	}
-
-	/**
 	 * Returns a registered method by name, either from
 	 * the current class or from a parent class ordered by
 	 * inheritance order (top to bottom)
@@ -69,5 +60,14 @@ trait HasMethods
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks if the object has a registered custom method
+	 */
+	#[BlockCollectionAccess]
+	public function hasMethod(string $method): bool
+	{
+		return $this->getMethod($method) !== null;
 	}
 }

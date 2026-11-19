@@ -147,11 +147,6 @@ export default {
 			};
 		}
 	},
-	watch: {
-		$props() {
-			this.$forceUpdate();
-		}
-	},
 	methods: {
 		onEmpty(e) {
 			e.stopPropagation();

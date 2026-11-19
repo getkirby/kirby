@@ -32,11 +32,47 @@ class MemCachedTest extends TestCase
 		$connection->flush();
 	}
 
+	public function testConstructServer(): void
+	{
+		$cache = new MemCached([
+			'host' => 'localhost',
+			'port' => 1234
+		]);
+		$this->assertFalse($cache->set('foo', 'A basic value'));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertFalse($cache->remove('foo'));
+
+		$cache = new MemCached([
+			'host' => 'asdfgh.invalid',
+			'port' => 11211
+		]);
+		$this->assertFalse($cache->set('foo', 'A basic value'));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertFalse($cache->remove('foo'));
+	}
+
 	public function testEnabled(): void
 	{
 		$cache = new MemCached();
 
 		$this->assertTrue($cache->enabled());
+	}
+
+	public function testFlush(): void
+	{
+		$cache = new MemCached([]);
+
+		$cache->set('a', 'A basic value');
+		$cache->set('b', 'A basic value');
+		$cache->set('c', 'A basic value');
+		$this->assertTrue($cache->exists('a'));
+		$this->assertTrue($cache->exists('b'));
+		$this->assertTrue($cache->exists('c'));
+
+		$this->assertTrue($cache->flush());
+		$this->assertFalse($cache->exists('a'));
+		$this->assertFalse($cache->exists('b'));
+		$this->assertFalse($cache->exists('c'));
 	}
 
 	public function testOperations(): void
@@ -85,41 +121,5 @@ class MemCachedTest extends TestCase
 		$this->assertNull($cache1->retrieve('foo'));
 		$this->assertTrue($cache2->exists('foo'));
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
-	}
-
-	public function testConstructServer(): void
-	{
-		$cache = new MemCached([
-			'host' => 'localhost',
-			'port' => 1234
-		]);
-		$this->assertFalse($cache->set('foo', 'A basic value'));
-		$this->assertNull($cache->retrieve('foo'));
-		$this->assertFalse($cache->remove('foo'));
-
-		$cache = new MemCached([
-			'host' => 'asdfgh.invalid',
-			'port' => 11211
-		]);
-		$this->assertFalse($cache->set('foo', 'A basic value'));
-		$this->assertNull($cache->retrieve('foo'));
-		$this->assertFalse($cache->remove('foo'));
-	}
-
-	public function testFlush(): void
-	{
-		$cache = new MemCached([]);
-
-		$cache->set('a', 'A basic value');
-		$cache->set('b', 'A basic value');
-		$cache->set('c', 'A basic value');
-		$this->assertTrue($cache->exists('a'));
-		$this->assertTrue($cache->exists('b'));
-		$this->assertTrue($cache->exists('c'));
-
-		$this->assertTrue($cache->flush());
-		$this->assertFalse($cache->exists('a'));
-		$this->assertFalse($cache->exists('b'));
-		$this->assertFalse($cache->exists('c'));
 	}
 }

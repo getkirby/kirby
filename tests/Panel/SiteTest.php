@@ -104,13 +104,6 @@ class SiteTest extends TestCase
 		$this->assertSame('site', $this->panel()->path());
 	}
 
-	public function testPreviewPermissionsWithoutHomePage(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertFalse($props['permissions']['preview']);
-	}
-
 	public function testPreviewPermissionsWithHomePage(): void
 	{
 		$this->app = $this->app->clone([
@@ -132,6 +125,13 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertTrue($props['permissions']['preview']);
+	}
+
+	public function testPreviewPermissionsWithoutHomePage(): void
+	{
+		$props = $this->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
 	}
 
 	public function testPreviewPermissionsWithoutSitePermission(): void

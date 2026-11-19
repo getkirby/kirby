@@ -327,10 +327,36 @@ class FieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
+	public function testPropsWithPropAttributes(): void
+	{
+		$props = new OptionsMockField(name: 'test')->props();
+
+		// all `#[Prop]` properties are exported automatically
+		$this->assertFalse($props['enabled']);
+		$this->assertSame(['size' => 'small', 'colors' => ['red', 'blue']], $props['settings']);
+		$this->assertSame(['a', 'b', 'c'], $props['tags']);
+
+		// properties without the attribute are not exported
+		$this->assertArrayNotHasKey('cache', $props);
+		$this->assertArrayNotHasKey('page', $props);
+
+		// props marked with `export: false` are not exported
+		$this->assertArrayNotHasKey('default', $props);
+		$this->assertArrayNotHasKey('translate', $props);
+	}
+
 	public function testRegisterWithAlias(): void
 	{
 		$field = new OptionsMockField(labels: ['b']);
 		$this->assertSame(['b'], $field->option('tags'));
+	}
+
+	public function testRegisterWithAliasAndInvalidType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field "test": The option "labels" must be of type array');
+
+		new OptionsMockField(name: 'test', labels: 'b');
 	}
 
 	public function testRegisterWithAliasAndName(): void
@@ -346,14 +372,6 @@ class FieldTest extends TestCase
 		// a `null` value doesn't count
 		$field = new OptionsMockField(labels: ['b'], tags: null);
 		$this->assertSame(['b'], $field->option('tags'));
-	}
-
-	public function testRegisterWithAliasAndInvalidType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Field "test": The option "labels" must be of type array');
-
-		new OptionsMockField(name: 'test', labels: 'b');
 	}
 
 	public function testRegisterWithArrays(): void
@@ -415,24 +433,6 @@ class FieldTest extends TestCase
 		$this->assertFalse(isset($field->foo));
 	}
 
-	public function testPropsWithPropAttributes(): void
-	{
-		$props = new OptionsMockField(name: 'test')->props();
-
-		// all `#[Prop]` properties are exported automatically
-		$this->assertFalse($props['enabled']);
-		$this->assertSame(['size' => 'small', 'colors' => ['red', 'blue']], $props['settings']);
-		$this->assertSame(['a', 'b', 'c'], $props['tags']);
-
-		// properties without the attribute are not exported
-		$this->assertArrayNotHasKey('cache', $props);
-		$this->assertArrayNotHasKey('page', $props);
-
-		// props marked with `export: false` are not exported
-		$this->assertArrayNotHasKey('default', $props);
-		$this->assertArrayNotHasKey('translate', $props);
-	}
-
 	public function testResolve(): void
 	{
 		Field::$types['mock'] = MockField::class;
@@ -467,6 +467,15 @@ class FieldTest extends TestCase
 		Field::resolve('mock');
 	}
 
+	public function testResolveWithMissingType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.field.type.missing');
+		$this->expectExceptionMessageIs('Field "test": The field type "mock" does not exist');
+
+		Field::resolve('mock', 'test');
+	}
+
 	public function testResolveWithNonVariadicConstructor(): void
 	{
 		Field::$types['mock'] = ConstructorMockField::class;
@@ -481,13 +490,17 @@ class FieldTest extends TestCase
 		Field::resolve('mock');
 	}
 
-	public function testResolveWithMissingType(): void
+	public function testStringTemplateI18nWithEmptyValue(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.field.type.missing');
-		$this->expectExceptionMessageIs('Field "test": The field type "mock" does not exist');
+		$field = new class () extends MockField {
+			public function stringTemplateI18nTest($value)
+			{
+				return $this->stringTemplateI18n($value);
+			}
+		};
 
-		Field::resolve('mock', 'test');
+		$this->assertNull($field->stringTemplateI18nTest(null));
+		$this->assertSame('', $field->stringTemplateI18nTest(''));
 	}
 
 	public function testStringTemplateWithEmptyValue(): void
@@ -501,19 +514,6 @@ class FieldTest extends TestCase
 
 		$this->assertNull($field->stringTemplateTest(null));
 		$this->assertSame('', $field->stringTemplateTest(''));
-	}
-
-	public function testStringTemplateI18nWithEmptyValue(): void
-	{
-		$field = new class () extends MockField {
-			public function stringTemplateI18nTest($value)
-			{
-				return $this->stringTemplateI18n($value);
-			}
-		};
-
-		$this->assertNull($field->stringTemplateI18nTest(null));
-		$this->assertSame('', $field->stringTemplateI18nTest(''));
 	}
 
 	public function testToArray(): void

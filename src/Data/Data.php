@@ -48,32 +48,6 @@ class Data
 	];
 
 	/**
-	 * Handler getter
-	 */
-	public static function handler(string $type): Handler
-	{
-		$type    = strtolower($type);
-		$alias   = static::$aliases[$type] ?? $type;
-		$handler = static::$handlers[$type] ?? static::$handlers[$alias] ?? null;
-
-		if ($handler === null || class_exists($handler) === false) {
-			throw new Exception(
-				message: 'Missing handler for type: "' . $type . '"'
-			);
-		}
-
-		$handler = new $handler();
-
-		if ($handler instanceof Handler === false) {
-			throw new Exception(
-				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
-			);
-		}
-
-		return $handler;
-	}
-
-	/**
 	 * Decodes data with the specified handler
 	 */
 	public static function decode(
@@ -98,6 +72,32 @@ class Data
 	public static function encode(mixed $data, string $type): string
 	{
 		return static::handler($type)->encode($data);
+	}
+
+	/**
+	 * Handler getter
+	 */
+	public static function handler(string $type): Handler
+	{
+		$type    = strtolower($type);
+		$alias   = static::$aliases[$type] ?? $type;
+		$handler = static::$handlers[$type] ?? static::$handlers[$alias] ?? null;
+
+		if ($handler === null || class_exists($handler) === false) {
+			throw new Exception(
+				message: 'Missing handler for type: "' . $type . '"'
+			);
+		}
+
+		$handler = new $handler();
+
+		if ($handler instanceof Handler === false) {
+			throw new Exception(
+				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
+			);
+		}
+
+		return $handler;
 	}
 
 	/**

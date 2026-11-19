@@ -15,63 +15,6 @@ use Kirby\Toolkit\Str;
 class Txt extends Handler
 {
 	/**
-	 * Converts an array to an encoded Kirby txt string
-	 */
-	public static function encode(mixed $data): string
-	{
-		$result = [];
-
-		foreach (A::wrap($data) as $key => $value) {
-			if ($key === '' || $value === null) {
-				continue;
-			}
-
-			$key          = Str::ucfirst(Str::slug(
-				string: $key,
-				language: false
-			));
-			$value        = static::encodeValue($value);
-			$result[$key] = static::encodeResult($key, $value);
-		}
-
-		return implode("\n\n----\n\n", $result);
-	}
-
-	/**
-	 * Helper for converting the value
-	 */
-	protected static function encodeValue(
-		array|bool|float|int|string $value
-	): string {
-		$value = match (true) {
-			$value === true  => 'true',
-			$value === false => 'false',
-			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
-			is_float($value) => Str::float($value) ?? '',
-			default          => (string)$value
-		};
-
-		// escape accidental dividers within a field
-		return preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
-	}
-
-	/**
-	 * Helper for converting the key and value to the result string
-	 */
-	protected static function encodeResult(string $key, string $value): string
-	{
-		$value     = trim($value);
-		$separator = match (preg_match('!\R!', $value)) {
-			// multi-line content
-			1       => "\n\n",
-			// single line content, just add space after colon
-			default => ' ',
-		};
-
-		return $key . ':' . $separator . $value;
-	}
-
-	/**
 	 * Parses a Kirby txt string and returns a multi-dimensional array
 	 */
 	public static function decode(mixed $string): array
@@ -123,5 +66,62 @@ class Txt extends Handler
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Converts an array to an encoded Kirby txt string
+	 */
+	public static function encode(mixed $data): string
+	{
+		$result = [];
+
+		foreach (A::wrap($data) as $key => $value) {
+			if ($key === '' || $value === null) {
+				continue;
+			}
+
+			$key          = Str::ucfirst(Str::slug(
+				string: $key,
+				language: false
+			));
+			$value        = static::encodeValue($value);
+			$result[$key] = static::encodeResult($key, $value);
+		}
+
+		return implode("\n\n----\n\n", $result);
+	}
+
+	/**
+	 * Helper for converting the key and value to the result string
+	 */
+	protected static function encodeResult(string $key, string $value): string
+	{
+		$value     = trim($value);
+		$separator = match (preg_match('!\R!', $value)) {
+			// multi-line content
+			1       => "\n\n",
+			// single line content, just add space after colon
+			default => ' ',
+		};
+
+		return $key . ':' . $separator . $value;
+	}
+
+	/**
+	 * Helper for converting the value
+	 */
+	protected static function encodeValue(
+		array|bool|float|int|string $value
+	): string {
+		$value = match (true) {
+			$value === true  => 'true',
+			$value === false => 'false',
+			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
+			is_float($value) => Str::float($value) ?? '',
+			default          => (string)$value
+		};
+
+		// escape accidental dividers within a field
+		return preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
 	}
 }

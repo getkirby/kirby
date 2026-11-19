@@ -24,6 +24,20 @@ use Throwable;
 class Database
 {
 	/**
+	 * A global array of started connections
+	 *
+	 * @var array<string, Database>
+	 */
+	public static array $connections = [];
+
+	/**
+	 * Available database types with their Sql class and DSN builder
+	 *
+	 * @var array<string, array{sql: class-string<Sql>, dsn: Closure(array): string}>
+	 */
+	public static array $types = [];
+
+	/**
 	 * The number of affected rows for the last query
 	 */
 	protected int|null $affected = null;
@@ -39,13 +53,6 @@ class Database
 	 * The established connection
 	 */
 	protected PDO|null $connection = null;
-
-	/**
-	 * A global array of started connections
-	 *
-	 * @var array<string, Database>
-	 */
-	public static array $connections = [];
 
 	/**
 	 * Database name
@@ -113,13 +120,6 @@ class Database
 	protected string $type;
 
 	/**
-	 * Available database types with their Sql class and DSN builder
-	 *
-	 * @var array<string, array{sql: class-string<Sql>, dsn: Closure(array): string}>
-	 */
-	public static array $types = [];
-
-	/**
 	 * Creates a new Database instance
 	 */
 	public function __construct(array $params = [])
@@ -128,25 +128,21 @@ class Database
 	}
 
 	/**
-	 * Returns one of the started instances
+	 * Magic way to start queries for tables by
+	 * using a method named like the table.
+	 * I.e. $db->users()->all()
 	 */
-	public static function instance(string|null $id = null): static|null
+	public function __call(string $method, mixed $arguments = null): Query
 	{
-		if ($id === null) {
-			return A::last(static::$connections);
-		}
-
-		return static::$connections[$id] ?? null;
+		return $this->table($method);
 	}
 
 	/**
-	 * Returns all started instances
-	 *
-	 * @return array<string, Database>
+	 * Returns the number of affected rows for the last query
 	 */
-	public static function instances(): array
+	public function affected(): int|null
 	{
-		return static::$connections;
+		return $this->affected;
 	}
 
 	/**
@@ -217,30 +213,51 @@ class Database
 	}
 
 	/**
-	 * Sets the exception mode
-	 *
-	 * @return $this
+	 * Creates a new table
 	 */
-	public function fail(bool $fail = true): static
+	public function createTable(string $table, array $columns = []): bool
 	{
-		$this->fail = $fail;
-		return $this;
+		$sql     = $this->sql()->createTable($table, $columns);
+		$queries = Str::split($sql['query'], ';');
+
+		foreach ($queries as $query) {
+			$query = trim($query);
+
+			if ($this->execute($query, $sql['bindings']) === false) {
+				return false;
+			}
+		}
+
+		// update cache if it has been loaded already
+		if (
+			$this->tables !== null &&
+			in_array($table, $this->tables, true) === false
+		) {
+			$this->tables[] = $table;
+		}
+
+		return true;
 	}
 
 	/**
-	 * Returns the used database type
+	 * Drops a table
 	 */
-	public function type(): string
+	public function dropTable(string $table): bool
 	{
-		return $this->type;
-	}
+		$sql = $this->sql()->dropTable($table);
 
-	/**
-	 * Returns the used table name prefix
-	 */
-	public function prefix(): string|null
-	{
-		return $this->prefix;
+		if ($this->execute($sql['query'], $sql['bindings']) !== true) {
+			return false;
+		}
+
+		// update cache
+		$key = array_search($table, $this->tables ?? [], true);
+
+		if ($key !== false) {
+			unset($this->tables[$key]);
+		}
+
+		return true;
 	}
 
 	/**
@@ -253,70 +270,23 @@ class Database
 	}
 
 	/**
-	 * Adds a value to the db trace and also
-	 * returns the entire trace if nothing is specified
+	 * Executes a sql query, which is expected
+	 * to not return a set of results
+	 */
+	public function execute(string $query, array $bindings = []): bool
+	{
+		return $this->lastResult = $this->hit($query, $bindings);
+	}
+
+	/**
+	 * Sets the exception mode
 	 *
-	 * @return list<array>
+	 * @return $this
 	 */
-	public function trace(array|null $data = null): array
+	public function fail(bool $fail = true): static
 	{
-		// return the full trace
-		if ($data === null) {
-			return $this->trace;
-		}
-
-		// add a new entry to the trace
-		$this->trace[] = $data;
-
-		return $this->trace;
-	}
-
-	/**
-	 * Returns the number of affected rows for the last query
-	 */
-	public function affected(): int|null
-	{
-		return $this->affected;
-	}
-
-	/**
-	 * Returns the last id if available
-	 */
-	public function lastId(): int|null
-	{
-		return $this->lastId;
-	}
-
-	/**
-	 * Returns the last query
-	 */
-	public function lastQuery(): string|null
-	{
-		return $this->lastQuery;
-	}
-
-	/**
-	 * Returns the last set of results
-	 */
-	public function lastResult()
-	{
-		return $this->lastResult;
-	}
-
-	/**
-	 * Returns the last db error
-	 */
-	public function lastError(): Throwable|null
-	{
-		return $this->lastError;
-	}
-
-	/**
-	 * Returns the name of the database
-	 */
-	public function name(): string|null
-	{
-		return $this->database;
+		$this->fail = $fail;
+		return $this;
 	}
 
 	/**
@@ -397,6 +367,76 @@ class Database
 	}
 
 	/**
+	 * Returns one of the started instances
+	 */
+	public static function instance(string|null $id = null): static|null
+	{
+		if ($id === null) {
+			return A::last(static::$connections);
+		}
+
+		return static::$connections[$id] ?? null;
+	}
+
+	/**
+	 * Returns all started instances
+	 *
+	 * @return array<string, Database>
+	 */
+	public static function instances(): array
+	{
+		return static::$connections;
+	}
+
+	/**
+	 * Returns the last db error
+	 */
+	public function lastError(): Throwable|null
+	{
+		return $this->lastError;
+	}
+
+	/**
+	 * Returns the last id if available
+	 */
+	public function lastId(): int|null
+	{
+		return $this->lastId;
+	}
+
+	/**
+	 * Returns the last query
+	 */
+	public function lastQuery(): string|null
+	{
+		return $this->lastQuery;
+	}
+
+	/**
+	 * Returns the last set of results
+	 */
+	public function lastResult()
+	{
+		return $this->lastResult;
+	}
+
+	/**
+	 * Returns the name of the database
+	 */
+	public function name(): string|null
+	{
+		return $this->database;
+	}
+
+	/**
+	 * Returns the used table name prefix
+	 */
+	public function prefix(): string|null
+	{
+		return $this->prefix;
+	}
+
+	/**
 	 * Executes a sql query, which is expected to return a set of results
 	 */
 	public function query(
@@ -465,15 +505,6 @@ class Database
 	}
 
 	/**
-	 * Executes a sql query, which is expected
-	 * to not return a set of results
-	 */
-	public function execute(string $query, array $bindings = []): bool
-	{
-		return $this->lastResult = $this->hit($query, $bindings);
-	}
-
-	/**
 	 * Returns the correct Sql generator instance
 	 * for the type of database
 	 */
@@ -494,26 +525,30 @@ class Database
 	}
 
 	/**
-	 * Checks if a table exists in the current database
+	 * Adds a value to the db trace and also
+	 * returns the entire trace if nothing is specified
 	 *
-	 * @throws \PDOException if the tables cannot be listed
+	 * @return list<array>
 	 */
-	public function validateTable(string $table): bool
+	public function trace(array|null $data = null): array
 	{
-		if ($this->tables === null) {
-			// Get the list of tables from the database
-			$sql     = $this->sql()->tables();
-			$results = $this->query($sql['query'], $sql['bindings']);
-
-			// a failed lookup doesn't mean the table is missing
-			if ($this->lastError !== null) {
-				throw $this->lastError;
-			}
-
-			$this->tables = $results->pluck('name');
+		// return the full trace
+		if ($data === null) {
+			return $this->trace;
 		}
 
-		return in_array($table, $this->tables, true) === true;
+		// add a new entry to the trace
+		$this->trace[] = $data;
+
+		return $this->trace;
+	}
+
+	/**
+	 * Returns the used database type
+	 */
+	public function type(): string
+	{
+		return $this->type;
 	}
 
 	/**
@@ -545,61 +580,26 @@ class Database
 	}
 
 	/**
-	 * Creates a new table
+	 * Checks if a table exists in the current database
+	 *
+	 * @throws \PDOException if the tables cannot be listed
 	 */
-	public function createTable(string $table, array $columns = []): bool
+	public function validateTable(string $table): bool
 	{
-		$sql     = $this->sql()->createTable($table, $columns);
-		$queries = Str::split($sql['query'], ';');
+		if ($this->tables === null) {
+			// Get the list of tables from the database
+			$sql     = $this->sql()->tables();
+			$results = $this->query($sql['query'], $sql['bindings']);
 
-		foreach ($queries as $query) {
-			$query = trim($query);
-
-			if ($this->execute($query, $sql['bindings']) === false) {
-				return false;
+			// a failed lookup doesn't mean the table is missing
+			if ($this->lastError !== null) {
+				throw $this->lastError;
 			}
+
+			$this->tables = $results->pluck('name');
 		}
 
-		// update cache if it has been loaded already
-		if (
-			$this->tables !== null &&
-			in_array($table, $this->tables, true) === false
-		) {
-			$this->tables[] = $table;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Drops a table
-	 */
-	public function dropTable(string $table): bool
-	{
-		$sql = $this->sql()->dropTable($table);
-
-		if ($this->execute($sql['query'], $sql['bindings']) !== true) {
-			return false;
-		}
-
-		// update cache
-		$key = array_search($table, $this->tables ?? [], true);
-
-		if ($key !== false) {
-			unset($this->tables[$key]);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Magic way to start queries for tables by
-	 * using a method named like the table.
-	 * I.e. $db->users()->all()
-	 */
-	public function __call(string $method, mixed $arguments = null): Query
-	{
-		return $this->table($method);
+		return in_array($table, $this->tables, true) === true;
 	}
 }
 

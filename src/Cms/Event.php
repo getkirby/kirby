@@ -20,12 +20,6 @@ use Stringable;
 class Event implements Stringable
 {
 	/**
-	 * The event type
-	 * (e.g. `page` in `page.create:after`)
-	 */
-	protected string $type;
-
-	/**
 	 * The event action
 	 * (e.g. `create` in `page.create:after`)
 	 */
@@ -36,6 +30,12 @@ class Event implements Stringable
 	 * (e.g. `after` in `page.create:after`)
 	 */
 	protected string|null $state;
+
+	/**
+	 * The event type
+	 * (e.g. `page` in `page.create:after`)
+	 */
+	protected string $type;
 
 	/**
 	 * Class constructor

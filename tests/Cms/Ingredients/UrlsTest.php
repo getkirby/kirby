@@ -6,78 +6,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlsTest extends TestCase
 {
-	public static function defaultUrlProvider(): array
-	{
-		return [
-			['/',      'index'],
-			['/media', 'media'],
-			['/api',   'api'],
-		];
-	}
-
-	#[DataProvider('defaultUrlProvider')]
-	public function testDefaulUrl($url, $method): void
-	{
-		$app  = new App([
-			'roots' => [
-				'index' => __DIR__
-			]
-		]);
-
-		$urls = $app->urls();
-
-		$this->assertSame($url, $urls->$method());
-	}
-
-	public static function customBaseUrlProvider(): array
-	{
-		return [
-			['https://getkirby.com',       'index'],
-			['https://getkirby.com/media', 'media'],
-		];
-	}
-
-	#[DataProvider('customBaseUrlProvider')]
-	public function testWithCustomBaseUrl($url, $method): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			]
-		]);
-
-		$urls = $app->urls();
-		$this->assertSame($url, $urls->$method());
-	}
-
-	public static function customUrlProvider(): array
-	{
-		return [
-			['https://getkirby.com',       'index'],
-			['https://cdn.getkirby.com',   'media'],
-		];
-	}
-
-	#[DataProvider('customUrlProvider')]
-	public function testWithCustomUrl($url, $method): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com',
-				'media' => 'https://cdn.getkirby.com',
-			]
-		]);
-
-		$urls = $app->urls();
-		$this->assertSame($url, $urls->$method());
-	}
-
 	public function testCurrent(): void
 	{
 		$app = new App([
@@ -154,5 +82,77 @@ class UrlsTest extends TestCase
 		]);
 
 		$this->assertSame('http://getkirby.com/test/path', $app->url('current'));
+	}
+
+	public static function defaultUrlProvider(): array
+	{
+		return [
+			['/',      'index'],
+			['/media', 'media'],
+			['/api',   'api'],
+		];
+	}
+
+	#[DataProvider('defaultUrlProvider')]
+	public function testDefaulUrl($url, $method): void
+	{
+		$app  = new App([
+			'roots' => [
+				'index' => __DIR__
+			]
+		]);
+
+		$urls = $app->urls();
+
+		$this->assertSame($url, $urls->$method());
+	}
+
+	public static function customBaseUrlProvider(): array
+	{
+		return [
+			['https://getkirby.com',       'index'],
+			['https://getkirby.com/media', 'media'],
+		];
+	}
+
+	#[DataProvider('customBaseUrlProvider')]
+	public function testWithCustomBaseUrl($url, $method): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			]
+		]);
+
+		$urls = $app->urls();
+		$this->assertSame($url, $urls->$method());
+	}
+
+	public static function customUrlProvider(): array
+	{
+		return [
+			['https://getkirby.com',       'index'],
+			['https://cdn.getkirby.com',   'media'],
+		];
+	}
+
+	#[DataProvider('customUrlProvider')]
+	public function testWithCustomUrl($url, $method): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com',
+				'media' => 'https://cdn.getkirby.com',
+			]
+		]);
+
+		$urls = $app->urls();
+		$this->assertSame($url, $urls->$method());
 	}
 }

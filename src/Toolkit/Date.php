@@ -566,19 +566,6 @@ class Date extends DateTime implements Stringable
 	}
 
 	/**
-	 * Gets or sets the year value
-	 */
-	public function year(int|null $year = null): int
-	{
-		if ($year === null) {
-			return (int)$this->format('Y');
-		}
-
-		$this->setDate($year, $this->month(), $this->day());
-		return $this->year();
-	}
-
-	/**
 	 * Ensures that the provided string is a valid unit name
 	 *
 	 * @throws InvalidArgumentException
@@ -592,5 +579,18 @@ class Date extends DateTime implements Stringable
 				message: 'Invalid rounding unit: ' . $unit
 			);
 		}
+	}
+
+	/**
+	 * Gets or sets the year value
+	 */
+	public function year(int|null $year = null): int
+	{
+		if ($year === null) {
+			return (int)$this->format('Y');
+		}
+
+		$this->setDate($year, $this->month(), $this->day());
+		return $this->year();
 	}
 }

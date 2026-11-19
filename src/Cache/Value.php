@@ -92,14 +92,6 @@ class Value
 	}
 
 	/**
-	 * Converts the object to a JSON string
-	 */
-	public function toJson(): string
-	{
-		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
-	}
-
-	/**
 	 * Converts the object to an array
 	 *
 	 * @return array{created: int, minutes: int, value: mixed}
@@ -111,6 +103,14 @@ class Value
 			'minutes' => $this->minutes,
 			'value'   => $this->value,
 		];
+	}
+
+	/**
+	 * Converts the object to a JSON string
+	 */
+	public function toJson(): string
+	{
+		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
 	}
 
 	/**

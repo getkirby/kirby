@@ -354,6 +354,18 @@ class Version
 	}
 
 	/**
+	 * Make sure that reading from storage will always
+	 * return a usable set of fields with clean field names
+	 */
+	protected function prepareFieldsAfterRead(array $fields, Language $language): array
+	{
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+
+		// ignore all fields with null values
+		return array_filter($fields, fn ($field) => $field !== null);
+	}
+
+	/**
 	 * Prepare fields to be written by removing unwanted fields
 	 * depending on the language or model and by cleaning the field names
 	 */
@@ -396,18 +408,6 @@ class Version
 		unset($fields['uuid']);
 
 		return $fields;
-	}
-
-	/**
-	 * Make sure that reading from storage will always
-	 * return a usable set of fields with clean field names
-	 */
-	protected function prepareFieldsAfterRead(array $fields, Language $language): array
-	{
-		$fields = $this->convertFieldNamesToLowerCase($fields);
-
-		// ignore all fields with null values
-		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**

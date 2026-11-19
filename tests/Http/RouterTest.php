@@ -11,88 +11,31 @@ use TypeError;
 #[CoversClass(Router::class)]
 class RouterTest extends TestCase
 {
-	public function testRegisterSingleRoute(): void
+	public function testAfterEach(): void
 	{
-		$router = new Router([
+		$hooks = [
+			'afterEach' => function ($route, $path, $method, $result, $final) {
+				$this->assertInstanceOf(Route::class, $route);
+				$this->assertSame('/', $path);
+				$this->assertSame('GET', $method);
+				$this->assertSame('test', $result);
+				$this->assertTrue($final);
+
+				return $result . ':after';
+			}
+		];
+
+		$router = new Router(
 			[
-				'pattern' => '/',
-				'method'  => 'GET',
-				'action'  => function () {
-				}
-			]
-		]);
-
-		$result = $router->find('/', 'GET');
-
-		$this->assertInstanceOf(Route::class, $result);
-		$this->assertSame('', $result->pattern());
-		$this->assertSame('GET', $result->method());
-	}
-
-	public function testRegisterMultipleRoutes(): void
-	{
-		$router = new Router([
-			[
-				'pattern' => 'a',
-				'method'  => 'GET',
-				'action'  => function () {
-				}
+				[
+					'pattern' => '/',
+					'action'  => fn () => 'test'
+				]
 			],
-			[
-				'pattern' => 'b',
-				'method'  => 'POST',
-				'action'  => function () {
-				}
-			]
-		]);
+			$hooks
+		);
 
-		$resultA = $router->find('a', 'GET');
-		$resultB = $router->find('b', 'POST');
-
-		$this->assertInstanceOf(Route::class, $resultA);
-		$this->assertSame('a', $resultA->pattern());
-		$this->assertSame('GET', $resultA->method());
-
-		$this->assertInstanceOf(Route::class, $resultB);
-		$this->assertSame('b', $resultB->pattern());
-		$this->assertSame('POST', $resultB->method());
-	}
-
-	public function testRegisterInvalidRoute(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid route parameters');
-
-		$router = new Router([
-			'test' => 'test'
-		]);
-	}
-
-	public function testRegisterInvalidData(): void
-	{
-		$this->expectException(TypeError::class);
-
-		new Router('route');
-	}
-
-	public function testFindWithNonexistingMethod(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid routing method: KIRBY');
-		$this->expectExceptionCode(400);
-
-		$router = new Router();
-		$router->find('a', 'KIRBY');
-	}
-
-	public function testFindNonexistingRoute(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('No route found for path: "a" and request method: "GET"');
-		$this->expectExceptionCode(404);
-
-		$router = new Router();
-		$router->find('a', 'GET');
+		$this->assertSame('test:after', $router->call('/', 'GET'));
 	}
 
 	public function testBeforeEach(): void
@@ -119,31 +62,44 @@ class RouterTest extends TestCase
 		$router->call('/', 'GET');
 	}
 
-	public function testAfterEach(): void
+	public function testCallWithCallback(): void
 	{
-		$hooks = [
-			'afterEach' => function ($route, $path, $method, $result, $final) {
-				$this->assertInstanceOf(Route::class, $route);
-				$this->assertSame('/', $path);
-				$this->assertSame('GET', $method);
-				$this->assertSame('test', $result);
-				$this->assertTrue($final);
-
-				return $result . ':after';
-			}
-		];
-
-		$router = new Router(
+		$router = new Router([
 			[
-				[
-					'pattern' => '/',
-					'action'  => fn () => 'test'
-				]
+				'pattern' => '(:any)',
+				'action'  => function ($slug) {
+					// does not really get called
+				}
 			],
-			$hooks
-		);
+		]);
 
-		$this->assertSame('test:after', $router->call('/', 'GET'));
+		$phpunit = $this;
+		$result  = $router->call('test', 'GET', function ($route) use ($phpunit) {
+			$phpunit->assertInstanceOf(Route::class, $route);
+			return $route->arguments()[0];
+		});
+
+		$this->assertSame('test', $result);
+	}
+
+	public function testFindNonexistingRoute(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('No route found for path: "a" and request method: "GET"');
+		$this->expectExceptionCode(404);
+
+		$router = new Router();
+		$router->find('a', 'GET');
+	}
+
+	public function testFindWithNonexistingMethod(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid routing method: KIRBY');
+		$this->expectExceptionCode(400);
+
+		$router = new Router();
+		$router->find('a', 'KIRBY');
 	}
 
 	public function testNext(): void
@@ -236,23 +192,67 @@ class RouterTest extends TestCase
 		$this->assertSame(1, $numFinal);
 	}
 
-	public function testCallWithCallback(): void
+	public function testRegisterInvalidData(): void
+	{
+		$this->expectException(TypeError::class);
+
+		new Router('route');
+	}
+
+	public function testRegisterInvalidRoute(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid route parameters');
+
+		$router = new Router([
+			'test' => 'test'
+		]);
+	}
+
+	public function testRegisterMultipleRoutes(): void
 	{
 		$router = new Router([
 			[
-				'pattern' => '(:any)',
-				'action'  => function ($slug) {
-					// does not really get called
+				'pattern' => 'a',
+				'method'  => 'GET',
+				'action'  => function () {
 				}
 			],
+			[
+				'pattern' => 'b',
+				'method'  => 'POST',
+				'action'  => function () {
+				}
+			]
 		]);
 
-		$phpunit = $this;
-		$result  = $router->call('test', 'GET', function ($route) use ($phpunit) {
-			$phpunit->assertInstanceOf(Route::class, $route);
-			return $route->arguments()[0];
-		});
+		$resultA = $router->find('a', 'GET');
+		$resultB = $router->find('b', 'POST');
 
-		$this->assertSame('test', $result);
+		$this->assertInstanceOf(Route::class, $resultA);
+		$this->assertSame('a', $resultA->pattern());
+		$this->assertSame('GET', $resultA->method());
+
+		$this->assertInstanceOf(Route::class, $resultB);
+		$this->assertSame('b', $resultB->pattern());
+		$this->assertSame('POST', $resultB->method());
+	}
+
+	public function testRegisterSingleRoute(): void
+	{
+		$router = new Router([
+			[
+				'pattern' => '/',
+				'method'  => 'GET',
+				'action'  => function () {
+				}
+			]
+		]);
+
+		$result = $router->find('/', 'GET');
+
+		$this->assertInstanceOf(Route::class, $result);
+		$this->assertSame('', $result->pattern());
+		$this->assertSame('GET', $result->method());
 	}
 }

@@ -15,6 +15,12 @@ class ObjTest extends TestCase
 		$this->assertSame('bar', $obj->foo());
 	}
 
+	public function test__debugInfo(): void
+	{
+		$obj = new Obj($expected = ['foo' => 'bar']);
+		$this->assertSame($expected, $obj->__debugInfo());
+	}
+
 	public function test__get(): void
 	{
 		$obj = new Obj();
@@ -87,6 +93,13 @@ class ObjTest extends TestCase
 		$this->assertSame(json_encode($expected), $obj->toJson());
 	}
 
+	public function testToJsonFailure(): void
+	{
+		$obj = new Obj(['invalid' => "\xb1\x31"]);
+		$this->expectException(JsonException::class);
+		$obj->toJson();
+	}
+
 	public function testToJsonWithFlags(): void
 	{
 		$obj = new Obj(['foo' => 'bar']);
@@ -96,13 +109,6 @@ class ObjTest extends TestCase
 		);
 	}
 
-	public function testToJsonFailure(): void
-	{
-		$obj = new Obj(['invalid' => "\xb1\x31"]);
-		$this->expectException(JsonException::class);
-		$obj->toJson();
-	}
-
 	public function testToKeys(): void
 	{
 		$obj = new Obj(['foo' => 'bar']);
@@ -110,11 +116,5 @@ class ObjTest extends TestCase
 
 		$obj = new Obj(['foo' => 'bar', 'one' => 'first']);
 		$this->assertSame(['foo', 'one'], $obj->toKeys());
-	}
-
-	public function test__debugInfo(): void
-	{
-		$obj = new Obj($expected = ['foo' => 'bar']);
-		$this->assertSame($expected, $obj->__debugInfo());
 	}
 }

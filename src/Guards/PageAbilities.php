@@ -15,21 +15,6 @@ use Kirby\Cms\Page;
  */
 class PageAbilities extends ModelAbilities
 {
-	protected function error(
-		string $key,
-		array $data = [],
-		array $details = []
-	): never {
-		parent::error(
-			key: 'page.' . $key,
-			data: [
-				'slug' => $this->model->slug(),
-				...$data
-			],
-			details: $details
-		);
-	}
-
 	protected function ensureToChangeSlug(): void
 	{
 		if ($this->model->isHomePage() === true) {
@@ -110,5 +95,20 @@ class PageAbilities extends ModelAbilities
 		if ($this->model->blueprint()->num() !== 'default') {
 			$this->error(key: 'sort.mode');
 		}
+	}
+
+	protected function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
+		parent::error(
+			key: 'page.' . $key,
+			data: [
+				'slug' => $this->model->slug(),
+				...$data
+			],
+			details: $details
+		);
 	}
 }

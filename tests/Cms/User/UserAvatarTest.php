@@ -189,6 +189,34 @@ class UserAvatarTest extends ModelTestCase
 		$this->assertFileExists($user->root() . '/profile.jpg');
 	}
 
+	public function testReplaceAvatarHooks(): void
+	{
+		$calls   = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.replaceAvatar:before' => function (User $user, string $source, string $extension) use ($phpunit, &$calls) {
+					$phpunit->assertSame('admin@getkirby.com', $user->email());
+					$phpunit->assertSame('jpg', $extension);
+					$calls++;
+				},
+				'user.replaceAvatar:after' => function (User $user) use ($phpunit, &$calls) {
+					$phpunit->assertSame('admin@getkirby.com', $user->email());
+					$calls++;
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$user = $this->app->user('admin@getkirby.com');
+		$user->createAvatar($this->avatarSource(), 'jpg');
+		$user->replaceAvatar($this->avatarSource(), 'jpg');
+
+		$this->assertSame(2, $calls);
+	}
+
 	public function testReplaceAvatarWithDifferentExtension(): void
 	{
 		$user = $this->app->user('admin@getkirby.com');
@@ -244,33 +272,5 @@ class UserAvatarTest extends ModelTestCase
 		$this->expectExceptionMessageIs('You are not allowed to update the user "editor@getkirby.com"');
 
 		$this->app->user('editor@getkirby.com')->replaceAvatar($this->avatarSource(), 'jpg');
-	}
-
-	public function testReplaceAvatarHooks(): void
-	{
-		$calls   = 0;
-		$phpunit = $this;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'user.replaceAvatar:before' => function (User $user, string $source, string $extension) use ($phpunit, &$calls) {
-					$phpunit->assertSame('admin@getkirby.com', $user->email());
-					$phpunit->assertSame('jpg', $extension);
-					$calls++;
-				},
-				'user.replaceAvatar:after' => function (User $user) use ($phpunit, &$calls) {
-					$phpunit->assertSame('admin@getkirby.com', $user->email());
-					$calls++;
-				}
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-		$user->replaceAvatar($this->avatarSource(), 'jpg');
-
-		$this->assertSame(2, $calls);
 	}
 }

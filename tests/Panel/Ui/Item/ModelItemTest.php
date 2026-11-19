@@ -34,6 +34,16 @@ class ModelItemTest extends TestCase
 		$this->assertSame('k-item', $item->component());
 	}
 
+	public function testImageDisabled(): void
+	{
+		$item = new ModelItem(
+			model: $this->model,
+			image: false
+		);
+
+		$this->assertNull($item->props()['image']);
+	}
+
 	public function testImageSettings(): void
 	{
 		$item = new ModelItem(
@@ -44,16 +54,6 @@ class ModelItemTest extends TestCase
 		);
 
 		$this->assertSame('black', $item->props()['image']['back']);
-	}
-
-	public function testImageDisabled(): void
-	{
-		$item = new ModelItem(
-			model: $this->model,
-			image: false
-		);
-
-		$this->assertNull($item->props()['image']);
 	}
 
 	public function testInfo(): void
@@ -89,19 +89,6 @@ class ModelItemTest extends TestCase
 		$this->assertSame('', $item->props()['info']);
 	}
 
-	public function testInfoWithTableLayout(): void
-	{
-		$item = new ModelItem(
-			model:  $this->escapable(),
-			info:   '{{ page.title }}',
-			layout: 'table'
-		);
-
-		// table cells render as text, so escaping here would show up
-		// as entities in the Panel
-		$this->assertSame('Fish <b>&</b> Chips', $item->props()['info']);
-	}
-
 	public function testInfoWithListLayout(): void
 	{
 		$item = new ModelItem(
@@ -113,6 +100,19 @@ class ModelItemTest extends TestCase
 
 		$this->assertInstanceOf(HtmlString::class, $info);
 		$this->assertSame('Fish &lt;b&gt;&amp;&lt;/b&gt; Chips', (string)$info);
+	}
+
+	public function testInfoWithTableLayout(): void
+	{
+		$item = new ModelItem(
+			model:  $this->escapable(),
+			info:   '{{ page.title }}',
+			layout: 'table'
+		);
+
+		// table cells render as text, so escaping here would show up
+		// as entities in the Panel
+		$this->assertSame('Fish <b>&</b> Chips', $item->props()['info']);
 	}
 
 	public function testProps(): void
@@ -158,19 +158,6 @@ class ModelItemTest extends TestCase
 		$this->assertSame('test', (string)$item->props()['text']);
 	}
 
-	public function testTextWithTableLayout(): void
-	{
-		$item = new ModelItem(
-			model:  $this->escapable(),
-			text:   '{{ page.title }}',
-			layout: 'table'
-		);
-
-		// table cells render as text, so escaping here would show up
-		// as entities in the Panel
-		$this->assertSame('Fish <b>&</b> Chips', $item->props()['text']);
-	}
-
 	public function testTextWithListLayout(): void
 	{
 		$item = new ModelItem(
@@ -182,5 +169,18 @@ class ModelItemTest extends TestCase
 
 		$this->assertInstanceOf(HtmlString::class, $text);
 		$this->assertSame('Fish &lt;b&gt;&amp;&lt;/b&gt; Chips', (string)$text);
+	}
+
+	public function testTextWithTableLayout(): void
+	{
+		$item = new ModelItem(
+			model:  $this->escapable(),
+			text:   '{{ page.title }}',
+			layout: 'table'
+		);
+
+		// table cells render as text, so escaping here would show up
+		// as entities in the Panel
+		$this->assertSame('Fish <b>&</b> Chips', $item->props()['text']);
 	}
 }

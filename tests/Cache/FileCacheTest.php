@@ -189,6 +189,61 @@ class FileCacheTest extends TestCase
 		);
 	}
 
+	public function testFlush(): void
+	{
+		$cache = new FileCache([
+			'root' => $root = static::TMP
+		]);
+
+		$cache->set('a', 'A basic value');
+		$cache->set('b', 'A basic value');
+		$cache->set('c', 'A basic value');
+		$cache->set('d/a', 'A basic value');
+		$this->assertFileExists($root . '/a');
+		$this->assertFileExists($root . '/b');
+		$this->assertFileExists($root . '/c');
+		$this->assertFileExists($root . '/d/a');
+
+		$this->assertTrue($cache->flush());
+		$this->assertFileDoesNotExist($root . '/a');
+		$this->assertFileDoesNotExist($root . '/b');
+		$this->assertFileDoesNotExist($root . '/c');
+		$this->assertDirectoryDoesNotExist($root . '/d');
+	}
+
+	public function testFlushWithPrefix(): void
+	{
+		$cache1 = new FileCache([
+			'root' => $root = static::TMP,
+			'prefix' => 'test1'
+		]);
+		$cache2 = new FileCache([
+			'root' => $root = static::TMP,
+			'prefix' => 'test2'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache1->set('b', 'A basic value');
+		$cache2->set('a', 'A basic value');
+		$cache2->set('b', 'A basic value');
+		$cache1->set('c/a', 'A basic value');
+		$cache2->set('c/a', 'A basic value');
+		$this->assertFileExists($root . '/test1/a');
+		$this->assertFileExists($root . '/test1/b');
+		$this->assertFileExists($root . '/test2/a');
+		$this->assertFileExists($root . '/test2/b');
+		$this->assertFileExists($root . '/test2/c/a');
+		$this->assertFileExists($root . '/test2/c/a');
+
+		$this->assertTrue($cache1->flush());
+		$this->assertFileDoesNotExist($root . '/test1/a');
+		$this->assertFileDoesNotExist($root . '/test1/b');
+		$this->assertDirectoryDoesNotExist($root . '/test1/c');
+		$this->assertFileExists($root . '/test2/a');
+		$this->assertFileExists($root . '/test2/b');
+		$this->assertFileExists($root . '/test2/c/a');
+	}
+
 	public function testOperations(): void
 	{
 		$cache = new FileCache([
@@ -284,61 +339,6 @@ class FileCacheTest extends TestCase
 		$this->assertNull($cache1->retrieve('foo'));
 		$this->assertTrue($cache2->exists('foo'));
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
-	}
-
-	public function testFlush(): void
-	{
-		$cache = new FileCache([
-			'root' => $root = static::TMP
-		]);
-
-		$cache->set('a', 'A basic value');
-		$cache->set('b', 'A basic value');
-		$cache->set('c', 'A basic value');
-		$cache->set('d/a', 'A basic value');
-		$this->assertFileExists($root . '/a');
-		$this->assertFileExists($root . '/b');
-		$this->assertFileExists($root . '/c');
-		$this->assertFileExists($root . '/d/a');
-
-		$this->assertTrue($cache->flush());
-		$this->assertFileDoesNotExist($root . '/a');
-		$this->assertFileDoesNotExist($root . '/b');
-		$this->assertFileDoesNotExist($root . '/c');
-		$this->assertDirectoryDoesNotExist($root . '/d');
-	}
-
-	public function testFlushWithPrefix(): void
-	{
-		$cache1 = new FileCache([
-			'root' => $root = static::TMP,
-			'prefix' => 'test1'
-		]);
-		$cache2 = new FileCache([
-			'root' => $root = static::TMP,
-			'prefix' => 'test2'
-		]);
-
-		$cache1->set('a', 'A basic value');
-		$cache1->set('b', 'A basic value');
-		$cache2->set('a', 'A basic value');
-		$cache2->set('b', 'A basic value');
-		$cache1->set('c/a', 'A basic value');
-		$cache2->set('c/a', 'A basic value');
-		$this->assertFileExists($root . '/test1/a');
-		$this->assertFileExists($root . '/test1/b');
-		$this->assertFileExists($root . '/test2/a');
-		$this->assertFileExists($root . '/test2/b');
-		$this->assertFileExists($root . '/test2/c/a');
-		$this->assertFileExists($root . '/test2/c/a');
-
-		$this->assertTrue($cache1->flush());
-		$this->assertFileDoesNotExist($root . '/test1/a');
-		$this->assertFileDoesNotExist($root . '/test1/b');
-		$this->assertDirectoryDoesNotExist($root . '/test1/c');
-		$this->assertFileExists($root . '/test2/a');
-		$this->assertFileExists($root . '/test2/b');
-		$this->assertFileExists($root . '/test2/c/a');
 	}
 
 	public function testRemoveEmptyDirectories(): void

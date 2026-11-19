@@ -183,7 +183,6 @@ class StatTest extends TestCase
 		$this->assertSame('Test Value', $stat->value());
 		$this->assertSame($this->model, $stat->model);
 
-
 		// from array without model
 		$stat = Stat::from(
 			input: [

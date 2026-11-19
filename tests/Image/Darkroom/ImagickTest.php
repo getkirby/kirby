@@ -491,15 +491,16 @@ class ImagickTest extends TestCase
 		$this->assertSame(150, $image->getImageHeight());
 	}
 
-	public function testResizeWithoutCrop(): void
+	public function testResizeWithCropRounding(): void
 	{
 		$imagick = new Imagick([
-			'crop'   => false,
-			'width'  => 200
+			'crop'   => true,
+			'width'  => 200,
+			'height' => 289
 		]);
 
 		copy(
-			static::FIXTURES . '/image/cat.jpg',
+			static::FIXTURES . '/orientation/Landscape_0.jpg',
 			$file = static::TMP . '/resize.jpg'
 		);
 
@@ -507,7 +508,7 @@ class ImagickTest extends TestCase
 		$image = new Image($file);
 
 		$this->assertSame(200, $image->getImageWidth());
-		$this->assertSame(200, $image->getImageHeight());
+		$this->assertSame(289, $image->getImageHeight());
 	}
 
 	public function testResizeWithFocusPoint(): void
@@ -530,16 +531,15 @@ class ImagickTest extends TestCase
 		$this->assertSame(150, $image->getImageHeight());
 	}
 
-	public function testResizeWithCropRounding(): void
+	public function testResizeWithoutCrop(): void
 	{
 		$imagick = new Imagick([
-			'crop'   => true,
-			'width'  => 200,
-			'height' => 289
+			'crop'   => false,
+			'width'  => 200
 		]);
 
 		copy(
-			static::FIXTURES . '/orientation/Landscape_0.jpg',
+			static::FIXTURES . '/image/cat.jpg',
 			$file = static::TMP . '/resize.jpg'
 		);
 
@@ -547,21 +547,7 @@ class ImagickTest extends TestCase
 		$image = new Image($file);
 
 		$this->assertSame(200, $image->getImageWidth());
-		$this->assertSame(289, $image->getImageHeight());
-	}
-
-	public function testSaveWithFormat(): void
-	{
-		$imagick = new Imagick(['format' => 'webp']);
-
-		copy(
-			static::FIXTURES . '/image/cat.jpg',
-			$file = static::TMP . '/cat.jpg'
-		);
-
-		$imagick->process($file);
-		$this->assertTrue(F::exists($file));
-		$this->assertSame('image/webp', F::mime($file));
+		$this->assertSame(200, $image->getImageHeight());
 	}
 
 	public function testSaveSetsOutputFormat(): void
@@ -580,6 +566,20 @@ class ImagickTest extends TestCase
 		]);
 
 		$this->assertTrue($result);
+	}
+
+	public function testSaveWithFormat(): void
+	{
+		$imagick = new Imagick(['format' => 'webp']);
+
+		copy(
+			static::FIXTURES . '/image/cat.jpg',
+			$file = static::TMP . '/cat.jpg'
+		);
+
+		$imagick->process($file);
+		$this->assertTrue(F::exists($file));
+		$this->assertSame('image/webp', F::mime($file));
 	}
 
 	public function testSharpen(): void
@@ -641,6 +641,29 @@ class ImagickTest extends TestCase
 		}
 	}
 
+	public function testStripPreservesProfileFromOption(): void
+	{
+		$fixture = static::FIXTURES . '/image/onigiri-adobe-rgb-gps.jpg';
+
+		// confirm the fixture has IPTC data before processing
+		$command = 'identify -verbose ' . escapeshellarg($fixture) . ' 2>/dev/null';
+		$this->assertStringContainsString('Profile-iptc', shell_exec($command));
+
+		// IPTC is preserved when listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-preserved.jpg');
+		$imagick = new Imagick(['profiles' => ['icc', 'iptc'], 'width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringContainsString('Profile-iptc', $meta);
+
+		// IPTC is stripped when not listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-stripped.jpg');
+		$imagick = new Imagick(['width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringNotContainsString('Profile-iptc', $meta);
+	}
+
 	#[DataProvider('stripProvider')]
 	public function testStripWhenProcessing(
 		string $name,
@@ -673,29 +696,6 @@ class ImagickTest extends TestCase
 		$meta = shell_exec('identify -verbose ' . escapeshellarg($file));
 		$this->assertStringNotContainsString('photoshop:CaptionWriter', $meta);
 		$this->assertStringNotContainsString('GPS', $meta);
-		$this->assertStringNotContainsString('Profile-iptc', $meta);
-	}
-
-	public function testStripPreservesProfileFromOption(): void
-	{
-		$fixture = static::FIXTURES . '/image/onigiri-adobe-rgb-gps.jpg';
-
-		// confirm the fixture has IPTC data before processing
-		$command = 'identify -verbose ' . escapeshellarg($fixture) . ' 2>/dev/null';
-		$this->assertStringContainsString('Profile-iptc', shell_exec($command));
-
-		// IPTC is preserved when listed in profiles option
-		copy($fixture, $file = static::TMP . '/onigiri-iptc-preserved.jpg');
-		$imagick = new Imagick(['profiles' => ['icc', 'iptc'], 'width' => 250]);
-		$imagick->process($file);
-		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
-		$this->assertStringContainsString('Profile-iptc', $meta);
-
-		// IPTC is stripped when not listed in profiles option
-		copy($fixture, $file = static::TMP . '/onigiri-iptc-stripped.jpg');
-		$imagick = new Imagick(['width' => 250]);
-		$imagick->process($file);
-		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
 		$this->assertStringNotContainsString('Profile-iptc', $meta);
 	}
 }

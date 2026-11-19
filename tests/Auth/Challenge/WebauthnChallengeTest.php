@@ -37,14 +37,6 @@ class WebauthnChallengeTest extends TestCase
 		$this->user = $this->app->user('marge');
 	}
 
-	protected function writeCredentials(mixed $webauthn): void
-	{
-		F::write(
-			static::TMP . '/site/accounts/marge/.htpasswd',
-			"\n" . json_encode(['webauthn' => $webauthn])
-		);
-	}
-
 	/**
 	 * @return array{0: string, 1: string}
 	 */
@@ -176,6 +168,14 @@ class WebauthnChallengeTest extends TestCase
 		$this->assertSame(
 			9,
 			$this->app->user('marge')->secret('webauthn')[0]['counter']
+		);
+	}
+
+	protected function writeCredentials(mixed $webauthn): void
+	{
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			"\n" . json_encode(['webauthn' => $webauthn])
 		);
 	}
 }

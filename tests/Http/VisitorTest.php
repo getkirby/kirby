@@ -10,33 +10,23 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Visitor::class)]
 class VisitorTest extends TestCase
 {
-	public function testVisitorDefaults(): void
+	public function testAcceptsLanguage(): void
 	{
-		$visitor = new Visitor();
-
-		$this->assertSame('', $visitor->ip());
-		$this->assertSame('', $visitor->userAgent());
-		$this->assertNull($visitor->acceptedLanguage());
-		$this->assertInstanceOf(Collection::class, $visitor->acceptedLanguages());
-		$this->assertNull($visitor->acceptedMimeType());
-		$this->assertInstanceOf(Collection::class, $visitor->acceptedMimeTypes());
+		$visitor = new Visitor(['acceptedLanguage' => 'en-US']);
+		$this->assertTrue($visitor->acceptsLanguage('en_US'));
+		$this->assertTrue($visitor->acceptsLanguage('en'));
+		$this->assertFalse($visitor->acceptsLanguage('de_DE'));
+		$this->assertFalse($visitor->acceptsLanguage('de'));
 	}
 
-	public function testVisitorWithArguments(): void
+	public function testAcceptsMimeType(): void
 	{
-		$visitor = new Visitor([
-			'ip'               => '192.168.1.1',
-			'userAgent'        => 'Kirby',
-			'acceptedLanguage' => 'en-US',
-			'acceptedMimeType' => 'text/html'
-		]);
+		$visitor = new Visitor();
+		$this->assertFalse($visitor->acceptsMimeType('text/html'));
 
-		$this->assertSame('192.168.1.1', $visitor->ip());
-		$this->assertSame('Kirby', $visitor->userAgent());
-		$this->assertInstanceOf(Obj::class, $visitor->acceptedLanguage());
-		$this->assertSame('en_US', $visitor->acceptedLanguage()->locale());
-		$this->assertInstanceOf(Obj::class, $visitor->acceptedMimeType());
-		$this->assertSame('text/html', $visitor->acceptedMimeType()->type());
+		$visitor = new Visitor(['acceptedMimeType' => 'text/html']);
+		$this->assertTrue($visitor->acceptsMimeType('text/html'));
+		$this->assertFalse($visitor->acceptsMimeType('application/json'));
 	}
 
 	public function testIp(): void
@@ -53,23 +43,6 @@ class VisitorTest extends TestCase
 		$visitor->ip('192.168.1.1');
 		$this->assertSame('192.168.1.1', $visitor->ip());
 		$this->assertSame('c5eb5a4cc76a5cdb16e79864b9ccd26c3553f0c396d0a21baf', $visitor->ip(hash: true));
-	}
-
-	public function testUserAgent(): void
-	{
-		$visitor = new Visitor();
-		$this->assertInstanceOf(Visitor::class, $visitor->userAgent('Kirby'));
-		$this->assertSame('Kirby', $visitor->userAgent());
-	}
-
-	public function testAcceptsMimeType(): void
-	{
-		$visitor = new Visitor();
-		$this->assertFalse($visitor->acceptsMimeType('text/html'));
-
-		$visitor = new Visitor(['acceptedMimeType' => 'text/html']);
-		$this->assertTrue($visitor->acceptsMimeType('text/html'));
-		$this->assertFalse($visitor->acceptsMimeType('application/json'));
 	}
 
 	public function testPreferredMimeType(): void
@@ -112,12 +85,39 @@ class VisitorTest extends TestCase
 		$this->assertFalse($visitor->prefersJson());
 	}
 
-	public function testAcceptsLanguage(): void
+	public function testUserAgent(): void
 	{
-		$visitor = new Visitor(['acceptedLanguage' => 'en-US']);
-		$this->assertTrue($visitor->acceptsLanguage('en_US'));
-		$this->assertTrue($visitor->acceptsLanguage('en'));
-		$this->assertFalse($visitor->acceptsLanguage('de_DE'));
-		$this->assertFalse($visitor->acceptsLanguage('de'));
+		$visitor = new Visitor();
+		$this->assertInstanceOf(Visitor::class, $visitor->userAgent('Kirby'));
+		$this->assertSame('Kirby', $visitor->userAgent());
+	}
+
+	public function testVisitorDefaults(): void
+	{
+		$visitor = new Visitor();
+
+		$this->assertSame('', $visitor->ip());
+		$this->assertSame('', $visitor->userAgent());
+		$this->assertNull($visitor->acceptedLanguage());
+		$this->assertInstanceOf(Collection::class, $visitor->acceptedLanguages());
+		$this->assertNull($visitor->acceptedMimeType());
+		$this->assertInstanceOf(Collection::class, $visitor->acceptedMimeTypes());
+	}
+
+	public function testVisitorWithArguments(): void
+	{
+		$visitor = new Visitor([
+			'ip'               => '192.168.1.1',
+			'userAgent'        => 'Kirby',
+			'acceptedLanguage' => 'en-US',
+			'acceptedMimeType' => 'text/html'
+		]);
+
+		$this->assertSame('192.168.1.1', $visitor->ip());
+		$this->assertSame('Kirby', $visitor->userAgent());
+		$this->assertInstanceOf(Obj::class, $visitor->acceptedLanguage());
+		$this->assertSame('en_US', $visitor->acceptedLanguage()->locale());
+		$this->assertInstanceOf(Obj::class, $visitor->acceptedMimeType());
+		$this->assertSame('text/html', $visitor->acceptedMimeType()->type());
 	}
 }

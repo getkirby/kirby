@@ -1,15 +1,9 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import dayjs from "@/libraries/dayjs";
 import html, { HtmlString } from "./html";
 import Translation, { type TranslationState } from "./translation";
 
 describe("panel.translation", () => {
-	afterEach(() => {
-		dayjs.locale("en");
-		document.documentElement.lang = "";
-		document.body.dir = "";
-	});
-
 	describe("reset()", () => {
 		it("restores all default values", () => {
 			const translation = Translation();

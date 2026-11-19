@@ -8,11 +8,7 @@ $config = Config::create();
 return $config
 	->setRules([
 		...$config->getRules(),
-		'new_expression_parentheses' => true,
-		// both move class members, which would turn 5.x forward merges
-		// into conflicts; enable once those have slowed down
-		'ordered_class_elements' => false,
-		'php_unit_data_provider_method_order' => false
+		'new_expression_parentheses' => true
 	])
 	->setFinder(
 		Finder::create()

@@ -69,6 +69,16 @@ class ATest extends TestCase
 		$this->assertSame($expected, A::apply($array, 'b', 'c'));
 	}
 
+	public function testAverage(): void
+	{
+		$array = [5, 2, 4, 7, 9.7];
+
+		$this->assertSame(6.0, A::average($array));
+		$this->assertSame(5.5, A::average($array, 1));
+		$this->assertSame(5.54, A::average($array, 2));
+		$this->assertNull(A::average([]));
+	}
+
 	public function testCount(): void
 	{
 		$this->assertSame(3, A::count($this->_array()));
@@ -133,6 +143,118 @@ class ATest extends TestCase
 			A::every(['foo', 'bar', 'baz'], fn ($value) => $value),
 			'truthy values should be treated as true'
 		);
+	}
+
+	public function testExtend(): void
+	{
+		// simple
+		$a = $this->_array();
+		$b = [
+			'elephant' => 'toot',
+			'snake'    => 'zzz',
+			'fox'      => 'what does the fox say?'
+		];
+
+		$merged = [
+			'cat'      => 'miao',
+			'dog'      => 'wuff',
+			'bird'     => 'tweet',
+			'elephant' => 'toot',
+			'snake'    => 'zzz',
+			'fox'      => 'what does the fox say?'
+		];
+
+		$this->assertSame($merged, A::extend($a, $b));
+
+		// complex
+		$a = [
+			'verb'         => 'care',
+			'prepositions' => ['not for', 'about', 'of']
+		];
+		$b = [
+			'prepositions' => ['for'],
+			'object'       => 'others'
+		];
+
+		$merged = [
+			'verb'         => 'care',
+			'prepositions' => ['not for', 'about', 'of', 'for'],
+			'object'       => 'others'
+		];
+
+		$this->assertSame($merged, A::extend($a, $b));
+	}
+
+	public function testFill(): void
+	{
+		$array = [
+			'miao',
+			'wuff',
+			'tweet'
+		];
+
+		// placholder
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'placeholder'
+		], A::fill($array, 4));
+
+		// custom value
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant'
+		], A::fill($array, 5, 'elephant'));
+
+		// Callable
+		$this->assertSame([
+			'miao',
+			'wuff',
+			'tweet',
+			'elephant',
+			'elephant',
+			'elephant'
+		], A::fill($array, 6, fn () => 'elephant'));
+
+		// Callable with Closure
+		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
+
+		// callable with callable
+		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
+
+		// strings are never called, even if they name a function
+		$this->assertSame(['trim', 'trim'], A::fill([], 2, 'trim'));
+	}
+
+	public function testFilter(): void
+	{
+		$associativeArray = $this->_array();
+		$indexedArray = array_keys($associativeArray);
+
+		$result = A::filter(
+			$associativeArray,
+			fn ($value, $key) => in_array($key, ['cat', 'dog'])
+		);
+		$this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff'], $result);
+
+		$result = A::filter(
+			$associativeArray,
+			fn ($value) => in_array($value, ['miao', 'tweet'])
+		);
+		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
+
+		$result = A::filter(
+			$associativeArray,
+			fn ($value, $key) => $key === 'cat' || $value === 'tweet'
+		);
+		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
+
+		$result = A::filter($indexedArray, fn ($value, $key) => $key > 0);
+		$this->assertSame([1 => 'dog', 2 => 'bird'], $result);
 	}
 
 	public function testFind(): void
@@ -200,6 +322,43 @@ class ATest extends TestCase
 			A::find(['foo', 'bar', 'baz'], fn ($value) => $value),
 			'truthy values should be treated as true'
 		);
+	}
+
+	public function testFirst(): void
+	{
+		$this->assertSame('miao', A::first($this->_array()));
+	}
+
+	public function testFlip(): void
+	{
+		// scalar values
+		$this->assertSame(
+			['miao' => ['cat'], 'wuff' => ['dog'], 'tweet' => ['bird']],
+			A::flip(['cat' => 'miao', 'dog' => 'wuff', 'bird' => 'tweet'])
+		);
+
+		// array values: each element becomes its own key in the result
+		$this->assertSame(
+			[
+				'image/jpeg'  => ['jpg', 'jpeg'],
+				'image/pjpeg' => ['jpg', 'jpeg'],
+				'image/png'   => ['png'],
+			],
+			A::flip([
+				'jpg'  => ['image/jpeg', 'image/pjpeg'],
+				'jpeg' => ['image/jpeg', 'image/pjpeg'],
+				'png'  => 'image/png',
+			])
+		);
+
+		// duplicate scalar values: both keys preserved (unlike array_flip)
+		$this->assertSame(
+			['x' => ['a', 'b']],
+			A::flip(['a' => 'x', 'b' => 'x'])
+		);
+
+		// empty array
+		$this->assertSame([], A::flip([]));
 	}
 
 	public function testGet(): void
@@ -333,6 +492,100 @@ class ATest extends TestCase
 		$this->assertSame('0-x-y', A::implode([['0'], 'x', 'y'], '-'));
 	}
 
+	public function testIsAssociative(): void
+	{
+		$yes = $this->_array();
+		$no = ['cat', 'dog', 'bird'];
+
+		$this->assertTrue(A::isAssociative($yes));
+		$this->assertFalse(A::isAssociative($no));
+	}
+
+	public function testJoin(): void
+	{
+		$array = ['a', 'b', 'c'];
+		$this->assertSame('a, b, c', A::join($array));
+
+		$array = ['a', 'b', 'c'];
+		$this->assertSame('a/b/c', A::join($array, '/'));
+
+		$this->assertSame('a/b/c', A::join('a/b/c'));
+	}
+
+	public function testKeyBy(): void
+	{
+		$array = [
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_id = [
+			1 => ['id' => 1, 'username' => 'bastian'],
+			2 => ['id' => 2, 'username' => 'sonja'],
+			3 => ['id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_name = [
+			'bastian' => ['id' => 1, 'username' => 'bastian'],
+			'sonja'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas'   => ['id' => 3, 'username' => 'lukas']
+		];
+
+		$array_by_cb = [
+			'bastian-1' => ['id' => 1, 'username' => 'bastian'],
+			'sonja-2'   => ['id' => 2, 'username' => 'sonja'],
+			'lukas-3'   => ['id' => 3, 'username' => 'lukas']
+		];
+
+		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
+		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
+		$this->assertSame(
+			$array_by_cb,
+			A::keyBy($array, fn ($item) => $item['username'] . '-' . $item['id'])
+		);
+
+		// test with associative array
+		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
+	}
+
+	public function testKeyByWithFunctionNamedKey(): void
+	{
+		$array = [
+			['key' => 'a', 'date' => '2026-01-01'],
+			['key' => 'b', 'date' => '2026-01-02']
+		];
+
+		$this->assertSame(
+			['a' => $array[0], 'b' => $array[1]],
+			A::keyBy($array, 'key')
+		);
+
+		$this->assertSame(
+			['2026-01-01' => $array[0], '2026-01-02' => $array[1]],
+			A::keyBy($array, 'date')
+		);
+	}
+
+	public function testKeyByWithNonexistentKeys(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('The "key by" argument must be a valid key or a callable');
+
+		$array = [
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
+		];
+
+		A::keyBy($array, 'nonexistent');
+	}
+
+	public function testLast(): void
+	{
+		$this->assertSame('tweet', A::last($this->_array()));
+	}
+
 	public function testMap(): void
 	{
 		$array = [
@@ -351,20 +604,20 @@ class ATest extends TestCase
 		);
 	}
 
-	public function testMapWithFunction(): void
-	{
-		$array    = [' A ', 'B ', ' C'];
-		$expected = ['A', 'B', 'C'];
-
-		$this->assertSame($expected, A::map($array, trim(...)));
-	}
-
 	public function testMapWithClassMethod(): void
 	{
 		$array    = ['a', 'b', 'c'];
 		$expected = ['A', 'B', 'C'];
 
 		$this->assertSame($expected, A::map($array, 'Str::upper'));
+	}
+
+	public function testMapWithFunction(): void
+	{
+		$array    = [' A ', 'B ', ' C'];
+		$expected = ['A', 'B', 'C'];
+
+		$this->assertSame($expected, A::map($array, trim(...)));
 	}
 
 	public function testMerge(): void
@@ -421,6 +674,71 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testMergeInvalid(): void
+	{
+		// no arrays at all
+		$this->assertSame([], A::merge());
+
+		// only a mode constant
+		$this->assertSame([], A::merge(A::MERGE_REPLACE));
+
+		// single array, no second to merge into
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b']));
+
+		// single array with a trailing mode constant
+		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b'], A::MERGE_REPLACE));
+	}
+
+	public function testMergeModes(): void
+	{
+		// simple non-associative arrays
+		$a        = [1 => 'a', 4 => 'b'];
+		$b        = [1 => 'c', 3 => 'd', 5 => 'a'];
+
+		// A::MERGE_APPEND
+		$expected = ['a', 'b', 'c', 'd', 'a'];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result, true);
+		$result   = A::merge($a, $b, A::MERGE_APPEND);
+		$this->assertSame($expected, $result);
+
+		// A::MERGE_OVERWRITE
+		$expected = [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'];
+		$result   = A::merge($a, $b, false);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
+		$this->assertSame($expected, $result);
+
+		// recursive merging
+		$a        = ['a' => [1 => 'b', 4 => 'c']];
+		$b        = ['a' => [1 => 'c', 3 => 'd', 5 => 'a']];
+
+		// A::MERGE_APPEND
+		$expected = ['a' => ['b', 'c', 'c', 'd', 'a']];
+		$result   = A::merge($a, $b);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, true);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_APPEND);
+		$this->assertSame($expected, $result);
+
+		// A::MERGE_OVERWRITE
+		$expected = ['a' => [1 => 'c', 4 => 'c', 3 => 'd', 5 => 'a']];
+		$result   = A::merge($a, $b, false);
+		$this->assertSame($expected, $result);
+		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
+		$this->assertSame($expected, $result);
+
+		// A::MERGE_REPLACE
+		$a        = ['a' => ['a', 'b', 'c']];
+		$b        = ['a' => ['d', 'e', 'f']];
+		$expected = ['a' => ['d', 'e', 'f']];
+		$result   = A::merge($a, $b, A::MERGE_REPLACE);
+		$this->assertSame($expected, $result);
+	}
+
 	public function testMergeMultiples(): void
 	{
 		// simple non-associative arrays
@@ -448,338 +766,12 @@ class ATest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testMergeModes(): void
+	public function testMissing(): void
 	{
-		// simple non-associative arrays
-		$a        = [1 => 'a', 4 => 'b'];
-		$b        = [1 => 'c', 3 => 'd', 5 => 'a'];
+		$required = ['cat', 'elephant'];
 
-		// A::MERGE_APPEND
-		$expected = ['a', 'b', 'c', 'd', 'a'];
-		$result   = A::merge($a, $b);
-		$this->assertSame($expected, $result);
-		$result   = A::merge($a, $b);
-		$this->assertSame($expected, $result, true);
-		$result   = A::merge($a, $b, A::MERGE_APPEND);
-		$this->assertSame($expected, $result);
-
-		// A::MERGE_OVERWRITE
-		$expected = [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'];
-		$result   = A::merge($a, $b, false);
-		$this->assertSame($expected, $result);
-		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
-		$this->assertSame($expected, $result);
-
-
-		// recursive merging
-		$a        = ['a' => [1 => 'b', 4 => 'c']];
-		$b        = ['a' => [1 => 'c', 3 => 'd', 5 => 'a']];
-
-		// A::MERGE_APPEND
-		$expected = ['a' => ['b', 'c', 'c', 'd', 'a']];
-		$result   = A::merge($a, $b);
-		$this->assertSame($expected, $result);
-		$result   = A::merge($a, $b, true);
-		$this->assertSame($expected, $result);
-		$result   = A::merge($a, $b, A::MERGE_APPEND);
-		$this->assertSame($expected, $result);
-
-		// A::MERGE_OVERWRITE
-		$expected = ['a' => [1 => 'c', 4 => 'c', 3 => 'd', 5 => 'a']];
-		$result   = A::merge($a, $b, false);
-		$this->assertSame($expected, $result);
-		$result   = A::merge($a, $b, A::MERGE_OVERWRITE);
-		$this->assertSame($expected, $result);
-
-
-		// A::MERGE_REPLACE
-		$a        = ['a' => ['a', 'b', 'c']];
-		$b        = ['a' => ['d', 'e', 'f']];
-		$expected = ['a' => ['d', 'e', 'f']];
-		$result   = A::merge($a, $b, A::MERGE_REPLACE);
-		$this->assertSame($expected, $result);
-	}
-
-	public function testMergeInvalid(): void
-	{
-		// no arrays at all
-		$this->assertSame([], A::merge());
-
-		// only a mode constant
-		$this->assertSame([], A::merge(A::MERGE_REPLACE));
-
-		// single array, no second to merge into
-		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b']));
-
-		// single array with a trailing mode constant
-		$this->assertSame(['a' => 'b'], A::merge(['a' => 'b'], A::MERGE_REPLACE));
-	}
-
-	public function testPrepend(): void
-	{
-		// associative
-		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
-		$two    = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
-		$result = A::prepend($one, $two);
-		$this->assertSame(['d' => 'D', 'e' => 'E', 'f' => 'F', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
-
-		// numeric
-		$one    = ['a', 'b', 'c'];
-		$two    = ['d', 'e', 'f'];
-		$result = A::prepend($one, $two);
-		$this->assertSame(['d', 'e', 'f', 'a', 'b', 'c'], $result);
-
-		// mixed
-		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
-		$two    = ['d', 'e', 'f'];
-		$result = A::prepend($one, $two);
-		$this->assertSame(['d', 'e', 'f', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
-	}
-
-	public function testPluck(): void
-	{
-		$array = [
-			['id' => 1, 'username' => 'bastian'],
-			['id' => 2, 'username' => 'sonja'],
-			['id' => 3, 'username' => 'lukas']
-		];
-
-		$this->assertSame([
-			'bastian',
-			'sonja',
-			'lukas'
-		], A::pluck($array, 'username'));
-	}
-
-	public function testShuffle(): void
-	{
-		$array = $this->_array();
-		$shuffled = A::shuffle($array);
-
-		$this->assertSame($array['cat'], $shuffled['cat']);
-		$this->assertSame($array['dog'], $shuffled['dog']);
-		$this->assertSame($array['bird'], $shuffled['bird']);
-	}
-
-	public function testReduce(): void
-	{
-		$array = $this->_array();
-
-		$reduced = A::reduce($array, fn ($carry, $item) => $carry . $item, '');
-		$this->assertSame('miaowufftweet', $reduced);
-
-		$reduced = A::reduce(
-			[1, 2, 3],
-			fn ($carry, $item) => $carry + $item,
-			42
-		);
-		$this->assertSame(48, $reduced);
-
-		$reduced = A::reduce([], fn ($carry, $item) => $carry + $item);
-		$this->assertSame(null, $reduced);
-	}
-
-	public function testSlice(): void
-	{
-		$array = $this->_array();
-
-		$this->assertSame(['cat' => 'miao'], A::slice($array, 0, 1));
-		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::slice($array, 1));
-		$this->assertSame(['bird' => 'tweet'], A::slice($array, -1));
-		$this->assertSame(['dog' => 'wuff'], A::slice($array, -2, 1));
-		$this->assertSame($array, A::slice($array, 0));
-	}
-
-	public function testSome(): void
-	{
-		// The value should be passed to the callback
-		A::some(['foo', 'bar'], function ($value = null) {
-			$this->assertIsString($value, 'The value should be passed to the callback');
-		});
-
-		// The key should be passed to the callback
-		A::some(['foo' => 1, 'bar' => 2], function ($value = null, $key = null) {
-			$this->assertIsString($key, 'The key should be passed to the callback');
-		});
-
-		// the array should be passed to the callback
-		$arr = ['foo'];
-		A::some($arr, function ($value = null, $key = null, $array = null) use ($arr) {
-			$this->assertSame($array, $arr, 'The array should be passed to the callback');
-		});
-
-		// It should return false if all callbacks returns false
-		$this->assertFalse(
-			A::some(['foo', 'bar'], fn () => false),
-			'It should return false if all callbacks returns false'
-		);
-
-		// It should return true if any callback returns true
-		$this->assertTrue(
-			A::some(['foo', 'bar'], fn ($value) => $value === 'foo'),
-			'It should return true if any callback returns true'
-		);
-
-		// It should return early if any callback returns true
-		$counter = 0;
-		A::some(['foo', 'bar', 'baz'], function () use (&$counter) {
-			$counter++;
-			return true;
-		});
-		$this->assertSame(1, $counter, 'It should return early if any callback returns true');
-
-		// falsy values should be treated as false
-		$this->assertFalse(
-			A::some(['', 0, null], fn ($value) => $value),
-			'falsy values should be treated as false'
-		);
-
-		// truthy values should be treated as true
-		$this->assertTrue(
-			A::some(['foo'], fn ($value) => $value),
-			'truthy values should be treated as true'
-		);
-	}
-
-	public function testSum(): void
-	{
-		$array = $this->_array();
-
-		$this->assertSame(0, A::sum([]));
-		$this->assertSame(6, A::sum([1, 2, 3]));
-		$this->assertSame(6, A::sum([1, -1, 6]));
-		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
-	}
-
-	public function testFirst(): void
-	{
-		$this->assertSame('miao', A::first($this->_array()));
-	}
-
-	public function testFlip(): void
-	{
-		// scalar values
-		$this->assertSame(
-			['miao' => ['cat'], 'wuff' => ['dog'], 'tweet' => ['bird']],
-			A::flip(['cat' => 'miao', 'dog' => 'wuff', 'bird' => 'tweet'])
-		);
-
-		// array values: each element becomes its own key in the result
-		$this->assertSame(
-			[
-				'image/jpeg'  => ['jpg', 'jpeg'],
-				'image/pjpeg' => ['jpg', 'jpeg'],
-				'image/png'   => ['png'],
-			],
-			A::flip([
-				'jpg'  => ['image/jpeg', 'image/pjpeg'],
-				'jpeg' => ['image/jpeg', 'image/pjpeg'],
-				'png'  => 'image/png',
-			])
-		);
-
-		// duplicate scalar values: both keys preserved (unlike array_flip)
-		$this->assertSame(
-			['x' => ['a', 'b']],
-			A::flip(['a' => 'x', 'b' => 'x'])
-		);
-
-		// empty array
-		$this->assertSame([], A::flip([]));
-	}
-
-	public function testLast(): void
-	{
-		$this->assertSame('tweet', A::last($this->_array()));
-	}
-
-	public function testRandom(): void
-	{
-		$array       = $this->_array();
-		$arrayKeys   = array_flip(array_keys($array));
-		$arrayValues = array_flip(array_values($array));
-
-		// Assert existence and correctness of keys
-		$random1 = A::random($array, 1);
-		$this->assertTrue(in_array(array_values($random1)[0], $array));
-		$this->assertArrayHasKey(array_key_first($random1), $array);
-
-		// Assert order of keys in non-shuffled random
-		$random2 = A::random($array, 2);
-		$this->assertTrue($arrayKeys[array_key_first($random2)] < $arrayKeys[array_key_last($random2)]);
-
-		// Assert count in completely shuffled array
-		$random3 = A::random($array, 3, true);
-		$this->assertCount(3, $random3);
-		foreach ($random3 as $key => $value) {
-			$this->assertContains($key, array_keys($array));
-			$this->assertContains($value, array_values($array));
-			$this->assertSame($arrayKeys[$key], $arrayValues[$value]);
-		}
-	}
-
-	public function testRandomShuffledKeepsIntKeys(): void
-	{
-		$array  = [5 => 'a', 9 => 'b', 'x' => 'c'];
-		$random = A::random($array, 3, true);
-
-		$this->assertCount(3, $random);
-
-		foreach ($random as $key => $value) {
-			$this->assertSame($array[$key], $value);
-		}
-	}
-
-	public function testRandomInvalidCount(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('$count is larger than available array items');
-		A::random([1, 2, 3], 4);
-	}
-
-	public function testFill(): void
-	{
-		$array = [
-			'miao',
-			'wuff',
-			'tweet'
-		];
-
-		// placholder
-		$this->assertSame([
-			'miao',
-			'wuff',
-			'tweet',
-			'placeholder'
-		], A::fill($array, 4));
-
-		// custom value
-		$this->assertSame([
-			'miao',
-			'wuff',
-			'tweet',
-			'elephant',
-			'elephant'
-		], A::fill($array, 5, 'elephant'));
-
-		// Callable
-		$this->assertSame([
-			'miao',
-			'wuff',
-			'tweet',
-			'elephant',
-			'elephant',
-			'elephant'
-		], A::fill($array, 6, fn () => 'elephant'));
-
-		// Callable with Closure
-		$this->assertSame([1, 2, 3], A::fill([], 3, fn (int $i) => $i + 1));
-
-		// callable with callable
-		$this->assertSame([false, true, false], A::fill([], 3, [V::class, 'accepted']));
-
-		// strings are never called, even if they name a function
-		$this->assertSame(['trim', 'trim'], A::fill([], 2, 'trim'));
+		$this->assertSame(['elephant'], A::missing($this->_array(), $required));
+		$this->assertSame([], A::missing($this->_array(), ['cat']));
 	}
 
 	public function testMove(): void
@@ -815,14 +807,6 @@ class ATest extends TestCase
 		$this->expectExceptionMessageIs('Invalid "to" index');
 
 		A::move(['a', 'b', 'c'], 0, 4);
-	}
-
-	public function testMissing(): void
-	{
-		$required = ['cat', 'elephant'];
-
-		$this->assertSame(['elephant'], A::missing($this->_array(), $required));
-		$this->assertSame([], A::missing($this->_array(), ['cat']));
 	}
 
 	public function testNest(): void
@@ -1005,6 +989,176 @@ class ATest extends TestCase
 		$this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
 	}
 
+	public function testPluck(): void
+	{
+		$array = [
+			['id' => 1, 'username' => 'bastian'],
+			['id' => 2, 'username' => 'sonja'],
+			['id' => 3, 'username' => 'lukas']
+		];
+
+		$this->assertSame([
+			'bastian',
+			'sonja',
+			'lukas'
+		], A::pluck($array, 'username'));
+	}
+
+	public function testPrepend(): void
+	{
+		// associative
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d' => 'D', 'e' => 'E', 'f' => 'F'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d' => 'D', 'e' => 'E', 'f' => 'F', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
+
+		// numeric
+		$one    = ['a', 'b', 'c'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d', 'e', 'f', 'a', 'b', 'c'], $result);
+
+		// mixed
+		$one    = ['a' => 'A', 'b' => 'B', 'c' => 'C'];
+		$two    = ['d', 'e', 'f'];
+		$result = A::prepend($one, $two);
+		$this->assertSame(['d', 'e', 'f', 'a' => 'A', 'b' => 'B', 'c' => 'C'], $result);
+	}
+
+	public function testRandom(): void
+	{
+		$array       = $this->_array();
+		$arrayKeys   = array_flip(array_keys($array));
+		$arrayValues = array_flip(array_values($array));
+
+		// Assert existence and correctness of keys
+		$random1 = A::random($array, 1);
+		$this->assertTrue(in_array(array_values($random1)[0], $array));
+		$this->assertArrayHasKey(array_key_first($random1), $array);
+
+		// Assert order of keys in non-shuffled random
+		$random2 = A::random($array, 2);
+		$this->assertTrue($arrayKeys[array_key_first($random2)] < $arrayKeys[array_key_last($random2)]);
+
+		// Assert count in completely shuffled array
+		$random3 = A::random($array, 3, true);
+		$this->assertCount(3, $random3);
+		foreach ($random3 as $key => $value) {
+			$this->assertContains($key, array_keys($array));
+			$this->assertContains($value, array_values($array));
+			$this->assertSame($arrayKeys[$key], $arrayValues[$value]);
+		}
+	}
+
+	public function testRandomInvalidCount(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('$count is larger than available array items');
+		A::random([1, 2, 3], 4);
+	}
+
+	public function testRandomShuffledKeepsIntKeys(): void
+	{
+		$array  = [5 => 'a', 9 => 'b', 'x' => 'c'];
+		$random = A::random($array, 3, true);
+
+		$this->assertCount(3, $random);
+
+		foreach ($random as $key => $value) {
+			$this->assertSame($array[$key], $value);
+		}
+	}
+
+	public function testReduce(): void
+	{
+		$array = $this->_array();
+
+		$reduced = A::reduce($array, fn ($carry, $item) => $carry . $item, '');
+		$this->assertSame('miaowufftweet', $reduced);
+
+		$reduced = A::reduce(
+			[1, 2, 3],
+			fn ($carry, $item) => $carry + $item,
+			42
+		);
+		$this->assertSame(48, $reduced);
+
+		$reduced = A::reduce([], fn ($carry, $item) => $carry + $item);
+		$this->assertSame(null, $reduced);
+	}
+
+	public function testShuffle(): void
+	{
+		$array = $this->_array();
+		$shuffled = A::shuffle($array);
+
+		$this->assertSame($array['cat'], $shuffled['cat']);
+		$this->assertSame($array['dog'], $shuffled['dog']);
+		$this->assertSame($array['bird'], $shuffled['bird']);
+	}
+
+	public function testSlice(): void
+	{
+		$array = $this->_array();
+
+		$this->assertSame(['cat' => 'miao'], A::slice($array, 0, 1));
+		$this->assertSame(['dog' => 'wuff', 'bird' => 'tweet'], A::slice($array, 1));
+		$this->assertSame(['bird' => 'tweet'], A::slice($array, -1));
+		$this->assertSame(['dog' => 'wuff'], A::slice($array, -2, 1));
+		$this->assertSame($array, A::slice($array, 0));
+	}
+
+	public function testSome(): void
+	{
+		// The value should be passed to the callback
+		A::some(['foo', 'bar'], function ($value = null) {
+			$this->assertIsString($value, 'The value should be passed to the callback');
+		});
+
+		// The key should be passed to the callback
+		A::some(['foo' => 1, 'bar' => 2], function ($value = null, $key = null) {
+			$this->assertIsString($key, 'The key should be passed to the callback');
+		});
+
+		// the array should be passed to the callback
+		$arr = ['foo'];
+		A::some($arr, function ($value = null, $key = null, $array = null) use ($arr) {
+			$this->assertSame($array, $arr, 'The array should be passed to the callback');
+		});
+
+		// It should return false if all callbacks returns false
+		$this->assertFalse(
+			A::some(['foo', 'bar'], fn () => false),
+			'It should return false if all callbacks returns false'
+		);
+
+		// It should return true if any callback returns true
+		$this->assertTrue(
+			A::some(['foo', 'bar'], fn ($value) => $value === 'foo'),
+			'It should return true if any callback returns true'
+		);
+
+		// It should return early if any callback returns true
+		$counter = 0;
+		A::some(['foo', 'bar', 'baz'], function () use (&$counter) {
+			$counter++;
+			return true;
+		});
+		$this->assertSame(1, $counter, 'It should return early if any callback returns true');
+
+		// falsy values should be treated as false
+		$this->assertFalse(
+			A::some(['', 0, null], fn ($value) => $value),
+			'falsy values should be treated as false'
+		);
+
+		// truthy values should be treated as true
+		$this->assertTrue(
+			A::some(['foo'], fn ($value) => $value),
+			'truthy values should be treated as true'
+		);
+	}
+
 	public function testSort(): void
 	{
 		$array = [
@@ -1027,7 +1181,7 @@ class ATest extends TestCase
 		$this->assertSame(0, array_search('sonja', array_column($sorted, 'username')));
 		$this->assertSame(1, array_search('lukas', array_column($sorted, 'username')));
 
-		//SORT_NATURAL
+		// SORT_NATURAL
 		$array = [
 			['file' => 'img12.png'],
 			['file' => 'img10.png'],
@@ -1060,143 +1214,14 @@ class ATest extends TestCase
 		$this->assertSame(['b', 'c', 'a'], array_keys(A::sort($array, 'username', 'asc')));
 	}
 
-	public function testIsAssociative(): void
+	public function testSum(): void
 	{
-		$yes = $this->_array();
-		$no = ['cat', 'dog', 'bird'];
+		$array = $this->_array();
 
-		$this->assertTrue(A::isAssociative($yes));
-		$this->assertFalse(A::isAssociative($no));
-	}
-
-	public function testAverage(): void
-	{
-		$array = [5, 2, 4, 7, 9.7];
-
-		$this->assertSame(6.0, A::average($array));
-		$this->assertSame(5.5, A::average($array, 1));
-		$this->assertSame(5.54, A::average($array, 2));
-		$this->assertNull(A::average([]));
-	}
-
-	public function testExtend(): void
-	{
-		// simple
-		$a = $this->_array();
-		$b = [
-			'elephant' => 'toot',
-			'snake'    => 'zzz',
-			'fox'      => 'what does the fox say?'
-		];
-
-		$merged = [
-			'cat'      => 'miao',
-			'dog'      => 'wuff',
-			'bird'     => 'tweet',
-			'elephant' => 'toot',
-			'snake'    => 'zzz',
-			'fox'      => 'what does the fox say?'
-		];
-
-		$this->assertSame($merged, A::extend($a, $b));
-
-		// complex
-		$a = [
-			'verb'         => 'care',
-			'prepositions' => ['not for', 'about', 'of']
-		];
-		$b = [
-			'prepositions' => ['for'],
-			'object'       => 'others'
-		];
-
-		$merged = [
-			'verb'         => 'care',
-			'prepositions' => ['not for', 'about', 'of', 'for'],
-			'object'       => 'others'
-		];
-
-		$this->assertSame($merged, A::extend($a, $b));
-	}
-
-	public function testJoin(): void
-	{
-		$array = ['a', 'b', 'c'];
-		$this->assertSame('a, b, c', A::join($array));
-
-		$array = ['a', 'b', 'c'];
-		$this->assertSame('a/b/c', A::join($array, '/'));
-
-		$this->assertSame('a/b/c', A::join('a/b/c'));
-	}
-
-	public function testKeyBy(): void
-	{
-		$array = [
-			['id' => 1, 'username' => 'bastian'],
-			['id' => 2, 'username' => 'sonja'],
-			['id' => 3, 'username' => 'lukas']
-		];
-
-		$array_by_id = [
-			1 => ['id' => 1, 'username' => 'bastian'],
-			2 => ['id' => 2, 'username' => 'sonja'],
-			3 => ['id' => 3, 'username' => 'lukas']
-		];
-
-		$array_by_name = [
-			'bastian' => ['id' => 1, 'username' => 'bastian'],
-			'sonja'   => ['id' => 2, 'username' => 'sonja'],
-			'lukas'   => ['id' => 3, 'username' => 'lukas']
-		];
-
-		$array_by_cb = [
-			'bastian-1' => ['id' => 1, 'username' => 'bastian'],
-			'sonja-2'   => ['id' => 2, 'username' => 'sonja'],
-			'lukas-3'   => ['id' => 3, 'username' => 'lukas']
-		];
-
-		$this->assertSame($array_by_id, A::keyBy($array, 'id'));
-		$this->assertSame($array_by_name, A::keyBy($array, 'username'));
-		$this->assertSame(
-			$array_by_cb,
-			A::keyBy($array, fn ($item) => $item['username'] . '-' . $item['id'])
-		);
-
-		// test with associative array
-		$this->assertSame($array_by_id, A::keyBy($array_by_cb, 'id'));
-	}
-
-	public function testKeyByWithFunctionNamedKey(): void
-	{
-		$array = [
-			['key' => 'a', 'date' => '2026-01-01'],
-			['key' => 'b', 'date' => '2026-01-02']
-		];
-
-		$this->assertSame(
-			['a' => $array[0], 'b' => $array[1]],
-			A::keyBy($array, 'key')
-		);
-
-		$this->assertSame(
-			['2026-01-01' => $array[0], '2026-01-02' => $array[1]],
-			A::keyBy($array, 'date')
-		);
-	}
-
-	public function testKeyByWithNonexistentKeys(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The "key by" argument must be a valid key or a callable');
-
-		$array = [
-			['id' => 1, 'username' => 'bastian'],
-			['id' => 2, 'username' => 'sonja'],
-			['id' => 3, 'username' => 'lukas']
-		];
-
-		A::keyBy($array, 'nonexistent');
+		$this->assertSame(0, A::sum([]));
+		$this->assertSame(6, A::sum([1, 2, 3]));
+		$this->assertSame(6, A::sum([1, -1, 6]));
+		$this->assertSame(6.0, A::sum([1.2, 2.4, 2.4]));
 	}
 
 	public function testUpdate(): void
@@ -1216,45 +1241,6 @@ class ATest extends TestCase
 			$updated,
 			A::update($array, ['cat' => fn ($value) => 'meow'])
 		);
-	}
-
-	public function testWrap(): void
-	{
-		$result = A::wrap($expected = ['a', 'b']);
-		$this->assertSame($expected, $result);
-
-		$result = A::wrap('a');
-		$this->assertSame(['a'], $result);
-
-		$result = A::wrap(null);
-		$this->assertSame([], $result);
-	}
-
-	public function testFilter(): void
-	{
-		$associativeArray = $this->_array();
-		$indexedArray = array_keys($associativeArray);
-
-		$result = A::filter(
-			$associativeArray,
-			fn ($value, $key) => in_array($key, ['cat', 'dog'])
-		);
-		$this->assertSame(['cat'  => 'miao', 'dog'  => 'wuff'], $result);
-
-		$result = A::filter(
-			$associativeArray,
-			fn ($value) => in_array($value, ['miao', 'tweet'])
-		);
-		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
-
-		$result = A::filter(
-			$associativeArray,
-			fn ($value, $key) => $key === 'cat' || $value === 'tweet'
-		);
-		$this->assertSame(['cat'  => 'miao', 'bird' => 'tweet'], $result);
-
-		$result = A::filter($indexedArray, fn ($value, $key) => $key > 0);
-		$this->assertSame([1 => 'dog', 2 => 'bird'], $result);
 	}
 
 	public function testWithout(): void
@@ -1280,5 +1266,17 @@ class ATest extends TestCase
 
 		$this->assertSame([2 => 'b'], A::without($array, [1]));
 		$this->assertSame([2 => 'b'], A::without($array, ['1']));
+	}
+
+	public function testWrap(): void
+	{
+		$result = A::wrap($expected = ['a', 'b']);
+		$this->assertSame($expected, $result);
+
+		$result = A::wrap('a');
+		$this->assertSame(['a'], $result);
+
+		$result = A::wrap(null);
+		$this->assertSame([], $result);
 	}
 }

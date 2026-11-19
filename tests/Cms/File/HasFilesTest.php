@@ -27,22 +27,6 @@ class NewHasFilesTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.NewHasFiles';
 
-	public static function fileProvider(): array
-	{
-		return [
-			['test.mp3', 'audio', true],
-			['test.jpg', 'audio', false],
-			['test.json', 'code', true],
-			['test.jpg', 'code', false],
-			['test.pdf', 'documents', true],
-			['test.jpg', 'documents', false],
-			['test.jpg', 'images', true],
-			['test.mov', 'images', false],
-			['test.mov', 'videos', true],
-			['test.jpg', 'videos', false],
-		];
-	}
-
 	public function testCreateFile(): void
 	{
 		$source = static::TMP . '/source.md';
@@ -106,25 +90,37 @@ class NewHasFilesTest extends ModelTestCase
 		$this->assertSame('mother/child/file.jpg', $file->id());
 	}
 
-	#[DataProvider('fileProvider')]
-	public function testTypes(
-		string $filename,
-		string $type,
-		bool $expected
-	): void {
+	public function testFileWithUUID(): void
+	{
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
 		$parent = new NewHasFileTraitUser([
-			new File(['filename' => $filename, 'parent' => $page])
+			new File([
+				'filename' => 'test.jpg',
+				'content'  => ['uuid' => 'file-test'],
+				'parent'   => $page
+			])
 		]);
 
-		if ($expected === true) {
-			$this->assertCount(1, $parent->{$type}());
-		} else {
-			$this->assertCount(0, $parent->{$type}());
-		}
+		$this->assertSame('test.jpg', $parent->file('file://file-test')->filename());
+	}
+
+	public static function fileProvider(): array
+	{
+		return [
+			['test.mp3', 'audio', true],
+			['test.jpg', 'audio', false],
+			['test.json', 'code', true],
+			['test.jpg', 'code', false],
+			['test.pdf', 'documents', true],
+			['test.jpg', 'documents', false],
+			['test.jpg', 'images', true],
+			['test.mov', 'images', false],
+			['test.mov', 'videos', true],
+			['test.jpg', 'videos', false],
+		];
 	}
 
 	#[DataProvider('fileProvider')]
@@ -163,20 +159,24 @@ class NewHasFilesTest extends ModelTestCase
 		$this->assertTrue($parent->hasFiles());
 	}
 
-	public function testFileWithUUID(): void
-	{
+	#[DataProvider('fileProvider')]
+	public function testTypes(
+		string $filename,
+		string $type,
+		bool $expected
+	): void {
 		$page = new Page([
 			'slug' => 'test'
 		]);
 
 		$parent = new NewHasFileTraitUser([
-			new File([
-				'filename' => 'test.jpg',
-				'content'  => ['uuid' => 'file-test'],
-				'parent'   => $page
-			])
+			new File(['filename' => $filename, 'parent' => $page])
 		]);
 
-		$this->assertSame('test.jpg', $parent->file('file://file-test')->filename());
+		if ($expected === true) {
+			$this->assertCount(1, $parent->{$type}());
+		} else {
+			$this->assertCount(0, $parent->{$type}());
+		}
 	}
 }

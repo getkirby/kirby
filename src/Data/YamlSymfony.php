@@ -15,6 +15,14 @@ use Symfony\Component\Yaml\Yaml as Symfony;
 class YamlSymfony
 {
 	/**
+	 * Parses an encoded YAML string and returns a multi-dimensional array
+	 */
+	public static function decode(string $string): array
+	{
+		return A::wrap(Symfony::parse($string));
+	}
+
+	/**
 	 * Converts an array to an encoded YAML string
 	 */
 	public static function encode(mixed $data): string
@@ -27,13 +35,5 @@ class YamlSymfony
 			$kirby?->option('yaml.params.indent') ?? 2,
 			Symfony::DUMP_MULTI_LINE_LITERAL_BLOCK | Symfony::DUMP_EMPTY_ARRAY_AS_SEQUENCE
 		);
-	}
-
-	/**
-	 * Parses an encoded YAML string and returns a multi-dimensional array
-	 */
-	public static function decode(string $string): array
-	{
-		return A::wrap(Symfony::parse($string));
 	}
 }

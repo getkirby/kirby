@@ -32,15 +32,15 @@ class VersionIdTest extends TestCase
 		new VersionId('foo');
 	}
 
-	public function testFromString(): void
-	{
-		$version = VersionId::from('latest');
-		$this->assertSame('latest', $version->value());
-	}
-
 	public function testFromInstance(): void
 	{
 		$version = VersionId::from(VersionId::latest());
+		$this->assertSame('latest', $version->value());
+	}
+
+	public function testFromString(): void
+	{
+		$version = VersionId::from('latest');
 		$this->assertSame('latest', $version->value());
 	}
 
@@ -63,29 +63,23 @@ class VersionIdTest extends TestCase
 		$this->assertSame('latest', $version->value());
 	}
 
-	public function testRenderString(): void
+	public function testRenderException(): void
 	{
 		$executed = 0;
 
 		$this->assertNull(VersionId::$render);
 
-		$return = VersionId::render('latest', function () use (&$executed) {
-			$executed++;
-			$this->assertSame('latest', VersionId::$render->value());
+		try {
+			VersionId::render(VersionId::latest(), function () use (&$executed) {
+				$executed++;
+				$this->assertSame('latest', VersionId::$render->value());
 
-			return 'some string';
-		});
-		$this->assertSame('some string', $return);
-
-		$this->assertNull(VersionId::$render);
-
-		$return = VersionId::render('changes', function () use (&$executed) {
+				throw new Exception('Something went wrong');
+			});
+		} catch (Exception $e) {
 			$executed += 2;
-			$this->assertSame('changes', VersionId::$render->value());
-
-			return 12345;
-		});
-		$this->assertSame(12345, $return);
+			$this->assertSame('Something went wrong', $e->getMessage());
+		}
 
 		$this->assertNull(VersionId::$render);
 		$this->assertSame(3, $executed);
@@ -137,23 +131,29 @@ class VersionIdTest extends TestCase
 		$this->assertSame(1, $executed);
 	}
 
-	public function testRenderException(): void
+	public function testRenderString(): void
 	{
 		$executed = 0;
 
 		$this->assertNull(VersionId::$render);
 
-		try {
-			VersionId::render(VersionId::latest(), function () use (&$executed) {
-				$executed++;
-				$this->assertSame('latest', VersionId::$render->value());
+		$return = VersionId::render('latest', function () use (&$executed) {
+			$executed++;
+			$this->assertSame('latest', VersionId::$render->value());
 
-				throw new Exception('Something went wrong');
-			});
-		} catch (Exception $e) {
+			return 'some string';
+		});
+		$this->assertSame('some string', $return);
+
+		$this->assertNull(VersionId::$render);
+
+		$return = VersionId::render('changes', function () use (&$executed) {
 			$executed += 2;
-			$this->assertSame('Something went wrong', $e->getMessage());
-		}
+			$this->assertSame('changes', VersionId::$render->value());
+
+			return 12345;
+		});
+		$this->assertSame(12345, $return);
 
 		$this->assertNull(VersionId::$render);
 		$this->assertSame(3, $executed);

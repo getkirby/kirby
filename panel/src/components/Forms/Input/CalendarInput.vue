@@ -13,7 +13,6 @@
 					:aria-label="$t('month')"
 					:autofocus="autofocus"
 					:options="months"
-					:empty="false"
 					:required="true"
 					:value="month"
 					@input="month = Number($event)"
@@ -21,7 +20,6 @@
 				<k-select-input
 					:aria-label="$t('year')"
 					:options="years"
-					:empty="false"
 					:required="true"
 					:value="year"
 					@input="year = Number($event)"

@@ -19,19 +19,6 @@ class LicenseStatusTest extends TestCase
 		$this->assertSame('Valid license', (string)$status);
 	}
 
-	public function testFromArray(): void
-	{
-		$status = LicenseStatus::from([
-			'icon'  => 'check',
-			'label' => 'Valid license',
-			'theme' => 'success',
-			'value' => 'active',
-		]);
-
-		$this->assertInstanceOf(LicenseStatus::class, $status);
-		$this->assertSame('active', $status->value());
-	}
-
 	public function testDialog(): void
 	{
 		$status = new LicenseStatus(
@@ -54,6 +41,19 @@ class LicenseStatusTest extends TestCase
 		);
 
 		$this->assertSame($drawer, $status->drawer());
+	}
+
+	public function testFromArray(): void
+	{
+		$status = LicenseStatus::from([
+			'icon'  => 'check',
+			'label' => 'Valid license',
+			'theme' => 'success',
+			'value' => 'active',
+		]);
+
+		$this->assertInstanceOf(LicenseStatus::class, $status);
+		$this->assertSame('active', $status->value());
 	}
 
 	public function testFromInstance(): void

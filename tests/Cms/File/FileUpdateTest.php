@@ -28,24 +28,6 @@ class FileUpdateTest extends ModelTestCase
 		$this->assertSame($template, $file->template());
 	}
 
-	public function testUpdateWithNullValue(): void
-	{
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site()
-		]);
-
-		// add a focus point
-		$updated = $file->update(['focus' => '52.8% 32.6%']);
-
-		$this->assertSame('52.8% 32.6%', $updated->focus()->value());
-
-		// remove the focus point
-		$updated = $updated->update(['focus' => null]);
-
-		$this->assertNull($updated->focus()->value());
-	}
-
 	public function testUpdateHooks(): void
 	{
 		$calls   = 0;
@@ -83,5 +65,23 @@ class FileUpdateTest extends ModelTestCase
 		$file->update($input);
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testUpdateWithNullValue(): void
+	{
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+
+		// add a focus point
+		$updated = $file->update(['focus' => '52.8% 32.6%']);
+
+		$this->assertSame('52.8% 32.6%', $updated->focus()->value());
+
+		// remove the focus point
+		$updated = $updated->update(['focus' => null]);
+
+		$this->assertNull($updated->focus()->value());
 	}
 }

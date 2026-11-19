@@ -8,26 +8,35 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Escape::class)]
 class EscapeTest extends TestCase
 {
-	/**
-	 * All character encodings supported by htmlspecialchars()
-	 */
-	protected array $supportedEncodings = [
-		'iso-8859-1',   'iso8859-1',    'iso-8859-5',   'iso8859-5',
-		'iso-8859-15',  'iso8859-15',   'utf-8',        'cp866',
-		'ibm866',       '866',          'cp1251',       'windows-1251',
-		'win-1251',     '1251',         'cp1252',       'windows-1252',
-		'1252',         'koi8-r',       'koi8-ru',      'koi8r',
-		'big5',         '950',          'gb2312',       '936',
-		'big5-hkscs',   'shift_jis',    'sjis',         'sjis-win',
-		'cp932',        '932',          'euc-jp',       'eucjp',
-		'eucjp-win',    'macroman'
-	];
-	protected array $htmlSpecialChars = [
-		'\''    => '&#039;',
-		'"'     => '&quot;',
-		'<'     => '&lt;',
-		'>'     => '&gt;',
-		'&'     => '&amp;',
+	protected array $cssSpecialChars = [
+		// HTML special chars - escape without exception to hex
+		'<'     => '\\3C ',
+		'>'     => '\\3E ',
+		'\''    => '\\27 ',
+		'"'     => '\\22 ',
+		'&'     => '\\26 ',
+		// Characters beyond ASCII value 255 to unicode escape
+		'Ā'     => '\\100 ',
+		// Characters beyond Unicode BMP to unicode escape
+		"\xF0\x90\x80\x80" => '\\10000 ',
+		// Immune chars excluded
+		','     => '\\2C ',
+		'.'     => '\\2E ',
+		'_'     => '\\5F ',
+		// Basic alnums exluded
+		'a'     => 'a',
+		'A'     => 'A',
+		'z'     => 'z',
+		'Z'     => 'Z',
+		'0'     => '0',
+		'9'     => '9',
+		// Basic control characters and null
+		"\r"    => '\\D ',
+		"\n"    => '\\A ',
+		"\t"    => '\\9 ',
+		"\0"    => '\\0 ',
+		// Encode spaces for quoteless attribute protection
+		' '     => '\\20 ',
 	];
 	protected array $htmlAttrSpecialChars = [
 		'\''    => '&#x27;',
@@ -60,6 +69,13 @@ class EscapeTest extends TestCase
 		// Encode spaces for quoteless attribute protection
 		' '     => '&#x20;',
 	];
+	protected array $htmlSpecialChars = [
+		'\''    => '&#039;',
+		'"'     => '&quot;',
+		'<'     => '&lt;',
+		'>'     => '&gt;',
+		'&'     => '&amp;',
+	];
 	protected array $jsSpecialChars = [
 		// HTML special chars - escape without exception to hex
 		'<'     => '\\x3C',
@@ -89,6 +105,21 @@ class EscapeTest extends TestCase
 		"\0"    => '\\x00',
 		// Encode spaces for quoteless attribute protection
 		' '     => '\\x20',
+	];
+
+	/**
+	 * All character encodings supported by htmlspecialchars()
+	 */
+	protected array $supportedEncodings = [
+		'iso-8859-1',   'iso8859-1',    'iso-8859-5',   'iso8859-5',
+		'iso-8859-15',  'iso8859-15',   'utf-8',        'cp866',
+		'ibm866',       '866',          'cp1251',       'windows-1251',
+		'win-1251',     '1251',         'cp1252',       'windows-1252',
+		'1252',         'koi8-r',       'koi8-ru',      'koi8r',
+		'big5',         '950',          'gb2312',       '936',
+		'big5-hkscs',   'shift_jis',    'sjis',         'sjis-win',
+		'cp932',        '932',          'euc-jp',       'eucjp',
+		'eucjp-win',    'macroman'
 	];
 	protected array $urlSpecialChars = [
 		// HTML special chars - escape without exception to percent encoding
@@ -124,130 +155,6 @@ class EscapeTest extends TestCase
 		'~'     => '~',
 		'+'     => '%2B',
 	];
-	protected array $cssSpecialChars = [
-		// HTML special chars - escape without exception to hex
-		'<'     => '\\3C ',
-		'>'     => '\\3E ',
-		'\''    => '\\27 ',
-		'"'     => '\\22 ',
-		'&'     => '\\26 ',
-		// Characters beyond ASCII value 255 to unicode escape
-		'Ā'     => '\\100 ',
-		// Characters beyond Unicode BMP to unicode escape
-		"\xF0\x90\x80\x80" => '\\10000 ',
-		// Immune chars excluded
-		','     => '\\2C ',
-		'.'     => '\\2E ',
-		'_'     => '\\5F ',
-		// Basic alnums exluded
-		'a'     => 'a',
-		'A'     => 'A',
-		'z'     => 'z',
-		'Z'     => 'Z',
-		'0'     => '0',
-		'9'     => '9',
-		// Basic control characters and null
-		"\r"    => '\\D ',
-		"\n"    => '\\A ',
-		"\t"    => '\\9 ',
-		"\0"    => '\\0 ',
-		// Encode spaces for quoteless attribute protection
-		' '     => '\\20 ',
-	];
-
-	public function testHtmlEscapingConvertsSpecialChars(): void
-	{
-		foreach ($this->htmlSpecialChars as $key => $value) {
-			$this->assertSame(
-				$value,
-				Escape::html($key),
-				'Failed to escape: ' . $key
-			);
-		}
-	}
-
-	public function testHtmlAttributeEscapingConvertsSpecialChars(): void
-	{
-		foreach ($this->htmlAttrSpecialChars as $key => $value) {
-			$this->assertSame(
-				$value,
-				Escape::attr($key),
-				'Failed to escape: ' . $key
-			);
-		}
-	}
-
-	public function testJavascriptEscapingConvertsSpecialChars(): void
-	{
-		foreach ($this->jsSpecialChars as $key => $value) {
-			$this->assertSame(
-				$value,
-				Escape::js($key),
-				'Failed to escape: ' . $key
-			);
-		}
-	}
-
-	public function testJavascriptEscapingReturnsStringIfZeroLength(): void
-	{
-		$this->assertSame('', Escape::js(''));
-	}
-
-	public function testJavascriptEscapingReturnsStringIfContainsOnlyDigits(): void
-	{
-		$this->assertSame('123', Escape::js('123'));
-	}
-
-	public function testCssEscapingConvertsSpecialChars(): void
-	{
-		foreach ($this->cssSpecialChars as $key => $value) {
-			$this->assertSame(
-				$value,
-				Escape::css($key),
-				'Failed to escape: ' . $key
-			);
-		}
-	}
-
-	public function testCssEscapingReturnsStringIfZeroLength(): void
-	{
-		$this->assertSame('', Escape::css(''));
-	}
-
-	public function testCssEscapingReturnsStringIfContainsOnlyDigits(): void
-	{
-		$this->assertSame('123', Escape::css('123'));
-	}
-
-	public function testUrlEscapingConvertsSpecialChars(): void
-	{
-		foreach ($this->urlSpecialChars as $key => $value) {
-			$this->assertSame(
-				$value,
-				Escape::url($key),
-				'Failed to escape: ' . $key
-			);
-		}
-	}
-
-	// /**
-	//  * Range tests to confirm escaped range of characters is within OWASP recommendation
-	//  */
-
-	/**
-	 * Only testing the first few 2 ranges on this prot. function
-	 * as that's all these other range tests require
-	 */
-	public function testUnicodeCodepointConversionToUtf8(): void
-	{
-		$expected = ' ~ޙ';
-		$codepoints = [0x20, 0x7e, 0x799];
-		$result = '';
-		foreach ($codepoints as $value) {
-			$result .= $this->codepointToUtf8($value);
-		}
-		$this->assertSame($expected, $result);
-	}
 
 	/**
 	 * Convert a Unicode Codepoint to a literal UTF-8 character.
@@ -282,9 +189,20 @@ class EscapeTest extends TestCase
 		throw new \Exception('Codepoint requested outside of Unicode range');
 	}
 
-	public function testJavascriptEscapingEscapesOwaspRecommendedRanges(): void
+	public function testCssEscapingConvertsSpecialChars(): void
 	{
-		$immune = [',', '.', '_']; // Exceptions to escaping ranges
+		foreach ($this->cssSpecialChars as $key => $value) {
+			$this->assertSame(
+				$value,
+				Escape::css($key),
+				'Failed to escape: ' . $key
+			);
+		}
+	}
+
+	public function testCssEscapingEscapesOwaspRecommendedRanges(): void
+	{
+		$immune = []; // CSS has no exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
 			if (
 				$chr >= 0x30 && $chr <= 0x39 ||
@@ -292,19 +210,36 @@ class EscapeTest extends TestCase
 				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
-				$this->assertSame($literal, Escape::js($literal));
+				$this->assertSame($literal, Escape::css($literal));
 			} else {
 				$literal = $this->codepointToUtf8($chr);
-				if (in_array($literal, $immune)) {
-					$this->assertSame($literal, Escape::js($literal));
-				} else {
-					$this->assertNotEquals(
-						$literal,
-						Escape::js($literal),
-						$literal . ' should be escaped!'
-					);
-				}
+				$this->assertNotEquals(
+					$literal,
+					Escape::css($literal),
+					$literal . ' should be escaped!'
+				);
 			}
+		}
+	}
+
+	public function testCssEscapingReturnsStringIfContainsOnlyDigits(): void
+	{
+		$this->assertSame('123', Escape::css('123'));
+	}
+
+	public function testCssEscapingReturnsStringIfZeroLength(): void
+	{
+		$this->assertSame('', Escape::css(''));
+	}
+
+	public function testHtmlAttributeEscapingConvertsSpecialChars(): void
+	{
+		foreach ($this->htmlAttrSpecialChars as $key => $value) {
+			$this->assertSame(
+				$value,
+				Escape::attr($key),
+				'Failed to escape: ' . $key
+			);
 		}
 	}
 
@@ -334,9 +269,31 @@ class EscapeTest extends TestCase
 		}
 	}
 
-	public function testCssEscapingEscapesOwaspRecommendedRanges(): void
+	public function testHtmlEscapingConvertsSpecialChars(): void
 	{
-		$immune = []; // CSS has no exceptions to escaping ranges
+		foreach ($this->htmlSpecialChars as $key => $value) {
+			$this->assertSame(
+				$value,
+				Escape::html($key),
+				'Failed to escape: ' . $key
+			);
+		}
+	}
+
+	public function testJavascriptEscapingConvertsSpecialChars(): void
+	{
+		foreach ($this->jsSpecialChars as $key => $value) {
+			$this->assertSame(
+				$value,
+				Escape::js($key),
+				'Failed to escape: ' . $key
+			);
+		}
+	}
+
+	public function testJavascriptEscapingEscapesOwaspRecommendedRanges(): void
+	{
+		$immune = [',', '.', '_']; // Exceptions to escaping ranges
 		for ($chr = 0; $chr < 0xFF; $chr++) {
 			if (
 				$chr >= 0x30 && $chr <= 0x39 ||
@@ -344,15 +301,59 @@ class EscapeTest extends TestCase
 				$chr >= 0x61 && $chr <= 0x7A
 			) {
 				$literal = $this->codepointToUtf8($chr);
-				$this->assertSame($literal, Escape::css($literal));
+				$this->assertSame($literal, Escape::js($literal));
 			} else {
 				$literal = $this->codepointToUtf8($chr);
-				$this->assertNotEquals(
-					$literal,
-					Escape::css($literal),
-					$literal . ' should be escaped!'
-				);
+				if (in_array($literal, $immune)) {
+					$this->assertSame($literal, Escape::js($literal));
+				} else {
+					$this->assertNotEquals(
+						$literal,
+						Escape::js($literal),
+						$literal . ' should be escaped!'
+					);
+				}
 			}
+		}
+	}
+
+	public function testJavascriptEscapingReturnsStringIfContainsOnlyDigits(): void
+	{
+		$this->assertSame('123', Escape::js('123'));
+	}
+
+	public function testJavascriptEscapingReturnsStringIfZeroLength(): void
+	{
+		$this->assertSame('', Escape::js(''));
+	}
+
+	// /**
+	//  * Range tests to confirm escaped range of characters is within OWASP recommendation
+	//  */
+
+	/**
+	 * Only testing the first few 2 ranges on this prot. function
+	 * as that's all these other range tests require
+	 */
+	public function testUnicodeCodepointConversionToUtf8(): void
+	{
+		$expected = ' ~ޙ';
+		$codepoints = [0x20, 0x7e, 0x799];
+		$result = '';
+		foreach ($codepoints as $value) {
+			$result .= $this->codepointToUtf8($value);
+		}
+		$this->assertSame($expected, $result);
+	}
+
+	public function testUrlEscapingConvertsSpecialChars(): void
+	{
+		foreach ($this->urlSpecialChars as $key => $value) {
+			$this->assertSame(
+				$value,
+				Escape::url($key),
+				'Failed to escape: ' . $key
+			);
 		}
 	}
 

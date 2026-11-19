@@ -65,9 +65,168 @@ class DatabaseTest extends TestCase
 		$this->tearDownTmp();
 	}
 
+	public function testAffected(): void
+	{
+		$this->database->table('users')->delete();
+		$this->assertSame(3, $this->database->affected());
+	}
+
+	public function testConnect(): void
+	{
+		$db = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$this->assertInstanceOf(Database::class, $db);
+		$this->expectException(InvalidArgumentException::class);
+
+		new Database([
+			'database' => ':memory:',
+			'type'     => 'nonexisting'
+		]);
+	}
+
+	public function testConnectConnection(): void
+	{
+		$this->assertInstanceOf(PDO::class, $this->database->connection());
+	}
+
+	public function testConnectConnectionDriverClass(): void
+	{
+		// driver-specific methods like `createFunction()`
+		// are only available on the driver's subclass
+		$this->assertSame(PdoSqlite::class, $this->database->connection()::class);
+	}
+
+	public function testConnectFailureKeepsState(): void
+	{
+		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
+		$connection = $db->connection();
+
+		try {
+			// valid options, but PDO itself cannot open this
+			$db->connect([
+				'type'     => 'sqlite',
+				'database' => '/definitely/not/a/directory/test.sqlite',
+				'prefix'   => 'zz_'
+			]);
+			$this->fail('Expected the connection to fail');
+		} catch (PDOException) {
+			// expected
+		}
+
+		$this->assertSame(':memory:', $db->name());
+		$this->assertNull($db->prefix());
+		$this->assertSame($connection, $db->connection());
+	}
+
+	public function testConnectIncompleteOptions(): void
+	{
+		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
+		$connection = $db->connection();
+
+		try {
+			// incomplete options (here: no database)
+			$db->connect(['type' => 'sqlite']);
+			$this->fail('Expected an exception for incomplete options');
+		} catch (InvalidArgumentException $e) {
+			$this->assertStringContainsString('requires a "database" parameter', $e->getMessage());
+		}
+
+		// the failed connect must not have touched the instance
+		$this->assertSame('sqlite', $db->type());
+		$this->assertSame(':memory:', $db->name());
+		$this->assertSame($connection, $db->connection());
+	}
+
+	public function testConnectTypeWithoutValidation(): void
+	{
+		// plugins can register a type whose connector
+		// doesn't validate the required params itself
+		Database::$types['memory'] = [
+			'sql' => Sqlite::class,
+			'dsn' => fn (array $params): string => 'sqlite::memory:'
+		];
+
+		try {
+			new Database(['type' => 'memory']);
+			$this->fail('Expected an exception for the missing database param');
+		} catch (InvalidArgumentException $e) {
+			$this->assertSame(
+				'The memory connection requires a "database" parameter',
+				$e->getMessage()
+			);
+		} finally {
+			unset(Database::$types['memory']);
+		}
+	}
+
+	public function testCreateTable(): void
+	{
+		$this->assertFalse($this->database->createTable('test'));
+		$this->assertTrue($this->database->createTable('test', [
+			'id' => [
+				'type' => 'int',
+				'primary' => true
+			]
+		]));
+	}
+
+	public function testCreateTableWithoutTableCache(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$database->execute('CREATE TABLE existing (id INTEGER)');
+		$database->createTable('created', [
+			'id' => ['type' => 'int']
+		]);
+
+		// the cache must not be started with the new table only
+		$this->assertTrue($database->validateTable('existing'));
+		$this->assertTrue($database->validateTable('created'));
+	}
+
+	public function testDropTable(): void
+	{
+		$this->assertTrue($this->database->dropTable('users'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->database->fail()->dropTable('nonexisting');
+	}
+
+	public function testEscape(): void
+	{
+		$this->assertSame("sql''inject", $this->database->escape("sql'inject"));
+	}
+
+	public function testFail(): void
+	{
+		$this->expectException(PDOException::class);
+
+		$this->database
+			->fail()
+			->table('users')->select('nonexisting')->all();
+	}
+
 	public function testInstance(): void
 	{
 		$this->assertSame($this->database, Database::instance());
+	}
+
+	public function testInstanceById(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite',
+			'id'       => 'custom'
+		]);
+
+		$this->assertSame($database, Database::instance('custom'));
+		$this->assertNull(Database::instance('missing'));
 	}
 
 	public function testInstances(): void
@@ -84,22 +243,11 @@ class DatabaseTest extends TestCase
 		], array_values(Database::instances()));
 	}
 
-	public function testInstanceById(): void
+	public function testLastError(): void
 	{
-		$database = new Database([
-			'database' => ':memory:',
-			'type'     => 'sqlite',
-			'id'       => 'custom'
-		]);
-
-		$this->assertSame($database, Database::instance('custom'));
-		$this->assertNull(Database::instance('missing'));
-	}
-
-	public function testAffected(): void
-	{
-		$this->database->table('users')->delete();
-		$this->assertSame(3, $this->database->affected());
+		$this->assertNull($this->database->lastError());
+		$this->database->table('users')->select('nonexisting')->all();
+		$this->assertInstanceOf(PDOException::class, $this->database->lastError());
 	}
 
 	public function testLastId(): void
@@ -116,10 +264,93 @@ class DatabaseTest extends TestCase
 		$this->assertSame($id, $this->database->lastId());
 	}
 
+	public function testLastQuery(): void
+	{
+		$this->database->users()->all();
+		$this->assertSame('SELECT * FROM "users"', $this->database->lastQuery());
+	}
+
+	public function testLastQueryAndResultWithoutQuery(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite'
+		]);
+
+		$this->assertNull($database->lastQuery());
+		$this->assertNull($database->lastResult());
+	}
+
 	public function testLastResult(): void
 	{
 		$result = $this->database->table('users')->select('*')->all();
 		$this->assertSame($result, $this->database->lastResult());
+	}
+
+	public function testMagicCall(): void
+	{
+		$this->assertCount(3, $this->database->users()->all());
+	}
+
+	public function testMysqlConnector(): void
+	{
+		$dsn = Database::$types['mysql']['dsn'];
+		$this->assertInstanceOf('Closure', $dsn);
+
+		// valid
+		$connectionString = $dsn([
+			'host' => 'localhost',
+			'database' => 'kirby',
+			'charset' => 'iso-8859-1',
+			'socket' => '/tmp/mysql.sock',
+			'port' => 3306,
+		]);
+
+		$expected = 'mysql:host=localhost;port=3306;unix_socket=/tmp/mysql.sock;dbname=kirby;charset=iso-8859-1';
+		$this->assertSame($expected, $connectionString);
+	}
+
+	public function testMysqlConnectorNoDatabase(): void
+	{
+		$dsn = Database::$types['mysql']['dsn'];
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('The mysql connection requires a "database" parameter');
+
+		$dsn(['host' => 'localhost']);
+	}
+
+	public function testMysqlConnectorNoSocketHost(): void
+	{
+		$dsn = Database::$types['mysql']['dsn'];
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('The mysql connection requires either a "host" or a "socket" parameter');
+
+		$dsn([]);
+	}
+
+	public function testName(): void
+	{
+		$this->assertSame(':memory:', $this->database->name());
+	}
+
+	public function testPrefixAndSql(): void
+	{
+		$database = new Database([
+			'database' => ':memory:',
+			'type'     => 'sqlite',
+			'prefix'   => 'kirby_'
+		]);
+
+		$database->execute('CREATE TABLE "kirby_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE)');
+
+		$this->assertSame('kirby_', $database->prefix());
+		$this->assertInstanceOf(Sqlite::class, $database->sql());
+		$this->assertSame(
+			'SELECT * FROM "kirby_users"',
+			$database->table('users')->build('select')['query']
+		);
 	}
 
 	public function testQueryWithArrayResultsAndTrace(): void
@@ -169,125 +400,28 @@ class DatabaseTest extends TestCase
 		$this->assertFalse($result);
 	}
 
-	public function testLastError(): void
+	public function testSqliteConnector(): void
 	{
-		$this->assertNull($this->database->lastError());
-		$this->database->table('users')->select('nonexisting')->all();
-		$this->assertInstanceOf(PDOException::class, $this->database->lastError());
-	}
+		$dsn = Database::$types['sqlite']['dsn'];
+		$this->assertInstanceOf('Closure', $dsn);
 
-	public function testConnect(): void
-	{
-		$db = new Database([
-			'database' => ':memory:',
-			'type'     => 'sqlite'
+		// valid
+		$connectionString = $dsn([
+			'database' => 'kirby'
 		]);
 
-		$this->assertInstanceOf(Database::class, $db);
+		$this->assertSame('sqlite:kirby', $connectionString);
+
+		// no database
 		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('The sqlite connection requires a "database" parameter');
 
-		new Database([
-			'database' => ':memory:',
-			'type'     => 'nonexisting'
-		]);
+		$dsn([]);
 	}
 
-	public function testConnectIncompleteOptions(): void
+	public function testType(): void
 	{
-		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
-		$connection = $db->connection();
-
-		try {
-			// incomplete options (here: no database)
-			$db->connect(['type' => 'sqlite']);
-			$this->fail('Expected an exception for incomplete options');
-		} catch (InvalidArgumentException $e) {
-			$this->assertStringContainsString('requires a "database" parameter', $e->getMessage());
-		}
-
-		// the failed connect must not have touched the instance
-		$this->assertSame('sqlite', $db->type());
-		$this->assertSame(':memory:', $db->name());
-		$this->assertSame($connection, $db->connection());
-	}
-
-	public function testConnectTypeWithoutValidation(): void
-	{
-		// plugins can register a type whose connector
-		// doesn't validate the required params itself
-		Database::$types['memory'] = [
-			'sql' => Sqlite::class,
-			'dsn' => fn (array $params): string => 'sqlite::memory:'
-		];
-
-		try {
-			new Database(['type' => 'memory']);
-			$this->fail('Expected an exception for the missing database param');
-		} catch (InvalidArgumentException $e) {
-			$this->assertSame(
-				'The memory connection requires a "database" parameter',
-				$e->getMessage()
-			);
-		} finally {
-			unset(Database::$types['memory']);
-		}
-	}
-
-	public function testConnectFailureKeepsState(): void
-	{
-		$db         = new Database(['database' => ':memory:', 'type' => 'sqlite']);
-		$connection = $db->connection();
-
-		try {
-			// valid options, but PDO itself cannot open this
-			$db->connect([
-				'type'     => 'sqlite',
-				'database' => '/definitely/not/a/directory/test.sqlite',
-				'prefix'   => 'zz_'
-			]);
-			$this->fail('Expected the connection to fail');
-		} catch (PDOException) {
-			// expected
-		}
-
-		$this->assertSame(':memory:', $db->name());
-		$this->assertNull($db->prefix());
-		$this->assertSame($connection, $db->connection());
-	}
-
-	public function testConnectConnection(): void
-	{
-		$this->assertInstanceOf(PDO::class, $this->database->connection());
-	}
-
-	public function testConnectConnectionDriverClass(): void
-	{
-		// driver-specific methods like `createFunction()`
-		// are only available on the driver's subclass
-		$this->assertSame(PdoSqlite::class, $this->database->connection()::class);
-	}
-
-	public function testFail(): void
-	{
-		$this->expectException(PDOException::class);
-
-		$this->database
-			->fail()
-			->table('users')->select('nonexisting')->all();
-	}
-
-	public function testDropTable(): void
-	{
-		$this->assertTrue($this->database->dropTable('users'));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->database->fail()->dropTable('nonexisting');
-	}
-
-	public function testValidateTable(): void
-	{
-		$this->database->validateTable('users');
-		$this->assertTrue($this->database->dropTable('users'));
+		$this->assertSame('sqlite', $this->database->type());
 	}
 
 	public function testValidateColumnAndTableCaches(): void
@@ -307,6 +441,12 @@ class DatabaseTest extends TestCase
 		$this->assertTrue($this->database->validateColumn('accounts', 'email'));
 		$this->assertTrue($this->database->dropTable('accounts'));
 		$this->assertFalse($this->database->validateTable('accounts'));
+	}
+
+	public function testValidateTable(): void
+	{
+		$this->database->validateTable('users');
+		$this->assertTrue($this->database->dropTable('users'));
 	}
 
 	public function testValidateWhenLocked(): void
@@ -355,145 +495,5 @@ class DatabaseTest extends TestCase
 		$lock->exec('ROLLBACK');
 
 		$this->assertTrue($database->validateColumn('posts', 'id'));
-	}
-
-	public function testMagicCall(): void
-	{
-		$this->assertCount(3, $this->database->users()->all());
-	}
-
-	public function testType(): void
-	{
-		$this->assertSame('sqlite', $this->database->type());
-	}
-
-	public function testPrefixAndSql(): void
-	{
-		$database = new Database([
-			'database' => ':memory:',
-			'type'     => 'sqlite',
-			'prefix'   => 'kirby_'
-		]);
-
-		$database->execute('CREATE TABLE "kirby_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE)');
-
-		$this->assertSame('kirby_', $database->prefix());
-		$this->assertInstanceOf(Sqlite::class, $database->sql());
-		$this->assertSame(
-			'SELECT * FROM "kirby_users"',
-			$database->table('users')->build('select')['query']
-		);
-	}
-
-	public function testEscape(): void
-	{
-		$this->assertSame("sql''inject", $this->database->escape("sql'inject"));
-	}
-
-	public function testLastQueryAndResultWithoutQuery(): void
-	{
-		$database = new Database([
-			'database' => ':memory:',
-			'type'     => 'sqlite'
-		]);
-
-		$this->assertNull($database->lastQuery());
-		$this->assertNull($database->lastResult());
-	}
-
-	public function testLastQuery(): void
-	{
-		$this->database->users()->all();
-		$this->assertSame('SELECT * FROM "users"', $this->database->lastQuery());
-	}
-
-	public function testName(): void
-	{
-		$this->assertSame(':memory:', $this->database->name());
-	}
-
-	public function testCreateTable(): void
-	{
-		$this->assertFalse($this->database->createTable('test'));
-		$this->assertTrue($this->database->createTable('test', [
-			'id' => [
-				'type' => 'int',
-				'primary' => true
-			]
-		]));
-	}
-
-	public function testCreateTableWithoutTableCache(): void
-	{
-		$database = new Database([
-			'database' => ':memory:',
-			'type'     => 'sqlite'
-		]);
-
-		$database->execute('CREATE TABLE existing (id INTEGER)');
-		$database->createTable('created', [
-			'id' => ['type' => 'int']
-		]);
-
-		// the cache must not be started with the new table only
-		$this->assertTrue($database->validateTable('existing'));
-		$this->assertTrue($database->validateTable('created'));
-	}
-
-	public function testMysqlConnector(): void
-	{
-		$dsn = Database::$types['mysql']['dsn'];
-		$this->assertInstanceOf('Closure', $dsn);
-
-		// valid
-		$connectionString = $dsn([
-			'host' => 'localhost',
-			'database' => 'kirby',
-			'charset' => 'iso-8859-1',
-			'socket' => '/tmp/mysql.sock',
-			'port' => 3306,
-		]);
-
-		$expected = 'mysql:host=localhost;port=3306;unix_socket=/tmp/mysql.sock;dbname=kirby;charset=iso-8859-1';
-		$this->assertSame($expected, $connectionString);
-	}
-
-	public function testMysqlConnectorNoSocketHost(): void
-	{
-		$dsn = Database::$types['mysql']['dsn'];
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The mysql connection requires either a "host" or a "socket" parameter');
-
-		$dsn([]);
-	}
-
-	public function testMysqlConnectorNoDatabase(): void
-	{
-		$dsn = Database::$types['mysql']['dsn'];
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The mysql connection requires a "database" parameter');
-
-		$dsn(['host' => 'localhost']);
-	}
-
-	public function testSqliteConnector(): void
-	{
-		$dsn = Database::$types['sqlite']['dsn'];
-		$this->assertInstanceOf('Closure', $dsn);
-
-		// valid
-		$connectionString = $dsn([
-			'database' => 'kirby'
-		]);
-
-		$this->assertSame('sqlite:kirby', $connectionString);
-
-		// no database
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('The sqlite connection requires a "database" parameter');
-
-		$dsn([]);
 	}
 }

@@ -124,17 +124,6 @@ class UserTest extends TestCase
 		$this->assertFalse(isset($image['url']));
 	}
 
-	public function testImageStringQuery(): void
-	{
-		$user = new ModelUser([
-			'email' => 'test@getkirby.com',
-		]);
-
-		// fallback to model itself
-		$image = new User($user)->image('foo.bar');
-		$this->assertNotEmpty($image);
-	}
-
 	public function testImageCover(): void
 	{
 		$app = $this->app->clone([
@@ -184,6 +173,17 @@ class UserTest extends TestCase
 			'src'    => Model::imagePlaceholder(),
 			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
+	}
+
+	public function testImageStringQuery(): void
+	{
+		$user = new ModelUser([
+			'email' => 'test@getkirby.com',
+		]);
+
+		// fallback to model itself
+		$image = new User($user)->image('foo.bar');
+		$this->assertNotEmpty($image);
 	}
 
 	public function testInfo(): void

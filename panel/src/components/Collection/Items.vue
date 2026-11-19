@@ -1,5 +1,4 @@
 <template>
-	<!-- Layout: table -->
 	<k-table
 		v-if="layout === 'table'"
 		v-bind="table"
@@ -14,8 +13,6 @@
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>
-
-	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
 		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"

@@ -36,6 +36,15 @@ class System
 	}
 
 	/**
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
+
+	/**
 	 * Check for a writable accounts folder
 	 */
 	public function accounts(): bool
@@ -481,14 +490,5 @@ class System
 				static::upgradeContent($newRoot);
 			}
 		}
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
 	}
 }

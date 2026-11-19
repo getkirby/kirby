@@ -71,38 +71,22 @@ class PageTreeRequestControllerTest extends TestCase
 		App::destroy();
 	}
 
-	public function testEntryWithSite(): void
+	public function testEntryWhenUuidsDisabled(): void
 	{
-		$controller = new PageTreeRequestController();
-		$entry      = $controller->entry($this->app->site());
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
 
-		$this->assertSame('/site', $entry['children']);
-		$this->assertFalse($entry['disabled']);
-		$this->assertTrue($entry['hasChildren']);
-		$this->assertSame('home', $entry['icon']);
-		$this->assertSame('/', $entry['id']);
-		$this->assertFalse($entry['open']);
-		$this->assertSame('Site', $entry['label']);
-		$this->assertSame('/', $entry['url']);
-		$this->assertSame('site://', $entry['uuid']);
-		$this->assertSame('site://', $entry['value']);
-	}
-
-	public function testEntryWithPage(): void
-	{
 		$controller = new PageTreeRequestController();
 		$entry      = $controller->entry($this->app->page('articles'));
 
-		$this->assertSame('/pages/articles', $entry['children']);
-		$this->assertFalse($entry['disabled']);
-		$this->assertTrue($entry['hasChildren']);
-		$this->assertSame('page', $entry['icon']);
 		$this->assertSame('articles', $entry['id']);
-		$this->assertFalse($entry['open']);
-		$this->assertSame('Blog articles', $entry['label']);
-		$this->assertSame('/articles', $entry['url']);
-		$this->assertSame('page://articles', $entry['uuid']);
-		$this->assertSame('page://articles', $entry['value']);
+		$this->assertNull($entry['uuid']);
+		$this->assertSame('articles', $entry['value']);
 	}
 
 	public function testEntryWithMoving(): void
@@ -123,6 +107,40 @@ class PageTreeRequestControllerTest extends TestCase
 
 		$entry = $controller->entry($this->app->page('articles/article-3'));
 		$this->assertTrue($entry['disabled']);
+	}
+
+	public function testEntryWithPage(): void
+	{
+		$controller = new PageTreeRequestController();
+		$entry      = $controller->entry($this->app->page('articles'));
+
+		$this->assertSame('/pages/articles', $entry['children']);
+		$this->assertFalse($entry['disabled']);
+		$this->assertTrue($entry['hasChildren']);
+		$this->assertSame('page', $entry['icon']);
+		$this->assertSame('articles', $entry['id']);
+		$this->assertFalse($entry['open']);
+		$this->assertSame('Blog articles', $entry['label']);
+		$this->assertSame('/articles', $entry['url']);
+		$this->assertSame('page://articles', $entry['uuid']);
+		$this->assertSame('page://articles', $entry['value']);
+	}
+
+	public function testEntryWithSite(): void
+	{
+		$controller = new PageTreeRequestController();
+		$entry      = $controller->entry($this->app->site());
+
+		$this->assertSame('/site', $entry['children']);
+		$this->assertFalse($entry['disabled']);
+		$this->assertTrue($entry['hasChildren']);
+		$this->assertSame('home', $entry['icon']);
+		$this->assertSame('/', $entry['id']);
+		$this->assertFalse($entry['open']);
+		$this->assertSame('Site', $entry['label']);
+		$this->assertSame('/', $entry['url']);
+		$this->assertSame('site://', $entry['uuid']);
+		$this->assertSame('site://', $entry['value']);
 	}
 
 	public function testEntryWithUnlistableChildren(): void
@@ -176,43 +194,6 @@ class PageTreeRequestControllerTest extends TestCase
 		$this->assertTrue($controller->entry($app->page('d'))['hasChildren']);
 	}
 
-	public function testEntryWhenUuidsDisabled(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'content' => [
-					'uuid' => false
-				]
-			]
-		]);
-
-		$controller = new PageTreeRequestController();
-		$entry      = $controller->entry($this->app->page('articles'));
-
-		$this->assertSame('articles', $entry['id']);
-		$this->assertNull($entry['uuid']);
-		$this->assertSame('articles', $entry['value']);
-	}
-
-	public function testLoadForSite(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'parent' => null
-				],
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$controller = new PageTreeRequestController();
-		$data       = $controller->load();
-
-		$this->assertCount(1, $data);
-		$this->assertSame('site://', $data[0]['value']);
-	}
-
 	public function testLoadForPage(): void
 	{
 		$this->app = $this->app->clone([
@@ -235,6 +216,25 @@ class PageTreeRequestControllerTest extends TestCase
 		$this->assertFalse($data[0]['disabled']);
 		$this->assertFalse($data[1]['disabled']);
 		$this->assertFalse($data[2]['disabled']);
+	}
+
+	public function testLoadForSite(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'parent' => null
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageTreeRequestController();
+		$data       = $controller->load();
+
+		$this->assertCount(1, $data);
+		$this->assertSame('site://', $data[0]['value']);
 	}
 
 	public function testLoadWithMove(): void

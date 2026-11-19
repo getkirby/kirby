@@ -108,6 +108,34 @@ class PageChangeSortTest extends ModelTestCase
 		$page->changeSort(1);
 	}
 
+	public function testFreshPageRemainsWritableAfterChangeSort(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$page = $this->site()->find('b')->changeSort(3);
+		$page = $page->update([
+			'headline' => 'Sorted'
+		]);
+
+		$this->assertSame('Sorted', $page->headline()->value());
+		$this->assertSame(3, $page->num());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertFileExists(static::TMP . '/content/3_b/default.txt');
+	}
+
 	public function testMassSorting(): void
 	{
 		foreach ($chars = range('a', 'd') as $slug) {
@@ -139,33 +167,5 @@ class PageChangeSortTest extends ModelTestCase
 		$this->assertDirectoryExists(static::TMP . '/content/3_b');
 		$this->assertDirectoryExists(static::TMP . '/content/2_c');
 		$this->assertDirectoryExists(static::TMP . '/content/1_d');
-	}
-
-	public function testFreshPageRemainsWritableAfterChangeSort(): void
-	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
-		]);
-
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
-
-		Page::create([
-			'slug' => 'c',
-			'num'  => 3,
-		]);
-
-		$page = $this->site()->find('b')->changeSort(3);
-		$page = $page->update([
-			'headline' => 'Sorted'
-		]);
-
-		$this->assertSame('Sorted', $page->headline()->value());
-		$this->assertSame(3, $page->num());
-		$this->assertDirectoryExists(static::TMP . '/content/3_b');
-		$this->assertFileExists(static::TMP . '/content/3_b/default.txt');
 	}
 }

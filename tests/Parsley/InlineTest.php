@@ -116,19 +116,6 @@ class InlineTest extends TestCase
 		$this->assertSame('<b>Test</b> <i>Test</i>', $html);
 	}
 
-	public function testParseNodeWithKnownMarksWithAttrs(): void
-	{
-		$dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
-		$p    = $dom->query('//p')[0];
-		$html = Inline::parseNode($p, [
-			'a' => [
-				'attrs' => ['href'],
-			],
-		]);
-
-		$this->assertSame('<a href="https://getkirby.com">Test</a>', $html);
-	}
-
 	public function testParseNodeWithKnownMarksWithAttrDefaults(): void
 	{
 		$dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
@@ -145,25 +132,9 @@ class InlineTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com" rel="test">Test</a>', $html);
 	}
 
-	public function testSkipsDangerousHref(): void
+	public function testParseNodeWithKnownMarksWithAttrs(): void
 	{
-		$dom  = new Dom('<p><a href="javascript://x%0Aalert(1)">Test</a></p>');
-		$p    = $dom->query('//p')[0];
-		$html = Inline::parseNode($p, [
-			'a' => [
-				'attrs' => ['href', 'rel'],
-				'defaults' => [
-					'rel' => 'noreferrer'
-				]
-			],
-		]);
-
-		$this->assertSame('<a rel="noreferrer">Test</a>', $html);
-	}
-
-	public function testSkipsObfuscatedHref(): void
-	{
-		$dom  = new Dom("<p><a href=\"java\tscript://x%0Aalert(1)\">Test</a></p>");
+		$dom  = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
 		$p    = $dom->query('//p')[0];
 		$html = Inline::parseNode($p, [
 			'a' => [
@@ -171,16 +142,7 @@ class InlineTest extends TestCase
 			],
 		]);
 
-		$this->assertSame('<a>Test</a>', $html);
-	}
-
-	public function testParseNodeWithUnkownMarks(): void
-	{
-		$dom     = new Dom('<p><b>Test</b> <i>Test</i></p>');
-		$p       = $dom->query('//p')[0];
-		$html    = Inline::parseNode($p);
-
-		$this->assertSame('Test Test', $html);
+		$this->assertSame('<a href="https://getkirby.com">Test</a>', $html);
 	}
 
 	public function testParseNodeWithSelfClosingElement(): void
@@ -210,5 +172,43 @@ class InlineTest extends TestCase
 		$html = Inline::parseNode($text);
 
 		$this->assertSame('Test &amp; Test', $html);
+	}
+
+	public function testParseNodeWithUnkownMarks(): void
+	{
+		$dom     = new Dom('<p><b>Test</b> <i>Test</i></p>');
+		$p       = $dom->query('//p')[0];
+		$html    = Inline::parseNode($p);
+
+		$this->assertSame('Test Test', $html);
+	}
+
+	public function testSkipsDangerousHref(): void
+	{
+		$dom  = new Dom('<p><a href="javascript://x%0Aalert(1)">Test</a></p>');
+		$p    = $dom->query('//p')[0];
+		$html = Inline::parseNode($p, [
+			'a' => [
+				'attrs' => ['href', 'rel'],
+				'defaults' => [
+					'rel' => 'noreferrer'
+				]
+			],
+		]);
+
+		$this->assertSame('<a rel="noreferrer">Test</a>', $html);
+	}
+
+	public function testSkipsObfuscatedHref(): void
+	{
+		$dom  = new Dom("<p><a href=\"java\tscript://x%0Aalert(1)\">Test</a></p>");
+		$p    = $dom->query('//p')[0];
+		$html = Inline::parseNode($p, [
+			'a' => [
+				'attrs' => ['href'],
+			],
+		]);
+
+		$this->assertSame('<a>Test</a>', $html);
 	}
 }

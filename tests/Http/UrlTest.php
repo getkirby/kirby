@@ -11,15 +11,43 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
-	protected string $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
 	protected string $_docs = 'http://getkirby.com/docs/';
 	protected $_SERVER = null;
+	protected string $_yts  = 'https://www.youtube.com/watch?v=9q_aXttJduk';
 
 	protected function setUp(): void
 	{
 		Uri::$current = null;
 		Url::$current = null;
 		Url::$home    = '/';
+	}
+
+	public function testBase(): void
+	{
+		$this->assertNull(Url::base());
+		$this->assertSame('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
+	}
+
+	public function testBuild(): void
+	{
+		$this->assertSame('/', Url::build());
+
+		Url::$current = $this->_yts;
+
+		// build with defaults
+		$this->assertSame('https://www.youtube.com/watch?v=9q_aXttJduk', Url::build());
+
+		// build with different host
+		$this->assertSame('https://kirbyvideo.com/watch?v=9q_aXttJduk', Url::build(['host' => 'kirbyvideo.com']));
+
+		// build from parts
+		$parts = [
+			'path'     => ['hello', 'kitty', 'mickey', 'mouse'],
+			'query'    => ['get' => 'kirby'],
+			'fragment' => 'foo'
+		];
+		$result = 'http://getkirby.com/hello/kitty/mickey/mouse?get=kirby#foo';
+		$this->assertSame($result, Url::build($parts, 'http://getkirby.com'));
 	}
 
 	public function testCallStatic(): void
@@ -66,36 +94,12 @@ class UrlTest extends TestCase
 		$this->assertNull(Url::editor(editor: 'vscode', file: null, line: 23));
 	}
 
-	public function testHome(): void
+	public function testFix(): void
 	{
-		$this->assertSame('/', Url::home());
-	}
-
-	public function testLast(): void
-	{
-		$this->assertSame('', Url::last());
-	}
-
-	public function testBuild(): void
-	{
-		$this->assertSame('/', Url::build());
-
-		Url::$current = $this->_yts;
-
-		// build with defaults
-		$this->assertSame('https://www.youtube.com/watch?v=9q_aXttJduk', Url::build());
-
-		// build with different host
-		$this->assertSame('https://kirbyvideo.com/watch?v=9q_aXttJduk', Url::build(['host' => 'kirbyvideo.com']));
-
-		// build from parts
-		$parts = [
-			'path'     => ['hello', 'kitty', 'mickey', 'mouse'],
-			'query'    => ['get' => 'kirby'],
-			'fragment' => 'foo'
-		];
-		$result = 'http://getkirby.com/hello/kitty/mickey/mouse?get=kirby#foo';
-		$this->assertSame($result, Url::build($parts, 'http://getkirby.com'));
+		$this->assertSame('http://', Url::fix());
+		$this->assertSame('http://', Url::fix(''));
+		$this->assertSame('http://getkirby.com', Url::fix('getkirby.com'));
+		$this->assertSame('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
 	}
 
 	public function testHasDangerousScheme(): void
@@ -128,6 +132,60 @@ class UrlTest extends TestCase
 		$this->assertFalse(Url::hasDangerousScheme(null));
 	}
 
+	public function testHome(): void
+	{
+		$this->assertSame('/', Url::home());
+	}
+
+	public function testIdn(): void
+	{
+		$object = Url::idn('https://xn--tst-qla.de');
+		$this->assertInstanceOf(Uri::class, $object);
+		$this->assertSame('https://täst.de', $object->toString());
+	}
+
+	public static function scriptNameProvider(): array
+	{
+		return [
+			[null, 'index.php', '/'],
+			[null, '/index.php', '/'],
+			[null, '', '/'],
+			[null, '/', '/'],
+			[null, '/kirby/index.php', '/kirby'],
+			[null, 'kirby/index.php', '/kirby'],
+			[null, '/kirby/super.php', '/kirby'],
+			[null, 'kirby/super.php', '/kirby'],
+			[null, 'kirby\super.php', '/kirby'],
+
+			['localhost', 'index.php', 'http://localhost'],
+			['localhost', '/index.php', 'http://localhost'],
+			['localhost', '', 'http://localhost'],
+			['localhost', '/', 'http://localhost'],
+			['localhost', '/kirby/index.php', 'http://localhost/kirby'],
+			['localhost', 'kirby/index.php', 'http://localhost/kirby'],
+			['localhost', '/kirby/super.php', 'http://localhost/kirby'],
+			['localhost', 'kirby/super.php', 'http://localhost/kirby'],
+			['localhost', 'kirby\super.php', 'http://localhost/kirby'],
+		];
+	}
+
+	#[DataProvider('scriptNameProvider')]
+	public function testIndex($host, $scriptName, $expected): void
+	{
+		new App([
+			'cli' => false,
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'server' => [
+				'SERVER_NAME' => $host,
+				'SCRIPT_NAME' => $scriptName
+			]
+		]);
+
+		$this->assertSame($expected, Url::index());
+	}
+
 	public function testIsAbsolute(): void
 	{
 		$this->assertTrue(Url::isAbsolute('http://getkirby.com/docs'));
@@ -143,26 +201,17 @@ class UrlTest extends TestCase
 		$this->assertFalse(Url::isAbsolute('data://text/html;base64,PHN2Zz4='));
 	}
 
+	public function testLast(): void
+	{
+		$this->assertSame('', Url::last());
+	}
+
 	public function testMakeAbsolute(): void
 	{
 		$this->assertSame('http://getkirby.com', Url::makeAbsolute('http://getkirby.com'));
 		$this->assertSame('/docs/cheatsheet', Url::makeAbsolute('docs/cheatsheet'));
 		$this->assertSame('http://getkirby.com/docs/cheatsheet', Url::makeAbsolute('docs/cheatsheet', 'http://getkirby.com'));
 		$this->assertSame('http://getkirby.com', Url::makeAbsolute('', 'http://getkirby.com'));
-	}
-
-	public function testFix(): void
-	{
-		$this->assertSame('http://', Url::fix());
-		$this->assertSame('http://', Url::fix(''));
-		$this->assertSame('http://getkirby.com', Url::fix('getkirby.com'));
-		$this->assertSame('ftp://getkirby.com', Url::fix('ftp://getkirby.com'));
-	}
-
-	public function testBase(): void
-	{
-		$this->assertNull(Url::base());
-		$this->assertSame('http://getkirby.com', Url::base('http://getkirby.com/docs/cheatsheet'));
 	}
 
 	public static function normalizeProvider(): array
@@ -243,24 +292,6 @@ class UrlTest extends TestCase
 		$this->assertSame('/a/b/', Url::path('https://getkirby.com/a/b/', true, true));
 	}
 
-	public function testStripPath(): void
-	{
-		$this->assertSame('https://getkirby.com', Url::stripPath('https://getkirby.com/a/b'));
-		$this->assertSame('https://getkirby.com/', Url::stripPath('https://getkirby.com/a/b/'));
-	}
-
-	public function testStripQuery(): void
-	{
-		$this->assertSame('https://getkirby.com', Url::stripQuery('https://getkirby.com?a=b'));
-		$this->assertSame('https://getkirby.com/', Url::stripQuery('https://getkirby.com/?a=b'));
-	}
-
-	public function testStripFragment(): void
-	{
-		$this->assertSame('https://getkirby.com', Url::stripFragment('https://getkirby.com#a/b'));
-		$this->assertSame('https://getkirby.com/', Url::stripFragment('https://getkirby.com/#a/b'));
-	}
-
 	public function testPathAndQueryWithArray(): void
 	{
 		$url = ['path' => 'a/b', 'query' => ['c' => 'd']];
@@ -302,52 +333,21 @@ class UrlTest extends TestCase
 		$this->assertSame('getkirby.com###', Url::short($this->_docs, 12, false, '###'));
 	}
 
-	public function testIdn(): void
+	public function testStripFragment(): void
 	{
-		$object = Url::idn('https://xn--tst-qla.de');
-		$this->assertInstanceOf(Uri::class, $object);
-		$this->assertSame('https://täst.de', $object->toString());
+		$this->assertSame('https://getkirby.com', Url::stripFragment('https://getkirby.com#a/b'));
+		$this->assertSame('https://getkirby.com/', Url::stripFragment('https://getkirby.com/#a/b'));
 	}
 
-	public static function scriptNameProvider(): array
+	public function testStripPath(): void
 	{
-		return [
-			[null, 'index.php', '/'],
-			[null, '/index.php', '/'],
-			[null, '', '/'],
-			[null, '/', '/'],
-			[null, '/kirby/index.php', '/kirby'],
-			[null, 'kirby/index.php', '/kirby'],
-			[null, '/kirby/super.php', '/kirby'],
-			[null, 'kirby/super.php', '/kirby'],
-			[null, 'kirby\super.php', '/kirby'],
-
-			['localhost', 'index.php', 'http://localhost'],
-			['localhost', '/index.php', 'http://localhost'],
-			['localhost', '', 'http://localhost'],
-			['localhost', '/', 'http://localhost'],
-			['localhost', '/kirby/index.php', 'http://localhost/kirby'],
-			['localhost', 'kirby/index.php', 'http://localhost/kirby'],
-			['localhost', '/kirby/super.php', 'http://localhost/kirby'],
-			['localhost', 'kirby/super.php', 'http://localhost/kirby'],
-			['localhost', 'kirby\super.php', 'http://localhost/kirby'],
-		];
+		$this->assertSame('https://getkirby.com', Url::stripPath('https://getkirby.com/a/b'));
+		$this->assertSame('https://getkirby.com/', Url::stripPath('https://getkirby.com/a/b/'));
 	}
 
-	#[DataProvider('scriptNameProvider')]
-	public function testIndex($host, $scriptName, $expected): void
+	public function testStripQuery(): void
 	{
-		new App([
-			'cli' => false,
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'server' => [
-				'SERVER_NAME' => $host,
-				'SCRIPT_NAME' => $scriptName
-			]
-		]);
-
-		$this->assertSame($expected, Url::index());
+		$this->assertSame('https://getkirby.com', Url::stripQuery('https://getkirby.com?a=b'));
+		$this->assertSame('https://getkirby.com/', Url::stripQuery('https://getkirby.com/?a=b'));
 	}
 }

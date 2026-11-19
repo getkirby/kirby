@@ -104,6 +104,52 @@ class PagePickerDialogControllerTest extends TestCase
 		$this->assertSame(0, $item['selectedChildren']);
 	}
 
+	public function testItems(): void
+	{
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$items = $controller->items();
+		$this->assertCount(3, $items);
+		$this->assertSame('alpha', $items[0]['id']);
+		$this->assertSame('beta', $items[1]['id']);
+		$this->assertSame('gamma', $items[2]['id']);
+	}
+
+	public function testItemsWithParentNavigation(): void
+	{
+		// default: lists the site's children
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertSame(
+			['alpha', 'beta', 'gamma'],
+			array_column($controller->items(), 'id')
+		);
+
+		// navigating into a parent lists that parent's children
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'parent' => 'gamma',
+				],
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertSame(
+			['gamma/delta', 'gamma/epsilon'],
+			array_column($controller->items(), 'id')
+		);
+	}
+
 	public function testItemWithImage(): void
 	{
 		// query string
@@ -224,19 +270,6 @@ class PagePickerDialogControllerTest extends TestCase
 		// only pages with listable children can be navigated into
 		$this->assertTrue($controller->item($this->app->page('alpha'))['hasChildren']);
 		$this->assertFalse($controller->item($this->app->page('beta'))['hasChildren']);
-	}
-
-	public function testItems(): void
-	{
-		$controller = new PagePickerDialogController(
-			model: $this->app->site()
-		);
-
-		$items = $controller->items();
-		$this->assertCount(3, $items);
-		$this->assertSame('alpha', $items[0]['id']);
-		$this->assertSame('beta', $items[1]['id']);
-		$this->assertSame('gamma', $items[2]['id']);
 	}
 
 	public function testLoad(): void
@@ -386,6 +419,58 @@ class PagePickerDialogControllerTest extends TestCase
 		);
 	}
 
+	public function testParentAndRootNotAccessibleThrows(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name' => 'editor',
+					'permissions' => [
+						'site' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'hidden-page',
+				],
+			],
+		]);
+
+		$this->app->impersonate('editor');
+
+		$this->assertFalse($this->app->page('hidden-page')->isAccessible());
+		$this->assertFalse($this->app->site()->isAccessible());
+
+		$controller = new PagePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->expectException(PermissionException::class);
+		$controller->parent();
+	}
+
 	public function testParentNotAccessibleFallsBackToRoot(): void
 	{
 		$this->app = $this->app->clone([
@@ -441,58 +526,6 @@ class PagePickerDialogControllerTest extends TestCase
 		);
 	}
 
-	public function testParentAndRootNotAccessibleThrows(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/forbidden' => [
-					'options' => [
-						'access' => false
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'hidden-page',
-						'template' => 'forbidden'
-					]
-				]
-			],
-			'roles' => [
-				['name' => 'admin'],
-				[
-					'name' => 'editor',
-					'permissions' => [
-						'site' => [
-							'access' => false
-						]
-					]
-				]
-			],
-			'users' => [
-				['id' => 'editor', 'role' => 'editor']
-			],
-			'request' => [
-				'query' => [
-					'parent' => 'hidden-page',
-				],
-			],
-		]);
-
-		$this->app->impersonate('editor');
-
-		$this->assertFalse($this->app->page('hidden-page')->isAccessible());
-		$this->assertFalse($this->app->site()->isAccessible());
-
-		$controller = new PagePickerDialogController(
-			model: $this->app->site()
-		);
-
-		$this->expectException(PermissionException::class);
-		$controller->parent();
-	}
-
 	public function testProps(): void
 	{
 		$controller = new PagePickerDialogController(
@@ -528,39 +561,6 @@ class PagePickerDialogControllerTest extends TestCase
 
 		$props = $controller->props();
 		$this->assertSame(['alpha', 'beta'], $props['value']);
-	}
-
-	public function testItemsWithParentNavigation(): void
-	{
-		// default: lists the site's children
-		$controller = new PagePickerDialogController(
-			model: $this->app->site()
-		);
-
-		$this->assertSame(
-			['alpha', 'beta', 'gamma'],
-			array_column($controller->items(), 'id')
-		);
-
-		// navigating into a parent lists that parent's children
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'parent' => 'gamma',
-				],
-			],
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$controller = new PagePickerDialogController(
-			model: $this->app->site()
-		);
-
-		$this->assertSame(
-			['gamma/delta', 'gamma/epsilon'],
-			array_column($controller->items(), 'id')
-		);
 	}
 
 	public function testRoot(): void

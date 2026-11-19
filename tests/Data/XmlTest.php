@@ -11,6 +11,30 @@ use stdClass;
 #[CoversClass(Xml::class)]
 class XmlTest extends TestCase
 {
+	public function testDecodeCorrupted(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('XML string is invalid');
+
+		Xml::decode('some gibberish');
+	}
+
+	public function testDecodeInvalid1(): void
+	{
+		// pass invalid object
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
+		Xml::decode(new stdClass());
+	}
+
+	public function testDecodeInvalid2(): void
+	{
+		// pass invalid int
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
+		Xml::decode(1);
+	}
+
 	public function testEncodeDecode(): void
 	{
 		$array = [
@@ -42,33 +66,9 @@ class XmlTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
 	}
 
-	public function testDecodeInvalid1(): void
-	{
-		// pass invalid object
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
-		Xml::decode(new stdClass());
-	}
-
-	public function testDecodeInvalid2(): void
-	{
-		// pass invalid int
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid XML data; please pass a string');
-		Xml::decode(1);
-	}
-
 	public function testEncodeScalar(): void
 	{
 		$expected = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<data>test</data>';
 		$this->assertSame($expected, Xml::encode('test'));
-	}
-
-	public function testDecodeCorrupted(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('XML string is invalid');
-
-		Xml::decode('some gibberish');
 	}
 }

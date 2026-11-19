@@ -179,6 +179,7 @@ class TimeFieldTest extends TestCase
 			'required'    => false,
 			'saveable'    => true,
 			'step'        => ['size' => 5, 'unit' => 'minute'],
+			'times'       => true,
 			'translate'   => true,
 			'type'        => 'time',
 			'when'        => null,
@@ -186,6 +187,16 @@ class TimeFieldTest extends TestCase
 		];
 
 		$this->assertSame($expected, $props);
+	}
+
+	public function testTimes(): void
+	{
+		$field = $this->field('time', [
+			'times' => false
+		]);
+
+		$this->assertFalse($field->times());
+		$this->assertFalse($field->props()['times']);
 	}
 
 	public static function valueProvider(): array

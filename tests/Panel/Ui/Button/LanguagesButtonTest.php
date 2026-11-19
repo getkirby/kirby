@@ -46,24 +46,6 @@ class LanguagesButtonTest extends AreaTestCase
 		$this->assertNull($button->render());
 	}
 
-	public function testRenderSingleLang(): void
-	{
-		$this->enableMultilang();
-		$this->app([
-			'languages' => [
-				'en' => [
-					'code'    => 'en',
-					'default' => true,
-					'name'    => 'English'
-				]
-			]
-		]);
-
-		$page   = new Page(['slug' => 'test']);
-		$button = new LanguagesButton($page);
-		$this->assertNull($button->render());
-	}
-
 	public function testRenderMultiLang(): void
 	{
 		$this->enableMultilang();
@@ -83,5 +65,23 @@ class LanguagesButtonTest extends AreaTestCase
 		$this->assertSame('k-languages-dropdown', $render['component']);
 		$this->assertIsArray($render['props']);
 		$this->assertSame('/pages/test/languages', $render['props']['options']);
+	}
+
+	public function testRenderSingleLang(): void
+	{
+		$this->enableMultilang();
+		$this->app([
+			'languages' => [
+				'en' => [
+					'code'    => 'en',
+					'default' => true,
+					'name'    => 'English'
+				]
+			]
+		]);
+
+		$page   = new Page(['slug' => 'test']);
+		$button = new LanguagesButton($page);
+		$this->assertNull($button->render());
 	}
 }

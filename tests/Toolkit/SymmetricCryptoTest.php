@@ -60,38 +60,6 @@ class SymmetricCryptoTest extends TestCase
 		], $crypto->__debugInfo());
 	}
 
-	public function testDestruct(): void
-	{
-		// helper to access protected props by reference
-		$reader = fn () => [
-			'password'  => &$this->password,
-			'secretKey' => &$this->secretKey,
-			'keys'      => &$this->keys,
-		];
-
-		$crypto = new SymmetricCrypto(secretKey: $secretKey = 'abcdefghijklmnopabcdefghijklmnop');
-		$values = Closure::bind($reader, $crypto, $crypto)();
-		$this->assertSame(['password' => null, 'secretKey' => $secretKey, 'keys' => []], $values);
-		unset($crypto);
-		$this->assertSame(['password' => null, 'secretKey' => '', 'keys' => []], $values);
-
-		$crypto = new SymmetricCrypto(password: $password = 'super secure');
-		$crypto->secretKey(str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES), [SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE]);
-		$crypto->secretKey(str_repeat('B', SODIUM_CRYPTO_PWHASH_SALTBYTES), [SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE]);
-		$values = Closure::bind($reader, $crypto, $crypto)();
-		$limits = SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE . ',' . SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE;
-		$this->assertSame([
-			'password' => $password,
-			'secretKey' => null,
-			'keys' => [
-				str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('8bfb935f72ecc1c77aecde1a44168f73aed70a21d35d8bd11c8c43dcec07ccb3'),
-				str_repeat('B', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('957a8b8b435aefb479351c8c5b5dcf0ca76253846d47c69dcc0ddba569c14d62'),
-			]
-		], $values);
-		unset($crypto);
-		$this->assertSame(['password' => '', 'secretKey' => null, 'keys' => []], $values);
-	}
-
 	public function testDecrypt(): void
 	{
 		$crypto = new SymmetricCrypto(secretKey: 'abcdefghijklmnopabcdefghijklmnop');
@@ -219,6 +187,38 @@ class SymmetricCryptoTest extends TestCase
 			'"nonce":"X3xgVLA1Zyffp5/AOlZQeccD6aynPj43","salt":"VHC6wQ2g7Z9+HK0XJUWV6Q==","limits":[2,67208864]}';
 
 		$crypto->decrypt($input);
+	}
+
+	public function testDestruct(): void
+	{
+		// helper to access protected props by reference
+		$reader = fn () => [
+			'password'  => &$this->password,
+			'secretKey' => &$this->secretKey,
+			'keys'      => &$this->keys,
+		];
+
+		$crypto = new SymmetricCrypto(secretKey: $secretKey = 'abcdefghijklmnopabcdefghijklmnop');
+		$values = Closure::bind($reader, $crypto, $crypto)();
+		$this->assertSame(['password' => null, 'secretKey' => $secretKey, 'keys' => []], $values);
+		unset($crypto);
+		$this->assertSame(['password' => null, 'secretKey' => '', 'keys' => []], $values);
+
+		$crypto = new SymmetricCrypto(password: $password = 'super secure');
+		$crypto->secretKey(str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES), [SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE]);
+		$crypto->secretKey(str_repeat('B', SODIUM_CRYPTO_PWHASH_SALTBYTES), [SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE, SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE]);
+		$values = Closure::bind($reader, $crypto, $crypto)();
+		$limits = SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE . ',' . SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE;
+		$this->assertSame([
+			'password' => $password,
+			'secretKey' => null,
+			'keys' => [
+				str_repeat('A', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('8bfb935f72ecc1c77aecde1a44168f73aed70a21d35d8bd11c8c43dcec07ccb3'),
+				str_repeat('B', SODIUM_CRYPTO_PWHASH_SALTBYTES) . ':' . $limits => hex2bin('957a8b8b435aefb479351c8c5b5dcf0ca76253846d47c69dcc0ddba569c14d62'),
+			]
+		], $values);
+		unset($crypto);
+		$this->assertSame(['password' => '', 'secretKey' => null, 'keys' => []], $values);
 	}
 
 	public function testEncrypt(): void

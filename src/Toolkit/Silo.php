@@ -14,19 +14,6 @@ class Silo
 {
 	public static array $data = [];
 
-	/**
-	 * Setter for new data
-	 */
-	public static function set(string|array $key, $value = null): array
-	{
-		if (is_array($key) === true) {
-			return static::$data = [...static::$data, ...$key];
-		}
-
-		static::$data[$key] = $value;
-		return static::$data;
-	}
-
 	public static function get(string|array|null $key = null, $default = null)
 	{
 		if ($key === null) {
@@ -50,6 +37,19 @@ class Silo
 		unset(static::$data[$key]);
 
 		// return the array without the removed key
+		return static::$data;
+	}
+
+	/**
+	 * Setter for new data
+	 */
+	public static function set(string|array $key, $value = null): array
+	{
+		if (is_array($key) === true) {
+			return static::$data = [...static::$data, ...$key];
+		}
+
+		static::$data[$key] = $value;
 		return static::$data;
 	}
 }

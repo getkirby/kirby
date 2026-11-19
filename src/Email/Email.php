@@ -28,15 +28,14 @@ class Email
 	 */
 	public static array $emails = [];
 
-	protected bool $isSent = false;
 	protected array $attachments;
-	protected Body $body;
 
 	/**
 	 * @var array<string, string|null>
 	 */
 	protected array $bcc;
 	protected Closure|null $beforeSend;
+	protected Body $body;
 
 	/**
 	 * @var array<string, string|null>
@@ -44,6 +43,7 @@ class Email
 	protected array $cc;
 	protected string $from;
 	protected string|null $fromName;
+	protected bool $isSent = false;
 	protected string $replyTo;
 	protected string|null $replyToName;
 	protected string $subject;
@@ -102,14 +102,6 @@ class Email
 	}
 
 	/**
-	 * Returns the email body
-	 */
-	public function body(): Body
-	{
-		return $this->body;
-	}
-
-	/**
 	 * Returns "bcc" recipients
 	 *
 	 * @return array<string, string|null>
@@ -126,6 +118,14 @@ class Email
 	public function beforeSend(): Closure|null
 	{
 		return $this->beforeSend;
+	}
+
+	/**
+	 * Returns the email body
+	 */
+	public function body(): Body
+	{
+		return $this->body;
 	}
 
 	/**
@@ -266,16 +266,6 @@ class Email
 	}
 
 	/**
-	 * Returns the email transports settings
-	 *
-	 * @return array<string, mixed>
-	 */
-	public function transport(): array
-	{
-		return $this->transport ?? $this->defaultTransport();
-	}
-
-	/**
 	 * @since 4.0.0
 	 */
 	public function toArray(): array
@@ -293,5 +283,15 @@ class Email
 			'to'          => $this->to(),
 			'transport'   => $this->transport()
 		];
+	}
+
+	/**
+	 * Returns the email transports settings
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function transport(): array
+	{
+		return $this->transport ?? $this->defaultTransport();
 	}
 }

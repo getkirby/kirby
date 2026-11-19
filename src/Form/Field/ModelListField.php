@@ -43,6 +43,11 @@ abstract class ModelListField extends DisplayField
 	protected ModelsCollector|null $collector = null;
 
 	/**
+	 * @var list<string>|null
+	 */
+	protected array|null $columnFieldsCache = null;
+
+	/**
 	 * Columns config for `layout: table`. `false` hides
 	 * a column, a string sets its label.
 	 */
@@ -53,11 +58,6 @@ abstract class ModelListField extends DisplayField
 	 * @var array<string, array<string, mixed>>|null
 	 */
 	protected array|null $columnsCache = null;
-
-	/**
-	 * @var list<string>|null
-	 */
-	protected array|null $columnFieldsCache = null;
 
 	/**
 	 * If `true`, the order of the entries is reversed
@@ -165,35 +165,6 @@ abstract class ModelListField extends DisplayField
 	abstract public function collector(): ModelsCollector;
 
 	/**
-	 * Column definitions for `layout: table`, with the type of
-	 * each column resolved from the blueprint of the entries
-	 *
-	 * @return array<string, array<string, mixed>>
-	 */
-	public function columns(): array
-	{
-		if ($this->columnsCache !== null) {
-			return $this->columnsCache;
-		}
-
-		$columns = $this->defineColumns();
-
-		if ($columns === []) {
-			return $this->columnsCache = [];
-		}
-
-		if ($blueprint = $this->models()->first()?->blueprint()) {
-			foreach ($columns as $name => $column) {
-				if ($id = $column['id'] ?? null) {
-					$columns[$name]['type'] ??= $blueprint->field($id)['type'] ?? null;
-				}
-			}
-		}
-
-		return $this->columnsCache = $columns;
-	}
-
-	/**
 	 * Blueprint field names behind all columns that read their
 	 * value from the model instead of from their own query
 	 *
@@ -220,6 +191,35 @@ abstract class ModelListField extends DisplayField
 		}
 
 		return $this->columnFieldsCache = $fields;
+	}
+
+	/**
+	 * Column definitions for `layout: table`, with the type of
+	 * each column resolved from the blueprint of the entries
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public function columns(): array
+	{
+		if ($this->columnsCache !== null) {
+			return $this->columnsCache;
+		}
+
+		$columns = $this->defineColumns();
+
+		if ($columns === []) {
+			return $this->columnsCache = [];
+		}
+
+		if ($blueprint = $this->models()->first()?->blueprint()) {
+			foreach ($columns as $name => $column) {
+				if ($id = $column['id'] ?? null) {
+					$columns[$name]['type'] ??= $blueprint->field($id)['type'] ?? null;
+				}
+			}
+		}
+
+		return $this->columnsCache = $columns;
 	}
 
 	/**

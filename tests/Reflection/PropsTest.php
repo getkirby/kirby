@@ -94,10 +94,10 @@ class PropsTestSetterClass
 	protected bool $active = false;
 
 	#[Prop]
-	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
+	protected string $mode = 'a';
 
 	#[Prop]
-	protected string $mode = 'a';
+	protected array $settings = ['size' => 'small', 'colors' => ['red', 'blue']];
 
 	#[Prop(setter: 'setStep')]
 	protected array $step = ['size' => 1, 'unit' => 'day'];
@@ -108,14 +108,14 @@ class PropsTestSetterClass
 	#[Prop]
 	protected bool $toggle = false;
 
-	public function option(string $name): mixed
-	{
-		return $this->$name;
-	}
-
 	protected function isActive(): bool
 	{
 		return $this->active === false;
+	}
+
+	public function option(string $name): mixed
+	{
+		return $this->$name;
 	}
 
 	/**
@@ -294,6 +294,17 @@ class PropsTest extends TestCase
 		new Props(new PropsTestSetterClass())->set('toggle', ['yes']);
 	}
 
+	public function testSetWithoutNamedSetter(): void
+	{
+		$object = new PropsTestSetterClass();
+		$props  = new Props($object);
+
+		// a `set{Name}()` method is only used
+		// when the attribute names it
+		$props->set('mode', 'b');
+		$this->assertSame('b', $object->option('mode'));
+	}
+
 	public function testSetWithSetter(): void
 	{
 		$object = new PropsTestSetterClass();
@@ -304,17 +315,6 @@ class PropsTest extends TestCase
 
 		$props->set('step', 'week');
 		$this->assertSame(['size' => 5, 'unit' => 'week'], $object->option('step'));
-	}
-
-	public function testSetWithoutNamedSetter(): void
-	{
-		$object = new PropsTestSetterClass();
-		$props  = new Props($object);
-
-		// a `set{Name}()` method is only used
-		// when the attribute names it
-		$props->set('mode', 'b');
-		$this->assertSame('b', $object->option('mode'));
 	}
 
 	public function testSetWithUnknownProp(): void
@@ -361,6 +361,14 @@ class PropsTest extends TestCase
 		$this->assertSame('marker', $props['marker']['name']);
 	}
 
+	public function testToArrayWithoutDefaultValue(): void
+	{
+		$props = new Props(PropsTestClass::class)->toArray();
+
+		$this->assertNull($props['uninitialized']['default']);
+		$this->assertNull($props['uninitialized']['description']);
+	}
+
 	public function testToArrayWithOverriddenDefault(): void
 	{
 		$props = new Props(PropsTestChildClass::class)->toArray();
@@ -378,14 +386,6 @@ class PropsTest extends TestCase
 		// the attribute can document a default the property never holds
 		$this->assertTrue($props['fieldsets']['computed']);
 		$this->assertSame(['heading', 'text'], $props['fieldsets']['default']);
-	}
-
-	public function testToArrayWithoutDefaultValue(): void
-	{
-		$props = new Props(PropsTestClass::class)->toArray();
-
-		$this->assertNull($props['uninitialized']['default']);
-		$this->assertNull($props['uninitialized']['description']);
 	}
 
 	public function testType(): void

@@ -45,6 +45,41 @@ class FileChangeNameTest extends ModelTestCase
 		$this->assertFileExists($result->version('latest')->contentFile('default'));
 	}
 
+	public function testChangeNameHooks(): void
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
+					$phpunit->assertIsFile($file);
+					$phpunit->assertSame('foo', $name);
+					$phpunit->assertSame('test.pdf', $file->filename());
+					$calls++;
+				},
+				'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
+					$phpunit->assertSame('foo.pdf', $newFile->filename());
+					$phpunit->assertSame('test.pdf', $oldFile->filename());
+					$calls++;
+				},
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $this->app->site(),
+		]);
+
+		$file->changeName('foo');
+
+		$this->assertSame(2, $calls);
+	}
+
 	public function testChangeNameMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
@@ -84,41 +119,6 @@ class FileChangeNameTest extends ModelTestCase
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($result->version('latest')->contentFile('en'));
 		$this->assertFileExists($result->version('latest')->contentFile('de'));
-	}
-
-	public function testChangeNameHooks(): void
-	{
-		$calls = 0;
-		$phpunit = $this;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
-					$phpunit->assertIsFile($file);
-					$phpunit->assertSame('foo', $name);
-					$phpunit->assertSame('test.pdf', $file->filename());
-					$calls++;
-				},
-				'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertIsFile($newFile);
-					$phpunit->assertIsFile($oldFile);
-					$phpunit->assertSame('foo.pdf', $newFile->filename());
-					$phpunit->assertSame('test.pdf', $oldFile->filename());
-					$calls++;
-				},
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$file = new File([
-			'filename' => 'test.pdf',
-			'parent'   => $this->app->site(),
-		]);
-
-		$file->changeName('foo');
-
-		$this->assertSame(2, $calls);
 	}
 
 	public function testChangeNameRejectsForbiddenExtension(): void

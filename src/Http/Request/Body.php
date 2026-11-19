@@ -37,6 +37,14 @@ class Body implements Stringable
 	}
 
 	/**
+	 * Magic string converter
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
+	/**
 	 * Fetches the raw contents for the body
 	 * or uses the passed contents.
 	 */
@@ -97,13 +105,5 @@ class Body implements Stringable
 	public function toString(): string
 	{
 		return http_build_query($this->data());
-	}
-
-	/**
-	 * Magic string converter
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

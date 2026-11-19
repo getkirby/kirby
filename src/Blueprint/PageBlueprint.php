@@ -61,14 +61,6 @@ class PageBlueprint extends Blueprint
 	}
 
 	/**
-	 * Returns the page numbering mode
-	 */
-	public function num(): string
-	{
-		return $this->props['num'];
-	}
-
-	/**
 	 * Normalizes the ordering number
 	 */
 	protected function normalizeNum(string|int $num): string
@@ -161,6 +153,14 @@ class PageBlueprint extends Blueprint
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Returns the page numbering mode
+	 */
+	public function num(): string
+	{
+		return $this->props['num'];
 	}
 
 	/**

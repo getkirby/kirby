@@ -23,14 +23,14 @@ class HasStringTemplateMock
 		return $this->model;
 	}
 
-	public function stringTemplatePublic(...$args): string|null
-	{
-		return $this->stringTemplate(...$args);
-	}
-
 	public function stringTemplateI18nPublic(...$args): string|null
 	{
 		return $this->stringTemplateI18n(...$args);
+	}
+
+	public function stringTemplatePublic(...$args): string|null
+	{
+		return $this->stringTemplate(...$args);
 	}
 }
 
@@ -51,22 +51,6 @@ class HasStringTemplateTest extends TestCase
 		$this->assertSame('Title: <b>Test</b>', $class->stringTemplatePublic('Title: {{ page.title }}', safe: false));
 	}
 
-	public function testUsesHasI18nTrait(): void
-	{
-		I18n::$translations['en'] = [
-			'my.key' => 'My translation',
-		];
-
-		$class = new HasStringTemplateMock(null);
-		$this->assertSame('My translation', $class->i18nPublic('my.key'));
-	}
-
-	public function testStringTemplateWithoutModel(): void
-	{
-		$class = new HasStringTemplateMock(null);
-		$this->assertSame('Title: {{ page.title }}', $class->stringTemplatePublic('Title: {{ page.title }}'));
-	}
-
 	public function testStringTemplateI18n(): void
 	{
 		$page  = new Page(['slug' => 'test']);
@@ -76,5 +60,21 @@ class HasStringTemplateTest extends TestCase
 			'Link: test',
 			$class->stringTemplateI18nPublic(['en' => 'Link: {{ page.slug }}'])
 		);
+	}
+
+	public function testStringTemplateWithoutModel(): void
+	{
+		$class = new HasStringTemplateMock(null);
+		$this->assertSame('Title: {{ page.title }}', $class->stringTemplatePublic('Title: {{ page.title }}'));
+	}
+
+	public function testUsesHasI18nTrait(): void
+	{
+		I18n::$translations['en'] = [
+			'my.key' => 'My translation',
+		];
+
+		$class = new HasStringTemplateMock(null);
+		$this->assertSame('My translation', $class->i18nPublic('my.key'));
 	}
 }

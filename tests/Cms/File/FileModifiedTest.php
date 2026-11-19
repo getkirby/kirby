@@ -22,7 +22,6 @@ class FileModifiedTest extends ModelTestCase
 			'parent'   => $page
 		]);
 
-
 		$this->assertSame($modified, $file->modified());
 
 		// default date handler

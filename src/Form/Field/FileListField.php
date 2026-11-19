@@ -28,8 +28,11 @@ class FileListField extends ModelListField implements ProvidesAcceptedFileBluepr
 {
 	public const string TYPE = 'files';
 
-	#[Prop(export: false)]
-	protected array|string|null $text = '{{ file.filename }}';
+	/**
+	 * Filters the files by blueprint and sets the blueprint for all uploads
+	 */
+	#[Prop(aliases: ['template'], export: false)]
+	protected string|null $blueprint = null;
 
 	/**
 	 * Option to switch off the upload button
@@ -37,11 +40,8 @@ class FileListField extends ModelListField implements ProvidesAcceptedFileBluepr
 	#[Prop(export: false)]
 	protected bool $create = true;
 
-	/**
-	 * Filters the files by blueprint and sets the blueprint for all uploads
-	 */
-	#[Prop(aliases: ['template'], export: false)]
-	protected string|null $blueprint = null;
+	#[Prop(export: false)]
+	protected array|string|null $text = '{{ file.filename }}';
 
 	public function accept(): string|null
 	{

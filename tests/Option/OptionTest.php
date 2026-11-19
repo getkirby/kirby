@@ -89,21 +89,6 @@ class OptionTest extends TestCase
 		$this->assertEquals($expected, $option->render($model)); // @phpstan-ignore-line
 	}
 
-	public function testRenderWithoutSafeMode(): void
-	{
-		$option = Option::factory([
-			'value' => 'test',
-			'text'  => "{{ page.something.or('String with <> HTML chars') }}",
-			'info'  => "{< page.something.or('String with <> HTML chars') >}"
-		]);
-
-		$model  = new Page(['slug' => 'test']);
-		$result = $option->render($model, safeMode: false);
-
-		$this->assertSame('String with <> HTML chars', $result['text']);
-		$this->assertSame('String with <> HTML chars', $result['info']);
-	}
-
 	public function testRenderPreResolved(): void
 	{
 		// when resolve is false, text/info containing query patterns must not
@@ -135,5 +120,20 @@ class OptionTest extends TestCase
 
 		$this->assertInstanceOf(HtmlString::class, $result['text']);
 		$this->assertSame('Tom &amp; Jerry', (string)$result['text']);
+	}
+
+	public function testRenderWithoutSafeMode(): void
+	{
+		$option = Option::factory([
+			'value' => 'test',
+			'text'  => "{{ page.something.or('String with <> HTML chars') }}",
+			'info'  => "{< page.something.or('String with <> HTML chars') >}"
+		]);
+
+		$model  = new Page(['slug' => 'test']);
+		$result = $option->render($model, safeMode: false);
+
+		$this->assertSame('String with <> HTML chars', $result['text']);
+		$this->assertSame('String with <> HTML chars', $result['info']);
 	}
 }

@@ -21,6 +21,11 @@ class Permalink
 	) {
 	}
 
+	public function __toString(): string
+	{
+		return $this->url();
+	}
+
 	/**
 	 * Creates a permalink for a page or file UUID string,
 	 * e.g. `page://my-page-uuid`
@@ -73,10 +78,5 @@ class Permalink
 	public function uuid(): FileUuid|PageUuid
 	{
 		return $this->uuid;
-	}
-
-	public function __toString(): string
-	{
-		return $this->url();
 	}
 }

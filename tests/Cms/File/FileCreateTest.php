@@ -39,24 +39,6 @@ class FileCreateTest extends ModelTestCase
 		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
-	public function testCreateWithoutFilename(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
-
-		// create the dummy source
-		F::write($source, '# Test');
-
-		// no filename prop, must be derived from the source basename
-		$result = File::create([
-			'source' => $source,
-			'parent' => $parent
-		]);
-
-		$this->assertSame('source.md', $result->filename());
-		$this->assertFileExists($parent->root() . '/source.md');
-	}
-
 	public function testCreateDuplicate(): void
 	{
 		$parent = new Page(['slug' => 'test']);
@@ -115,149 +97,41 @@ class FileCreateTest extends ModelTestCase
 		$this->assertSame($uuid, $duplicate->content()->get('uuid')->value());
 	}
 
-	public function testCreateWithoutRequiredProps(): void
+	public function testCreateHooks(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Please provide the "source" and "parent" props for the File');
+		$parent  = new Page(['slug' => 'test']);
+		$phpunit = $this;
+		$before  = false;
+		$after   = false;
 
-		File::create([
-			'filename' => 'test.md'
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.create:before' => function (File $file, BaseFile $upload) use (&$before) {
+					$before = true;
+				},
+				'file.create:after' => function (File $file) use (&$after, $phpunit) {
+					$phpunit->assertTrue($file->siblings(true)->has($file));
+					$phpunit->assertTrue($file->parent()->files()->has($file));
+					$phpunit->assertSame('test.md', $file->filename());
+
+					$after = true;
+				}
+			]
 		]);
-	}
 
-	public function testCreateMove(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
+		$this->app->impersonate('kirby');
 
 		// create the dummy source
-		F::write($source, '# Test');
+		F::write($source = static::TMP . '/source.md', '# Test');
 
 		$result = File::create([
 			'filename' => 'test.md',
 			'source'   => $source,
 			'parent'   => $parent
-		], true);
-
-		$this->assertFileDoesNotExist($source);
-		$this->assertFileExists($result->root());
-		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf(BaseFile::class, $result->asset());
-
-		// make sure file received UUID right away
-		$this->assertIsString($result->content()->get('uuid')->value());
-	}
-
-	public function testCreateWithDefaults(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/test' => [
-					'name'   => 'test',
-					'fields' => [
-						'a' => [
-							'type'    => 'text',
-							'default' => 'A'
-						],
-						'b' => [
-							'type'    => 'textarea',
-							'default' => 'B'
-						],
-					]
-				]
-			]
-		]);
-		$this->app->impersonate('kirby');
-
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
-
-		F::write($source, '# Test');
-
-		$result = File::create([
-			'filename' => 'test.md',
-			'source'   => $source,
-			'parent'   => $parent,
-			'template' => 'test',
 		]);
 
-		$this->assertSame('A', $result->a()->value());
-		$this->assertSame('B', $result->b()->value());
-	}
-
-	public function testCreateWithDefaultsAndContent(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/test' => [
-					'name'   => 'test',
-					'fields' => [
-						'a' => [
-							'type'    => 'text',
-							'default' => 'A'
-						],
-						'b' => [
-							'type'    => 'textarea',
-							'default' => 'B'
-						],
-					]
-				]
-			]
-		]);
-		$this->app->impersonate('kirby');
-
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
-
-		F::write($source, '# Test');
-
-		$result = File::create([
-			'content'  => ['a' => 'Custom A'],
-			'filename' => 'test.md',
-			'source'   => $source,
-			'parent'   => $parent,
-			'template' => 'test',
-		]);
-
-		$this->assertSame('Custom A', $result->a()->value());
-		$this->assertSame('B', $result->b()->value());
-	}
-
-	/**
-	 * @see https://github.com/getkirby/kirby/issues/8411
-	 */
-	public function testCreateWithSaveHandlers(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/test' => [
-					'name'   => 'test',
-					'fields' => [
-						'categories' => [
-							'type'    => 'checkboxes',
-							'options' => ['one', 'two', 'three']
-						]
-					]
-				]
-			]
-		]);
-		$this->app->impersonate('kirby');
-
-		$parent = new Page(['slug' => 'test']);
-		$source = static::TMP . '/source.md';
-
-		F::write($source, '# Test');
-
-		$result = File::create([
-			'content'  => ['categories' => ['one', 'two']],
-			'filename' => 'test.md',
-			'source'   => $source,
-			'parent'   => $parent,
-			'template' => 'test',
-		]);
-
-		$this->assertSame('one, two', $result->version()->read()['categories']);
-		$this->assertSame(['one', 'two'], $result->categories()->split());
+		$this->assertTrue($before);
+		$this->assertTrue($after);
 	}
 
 	public function testCreateImage(): void
@@ -381,41 +255,27 @@ class FileCreateTest extends ModelTestCase
 		$this->assertFileEquals($source, $result->root());
 	}
 
-	public function testCreateHooks(): void
+	public function testCreateMove(): void
 	{
-		$parent  = new Page(['slug' => 'test']);
-		$phpunit = $this;
-		$before  = false;
-		$after   = false;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'file.create:before' => function (File $file, BaseFile $upload) use (&$before) {
-					$before = true;
-				},
-				'file.create:after' => function (File $file) use (&$after, $phpunit) {
-					$phpunit->assertTrue($file->siblings(true)->has($file));
-					$phpunit->assertTrue($file->parent()->files()->has($file));
-					$phpunit->assertSame('test.md', $file->filename());
-
-					$after = true;
-				}
-			]
-		]);
-
-		$this->app->impersonate('kirby');
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
 
 		// create the dummy source
-		F::write($source = static::TMP . '/source.md', '# Test');
+		F::write($source, '# Test');
 
 		$result = File::create([
 			'filename' => 'test.md',
 			'source'   => $source,
 			'parent'   => $parent
-		]);
+		], true);
 
-		$this->assertTrue($before);
-		$this->assertTrue($after);
+		$this->assertFileDoesNotExist($source);
+		$this->assertFileExists($result->root());
+		$this->assertFileExists($parent->root() . '/test.md');
+		$this->assertInstanceOf(BaseFile::class, $result->asset());
+
+		// make sure file received UUID right away
+		$this->assertIsString($result->content()->get('uuid')->value());
 	}
 
 	public function testCreateStripInjectedBlueprint(): void
@@ -456,6 +316,109 @@ class FileCreateTest extends ModelTestCase
 		]);
 	}
 
+	public function testCreateWithDefaults(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		$this->assertSame('A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
+	}
+
+	public function testCreateWithDefaultsAndContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'a' => [
+							'type'    => 'text',
+							'default' => 'A'
+						],
+						'b' => [
+							'type'    => 'textarea',
+							'default' => 'B'
+						],
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'content'  => ['a' => 'Custom A'],
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		$this->assertSame('Custom A', $result->a()->value());
+		$this->assertSame('B', $result->b()->value());
+	}
+
+	public function testCreateWithoutFilename(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		// create the dummy source
+		F::write($source, '# Test');
+
+		// no filename prop, must be derived from the source basename
+		$result = File::create([
+			'source' => $source,
+			'parent' => $parent
+		]);
+
+		$this->assertSame('source.md', $result->filename());
+		$this->assertFileExists($parent->root() . '/source.md');
+	}
+
+	public function testCreateWithoutRequiredProps(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Please provide the "source" and "parent" props for the File');
+
+		File::create([
+			'filename' => 'test.md'
+		]);
+	}
+
 	public function testCreateWithPathTraversalTemplate(): void
 	{
 		$this->app = $this->app->clone([
@@ -492,5 +455,42 @@ class FileCreateTest extends ModelTestCase
 			'parent'   => $parent,
 			'template' => '../pages/public'
 		]);
+	}
+
+	/**
+	 * @see https://github.com/getkirby/kirby/issues/8411
+	 */
+	public function testCreateWithSaveHandlers(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'fields' => [
+						'categories' => [
+							'type'    => 'checkboxes',
+							'options' => ['one', 'two', 'three']
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new Page(['slug' => 'test']);
+		$source = static::TMP . '/source.md';
+
+		F::write($source, '# Test');
+
+		$result = File::create([
+			'content'  => ['categories' => ['one', 'two']],
+			'filename' => 'test.md',
+			'source'   => $source,
+			'parent'   => $parent,
+			'template' => 'test',
+		]);
+
+		$this->assertSame('one, two', $result->version()->read()['categories']);
+		$this->assertSame(['one', 'two'], $result->categories()->split());
 	}
 }

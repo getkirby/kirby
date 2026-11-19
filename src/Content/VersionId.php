@@ -21,14 +21,14 @@ use Stringable;
 class VersionId implements Stringable
 {
 	/**
-	 * Latest stable version of the content
-	 */
-	public const string LATEST = 'latest';
-
-	/**
 	 * Latest changes to the content (optional)
 	 */
 	public const string CHANGES = 'changes';
+
+	/**
+	 * Latest stable version of the content
+	 */
+	public const string LATEST = 'latest';
 
 	/**
 	 * A global store for a version id that should be

@@ -109,19 +109,6 @@ class ImageMagick extends Darkroom
 	}
 
 	/**
-	 * Applies sharpening if activated in the options.
-	 */
-	protected function sharpen(string $file, array $options): string|null
-	{
-		if (is_int($options['sharpen']) === false) {
-			return null;
-		}
-
-		$amount = max(1, min(100, $options['sharpen'])) / 100;
-		return '-sharpen ' . escapeshellarg('0x' . $amount);
-	}
-
-	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
 	 */
@@ -222,6 +209,19 @@ class ImageMagick extends Darkroom
 		}
 
 		return escapeshellarg($file);
+	}
+
+	/**
+	 * Applies sharpening if activated in the options.
+	 */
+	protected function sharpen(string $file, array $options): string|null
+	{
+		if (is_int($options['sharpen']) === false) {
+			return null;
+		}
+
+		$amount = max(1, min(100, $options['sharpen'])) / 100;
+		return '-sharpen ' . escapeshellarg('0x' . $amount);
 	}
 
 	/**

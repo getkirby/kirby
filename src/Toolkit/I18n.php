@@ -14,6 +14,13 @@ use NumberFormatter;
 class I18n
 {
 	/**
+	 * The fallback locale or a list of fallback locales
+	 *
+	 * @var string|array<string>|Closure|null
+	 */
+	public static string|array|Closure|null $fallback = ['en'];
+
+	/**
 	 * Custom loader function
 	 */
 	public static Closure|null $load = null;
@@ -29,13 +36,6 @@ class I18n
 	 * @var array<string, array<string, mixed>>
 	 */
 	public static array $translations = [];
-
-	/**
-	 * The fallback locale or a list of fallback locales
-	 *
-	 * @var string|array<string>|Closure|null
-	 */
-	public static string|array|Closure|null $fallback = ['en'];
 
 	/**
 	 * Cache of `NumberFormatter` objects by locale
@@ -118,6 +118,28 @@ class I18n
 		$formatter = static::formatter($locale);
 		$number    = $formatter?->format($number) ?? $number;
 		return (string)$number;
+	}
+
+	/**
+	 * Returns (and creates) a decimal number formatter for a given locale
+	 *
+	 * @since 7.0.0
+	 */
+	protected static function formatter(
+		string $locale
+	): NumberFormatter|null {
+		if ($formatter = static::$formatters[$locale] ?? null) {
+			return $formatter;
+		}
+
+		if (
+			extension_loaded('intl') !== true ||
+			class_exists('NumberFormatter') !== true
+		) {
+			return null; // @codeCoverageIgnore
+		}
+
+		return static::$formatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
 	}
 
 	/**
@@ -284,61 +306,6 @@ class I18n
 	}
 
 	/**
-	 * Returns the current or any other translation
-	 * by locale. If the translation does not exist
-	 * yet, the loader will try to load it, if defined.
-	 *
-	 * @return array<string, mixed>
-	 */
-	public static function translation(string|null $locale = null): array
-	{
-		$locale ??= static::locale();
-
-		if (isset(static::$translations[$locale]) === true) {
-			return static::$translations[$locale];
-		}
-
-		if (static::$load instanceof Closure) {
-			return static::$translations[$locale] = (static::$load)($locale);
-		}
-
-		// try to use language code, e.g. `es` when locale is `es_ES`
-		return static::$translations[Str::before($locale, '_')] ?? [];
-	}
-
-	/**
-	 * Returns all loaded or defined translations
-	 *
-	 * @return array<string, array<string, mixed>>
-	 */
-	public static function translations(): array
-	{
-		return static::$translations;
-	}
-
-	/**
-	 * Returns (and creates) a decimal number formatter for a given locale
-	 *
-	 * @since 7.0.0
-	 */
-	protected static function formatter(
-		string $locale
-	): NumberFormatter|null {
-		if ($formatter = static::$formatters[$locale] ?? null) {
-			return $formatter;
-		}
-
-		if (
-			extension_loaded('intl') !== true ||
-			class_exists('NumberFormatter') !== true
-		) {
-			return null; // @codeCoverageIgnore
-		}
-
-		return static::$formatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-	}
-
-	/**
 	 * Translates amounts
 	 *
 	 * Translation definition options:
@@ -379,5 +346,38 @@ class I18n
 				false => $count
 			}
 		]);
+	}
+
+	/**
+	 * Returns the current or any other translation
+	 * by locale. If the translation does not exist
+	 * yet, the loader will try to load it, if defined.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public static function translation(string|null $locale = null): array
+	{
+		$locale ??= static::locale();
+
+		if (isset(static::$translations[$locale]) === true) {
+			return static::$translations[$locale];
+		}
+
+		if (static::$load instanceof Closure) {
+			return static::$translations[$locale] = (static::$load)($locale);
+		}
+
+		// try to use language code, e.g. `es` when locale is `es_ES`
+		return static::$translations[Str::before($locale, '_')] ?? [];
+	}
+
+	/**
+	 * Returns all loaded or defined translations
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public static function translations(): array
+	{
+		return static::$translations;
 	}
 }

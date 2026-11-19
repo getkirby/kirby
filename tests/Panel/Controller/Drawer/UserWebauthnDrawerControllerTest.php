@@ -80,12 +80,6 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		return [json_encode($assert['payload']), $assert['challenge']];
 	}
 
-	public function testFactory(): void
-	{
-		$controller = UserWebauthnDrawerController::factory('test');
-		$this->assertInstanceOf(UserWebauthnDrawerController::class, $controller);
-	}
-
 	public function testConstructWithoutPermission(): void
 	{
 		// an editor may not manage another user's passkeys
@@ -95,6 +89,12 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->expectExceptionCode('error.user.changeSecret');
 
 		new UserWebauthnDrawerController($this->app->user('test'));
+	}
+
+	public function testFactory(): void
+	{
+		$controller = UserWebauthnDrawerController::factory('test');
+		$this->assertInstanceOf(UserWebauthnDrawerController::class, $controller);
 	}
 
 	public function testLoad(): void
@@ -126,6 +126,17 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		);
 	}
 
+	public function testLoadForAccount(): void
+	{
+		// the account owner re-completes a passkey assertion to remove one,
+		// so the assertion options are handed to the drawer to complete
+		$this->app->impersonate('test@getkirby.com');
+
+		// the owner receives assertion options to complete client-side
+		$props = $this->controller()->load()->props();
+		$this->assertSame('example.com', $props['assertion']['rpId']);
+	}
+
 	public function testLoadWithExistingCredentials(): void
 	{
 		$this->app->user('test')->changeSecret('webauthn', [
@@ -142,15 +153,83 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->assertSame('AQID', $props['registration']['excludeCredentials'][0]['id']);
 	}
 
-	public function testLoadForAccount(): void
+	public function testSubmitCreate(): void
 	{
-		// the account owner re-completes a passkey assertion to remove one,
-		// so the assertion options are handed to the drawer to complete
-		$this->app->impersonate('test@getkirby.com');
+		['payload' => $credential, 'challenge' => $challenge] = WebauthnTest::attestation(
+			Webauthn::for($this->app->user('test'))
+		);
 
-		// the owner receives assertion options to complete client-side
-		$props = $this->controller()->load()->props();
-		$this->assertSame('example.com', $props['assertion']['rpId']);
+		$this->setRequest([
+			'action'     => 'create',
+			'credential' => $credential,
+			'name'       => 'My Laptop'
+		]);
+		$this->app->impersonate('test');
+		$this->app->session()->set('kirby.webauthn.test', $challenge);
+
+		$this->assertTrue($this->controller()->submit());
+
+		// the verified passkey is stored under the provided name
+		$stored = $this->app->user('test')->secret('webauthn');
+		$this->assertCount(1, $stored);
+		$this->assertSame('My Laptop', $stored[0]['name']);
+		$this->assertSame('AQIDBA', $stored[0]['id']);
+		$this->assertSame('none', $stored[0]['attestation']);
+	}
+
+	public function testSubmitCreateForOtherUser(): void
+	{
+		// an admin must not register a passkey for another user: the
+		// credential would live on the admin's device and let them log
+		// in as that user
+		$this->setRequest([
+			'action'     => 'create',
+			'credential' => 'anything',
+			'name'       => 'My Laptop'
+		]);
+		$this->app->impersonate('admin');
+
+		try {
+			$this->controller()->submit();
+			$this->fail('Expected PermissionException was not thrown');
+		} catch (PermissionException) {
+			// the target user's account must be left untouched
+			$this->assertNull($this->app->user('test')->secret('webauthn'));
+		}
+	}
+
+	public function testSubmitCreateWithInvalidCredential(): void
+	{
+		// a malformed registration payload is rejected before anything
+		// is stored (the happy path needs a real authenticator attestation)
+		$this->setRequest(['action' => 'create', 'credential' => 123]);
+		$this->app->impersonate('test');
+		$this->app->session()->set('kirby.webauthn.test', 'challenge');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.webauthn.invalid');
+
+		$this->controller()->submit();
+	}
+
+	public function testSubmitCreateWithoutName(): void
+	{
+		['payload' => $credential, 'challenge' => $challenge] = WebauthnTest::attestation(
+			Webauthn::for($this->app->user('test'))
+		);
+
+		// no name provided → an incremental fallback name is generated
+		$this->setRequest([
+			'action'     => 'create',
+			'credential' => $credential
+		]);
+		$this->app->impersonate('test');
+		$this->app->session()->set('kirby.webauthn.test', $challenge);
+
+		$this->controller()->submit();
+
+		$stored = $this->app->user('test')->secret('webauthn');
+		$this->assertSame('#1', $stored[0]['name']);
 	}
 
 	public function testSubmitRemove(): void
@@ -175,45 +254,6 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$remaining = $this->app->user('test')->secret('webauthn');
 		$this->assertCount(1, $remaining);
 		$this->assertSame('bbb', $remaining[0]['id']);
-	}
-
-	public function testSubmitRemoveLastCredential(): void
-	{
-		$this->app->user('test')->changeSecret('webauthn', [
-			['id' => 'aaa', 'name' => 'Key 1']
-		]);
-
-		$this->setRequest([
-			'action'   => 'remove',
-			'id'       => 'aaa',
-			'password' => 'adminpass123'
-		]);
-		$this->app->impersonate('admin');
-
-		$result = $this->controller()->submit();
-
-		$this->assertTrue($result);
-		// the secret is cleared entirely once the last passkey is gone
-		$this->assertNull($this->app->user('test')->secret('webauthn'));
-	}
-
-	public function testSubmitRemoveNotFound(): void
-	{
-		$this->app->user('test')->changeSecret('webauthn', [
-			['id' => 'aaa', 'name' => 'Key 1']
-		]);
-
-		$this->setRequest([
-			'action'   => 'remove',
-			'id'       => 'zzz',
-			'password' => 'adminpass123'
-		]);
-		$this->app->impersonate('admin');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.webauthn.notFound');
-
-		$this->controller()->submit();
 	}
 
 	public function testSubmitRemoveAsAccount(): void
@@ -281,81 +321,41 @@ class UserWebauthnDrawerControllerTest extends TestCase
 		$this->controller()->submit();
 	}
 
-	public function testSubmitCreate(): void
+	public function testSubmitRemoveLastCredential(): void
 	{
-		['payload' => $credential, 'challenge' => $challenge] = WebauthnTest::attestation(
-			Webauthn::for($this->app->user('test'))
-		);
-
-		$this->setRequest([
-			'action'     => 'create',
-			'credential' => $credential,
-			'name'       => 'My Laptop'
+		$this->app->user('test')->changeSecret('webauthn', [
+			['id' => 'aaa', 'name' => 'Key 1']
 		]);
-		$this->app->impersonate('test');
-		$this->app->session()->set('kirby.webauthn.test', $challenge);
 
-		$this->assertTrue($this->controller()->submit());
-
-		// the verified passkey is stored under the provided name
-		$stored = $this->app->user('test')->secret('webauthn');
-		$this->assertCount(1, $stored);
-		$this->assertSame('My Laptop', $stored[0]['name']);
-		$this->assertSame('AQIDBA', $stored[0]['id']);
-		$this->assertSame('none', $stored[0]['attestation']);
-	}
-
-	public function testSubmitCreateForOtherUser(): void
-	{
-		// an admin must not register a passkey for another user: the
-		// credential would live on the admin's device and let them log
-		// in as that user
 		$this->setRequest([
-			'action'     => 'create',
-			'credential' => 'anything',
-			'name'       => 'My Laptop'
+			'action'   => 'remove',
+			'id'       => 'aaa',
+			'password' => 'adminpass123'
 		]);
 		$this->app->impersonate('admin');
 
-		try {
-			$this->controller()->submit();
-			$this->fail('Expected PermissionException was not thrown');
-		} catch (PermissionException) {
-			// the target user's account must be left untouched
-			$this->assertNull($this->app->user('test')->secret('webauthn'));
-		}
+		$result = $this->controller()->submit();
+
+		$this->assertTrue($result);
+		// the secret is cleared entirely once the last passkey is gone
+		$this->assertNull($this->app->user('test')->secret('webauthn'));
 	}
 
-	public function testSubmitCreateWithoutName(): void
+	public function testSubmitRemoveNotFound(): void
 	{
-		['payload' => $credential, 'challenge' => $challenge] = WebauthnTest::attestation(
-			Webauthn::for($this->app->user('test'))
-		);
-
-		// no name provided → an incremental fallback name is generated
-		$this->setRequest([
-			'action'     => 'create',
-			'credential' => $credential
+		$this->app->user('test')->changeSecret('webauthn', [
+			['id' => 'aaa', 'name' => 'Key 1']
 		]);
-		$this->app->impersonate('test');
-		$this->app->session()->set('kirby.webauthn.test', $challenge);
 
-		$this->controller()->submit();
-
-		$stored = $this->app->user('test')->secret('webauthn');
-		$this->assertSame('#1', $stored[0]['name']);
-	}
-
-	public function testSubmitCreateWithInvalidCredential(): void
-	{
-		// a malformed registration payload is rejected before anything
-		// is stored (the happy path needs a real authenticator attestation)
-		$this->setRequest(['action' => 'create', 'credential' => 123]);
-		$this->app->impersonate('test');
-		$this->app->session()->set('kirby.webauthn.test', 'challenge');
+		$this->setRequest([
+			'action'   => 'remove',
+			'id'       => 'zzz',
+			'password' => 'adminpass123'
+		]);
+		$this->app->impersonate('admin');
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.webauthn.invalid');
+		$this->expectExceptionCode('error.user.webauthn.notFound');
 
 		$this->controller()->submit();
 	}

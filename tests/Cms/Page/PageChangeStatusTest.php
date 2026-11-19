@@ -10,6 +10,45 @@ class PageChangeStatusTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeStatus';
 
+	public function testChangeStatusFromDraftToDraft(): void
+	{
+		$parent = new Page([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
+		]);
+
+		$page = $parent->draft('child-c');
+
+		$this->assertTrue($page->isDraft());
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+
+		$draft    = $page->changeStatus('draft');
+		$children = $parent->childrenAndDrafts();
+
+		$this->assertSame($draft, $page);
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-b', $children->nth(1)->slug());
+		$this->assertSame('child-c', $children->nth(2)->slug());
+	}
+
 	public function testChangeStatusFromDraftToListed(): void
 	{
 		$parent = new Page([
@@ -53,45 +92,6 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertSame('child-a', $children->nth(0)->slug());
 		$this->assertSame('child-c', $children->nth(1)->slug());
 		$this->assertSame('child-b', $children->nth(2)->slug());
-	}
-
-	public function testChangeStatusFromDraftToDraft(): void
-	{
-		$parent = new Page([
-			'slug'     => 'test',
-			'children' => [
-				[
-					'slug' => 'child-a',
-					'num'  => 1
-				],
-				[
-					'slug' => 'child-b',
-					'num'  => null
-				]
-			],
-			'drafts' => [
-				[
-					'slug'  => 'child-c',
-					'draft' => true
-				]
-			]
-		]);
-
-		$page = $parent->draft('child-c');
-
-		$this->assertTrue($page->isDraft());
-		$this->assertTrue($parent->drafts()->has($page));
-		$this->assertFalse($parent->children()->listed()->has($page));
-
-		$draft    = $page->changeStatus('draft');
-		$children = $parent->childrenAndDrafts();
-
-		$this->assertSame($draft, $page);
-		$this->assertTrue($parent->drafts()->has($page));
-		$this->assertFalse($parent->children()->listed()->has($page));
-		$this->assertSame('child-a', $children->nth(0)->slug());
-		$this->assertSame('child-b', $children->nth(1)->slug());
-		$this->assertSame('child-c', $children->nth(2)->slug());
 	}
 
 	public function testChangeStatusFromDraftToUnlisted(): void

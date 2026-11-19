@@ -10,9 +10,9 @@ class LimitsTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Limits';
 
-	protected Limits $limits;
-
 	public string|null $failedEmail = null;
+
+	protected Limits $limits;
 
 	protected function setUp(): void
 	{
@@ -58,6 +58,21 @@ class LimitsTest extends TestCase
 		$this->assertSame('homer@simpsons.com', $this->failedEmail);
 	}
 
+	public function testEnsurePasses(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		// IP 10.1 (9 trials) and marge are both below
+		// the limit, so ensure() must not throw or fire the hook
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->limits->ensure('marge@simpsons.com');
+
+		$this->assertNull($this->failedEmail);
+	}
+
 	public function testEnsureWithBlockedAccount(): void
 	{
 		copy(
@@ -99,21 +114,6 @@ class LimitsTest extends TestCase
 
 		// a blocked ip is not counted any further
 		$this->assertSame(10, $this->limits->log()['by-ip']['38f0a08519792a17e18a251008f3a116977907f921b0b287c8']['trials']);
-	}
-
-	public function testEnsurePasses(): void
-	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		// IP 10.1 (9 trials) and marge are both below
-		// the limit, so ensure() must not throw or fire the hook
-		$this->app->visitor()->ip('10.1.123.234');
-		$this->limits->ensure('marge@simpsons.com');
-
-		$this->assertNull($this->failedEmail);
 	}
 
 	public function testEnsureWithoutEmail(): void
@@ -186,6 +186,27 @@ class LimitsTest extends TestCase
 		$this->assertTrue($this->limits->isBlocked('lisa@simpsons.com'));
 	}
 
+	public function testIsBlockedByEmailForUnknownUser(): void
+	{
+		// IP 10.1 is not present, so the only possible
+		// block comes from the email-based limit
+		file_put_contents($this->limits->file(), json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'ghost@simpsons.com' => [
+					'time'   => 9999999999,
+					'trials' => 10
+				]
+			]
+		]));
+
+		$this->app->visitor()->ip('10.1.123.234');
+
+		// ghost is not a registered user, but the email-based limit
+		// still applies because isBlocked() does no user lookup
+		$this->assertTrue($this->limits->isBlocked('ghost@simpsons.com'));
+	}
+
 	public function testIsBlockedWithCustomTrialsOption(): void
 	{
 		$this->app = $this->app->clone([
@@ -209,27 +230,6 @@ class LimitsTest extends TestCase
 
 		// 5 trials reaches the custom limit of 5
 		$this->assertTrue($this->limits->isBlocked('marge@simpsons.com'));
-	}
-
-	public function testIsBlockedByEmailForUnknownUser(): void
-	{
-		// IP 10.1 is not present, so the only possible
-		// block comes from the email-based limit
-		file_put_contents($this->limits->file(), json_encode([
-			'by-ip' => [],
-			'by-email' => [
-				'ghost@simpsons.com' => [
-					'time'   => 9999999999,
-					'trials' => 10
-				]
-			]
-		]));
-
-		$this->app->visitor()->ip('10.1.123.234');
-
-		// ghost is not a registered user, but the email-based limit
-		// still applies because isBlocked() does no user lookup
-		$this->assertTrue($this->limits->isBlocked('ghost@simpsons.com'));
 	}
 
 	public function testIsBlockedWithoutEmail(): void
@@ -408,6 +408,23 @@ class LimitsTest extends TestCase
 		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
 	}
 
+	public function testTrackWithCorruptedFile(): void
+	{
+		file_put_contents($this->limits->file(), 'some gibberish');
+
+		$this->app->visitor()->ip('10.1.123.234');
+		$this->assertTrue($this->limits->track('homer@simpsons.com'));
+
+		// the unreadable contents are discarded and a fresh log
+		// is written instead of throwing
+		$log = $this->limits->log();
+		$this->assertSame(
+			1,
+			$log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']
+		);
+		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
+	}
+
 	public function testTrackWithEmailInOtherCase(): void
 	{
 		$this->app = $this->app->clone([
@@ -451,22 +468,5 @@ class LimitsTest extends TestCase
 		$log = $this->limits->log();
 		$this->assertSame(1, $log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']);
 		$this->assertSame([], $log['by-email']);
-	}
-
-	public function testTrackWithCorruptedFile(): void
-	{
-		file_put_contents($this->limits->file(), 'some gibberish');
-
-		$this->app->visitor()->ip('10.1.123.234');
-		$this->assertTrue($this->limits->track('homer@simpsons.com'));
-
-		// the unreadable contents are discarded and a fresh log
-		// is written instead of throwing
-		$log = $this->limits->log();
-		$this->assertSame(
-			1,
-			$log['by-ip']['87084f11690867b977a611dd2c943a918c3197f4c02b25ab59']['trials']
-		);
-		$this->assertSame(1, $log['by-email']['homer@simpsons.com']['trials']);
 	}
 }

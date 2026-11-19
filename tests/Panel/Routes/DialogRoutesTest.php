@@ -81,6 +81,18 @@ class DialogRoutesTest extends TestCase
 		$this->assertSame('POST', $routes[1]['method']);
 	}
 
+	public function testToArrayMissingCallbacks(): void
+	{
+		$routes = new DialogRoutes($this->area, [
+			'foo' => []
+		]);
+
+		$routes = $routes->toArray();
+		$this->assertCount(2, $routes);
+		$this->assertSame('The load handler is missing', $routes[0]['action']());
+		$this->assertTrue($routes[1]['action']());
+	}
+
 	public function testToArrayWithPattern(): void
 	{
 		$routes = new DialogRoutes($this->area, [
@@ -117,17 +129,5 @@ class DialogRoutesTest extends TestCase
 			['dialogs/foo/(:any)', 'dialogs/bar/(:any)'],
 			$routes[1]['pattern']
 		);
-	}
-
-	public function testToArrayMissingCallbacks(): void
-	{
-		$routes = new DialogRoutes($this->area, [
-			'foo' => []
-		]);
-
-		$routes = $routes->toArray();
-		$this->assertCount(2, $routes);
-		$this->assertSame('The load handler is missing', $routes[0]['action']());
-		$this->assertTrue($routes[1]['action']());
 	}
 }

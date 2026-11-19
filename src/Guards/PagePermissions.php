@@ -20,17 +20,6 @@ class PagePermissions extends ModelPermissions
 		return 'pages';
 	}
 
-	protected function error(string $key, array $data = []): never
-	{
-		parent::error(
-			key: 'page.' . $key . '.permission',
-			data: [
-				'slug' => $this->model->slug(),
-				...$data
-			]
-		);
-	}
-
 	/**
 	 * Converting a page to a draft is covered
 	 * by the `changeStatus` rule
@@ -46,5 +35,16 @@ class PagePermissions extends ModelPermissions
 	protected function ensureToPublish(): void
 	{
 		$this->ensureSetting('changeStatus');
+	}
+
+	protected function error(string $key, array $data = []): never
+	{
+		parent::error(
+			key: 'page.' . $key . '.permission',
+			data: [
+				'slug' => $this->model->slug(),
+				...$data
+			]
+		);
 	}
 }

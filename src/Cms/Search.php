@@ -13,13 +13,6 @@ namespace Kirby\Cms;
  */
 class Search
 {
-	public static function files(
-		string|null $query = null,
-		array $params = []
-	): Files {
-		return App::instance()->site()->index()->files()->search($query, $params);
-	}
-
 	/**
 	 * Native search method to search for anything within the collection
 	 */
@@ -30,6 +23,13 @@ class Search
 	): Collection {
 		$kirby = App::instance();
 		return ($kirby->component('search'))($kirby, $collection, $query, $params);
+	}
+
+	public static function files(
+		string|null $query = null,
+		array $params = []
+	): Files {
+		return App::instance()->site()->index()->files()->search($query, $params);
 	}
 
 	public static function pages(

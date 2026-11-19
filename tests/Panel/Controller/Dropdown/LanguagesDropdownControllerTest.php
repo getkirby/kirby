@@ -12,6 +12,23 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(LanguagesDropdownController::class)]
 class LanguagesDropdownControllerTest extends TestCase
 {
+	public function testFactoryForPage(): void
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$dropdown = LanguagesDropdownController::factory('pages/test');
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->page('test'), $dropdown->model);
+	}
+
 	public function testFactoryForPageFile(): void
 	{
 		$app = new App([
@@ -34,6 +51,19 @@ class LanguagesDropdownControllerTest extends TestCase
 		$this->assertSame($app->file('test/test.jpg'), $dropdown->model);
 	}
 
+	public function testFactoryForSite(): void
+	{
+		$app = new App();
+		$app->impersonate('kirby');
+		$dropdown = LanguagesDropdownController::factory('site');
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->site(), $dropdown->model);
+
+		$dropdown = LanguagesDropdownController::factory();
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->site(), $dropdown->model);
+	}
+
 	public function testFactoryForSiteFile(): void
 	{
 		$app = new App([
@@ -49,56 +79,6 @@ class LanguagesDropdownControllerTest extends TestCase
 		$dropdown = LanguagesDropdownController::factory('', 'test.jpg');
 		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
 		$this->assertSame($app->file('test.jpg'), $dropdown->model);
-	}
-
-	public function testFactoryForUserFile(): void
-	{
-		$app = new App([
-			'users' => [
-				[
-					'id'    => 'test',
-					'files' => [
-						['filename' => 'test.jpg']
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$dropdown = LanguagesDropdownController::factory('users/test', 'test.jpg');
-		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
-		$this->assertSame($app->user('test')->file('test.jpg'), $dropdown->model);
-	}
-
-	public function testFactoryForPage(): void
-	{
-		$app = new App([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$dropdown = LanguagesDropdownController::factory('pages/test');
-		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
-		$this->assertSame($app->page('test'), $dropdown->model);
-	}
-
-	public function testFactoryForSite(): void
-	{
-		$app = new App();
-		$app->impersonate('kirby');
-		$dropdown = LanguagesDropdownController::factory('site');
-		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
-		$this->assertSame($app->site(), $dropdown->model);
-
-		$dropdown = LanguagesDropdownController::factory();
-		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
-		$this->assertSame($app->site(), $dropdown->model);
 	}
 
 	public function testFactoryForSiteNotAccessible(): void
@@ -151,11 +131,24 @@ class LanguagesDropdownControllerTest extends TestCase
 		$this->assertSame($app->user('test'), $dropdown->model);
 	}
 
-	public function testLoadSingleLang(): void
+	public function testFactoryForUserFile(): void
 	{
-		$page     = new Page(['slug' => 'test']);
-		$dropdown = new LanguagesDropdownController($page);
-		$this->assertSame([], $dropdown->load());
+		$app = new App([
+			'users' => [
+				[
+					'id'    => 'test',
+					'files' => [
+						['filename' => 'test.jpg']
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$dropdown = LanguagesDropdownController::factory('users/test', 'test.jpg');
+		$this->assertInstanceOf(LanguagesDropdownController::class, $dropdown);
+		$this->assertSame($app->user('test')->file('test.jpg'), $dropdown->model);
 	}
 
 	public function testLoadMultiLang(): void
@@ -199,6 +192,13 @@ class LanguagesDropdownControllerTest extends TestCase
 				'lock'    => false
 			]
 		], $dropdown->load());
+	}
+
+	public function testLoadSingleLang(): void
+	{
+		$page     = new Page(['slug' => 'test']);
+		$dropdown = new LanguagesDropdownController($page);
+		$this->assertSame([], $dropdown->load());
 	}
 
 	public function testOption(): void

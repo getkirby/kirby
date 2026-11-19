@@ -5,7 +5,6 @@
 		class="k-overlay"
 		@cancel="onCancel"
 		@mousedown="onClick"
-		@touchdown="onClick"
 		@close="onClose"
 	>
 		<slot />

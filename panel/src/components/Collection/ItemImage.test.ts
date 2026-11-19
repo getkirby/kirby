@@ -34,9 +34,27 @@ describe("k-item-image", () => {
 			const wrapper = mount({ image: {} });
 			expect(wrapper.attributes("cover")).toBe("true");
 		});
+
+		it("lets the image turn cover off", () => {
+			const wrapper = mount({ image: { cover: false } });
+			expect(wrapper.attributes("cover")).toBe("false");
+		});
+
+		it("passes the icon options to the icon frame", () => {
+			const wrapper = mount({ image: { color: "blue", icon: "page" } });
+			expect(wrapper.attributes()).toMatchObject({
+				color: "blue",
+				icon: "page"
+			});
+		});
 	});
 
 	describe("layout prop", () => {
+		it("sets ratio to auto in the default list layout", () => {
+			const wrapper = mount({ image: { ratio: "1/1" } });
+			expect(wrapper.attributes("ratio")).toBe("auto");
+		});
+
 		it("sets ratio to auto in list layout", () => {
 			const wrapper = mount({ image: { ratio: "1/1" }, layout: "list" });
 			expect(wrapper.attributes("ratio")).toBe("auto");

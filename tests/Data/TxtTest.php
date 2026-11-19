@@ -14,96 +14,53 @@ class TxtTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 
-	public function testEncodeDecode(): void
+	public function testDecodeBom1(): void
 	{
-		$array = [
-			'title' => 'Title',
-			'text'  => 'Text'
+		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";
+		$array  = [
+			'title' => "title field with BOM \xEF\xBB\xBF",
+			'text'  => 'text field'
 		];
 
-		$data = Txt::encode($array);
-		$this->assertSame(
-			"Title: Title\n\n----\n\nText: Text",
-			$data
-		);
-
-		$result = Txt::decode($data);
-		$this->assertSame($array, $result);
-
-		$this->assertSame('', Txt::encode([]));
-		$this->assertSame([], Txt::decode(''));
-
-		$this->assertSame([], Txt::decode(null));
-		$this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));
+		$this->assertSame($array, Txt::decode($string));
 	}
 
-	public function testEncodeDecodeMixedCase(): void
+	public function testDecodeBom2(): void
 	{
-		$array = [
-			'title' => 'Title',
-			'text'  => 'Text',
-			'tItLe' => 'Another title',
-			'TEXT'  => 'UPPERTEXT'
+		$string = "\xEF\xBB\xBFTitle: title field with BOM\n--\xEF\xBB\xBF--\nand more text\n----\nText: text field";
+		$array  = [
+			'title' => "title field with BOM\n--\xEF\xBB\xBF--\nand more text",
+			'text'  => 'text field'
 		];
 
-		$data = Txt::encode($array);
-		$this->assertSame(
-			"Title: Another title\n\n----\n\nText: UPPERTEXT",
-			$data
-		);
-
-		$result = Txt::decode($data);
-		$this->assertSame([
-			'title' => 'Another title',
-			'text'  => 'UPPERTEXT'
-		], $result);
+		$this->assertSame($array, Txt::decode($string));
 	}
 
-	public function testEncodeMissingValues(): void
+	public function testDecodeFile(): void
 	{
 		$array = [
-			'title' => 'Title',
-			'text'  => null,
-			''      => 'text',
-			'field' => 'content'
+			'title_with_spaces' => 'Title',
+			'text_with_dashes'  => 'Text'
 		];
 
-		$data = Txt::encode($array);
-		$this->assertSame(
-			"Title: Title\n\n----\n\nField: content",
-			$data
-		);
+		$data = Txt::decode(file_get_contents(static::FIXTURES . '/decode.txt'));
+		$this->assertSame($array, $data);
 	}
 
-	public function testEncodeMultiline(): void
+	public function testDecodeInvalid1(): void
 	{
-		$array = [
-			'title' => 'Title',
-			'text'  => "Text\nText"
-		];
-
-		$data = Txt::encode($array);
-		$this->assertSame(
-			"Title: Title\n\n----\n\nText:\n\nText\nText",
-			$data
-		);
+		// pass invalid object
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
+		Txt::decode(new stdClass());
 	}
 
-	public function testEncodeDecodeDivider(): void
+	public function testDecodeInvalid2(): void
 	{
-		$array = [
-			'title' => 'Title',
-			'text'  => "----\n----\nText\n\n----Field:\nValue\n----  \n----"
-		];
-
-		$data = Txt::encode($array);
-		$this->assertSame(
-			"Title: Title\n\n----\n\nText:\n\n\\----\n\\----\n" .
-			"Text\n\n\\----Field:\nValue\n\\----  \n\\----",
-			$data
-		);
-
-		$this->assertSame($array, Txt::decode($data));
+		// pass invalid int
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
+		Txt::decode(1);
 	}
 
 	public function testEncodeArray(): void
@@ -134,6 +91,68 @@ class TxtTest extends TestCase
 		$this->assertSame('Bool: false', $data);
 	}
 
+	public function testEncodeDecode(): void
+	{
+		$array = [
+			'title' => 'Title',
+			'text'  => 'Text'
+		];
+
+		$data = Txt::encode($array);
+		$this->assertSame(
+			"Title: Title\n\n----\n\nText: Text",
+			$data
+		);
+
+		$result = Txt::decode($data);
+		$this->assertSame($array, $result);
+
+		$this->assertSame('', Txt::encode([]));
+		$this->assertSame([], Txt::decode(''));
+
+		$this->assertSame([], Txt::decode(null));
+		$this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));
+	}
+
+	public function testEncodeDecodeDivider(): void
+	{
+		$array = [
+			'title' => 'Title',
+			'text'  => "----\n----\nText\n\n----Field:\nValue\n----  \n----"
+		];
+
+		$data = Txt::encode($array);
+		$this->assertSame(
+			"Title: Title\n\n----\n\nText:\n\n\\----\n\\----\n" .
+			"Text\n\n\\----Field:\nValue\n\\----  \n\\----",
+			$data
+		);
+
+		$this->assertSame($array, Txt::decode($data));
+	}
+
+	public function testEncodeDecodeMixedCase(): void
+	{
+		$array = [
+			'title' => 'Title',
+			'text'  => 'Text',
+			'tItLe' => 'Another title',
+			'TEXT'  => 'UPPERTEXT'
+		];
+
+		$data = Txt::encode($array);
+		$this->assertSame(
+			"Title: Another title\n\n----\n\nText: UPPERTEXT",
+			$data
+		);
+
+		$result = Txt::decode($data);
+		$this->assertSame([
+			'title' => 'Another title',
+			'text'  => 'UPPERTEXT'
+		], $result);
+	}
+
 	public function testEncodeFloat(): void
 	{
 		$data = Txt::encode([
@@ -157,15 +176,6 @@ class TxtTest extends TestCase
 		Locale::set($currentLocale);
 	}
 
-	public function testEncodeInt(): void
-	{
-		$data = Txt::encode([
-			'number' => 1234567890123456789
-		]);
-
-		$this->assertSame('Number: 1234567890123456789', $data);
-	}
-
 	public function testEncodeIgnoresLanguageRules(): void
 	{
 		Str::$language = ['ä' => 'ae'];
@@ -181,6 +191,15 @@ class TxtTest extends TestCase
 		}
 	}
 
+	public function testEncodeInt(): void
+	{
+		$data = Txt::encode([
+			'number' => 1234567890123456789
+		]);
+
+		$this->assertSame('Number: 1234567890123456789', $data);
+	}
+
 	public function testEncodeIntKeys(): void
 	{
 		$data = Txt::encode(['a', 'b']);
@@ -189,52 +208,33 @@ class TxtTest extends TestCase
 		$this->assertSame(['a', 'b'], Txt::decode($data));
 	}
 
-	public function testDecodeFile(): void
+	public function testEncodeMissingValues(): void
 	{
 		$array = [
-			'title_with_spaces' => 'Title',
-			'text_with_dashes'  => 'Text'
+			'title' => 'Title',
+			'text'  => null,
+			''      => 'text',
+			'field' => 'content'
 		];
 
-		$data = Txt::decode(file_get_contents(static::FIXTURES . '/decode.txt'));
-		$this->assertSame($array, $data);
+		$data = Txt::encode($array);
+		$this->assertSame(
+			"Title: Title\n\n----\n\nField: content",
+			$data
+		);
 	}
 
-	public function testDecodeBom1(): void
+	public function testEncodeMultiline(): void
 	{
-		$string = "\xEF\xBB\xBFTitle: title field with BOM \xEF\xBB\xBF\n----\nText: text field";
-		$array  = [
-			'title' => "title field with BOM \xEF\xBB\xBF",
-			'text'  => 'text field'
+		$array = [
+			'title' => 'Title',
+			'text'  => "Text\nText"
 		];
 
-		$this->assertSame($array, Txt::decode($string));
-	}
-
-	public function testDecodeBom2(): void
-	{
-		$string = "\xEF\xBB\xBFTitle: title field with BOM\n--\xEF\xBB\xBF--\nand more text\n----\nText: text field";
-		$array  = [
-			'title' => "title field with BOM\n--\xEF\xBB\xBF--\nand more text",
-			'text'  => 'text field'
-		];
-
-		$this->assertSame($array, Txt::decode($string));
-	}
-
-	public function testDecodeInvalid1(): void
-	{
-		// pass invalid object
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
-		Txt::decode(new stdClass());
-	}
-
-	public function testDecodeInvalid2(): void
-	{
-		// pass invalid int
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessageIs('Invalid TXT data; please pass a string');
-		Txt::decode(1);
+		$data = Txt::encode($array);
+		$this->assertSame(
+			"Title: Title\n\n----\n\nText:\n\nText\nText",
+			$data
+		);
 	}
 }

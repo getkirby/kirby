@@ -51,6 +51,18 @@ class PageRepresentationTest extends ModelTestCase
 		$this->assertSame('json', $representation->type());
 	}
 
+	public function testRepresentationWithMissingRepresentation(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The content representation cannot be found');
+
+		$page->representation('json');
+	}
+
 	public function testRepresentationWithMultipleTypes(): void
 	{
 		$this->app = $this->app->clone([
@@ -75,17 +87,5 @@ class PageRepresentationTest extends ModelTestCase
 		$this->assertInstanceOf(Template::class, $representation);
 		$this->assertSame('test', $representation->name());
 		$this->assertSame('json', $representation->type());
-	}
-
-	public function testRepresentationWithMissingRepresentation(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The content representation cannot be found');
-
-		$page->representation('json');
 	}
 }

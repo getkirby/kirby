@@ -53,25 +53,15 @@ class UserRulesTest extends ModelTestCase
 		]);
 	}
 
-	public static function validDataProvider(): array
-	{
-		return [
-			['Email', 'editor@domain.com'],
-			['Language', 'en'],
-			['Password', '12345678'],
-			['Role', 'editor']
-		];
-	}
-
-	#[DataProvider('validDataProvider')]
-	public function testChangeValid(string $key, string $value): void
+	public function testChangeEmailDuplicate(): void
 	{
 		$this->app->impersonate('admin@domain.com');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionCode('error.user.duplicate');
+
 		$user = $this->app->user('user@domain.com');
-
-		$this->expectNotToPerformAssertions();
-
-		UserRules::{'change' . $key}($user, $value);
+		UserRules::changeEmail($user, 'admin@domain.com');
 	}
 
 	public static function invalidDataProvider(): array
@@ -102,56 +92,6 @@ class UserRulesTest extends ModelTestCase
 		$this->assertTrue(UserRules::{'change' . $key}($user, $value));
 	}
 
-	public static function missingPermissionProvider(): array
-	{
-		return [
-			['Email', 'test@domain.com', 'error.user.changeEmail.permission', 'You are not allowed to change the email for the user "user@domain.com"'],
-			['Language', 'english', 'error.user.changeLanguage.permission', 'You are not allowed to change the language for the user "user@domain.com"'],
-			['Name', 'Test', 'error.user.changeName.permission', 'You are not allowed to change the name for the user "user@domain.com"'],
-			['Password', '1234', 'error.user.changePassword.permission', 'You are not allowed to change the password for the user "user@domain.com"'],
-		];
-	}
-
-	#[DataProvider('missingPermissionProvider')]
-	public function testChangeWithoutPermission(
-		string $key,
-		string $value,
-		string $code,
-		string $message
-	): void {
-		$this->app->impersonate('nobody');
-		$user = $this->app->user('user@domain.com');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode($code);
-		$this->expectExceptionMessageIs($message);
-
-		UserRules::{'change' . $key}($user, $value);
-	}
-
-	public function testChangeEmailDuplicate(): void
-	{
-		$this->app->impersonate('admin@domain.com');
-
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionCode('error.user.duplicate');
-
-		$user = $this->app->user('user@domain.com');
-		UserRules::changeEmail($user, 'admin@domain.com');
-	}
-
-	public function testChangeRoleWithoutPermissions(): void
-	{
-		$this->app->impersonate('nobody');
-		$user = $this->app->user('another-user@domain.com');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.changeRole.permission');
-		$this->expectExceptionMessageIs('You are not allowed to change the role for the user "another-user@domain.com"');
-
-		UserRules::changeRole($user, 'editor');
-	}
-
 	public function testChangeRoleFromAdminByAdmin(): void
 	{
 		$this->app->impersonate('admin@domain.com');
@@ -173,29 +113,45 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeRole($user, 'editor');
 	}
 
-	public function testChangeRoleToRoleThatCannotBeAssigned(): void
+	public function testChangeRoleLastAdmin(): void
 	{
-		// a role blueprint without a `permissions` key grants every
-		// permission, so it must never be assignable by a user who
-		// is not allowed to create it
-		$this->app = $this->app->clone([
-			'roles' => [
-				['name' => 'admin'],
-				['name' => 'editor', 'permissions' => ['users' => false]],
-				['name' => 'manager']
+		$this->expectException(LogicException::class);
+		$this->expectExceptionCode('error.user.changeRole.lastAdmin');
+
+		$this->app = new App([
+			'users' => [
+				[
+					'email' => 'admin@domain.com',
+					'role'  => 'admin'
+				]
 			]
 		]);
 
-		$this->app->impersonate('user@domain.com');
+		$this->app->impersonate('admin@domain.com');
+
+		$user = $this->app->user('admin@domain.com');
+		UserRules::changeRole($user, 'editor');
+	}
+
+	public function testChangeRoleToAdminByAdmin(): void
+	{
+		$this->app->impersonate('admin@domain.com');
+
+		$this->expectNotToPerformAssertions();
 
 		$user = $this->app->user('user@domain.com');
+		UserRules::changeRole($user, 'admin');
+	}
 
-		$this->assertCount(0, $user->roles());
+	public function testChangeRoleToAdminByNonAdmin(): void
+	{
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.changeRole.toAdmin');
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.role.invalid');
+		$this->app->impersonate('user@domain.com');
 
-		UserRules::changeRole($user, 'manager');
+		$user = $this->app->user('another-user@domain.com');
+		UserRules::changeRole($user, 'admin');
 	}
 
 	public function testChangeRoleToRoleThatCanBeAssigned(): void
@@ -227,44 +183,40 @@ class UserRulesTest extends ModelTestCase
 		);
 	}
 
-	public function testChangeRoleToAdminByAdmin(): void
+	public function testChangeRoleToRoleThatCannotBeAssigned(): void
 	{
-		$this->app->impersonate('admin@domain.com');
-
-		$this->expectNotToPerformAssertions();
-
-		$user = $this->app->user('user@domain.com');
-		UserRules::changeRole($user, 'admin');
-	}
-
-	public function testChangeRoleToAdminByNonAdmin(): void
-	{
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.changeRole.toAdmin');
-
-		$this->app->impersonate('user@domain.com');
-
-		$user = $this->app->user('another-user@domain.com');
-		UserRules::changeRole($user, 'admin');
-	}
-
-	public function testChangeRoleLastAdmin(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionCode('error.user.changeRole.lastAdmin');
-
-		$this->app = new App([
-			'users' => [
-				[
-					'email' => 'admin@domain.com',
-					'role'  => 'admin'
-				]
+		// a role blueprint without a `permissions` key grants every
+		// permission, so it must never be assignable by a user who
+		// is not allowed to create it
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor', 'permissions' => ['users' => false]],
+				['name' => 'manager']
 			]
 		]);
 
-		$this->app->impersonate('admin@domain.com');
+		$this->app->impersonate('user@domain.com');
 
-		$user = $this->app->user('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		$this->assertCount(0, $user->roles());
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		UserRules::changeRole($user, 'manager');
+	}
+
+	public function testChangeRoleWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+		$user = $this->app->user('another-user@domain.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.changeRole.permission');
+		$this->expectExceptionMessageIs('You are not allowed to change the role for the user "another-user@domain.com"');
+
 		UserRules::changeRole($user, 'editor');
 	}
 
@@ -341,6 +293,54 @@ class UserRulesTest extends ModelTestCase
 		UserRules::changeTotp($user, 'foo');
 	}
 
+	public static function validDataProvider(): array
+	{
+		return [
+			['Email', 'editor@domain.com'],
+			['Language', 'en'],
+			['Password', '12345678'],
+			['Role', 'editor']
+		];
+	}
+
+	#[DataProvider('validDataProvider')]
+	public function testChangeValid(string $key, string $value): void
+	{
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		$this->expectNotToPerformAssertions();
+
+		UserRules::{'change' . $key}($user, $value);
+	}
+
+	public static function missingPermissionProvider(): array
+	{
+		return [
+			['Email', 'test@domain.com', 'error.user.changeEmail.permission', 'You are not allowed to change the email for the user "user@domain.com"'],
+			['Language', 'english', 'error.user.changeLanguage.permission', 'You are not allowed to change the language for the user "user@domain.com"'],
+			['Name', 'Test', 'error.user.changeName.permission', 'You are not allowed to change the name for the user "user@domain.com"'],
+			['Password', '1234', 'error.user.changePassword.permission', 'You are not allowed to change the password for the user "user@domain.com"'],
+		];
+	}
+
+	#[DataProvider('missingPermissionProvider')]
+	public function testChangeWithoutPermission(
+		string $key,
+		string $value,
+		string $code,
+		string $message
+	): void {
+		$this->app->impersonate('nobody');
+		$user = $this->app->user('user@domain.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode($code);
+		$this->expectExceptionMessageIs($message);
+
+		UserRules::{'change' . $key}($user, $value);
+	}
+
 	public function testCreate(): void
 	{
 		$this->app->impersonate('admin@domain.com');
@@ -355,6 +355,175 @@ class UserRulesTest extends ModelTestCase
 		$this->expectNotToPerformAssertions();
 
 		UserRules::create($user, $props);
+	}
+
+	public function testCreateAdminAsEditor(): void
+	{
+		$this->app->impersonate('user@domain.com');
+
+		$user = new User($props = [
+			'email'    => 'new-user@domain.com',
+			'password' => '12345678',
+			'language' => 'en',
+			'role'     => 'admin',
+			'kirby'    => $this->app
+		]);
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.create.admin');
+
+		UserRules::create($user, $props);
+	}
+
+	public function testCreateAvatar(): void
+	{
+		$this->expectNotToPerformAssertions();
+
+		$this->app->impersonate('admin@domain.com');
+		$user = $this->app->user('user@domain.com');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWhenAvatarExists(): void
+	{
+		$avatar = $this->createStub(File::class);
+		$avatar->method('filename')->willReturn('profile.jpg');
+
+		$user = $this->createStub(User::class);
+		$user->method('avatar')->willReturn($avatar);
+		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.avatar.duplicate');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateAvatarWithoutPermission(): void
+	{
+		$blueprint = $this->createStub(UserBlueprint::class);
+		$blueprint->method('optionForUser')->willReturn(false);
+
+		$user = $this->createStub(User::class);
+		$user->method('blueprint')->willReturn($blueprint);
+		$user->method('username')->willReturn('test');
+		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.update.permission');
+		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
+
+		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+	}
+
+	public function testCreateFirstUserWithoutPassword(): void
+	{
+		$app = new App();
+
+		$user = new User($props = [
+			'email'    => 'new-user@domain.com',
+			'password' => '',
+			'language' => 'en',
+			'kirby'    => $app
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.password.invalid');
+
+		UserRules::create($user, $props);
+	}
+
+	public function testCreateFirstUserWithoutRole(): void
+	{
+		$app = new App();
+
+		$user = new User($props = [
+			'email'    => 'new-user@domain.com',
+			'password' => '12345678',
+			'language' => 'en',
+			'kirby'    => $app
+		]);
+
+		// the first user must be an admin
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		UserRules::create($user, $props);
+	}
+
+	public function testCreateInstallation(): void
+	{
+		$app  = new App();
+		$user = new User(
+			$props = [
+				'email'    => 'admin@domain.com',
+				'password' => '12345678',
+				'language' => 'en',
+				'role'     => 'admin',
+				'kirby'    => $app
+			]
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		UserRules::create($user, $props);
+	}
+
+	public function testCreateInvalidRole(): void
+	{
+		$this->app->impersonate('user@domain.com');
+
+		$user = new User([
+			'id'       => 'test',
+			'email'    => 'test@getkirby.com',
+			'language' => 'en'
+		]);
+
+		// no role
+		UserRules::create($user, [
+			'password' => 12345678
+		]);
+
+		// role: nobody
+		UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'nobody'
+		]);
+
+		// role: default
+		UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'default'
+		]);
+
+		// invalid role
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.role.invalid');
+
+		UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'foo'
+		]);
+	}
+
+	public function testCreatePermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$user = new User([
+			'id'       => 'test',
+			'email'    => 'test@getkirby.com',
+			'language' => 'en'
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.create.permission');
+
+		UserRules::create($user, [
+			'password' => 12345678,
+			'role'     => 'editor'
+		]);
 	}
 
 	public function testCreateWithDuplicateEmail(): void
@@ -426,173 +595,14 @@ class UserRulesTest extends ModelTestCase
 		UserRules::create($user, $props);
 	}
 
-	public function testCreateFirstUserWithoutRole(): void
-	{
-		$app = new App();
-
-		$user = new User($props = [
-			'email'    => 'new-user@domain.com',
-			'password' => '12345678',
-			'language' => 'en',
-			'kirby'    => $app
-		]);
-
-		// the first user must be an admin
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.role.invalid');
-
-		UserRules::create($user, $props);
-	}
-
-	public function testCreateFirstUserWithoutPassword(): void
-	{
-		$app = new App();
-
-		$user = new User($props = [
-			'email'    => 'new-user@domain.com',
-			'password' => '',
-			'language' => 'en',
-			'kirby'    => $app
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.password.invalid');
-
-		UserRules::create($user, $props);
-	}
-
-	public function testCreateInstallation(): void
-	{
-		$app  = new App();
-		$user = new User(
-			$props = [
-				'email'    => 'admin@domain.com',
-				'password' => '12345678',
-				'language' => 'en',
-				'role'     => 'admin',
-				'kirby'    => $app
-			]
-		);
-
-		$this->expectNotToPerformAssertions();
-
-		UserRules::create($user, $props);
-	}
-
-	public function testCreateAdminAsEditor(): void
-	{
-		$this->app->impersonate('user@domain.com');
-
-		$user = new User($props = [
-			'email'    => 'new-user@domain.com',
-			'password' => '12345678',
-			'language' => 'en',
-			'role'     => 'admin',
-			'kirby'    => $this->app
-		]);
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.create.admin');
-
-		UserRules::create($user, $props);
-	}
-
-	public function testCreatePermissions(): void
-	{
-		$this->app->impersonate('nobody');
-
-		$user = new User([
-			'id'       => 'test',
-			'email'    => 'test@getkirby.com',
-			'language' => 'en'
-		]);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.create.permission');
-
-		UserRules::create($user, [
-			'password' => 12345678,
-			'role'     => 'editor'
-		]);
-	}
-
-	public function testCreateInvalidRole(): void
-	{
-		$this->app->impersonate('user@domain.com');
-
-		$user = new User([
-			'id'       => 'test',
-			'email'    => 'test@getkirby.com',
-			'language' => 'en'
-		]);
-
-		// no role
-		UserRules::create($user, [
-			'password' => 12345678
-		]);
-
-		// role: nobody
-		UserRules::create($user, [
-			'password' => 12345678,
-			'role'     => 'nobody'
-		]);
-
-		// role: default
-		UserRules::create($user, [
-			'password' => 12345678,
-			'role'     => 'default'
-		]);
-
-		// invalid role
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.role.invalid');
-
-		UserRules::create($user, [
-			'password' => 12345678,
-			'role'     => 'foo'
-		]);
-	}
-
-	public function testCreateAvatar(): void
+	public function testDelete(): void
 	{
 		$this->expectNotToPerformAssertions();
 
 		$this->app->impersonate('admin@domain.com');
-		$user = $this->app->user('user@domain.com');
+		$user = new User(['email' => 'user@domain.com']);
 
-		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
-	}
-
-	public function testCreateAvatarWithoutPermission(): void
-	{
-		$blueprint = $this->createStub(UserBlueprint::class);
-		$blueprint->method('optionForUser')->willReturn(false);
-
-		$user = $this->createStub(User::class);
-		$user->method('blueprint')->willReturn($blueprint);
-		$user->method('username')->willReturn('test');
-		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.update.permission');
-		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
-
-		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
-	}
-
-	public function testCreateAvatarWhenAvatarExists(): void
-	{
-		$avatar = $this->createStub(File::class);
-		$avatar->method('filename')->willReturn('profile.jpg');
-
-		$user = $this->createStub(User::class);
-		$user->method('avatar')->willReturn($avatar);
-		$user->method('guards')->willReturn(new UserGuards(model: $user, user: $user));
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.avatar.duplicate');
-
-		UserRules::createAvatar($user, '/tmp/avatar.jpg', 'jpg');
+		UserRules::delete($user);
 	}
 
 	public function testDeleteAvatar(): void
@@ -640,6 +650,59 @@ class UserRulesTest extends ModelTestCase
 		$this->expectExceptionMessageIs('You are not allowed to update the user "test"');
 
 		UserRules::deleteAvatar($user);
+	}
+
+	public function testDeleteLastAdmin(): void
+	{
+		$app = new App([
+			'users' => [
+				[
+					'email' => 'admin@domain.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$app->impersonate('admin@domain.com');
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.delete.lastAdmin');
+
+		UserRules::delete($app->user('admin@domain.com'));
+	}
+
+	public function testDeleteLastUser(): void
+	{
+		$app = new App([
+			'roles' => [
+				['name' => 'editor']
+			],
+			'users' => [
+				[
+					'email' => 'user@domain.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->impersonate('user@domain.com');
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.user.delete.lastUser');
+
+		UserRules::delete($app->user('user@domain.com'));
+	}
+
+	public function testDeletePermissions(): void
+	{
+		$this->app->impersonate('nobody');
+		$user = $this->app->user('another-user@domain.com');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.user.delete.permission');
+		$this->expectExceptionMessageIs('You are not allowed to delete the user "another-user@domain.com"');
+
+		UserRules::delete($user);
 	}
 
 	public function testReplaceAvatar(): void
@@ -701,69 +764,6 @@ class UserRulesTest extends ModelTestCase
 		], $input);
 	}
 
-	public function testDelete(): void
-	{
-		$this->expectNotToPerformAssertions();
-
-		$this->app->impersonate('admin@domain.com');
-		$user = new User(['email' => 'user@domain.com']);
-
-		UserRules::delete($user);
-	}
-
-	public function testDeleteLastAdmin(): void
-	{
-		$app = new App([
-			'users' => [
-				[
-					'email' => 'admin@domain.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$app->impersonate('admin@domain.com');
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.delete.lastAdmin');
-
-		UserRules::delete($app->user('admin@domain.com'));
-	}
-
-	public function testDeleteLastUser(): void
-	{
-		$app = new App([
-			'roles' => [
-				['name' => 'editor']
-			],
-			'users' => [
-				[
-					'email' => 'user@domain.com',
-					'role'  => 'editor'
-				]
-			]
-		]);
-
-		$app->impersonate('user@domain.com');
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.user.delete.lastUser');
-
-		UserRules::delete($app->user('user@domain.com'));
-	}
-
-	public function testDeletePermissions(): void
-	{
-		$this->app->impersonate('nobody');
-		$user = $this->app->user('another-user@domain.com');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.user.delete.permission');
-		$this->expectExceptionMessageIs('You are not allowed to delete the user "another-user@domain.com"');
-
-		UserRules::delete($user);
-	}
-
 	public function testValidAvatar(): void
 	{
 		$this->expectNotToPerformAssertions();
@@ -797,23 +797,14 @@ class UserRulesTest extends ModelTestCase
 		UserRules::validAvatar($user, $source, 'jpg');
 	}
 
-	public static function validIdProvider(): array
+	public function testValidIdWhenDuplicateIsFound(): void
 	{
-		return [
-			['homer'],
-			// uppercase characters are allowed
-			['Homer'],
-			// underscores and dashes are allowed
-			['foo_bar-1']
-		];
-	}
-
-	#[DataProvider('validIdProvider')]
-	public function testValidIdWhenValid(string $id): void
-	{
-		$this->expectNotToPerformAssertions();
 		$user = new User(['email' => 'test@getkirby.com']);
-		UserRules::validId($user, $id);
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessageIs('A user with this id exists');
+
+		UserRules::validId($user, 'admin');
 	}
 
 	public static function invalidIdProvider(): array
@@ -856,14 +847,23 @@ class UserRulesTest extends ModelTestCase
 		UserRules::validId($user, $id);
 	}
 
-	public function testValidIdWhenDuplicateIsFound(): void
+	public static function validIdProvider(): array
 	{
+		return [
+			['homer'],
+			// uppercase characters are allowed
+			['Homer'],
+			// underscores and dashes are allowed
+			['foo_bar-1']
+		];
+	}
+
+	#[DataProvider('validIdProvider')]
+	public function testValidIdWhenValid(string $id): void
+	{
+		$this->expectNotToPerformAssertions();
 		$user = new User(['email' => 'test@getkirby.com']);
-
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessageIs('A user with this id exists');
-
-		UserRules::validId($user, 'admin');
+		UserRules::validId($user, $id);
 	}
 
 	public function testValidRole(): void

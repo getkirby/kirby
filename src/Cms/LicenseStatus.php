@@ -14,16 +14,16 @@ use Kirby\Toolkit\I18n;
 enum LicenseStatus: string
 {
 	/**
-	 * The license is valid and active
-	 */
-	case Active = 'active';
-
-	/**
 	 * Compliance with the conditional license
 	 * requirements has been confirmed
 	 * @since 5.5.0
 	 */
 	case Acknowledged = 'acknowledged';
+
+	/**
+	 * The license is valid and active
+	 */
+	case Active = 'active';
 
 	/**
 	 * Only used for the demo instance

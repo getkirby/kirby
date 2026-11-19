@@ -14,6 +14,15 @@ class PHPTest extends TestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/php';
 	public const string TMP      = KIRBY_TMP_DIR . '/Data.PHP';
 
+	public function testDecode(): void
+	{
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessageIs('The PHP::decode() method is not implemented');
+
+		$input  = include static::FIXTURES . '/input.php';
+		$result = PHP::decode($input);
+	}
+
 	public function testEncode(): void
 	{
 		$input    = static::FIXTURES . '/input.php';
@@ -32,15 +41,6 @@ class PHPTest extends TestCase
 		$this->assertSame('0.30000000000000004', PHP::encode(0.1 + 0.2));
 		$this->assertSame('1.0', PHP::encode(1.0));
 		$this->assertSame('-9223372036854775807-1', PHP::encode(PHP_INT_MIN));
-	}
-
-	public function testDecode(): void
-	{
-		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessageIs('The PHP::decode() method is not implemented');
-
-		$input  = include static::FIXTURES . '/input.php';
-		$result = PHP::decode($input);
 	}
 
 	public function testRead(): void

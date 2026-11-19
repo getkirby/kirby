@@ -47,7 +47,7 @@
 				@input="onTimeInput"
 				@submit="$emit('submit')"
 			>
-				<template v-if="times && !disabled" #icon>
+				<template v-if="time.times !== false && !disabled" #icon>
 					<k-button
 						:icon="time.icon ?? 'clock'"
 						:title="$t('time.select')"
@@ -106,20 +106,13 @@ export default {
 			default: "calendar"
 		},
 		/**
-		 * Time options (e.g. `display`, `icon`, `step`).
+		 * Time options (e.g. `display`, `icon`, `step`, `times`).
 		 * Please check docs for `k-time-input` props.
 		 * @example { display: 'HH:mm', step: { unit: "minute", size: 30 } }
 		 */
 		time: {
 			type: [Boolean, Object],
 			default: () => ({})
-		},
-		/**
-		 * Deactivate the times dropdown or not
-		 */
-		times: {
-			type: Boolean,
-			default: true
 		}
 	},
 	emits: ["input", "submit"],

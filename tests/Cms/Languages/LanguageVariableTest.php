@@ -45,16 +45,6 @@ class LanguageVariableTest extends TestCase
 		$this->assertSame('bar', $variable->value());
 	}
 
-	public function testCreateWithMultipleValues(): void
-	{
-		// impersonate kirby to make sure the translation
-		// is created in the default language
-		$this->app->impersonate('kirby');
-
-		$variable = LanguageVariable::create('foo', ['bar', 'baz']);
-		$this->assertSame(['bar', 'baz'], $variable->value());
-	}
-
 	public function testCreateEmptyKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -71,6 +61,17 @@ class LanguageVariableTest extends TestCase
 		LanguageVariable::create('0');
 	}
 
+	public function testCreateWithCoreKey(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionCode('error.language.variable.core');
+		$this->expectExceptionMessageIs('"date" is one of Kirby\'s own translation strings and cannot be overwritten by a language variable');
+
+		LanguageVariable::create('date', 'bar');
+	}
+
 	public function testCreateWithDuplicateKey(): void
 	{
 		$this->app->impersonate('kirby');
@@ -83,15 +84,14 @@ class LanguageVariableTest extends TestCase
 		LanguageVariable::create('foo', 'baz');
 	}
 
-	public function testCreateWithCoreKey(): void
+	public function testCreateWithMultipleValues(): void
 	{
+		// impersonate kirby to make sure the translation
+		// is created in the default language
 		$this->app->impersonate('kirby');
 
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionCode('error.language.variable.core');
-		$this->expectExceptionMessageIs('"date" is one of Kirby\'s own translation strings and cannot be overwritten by a language variable');
-
-		LanguageVariable::create('date', 'bar');
+		$variable = LanguageVariable::create('foo', ['bar', 'baz']);
+		$this->assertSame(['bar', 'baz'], $variable->value());
 	}
 
 	public function testDelete(): void

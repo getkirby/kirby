@@ -17,8 +17,8 @@ class TotpChallengeTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.TotpChallenge';
 
-	protected User $user;
 	protected string $secret;
+	protected User $user;
 
 	protected function setUp(): void
 	{

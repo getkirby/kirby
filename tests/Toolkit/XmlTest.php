@@ -11,15 +11,6 @@ class XmlTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/xml';
 
-	#[DataProvider('attrProvider')]
-	public function testAttr(
-		array $input,
-		bool|null $value,
-		string $expected
-	): void {
-		$this->assertSame($expected, Xml::attr($input, $value));
-	}
-
 	public static function attrProvider(): array
 	{
 		return [
@@ -34,6 +25,15 @@ class XmlTest extends TestCase
 			[['a' => 'a', 'b' => []],    null,  'a="a"'],
 			[['a', 'b' => true],         null,  'a="a" b="b"']
 		];
+	}
+
+	#[DataProvider('attrProvider')]
+	public function testAttr(
+		array $input,
+		bool|null $value,
+		string $expected
+	): void {
+		$this->assertSame($expected, Xml::attr($input, $value));
 	}
 
 	public function testAttrArrayValue(): void
@@ -60,6 +60,45 @@ class XmlTest extends TestCase
 
 		$expected = '<contact>' . PHP_EOL . '  <name>Homer</name>' . PHP_EOL . '  <email />' . PHP_EOL . '</contact>';
 		$this->assertSame($expected, Xml::create(['name' => 'Homer', 'email' => null], 'contact', false));
+	}
+
+	public function testEncodeDecode(): void
+	{
+		$expected = 'S&#252;per &#214;nenc&#339;ded &#223;tring';
+		$this->assertSame($expected, Xml::encode('Süper Önencœded ßtring'));
+		$this->assertSame('Süper Önencœded ßtring', Xml::decode($expected));
+
+		$this->assertSame('S&#252;per Täst', Xml::encode('S&uuml;per Täst', false));
+
+		$this->assertSame("Homer's \"Duff\"", Xml::decode(Xml::encode("Homer's \"Duff\"")));
+		$this->assertSame("Homer's", Xml::decode('Homer&apos;s'));
+
+		$this->assertSame('', Xml::decode(''));
+		$this->assertSame('', Xml::encode(''));
+		$this->assertSame('', Xml::decode(null));
+		$this->assertSame('', Xml::encode(null));
+	}
+
+	public function testEntities(): void
+	{
+		$this->assertSame(Xml::$entities, Xml::entities());
+	}
+
+	public function testParseEntities(): void
+	{
+		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
+		$array = Xml::parse($xml);
+
+		$this->assertSame([
+			'@name'  => 'x',
+			'@value' => 'this is a file: foo bar (with entities)'
+		], $array);
+	}
+
+	public function testParseRecursiveEntities(): void
+	{
+		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
+		$this->assertNull(Xml::parse($xml));
 	}
 
 	public function testParseSimplifyCreate(): void
@@ -141,23 +180,6 @@ class XmlTest extends TestCase
 		$this->assertNull(Xml::parse('<this>is invalid</that>'));
 	}
 
-	public function testParseEntities(): void
-	{
-		$xml   = '<!DOCTYPE d [<!ENTITY e "bar">]><x>this is a file: foo &e; (with entities)</x>';
-		$array = Xml::parse($xml);
-
-		$this->assertSame([
-			'@name'  => 'x',
-			'@value' => 'this is a file: foo bar (with entities)'
-		], $array);
-	}
-
-	public function testParseRecursiveEntities(): void
-	{
-		$xml = file_get_contents(static::FIXTURES . '/billion-laughs.xml');
-		$this->assertNull(Xml::parse($xml));
-	}
-
 	public function testParseXXE(): void
 	{
 		$xml   = '<!DOCTYPE d [<!ENTITY e SYSTEM "' . __FILE__ . '">]><x>this is a file: &e; with an XXE vulnerability</x>';
@@ -167,28 +189,6 @@ class XmlTest extends TestCase
 			'@name' => 'x',
 			'@value' => 'this is a file:  with an XXE vulnerability'
 		], $array);
-	}
-
-	public function testEncodeDecode(): void
-	{
-		$expected = 'S&#252;per &#214;nenc&#339;ded &#223;tring';
-		$this->assertSame($expected, Xml::encode('Süper Önencœded ßtring'));
-		$this->assertSame('Süper Önencœded ßtring', Xml::decode($expected));
-
-		$this->assertSame('S&#252;per Täst', Xml::encode('S&uuml;per Täst', false));
-
-		$this->assertSame("Homer's \"Duff\"", Xml::decode(Xml::encode("Homer's \"Duff\"")));
-		$this->assertSame("Homer's", Xml::decode('Homer&apos;s'));
-
-		$this->assertSame('', Xml::decode(''));
-		$this->assertSame('', Xml::encode(''));
-		$this->assertSame('', Xml::decode(null));
-		$this->assertSame('', Xml::encode(null));
-	}
-
-	public function testEntities(): void
-	{
-		$this->assertSame(Xml::$entities, Xml::entities());
 	}
 
 	public function testTag(): void
@@ -218,14 +218,6 @@ class XmlTest extends TestCase
 		$this->assertSame('  <name foo="bar">' . PHP_EOL . '   Test' . PHP_EOL . '   Test2' . PHP_EOL . '  </name>', $tag);
 	}
 
-	#[DataProvider('valueProvider')]
-	public function testValue(
-		bool|int|string|null $input,
-		string|null $expected
-	): void {
-		$this->assertSame($expected, Xml::value($input));
-	}
-
 	public static function valueProvider(): array
 	{
 		return [
@@ -252,6 +244,14 @@ class XmlTest extends TestCase
 			['te]]>st', '<![CDATA[te]]]]><![CDATA[>st]]>'],
 			['tö]]>st', '<![CDATA[tö]]]]><![CDATA[>st]]>']
 		];
+	}
+
+	#[DataProvider('valueProvider')]
+	public function testValue(
+		bool|int|string|null $input,
+		string|null $expected
+	): void {
+		$this->assertSame($expected, Xml::value($input));
 	}
 
 	public function testValueStringable(): void

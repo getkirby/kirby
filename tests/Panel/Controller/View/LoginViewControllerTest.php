@@ -21,16 +21,6 @@ class TestChallenge extends Challenge
 {
 	public static bool $available = true;
 
-	public function icon(): string
-	{
-		return 'test-icon';
-	}
-
-	public function isAvailable(): bool
-	{
-		return static::$available;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
@@ -45,6 +35,16 @@ class TestChallenge extends Challenge
 		);
 	}
 
+	public function icon(): string
+	{
+		return 'test-icon';
+	}
+
+	public function isAvailable(): bool
+	{
+		return static::$available;
+	}
+
 	public function verify(mixed $input, Pending $data): bool
 	{
 		return true;
@@ -53,11 +53,6 @@ class TestChallenge extends Challenge
 
 class TestChallenge2 extends Challenge
 {
-	public function isAvailable(): bool
-	{
-		return true;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
@@ -70,6 +65,11 @@ class TestChallenge2 extends Challenge
 			submit:    $this->submit(),
 			user:      $this->user->email(),
 		);
+	}
+
+	public function isAvailable(): bool
+	{
+		return true;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -95,12 +95,6 @@ class TestNullFormChallenge extends TestChallenge2
 
 class TestSecretChallenge extends Challenge
 {
-	// only available once the user has set it up
-	public function isAvailable(): bool
-	{
-		return $this->user->secret('foo') !== null;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
@@ -113,6 +107,12 @@ class TestSecretChallenge extends Challenge
 			submit:    $this->submit(),
 			user:      $this->user->email(),
 		);
+	}
+
+	// only available once the user has set it up
+	public function isAvailable(): bool
+	{
+		return $this->user->secret('foo') !== null;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -177,6 +177,82 @@ class LoginViewControllerTest extends TestCase
 		);
 	}
 
+	public function testChallenges(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test', 'test2']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->session()->set('kirby.challenge.email', 'test@example.com');
+		$this->app->session()->set('kirby.challenge.type', 'test');
+		$this->app->session()->set('kirby.challenge.mode', 'login');
+
+		$challenges = new LoginViewController('challenge', 'test')->load()->props()['challenges'];
+
+		$this->assertCount(2, $challenges);
+
+		$this->assertSame('test', $challenges[0]['type']);
+		$this->assertSame('test-icon', $challenges[0]['icon']);
+		$this->assertArrayHasKey('label', $challenges[0]);
+		$this->assertTrue($challenges[0]['active']);
+
+		$this->assertSame('test2', $challenges[1]['type']);
+		$this->assertArrayHasKey('label', $challenges[1]);
+		$this->assertFalse($challenges[1]['active']);
+	}
+
+	public function testChallengesEmptyWhenNotPending(): void
+	{
+		$challenges = new LoginViewController()->load()->props()['challenges'];
+		$this->assertSame([], $challenges);
+	}
+
+	public function testConstructMismatchedChallengeRedirects(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['test', 'test2']
+				]
+			],
+			'users' => [
+				[
+					'email' => 'test@example.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'test@example.com');
+		$session->set('kirby.challenge.type', 'test');
+		$session->set('kirby.challenge.mode', 'login');
+
+		$exception = null;
+
+		try {
+			new LoginViewController('challenge', 'test2');
+		} catch (Redirect $e) {
+			$exception = $e;
+		}
+
+		$this->assertInstanceOf(Redirect::class, $exception);
+		$this->assertStringEndsWith('login/challenge/test', $exception->location());
+
+		// active challenge in the session was NOT switched
+		$this->assertSame('test', $session->get('kirby.challenge.type'));
+	}
+
 	public function testConstructUnknownChallenge(): void
 	{
 		$this->app = $this->app->clone([
@@ -229,82 +305,6 @@ class LoginViewControllerTest extends TestCase
 		new LoginViewController('challenge', 'email');
 	}
 
-	public function testConstructMismatchedChallengeRedirects(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'challenges' => ['test', 'test2']
-				]
-			],
-			'users' => [
-				[
-					'email' => 'test@example.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$session = $this->app->session();
-		$session->set('kirby.challenge.email', 'test@example.com');
-		$session->set('kirby.challenge.type', 'test');
-		$session->set('kirby.challenge.mode', 'login');
-
-		$exception = null;
-
-		try {
-			new LoginViewController('challenge', 'test2');
-		} catch (Redirect $e) {
-			$exception = $e;
-		}
-
-		$this->assertInstanceOf(Redirect::class, $exception);
-		$this->assertStringEndsWith('login/challenge/test', $exception->location());
-
-		// active challenge in the session was NOT switched
-		$this->assertSame('test', $session->get('kirby.challenge.type'));
-	}
-
-	public function testChallenges(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'challenges' => ['test', 'test2']
-				]
-			],
-			'users' => [
-				[
-					'email' => 'test@example.com',
-					'role'  => 'admin'
-				]
-			]
-		]);
-
-		$this->app->session()->set('kirby.challenge.email', 'test@example.com');
-		$this->app->session()->set('kirby.challenge.type', 'test');
-		$this->app->session()->set('kirby.challenge.mode', 'login');
-
-		$challenges = new LoginViewController('challenge', 'test')->load()->props()['challenges'];
-
-		$this->assertCount(2, $challenges);
-
-		$this->assertSame('test', $challenges[0]['type']);
-		$this->assertSame('test-icon', $challenges[0]['icon']);
-		$this->assertArrayHasKey('label', $challenges[0]);
-		$this->assertTrue($challenges[0]['active']);
-
-		$this->assertSame('test2', $challenges[1]['type']);
-		$this->assertArrayHasKey('label', $challenges[1]);
-		$this->assertFalse($challenges[1]['active']);
-	}
-
-	public function testChallengesEmptyWhenNotPending(): void
-	{
-		$challenges = new LoginViewController()->load()->props()['challenges'];
-		$this->assertSame([], $challenges);
-	}
-
 	public function testFormThrowsWhenComponentRendersNull(): void
 	{
 		$this->app = $this->app->clone([
@@ -348,18 +348,47 @@ class LoginViewControllerTest extends TestCase
 		$this->assertSame([], $props['challenges']);
 	}
 
-	public function testLoadWithMethod(): void
+	public function testLoadAppliesValueToForm(): void
+	{
+		// subclass that returns a value() so form props get prefilled
+		$controller = new class () extends LoginViewController {
+			protected function value(): array
+			{
+				return ['email' => 'prefilled@example.com'];
+			}
+		};
+
+		$form = $controller->load()->props()['form'];
+		$this->assertSame(
+			['email' => 'prefilled@example.com'],
+			$form['props']['value']
+		);
+	}
+
+	public function testLoadExcludesUserSpecificChallengeForNonExistentUser(): void
 	{
 		$this->app = $this->app->clone([
-			'options' => ['auth.methods' => ['password', 'code']]
+			'options' => [
+				'auth' => [
+					'challenges' => ['test-secret', 'test2']
+				]
+			],
+			'users' => []
 		]);
 
-		$controller = new LoginViewController('method', 'code');
-		$props      = $controller->load()->props();
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'ghost@example.com');
+		$session->set('kirby.challenge.mode', 'login');
+		// note: no kirby.challenge.type, fallback to last enabled ('test2')
 
-		$this->assertSame('k-login-code-method-form', $props['form']['component']);
-		$this->assertCount(2, $props['methods']);
-		$this->assertTrue($props['methods'][1]['active']);
+		$props = new LoginViewController('challenge', 'test2')->load()->props();
+
+		$this->assertSame('k-login-test-challenge2-form', $props['form']['component']);
+		$this->assertSame('ghost@example.com', $props['form']['props']['user']);
+
+		$types = array_column($props['challenges'], 'type');
+		$this->assertSame(['test2'], $types);
+		$this->assertNotContains('test-secret', $types);
 	}
 
 	public function testLoadWithChallenge(): void
@@ -459,47 +488,18 @@ class LoginViewControllerTest extends TestCase
 		$this->assertSame($id, $props['form']['props']['user']);
 	}
 
-	public function testLoadExcludesUserSpecificChallengeForNonExistentUser(): void
+	public function testLoadWithMethod(): void
 	{
 		$this->app = $this->app->clone([
-			'options' => [
-				'auth' => [
-					'challenges' => ['test-secret', 'test2']
-				]
-			],
-			'users' => []
+			'options' => ['auth.methods' => ['password', 'code']]
 		]);
 
-		$session = $this->app->session();
-		$session->set('kirby.challenge.email', 'ghost@example.com');
-		$session->set('kirby.challenge.mode', 'login');
-		// note: no kirby.challenge.type, fallback to last enabled ('test2')
+		$controller = new LoginViewController('method', 'code');
+		$props      = $controller->load()->props();
 
-		$props = new LoginViewController('challenge', 'test2')->load()->props();
-
-		$this->assertSame('k-login-test-challenge2-form', $props['form']['component']);
-		$this->assertSame('ghost@example.com', $props['form']['props']['user']);
-
-		$types = array_column($props['challenges'], 'type');
-		$this->assertSame(['test2'], $types);
-		$this->assertNotContains('test-secret', $types);
-	}
-
-	public function testLoadAppliesValueToForm(): void
-	{
-		// subclass that returns a value() so form props get prefilled
-		$controller = new class () extends LoginViewController {
-			protected function value(): array
-			{
-				return ['email' => 'prefilled@example.com'];
-			}
-		};
-
-		$form = $controller->load()->props()['form'];
-		$this->assertSame(
-			['email' => 'prefilled@example.com'],
-			$form['props']['value']
-		);
+		$this->assertSame('k-login-code-method-form', $props['form']['component']);
+		$this->assertCount(2, $props['methods']);
+		$this->assertTrue($props['methods'][1]['active']);
 	}
 
 	public function testMethodRouteRedirectsWhenPending(): void

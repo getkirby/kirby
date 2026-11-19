@@ -34,6 +34,32 @@ class TranslationTest extends TestCase
 		$this->assertSame('de', $translationDE->id());
 	}
 
+	public function testContentFileMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $this->model->version(),
+			language: Language::ensure('en')
+		);
+
+		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
+	}
+
+	public function testContentFileSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $this->model->version(),
+			language: Language::single()
+		);
+
+		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
+	}
+
 	public function testContentMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -69,32 +95,6 @@ class TranslationTest extends TestCase
 		$expected = $this->createContentSingleLanguage();
 
 		$this->assertSame($expected['content'], $translation->content());
-	}
-
-	public function testContentFileMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $this->model->version(),
-			language: Language::ensure('en')
-		);
-
-		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
-	}
-
-	public function testContentFileSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $this->model->version(),
-			language: Language::single()
-		);
-
-		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
 	}
 
 	public function testCreate(): void

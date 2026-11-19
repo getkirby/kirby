@@ -25,12 +25,6 @@ use ReflectionClass;
 #[CoversClass(Parser::class)]
 class ParserTest extends TestCase
 {
-	public function testConstructor(): void
-	{
-		$parser = new Parser('user.name');
-		$this->assertSame('user', $parser->current()->lexeme);
-	}
-
 	public function testAdvance(): void
 	{
 		$parser  = new Parser('user.name');
@@ -191,42 +185,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testComparisonWithLiterals(): void
-	{
-		$parser = new Parser('user.age > 18');
-		$ast    = $parser->parse();
-
-		$this->assertEquals(
-			new ComparisonNode(
-				left: new MemberAccessNode(
-					object: new VariableNode('user'),
-					member: new LiteralNode('age')
-				),
-				operator: '>',
-				right: new LiteralNode(18)
-			),
-			$ast
-		);
-	}
-
-	public function testComparisonWithStrings(): void
-	{
-		$parser = new Parser('user.name == "John"');
-		$ast    = $parser->parse();
-
-		$this->assertEquals(
-			new ComparisonNode(
-				left: new MemberAccessNode(
-					object: new VariableNode('user'),
-					member: new LiteralNode('name')
-				),
-				operator: '==',
-				right: new LiteralNode('John')
-			),
-			$ast
-		);
-	}
-
 	public function testComparisonChaining(): void
 	{
 		$parser = new Parser('a < b <= c');
@@ -246,23 +204,19 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testComparisonWithTernary(): void
+	public function testComparisonPrecedence(): void
 	{
-		$parser = new Parser('user.age >= 18 ? "adult" : "minor"');
+		$parser = new Parser('user.age > 18');
 		$ast    = $parser->parse();
 
 		$this->assertEquals(
-			new TernaryNode(
-				condition: new ComparisonNode(
-					left: new MemberAccessNode(
-						object: new VariableNode('user'),
-						member: new LiteralNode('age')
-					),
-					operator: '>=',
-					right: new LiteralNode(18)
+			new ComparisonNode(
+				left: new MemberAccessNode(
+					object: new VariableNode('user'),
+					member: new LiteralNode('age')
 				),
-				true: new LiteralNode('adult'),
-				false: new LiteralNode('minor')
+				operator: '>',
+				right: new LiteralNode(18)
 			),
 			$ast
 		);
@@ -311,7 +265,7 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testComparisonPrecedence(): void
+	public function testComparisonWithLiterals(): void
 	{
 		$parser = new Parser('user.age > 18');
 		$ast    = $parser->parse();
@@ -329,6 +283,52 @@ class ParserTest extends TestCase
 		);
 	}
 
+	public function testComparisonWithStrings(): void
+	{
+		$parser = new Parser('user.name == "John"');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new ComparisonNode(
+				left: new MemberAccessNode(
+					object: new VariableNode('user'),
+					member: new LiteralNode('name')
+				),
+				operator: '==',
+				right: new LiteralNode('John')
+			),
+			$ast
+		);
+	}
+
+	public function testComparisonWithTernary(): void
+	{
+		$parser = new Parser('user.age >= 18 ? "adult" : "minor"');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new TernaryNode(
+				condition: new ComparisonNode(
+					left: new MemberAccessNode(
+						object: new VariableNode('user'),
+						member: new LiteralNode('age')
+					),
+					operator: '>=',
+					right: new LiteralNode(18)
+				),
+				true: new LiteralNode('adult'),
+				false: new LiteralNode('minor')
+			),
+			$ast
+		);
+	}
+
+	public function testConstructor(): void
+	{
+		$parser = new Parser('user.name');
+		$this->assertSame('user', $parser->current()->lexeme);
+	}
+
 	public function testConsume(): void
 	{
 		$parser  = new Parser('user.name');
@@ -336,14 +336,6 @@ class ParserTest extends TestCase
 		$consume = $class->getMethod('consume');
 		$token   = $consume->invokeArgs($parser, [TokenType::T_IDENTIFIER]);
 		$this->assertSame('user', $token->lexeme);
-	}
-
-	public function testConsumeInvalidType(): void
-	{
-		$parser  = new Parser('user.name');
-		$class   = new ReflectionClass($parser);
-		$consume = $class->getMethod('consume');
-		$this->assertFalse($consume->invokeArgs($parser, [TokenType::T_TRUE]));
 	}
 
 	public function testConsumeAny(): void
@@ -355,12 +347,12 @@ class ParserTest extends TestCase
 		$this->assertSame('user', $token->lexeme);
 	}
 
-	public function testConsumeInvalidTypeInvalidType(): void
+	public function testConsumeInvalidType(): void
 	{
 		$parser  = new Parser('user.name');
 		$class   = new ReflectionClass($parser);
-		$consume = $class->getMethod('consumeAny');
-		$this->assertFalse($consume->invokeArgs($parser, [[TokenType::T_TRUE, TokenType::T_FALSE]]));
+		$consume = $class->getMethod('consume');
+		$this->assertFalse($consume->invokeArgs($parser, [TokenType::T_TRUE]));
 	}
 
 	public function testConsumeInvalidTypeCustomError(): void
@@ -372,6 +364,14 @@ class ParserTest extends TestCase
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessageIs('foo');
 		$consume->invokeArgs($parser, [TokenType::T_TRUE, 'foo']);
+	}
+
+	public function testConsumeInvalidTypeInvalidType(): void
+	{
+		$parser  = new Parser('user.name');
+		$class   = new ReflectionClass($parser);
+		$consume = $class->getMethod('consumeAny');
+		$this->assertFalse($consume->invokeArgs($parser, [[TokenType::T_TRUE, TokenType::T_FALSE]]));
 	}
 
 	public function testConsumeList(): void
@@ -548,18 +548,28 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testMemberAccessSubscriptString(): void
+	public function testMemberAccessInvalid(): void
 	{
-		$parser = new Parser('user["This.is the key"](2)');
+		$parser = new Parser('user.true');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Expect property name after "."');
+		$parser->parse();
+	}
+
+	public function testMemberAccessSequential(): void
+	{
+		$parser = new Parser('user.name("arg").age');
 		$ast    = $parser->parse();
 
 		$this->assertEquals(
 			new MemberAccessNode(
-				new VariableNode('user'),
-				new LiteralNode('This.is the key'),
-				arguments: new ArgumentListNode([
-					new LiteralNode(2)
-				])
+				new MemberAccessNode(
+					new VariableNode('user'),
+					new LiteralNode('name'),
+					new ArgumentListNode([new LiteralNode('arg')])
+				),
+				new LiteralNode('age')
 			),
 			$ast
 		);
@@ -582,31 +592,21 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testMemberAccessSequential(): void
+	public function testMemberAccessSubscriptString(): void
 	{
-		$parser = new Parser('user.name("arg").age');
+		$parser = new Parser('user["This.is the key"](2)');
 		$ast    = $parser->parse();
 
 		$this->assertEquals(
 			new MemberAccessNode(
-				new MemberAccessNode(
-					new VariableNode('user'),
-					new LiteralNode('name'),
-					new ArgumentListNode([new LiteralNode('arg')])
-				),
-				new LiteralNode('age')
+				new VariableNode('user'),
+				new LiteralNode('This.is the key'),
+				arguments: new ArgumentListNode([
+					new LiteralNode(2)
+				])
 			),
 			$ast
 		);
-	}
-
-	public function testMemberAccessInvalid(): void
-	{
-		$parser = new Parser('user.true');
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Expect property name after "."');
-		$parser->parse();
 	}
 
 	public function testNot(): void
@@ -637,40 +637,6 @@ class ParserTest extends TestCase
 		);
 	}
 
-	public function testNotWithMemberAccess(): void
-	{
-		// member access binds tighter than the not operator
-		$parser = new Parser('!user.isAdmin');
-		$ast    = $parser->parse();
-
-		$this->assertEquals(
-			new NotNode(
-				new MemberAccessNode(
-					new VariableNode('user'),
-					new LiteralNode('isAdmin')
-				)
-			),
-			$ast
-		);
-	}
-
-	public function testNotWithGrouping(): void
-	{
-		$parser = new Parser('!(a && b)');
-		$ast    = $parser->parse();
-
-		$this->assertEquals(
-			new NotNode(
-				new LogicalNode(
-					new VariableNode('a'),
-					'&&',
-					new VariableNode('b')
-				)
-			),
-			$ast
-		);
-	}
-
 	public function testNotPrecedence(): void
 	{
 		// the not operator binds tighter than comparison,
@@ -695,6 +661,40 @@ class ParserTest extends TestCase
 				new NotNode(new VariableNode('a')),
 				'*',
 				new VariableNode('b')
+			),
+			$ast
+		);
+	}
+
+	public function testNotWithGrouping(): void
+	{
+		$parser = new Parser('!(a && b)');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new LogicalNode(
+					new VariableNode('a'),
+					'&&',
+					new VariableNode('b')
+				)
+			),
+			$ast
+		);
+	}
+
+	public function testNotWithMemberAccess(): void
+	{
+		// member access binds tighter than the not operator
+		$parser = new Parser('!user.isAdmin');
+		$ast    = $parser->parse();
+
+		$this->assertEquals(
+			new NotNode(
+				new MemberAccessNode(
+					new VariableNode('user'),
+					new LiteralNode('isAdmin')
+				)
 			),
 			$ast
 		);

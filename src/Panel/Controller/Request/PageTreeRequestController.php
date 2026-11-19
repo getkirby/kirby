@@ -18,8 +18,8 @@ use Kirby\Panel\Controller\RequestController;
  */
 class PageTreeRequestController extends RequestController
 {
-	protected Site|Page|null $parent;
 	protected Page|null $move;
+	protected Site|Page|null $parent;
 
 	public function __construct()
 	{

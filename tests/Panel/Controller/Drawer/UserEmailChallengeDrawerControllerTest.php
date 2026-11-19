@@ -242,21 +242,6 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 		}
 	}
 
-	public function testSubmitCreateWithWrongCode(): void
-	{
-		$this->setRequest([
-			'action'        => 'create',
-			'authorization' => '000 000'
-		]);
-		$this->app->impersonate('test');
-		$this->storeCode();
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.access.code');
-
-		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
-	}
-
 	public function testSubmitCreateWithoutCode(): void
 	{
 		// the code action must run first, otherwise there is
@@ -266,6 +251,21 @@ class UserEmailChallengeDrawerControllerTest extends TestCase
 			'authorization' => '000 000'
 		]);
 		$this->app->impersonate('test');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.access.code');
+
+		new UserEmailChallengeDrawerController($this->app->user('test'))->submit();
+	}
+
+	public function testSubmitCreateWithWrongCode(): void
+	{
+		$this->setRequest([
+			'action'        => 'create',
+			'authorization' => '000 000'
+		]);
+		$this->app->impersonate('test');
+		$this->storeCode();
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.access.code');

@@ -19,17 +19,6 @@ use Stringable;
 class Responder implements Stringable
 {
 	/**
-	 * Timestamp when the response expires
-	 * in Kirby's cache
-	 */
-	protected int|null $expires = null;
-
-	/**
-	 * HTTP status code
-	 */
-	protected int|null $code = null;
-
-	/**
 	 * Response body
 	 */
 	protected string|null $body = null;
@@ -39,6 +28,17 @@ class Responder implements Stringable
 	 * response can be cached by Kirby's cache
 	 */
 	protected bool $cache = true;
+
+	/**
+	 * HTTP status code
+	 */
+	protected int|null $code = null;
+
+	/**
+	 * Timestamp when the response expires
+	 * in Kirby's cache
+	 */
+	protected int|null $expires = null;
 
 	/**
 	 * HTTP headers
@@ -119,51 +119,17 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Setter and getter for the flag that defines
-	 * whether the current response uses the HTTP
-	 * `Authorization` request header
-	 * @since 3.7.0
+	 * Setter and getter for the status code
 	 *
-	 * @return ($usesAuth is null ? bool : static)
+	 * @return ($code is null ? int|null : $this)
 	 */
-	public function usesAuth(bool|null $usesAuth = null): bool|static
+	public function code(int|null $code = null): static|int|null
 	{
-		if ($usesAuth === null) {
-			return $this->usesAuth;
+		if ($code === null) {
+			return $this->code;
 		}
 
-		$this->usesAuth = $usesAuth;
-		return $this;
-	}
-
-	/**
-	 * Setter for a cookie name that is
-	 * used by the response
-	 * @since 3.7.0
-	 */
-	public function usesCookie(string $name): void
-	{
-		// only add unique names
-		if (in_array($name, $this->usesCookies, true) === false) {
-			$this->usesCookies[] = $name;
-		}
-	}
-
-	/**
-	 * Setter and getter for the list of cookie
-	 * names the response relies on
-	 * @since 3.7.0
-	 *
-	 * @param list<string>|null $usesCookies
-	 * @return ($usesCookies is null ? list<string> : static)
-	 */
-	public function usesCookies(array|null $usesCookies = null): array|static
-	{
-		if ($usesCookies === null) {
-			return $this->usesCookies;
-		}
-
-		$this->usesCookies = $usesCookies;
+		$this->code = $code;
 		return $this;
 	}
 
@@ -174,7 +140,7 @@ class Responder implements Stringable
 	 *
 	 * @param int|string|null $expires Timestamp, number of minutes or time string to parse
 	 * @param $override If `true`, the already defined timestamp will be overridden
-	 * @return int|null|$this
+	 * @return int|$this|null
 	 */
 	public function expires($expires = null, bool $override = false): static|int|null
 	{
@@ -215,21 +181,6 @@ class Responder implements Stringable
 			$this->expires = $expires;
 		}
 
-		return $this;
-	}
-
-	/**
-	 * Setter and getter for the status code
-	 *
-	 * @return ($code is null ? int|null : $this)
-	 */
-	public function code(int|null $code = null): static|int|null
-	{
-		if ($code === null) {
-			return $this->code;
-		}
-
-		$this->code = $code;
 		return $this;
 	}
 
@@ -331,6 +282,32 @@ class Responder implements Stringable
 		$this->headers = $headers;
 		$this->volatileHeaders([]);
 		return $this;
+	}
+
+	/**
+	 * Checks whether the response needs to be exempted from
+	 * all caches due to using dynamic data based on auth
+	 * and/or cookies; the request data only matters if it
+	 * is actually used/relied on by the response
+	 *
+	 * @since 3.7.0
+	 * @unstable
+	 */
+	public static function isPrivate(bool $usesAuth, array $usesCookies): bool
+	{
+		$kirby = App::instance();
+
+		if ($usesAuth === true && $kirby->request()->hasAuth() === true) {
+			return true;
+		}
+
+		foreach ($usesCookies as $cookie) {
+			if (isset($_COOKIE[$cookie]) === true) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -451,29 +428,52 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Checks whether the response needs to be exempted from
-	 * all caches due to using dynamic data based on auth
-	 * and/or cookies; the request data only matters if it
-	 * is actually used/relied on by the response
-	 *
+	 * Setter and getter for the flag that defines
+	 * whether the current response uses the HTTP
+	 * `Authorization` request header
 	 * @since 3.7.0
-	 * @unstable
+	 *
+	 * @return ($usesAuth is null ? bool : static)
 	 */
-	public static function isPrivate(bool $usesAuth, array $usesCookies): bool
+	public function usesAuth(bool|null $usesAuth = null): bool|static
 	{
-		$kirby = App::instance();
-
-		if ($usesAuth === true && $kirby->request()->hasAuth() === true) {
-			return true;
+		if ($usesAuth === null) {
+			return $this->usesAuth;
 		}
 
-		foreach ($usesCookies as $cookie) {
-			if (isset($_COOKIE[$cookie]) === true) {
-				return true;
-			}
+		$this->usesAuth = $usesAuth;
+		return $this;
+	}
+
+	/**
+	 * Setter for a cookie name that is
+	 * used by the response
+	 * @since 3.7.0
+	 */
+	public function usesCookie(string $name): void
+	{
+		// only add unique names
+		if (in_array($name, $this->usesCookies, true) === false) {
+			$this->usesCookies[] = $name;
+		}
+	}
+
+	/**
+	 * Setter and getter for the list of cookie
+	 * names the response relies on
+	 * @since 3.7.0
+	 *
+	 * @param list<string>|null $usesCookies
+	 * @return ($usesCookies is null ? list<string> : static)
+	 */
+	public function usesCookies(array|null $usesCookies = null): array|static
+	{
+		if ($usesCookies === null) {
+			return $this->usesCookies;
 		}
 
-		return false;
+		$this->usesCookies = $usesCookies;
+		return $this;
 	}
 
 	/**

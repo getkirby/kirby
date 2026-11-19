@@ -67,18 +67,6 @@ class PageDuplicateDialogControllerTest extends TestCase
 		$this->assertSame('/', $fields['slug']['path']);
 	}
 
-	public function testFieldsWithFiles(): void
-	{
-		$page       = $this->app->page('test-with-files');
-		$controller = new PageDuplicateDialogController($page);
-		$fields     = $controller->fields();
-
-		$this->assertCount(3, $fields);
-		$this->assertSame('Copy files', $fields['files']['label']);
-		$this->assertSame('toggle', $fields['files']['type']);
-		$this->assertSame('1/1', $fields['files']['width']);
-	}
-
 	public function testFieldsWithChildren(): void
 	{
 		$page       = $this->app->page('test-with-children');
@@ -100,6 +88,18 @@ class PageDuplicateDialogControllerTest extends TestCase
 		$this->assertCount(4, $fields);
 		$this->assertSame('1/2', $fields['files']['width']);
 		$this->assertSame('1/2', $fields['children']['width']);
+	}
+
+	public function testFieldsWithFiles(): void
+	{
+		$page       = $this->app->page('test-with-files');
+		$controller = new PageDuplicateDialogController($page);
+		$fields     = $controller->fields();
+
+		$this->assertCount(3, $fields);
+		$this->assertSame('Copy files', $fields['files']['label']);
+		$this->assertSame('toggle', $fields['files']['type']);
+		$this->assertSame('1/1', $fields['files']['width']);
 	}
 
 	public function testLoad(): void

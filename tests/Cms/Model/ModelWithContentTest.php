@@ -153,6 +153,78 @@ class ModelWithContentTest extends TestCase
 		];
 	}
 
+	#[DataProvider('modelsProvider')]
+	public function testBlueprints(ModelWithContent $model): void
+	{
+		$model = new BlueprintsModelWithContent($model);
+
+		$expected = [
+			[
+				'name' => 'foo',
+				'title' => 'Foo'
+			],
+			[
+				'name' => 'bar',
+				'title' => 'Bar'
+			],
+			[
+				'name' => 'home',
+				'title' => 'Home'
+			],
+			[
+				'name' => 'default',
+				'title' => 'Page'
+			]
+		];
+
+		$this->assertSame($expected, $model->blueprints());
+
+		$this->assertSame([
+			[
+				'name' => 'home',
+				'title' => 'Home'
+			],
+			[
+				'name' => 'default',
+				'title' => 'Page'
+			]
+		], $model->blueprints('menu'));
+
+		// non-existing field
+		$this->assertSame([], $model->blueprints('foo'));
+	}
+
+	public function testBlueprintsWithInvalidBlueprint(): void
+	{
+		new App([
+			'blueprints' => [
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$site = new Site([
+			'blueprint' => [
+				'fields' => [
+					'pages' => [
+						'type'       => 'pagelist',
+						'blueprints' => ['broken']
+					]
+				]
+			]
+		]);
+
+		// a blueprint that cannot be created still
+		// needs an entry, based on its name
+		$this->assertSame([
+			['name' => 'broken', 'title' => 'Broken']
+		], $site->blueprints());
+	}
+
 	public function testContentForInvalidTranslation(): void
 	{
 		$app = new App([
@@ -437,78 +509,6 @@ class ModelWithContentTest extends TestCase
 				'content' => ['categories' => 'c']
 			]
 		], $translations);
-	}
-
-	#[DataProvider('modelsProvider')]
-	public function testBlueprints(ModelWithContent $model): void
-	{
-		$model = new BlueprintsModelWithContent($model);
-
-		$expected = [
-			[
-				'name' => 'foo',
-				'title' => 'Foo'
-			],
-			[
-				'name' => 'bar',
-				'title' => 'Bar'
-			],
-			[
-				'name' => 'home',
-				'title' => 'Home'
-			],
-			[
-				'name' => 'default',
-				'title' => 'Page'
-			]
-		];
-
-		$this->assertSame($expected, $model->blueprints());
-
-		$this->assertSame([
-			[
-				'name' => 'home',
-				'title' => 'Home'
-			],
-			[
-				'name' => 'default',
-				'title' => 'Page'
-			]
-		], $model->blueprints('menu'));
-
-		// non-existing field
-		$this->assertSame([], $model->blueprints('foo'));
-	}
-
-	public function testBlueprintsWithInvalidBlueprint(): void
-	{
-		new App([
-			'blueprints' => [
-				'pages/broken' => [
-					'title'  => 'Not used',
-					// a scalar instead of a list of fields
-					// breaks the blueprint
-					'fields' => 'text'
-				]
-			]
-		]);
-
-		$site = new Site([
-			'blueprint' => [
-				'fields' => [
-					'pages' => [
-						'type'       => 'pagelist',
-						'blueprints' => ['broken']
-					]
-				]
-			]
-		]);
-
-		// a blueprint that cannot be created still
-		// needs an entry, based on its name
-		$this->assertSame([
-			['name' => 'broken', 'title' => 'Broken']
-		], $site->blueprints());
 	}
 
 	public function testIncrement(): void

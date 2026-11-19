@@ -200,25 +200,6 @@ class PageModelTest extends ModelTestCase
 		$this->assertContains('c.jpg', $filenames);
 	}
 
-	public function testHasDrafts(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$this->assertAttr($page, 'hasDrafts', false);
-
-		$page = new Page([
-			'slug' => 'test',
-			'drafts' => [
-				['slug' => 'a'],
-				['slug' => 'b'],
-			]
-		]);
-
-		$this->assertAttr($page, 'hasDrafts', true);
-	}
-
 	public function testHasChildren(): void
 	{
 		$page = new Page([
@@ -236,6 +217,25 @@ class PageModelTest extends ModelTestCase
 		]);
 
 		$this->assertAttr($page, 'hasChildren', true);
+	}
+
+	public function testHasDrafts(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertAttr($page, 'hasDrafts', false);
+
+		$page = new Page([
+			'slug' => 'test',
+			'drafts' => [
+				['slug' => 'a'],
+				['slug' => 'b'],
+			]
+		]);
+
+		$this->assertAttr($page, 'hasDrafts', true);
 	}
 
 	public function testId(): void

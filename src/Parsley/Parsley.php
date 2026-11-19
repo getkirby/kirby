@@ -21,6 +21,8 @@ use Kirby\Toolkit\Dom;
  */
 class Parsley
 {
+	public static bool $useXmlExtension = true;
+
 	/**
 	 * @var list<array>
 	 */
@@ -50,8 +52,6 @@ class Parsley
 	 * @var list<string>
 	 */
 	protected array $skip = [];
-
-	public static bool $useXmlExtension = true;
 
 	public function __construct(string $html, Schema|null $schema = null)
 	{
@@ -101,20 +101,6 @@ class Parsley
 	}
 
 	/**
-	 * Load all node rules from the schema
-	 *
-	 * @return array<string, array>
-	 */
-	public function createNodeRules(array $nodes): array
-	{
-		foreach ($nodes as $node) {
-			$this->nodes[$node['tag']] = $node;
-		}
-
-		return $this->nodes;
-	}
-
-	/**
 	 * Checks if the given element contains
 	 * any other block level elements
 	 */
@@ -134,6 +120,20 @@ class Parsley
 		}
 
 		return false;
+	}
+
+	/**
+	 * Load all node rules from the schema
+	 *
+	 * @return array<string, array>
+	 */
+	public function createNodeRules(array $nodes): array
+	{
+		foreach ($nodes as $node) {
+			$this->nodes[$node['tag']] = $node;
+		}
+
+		return $this->nodes;
 	}
 
 	/**

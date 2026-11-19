@@ -50,14 +50,6 @@ class CookieTest extends TestCase
 		$this->assertSame($_COOKIE, Cookie::get());
 	}
 
-	public function testGetWithArray(): void
-	{
-		// e.g. a request with the header `Cookie: foo[]=bar`
-		$_COOKIE['foo'] = ['bar'];
-
-		$this->assertSame('default', Cookie::get('foo', 'default'));
-	}
-
 	public function testGetSetTrack(): void
 	{
 		$app = new App([
@@ -72,6 +64,14 @@ class CookieTest extends TestCase
 		Cookie::get('bar');
 
 		$this->assertSame(['foo', 'bar'], $app->response()->usesCookies());
+	}
+
+	public function testGetWithArray(): void
+	{
+		// e.g. a request with the header `Cookie: foo[]=bar`
+		$_COOKIE['foo'] = ['bar'];
+
+		$this->assertSame('default', Cookie::get('foo', 'default'));
 	}
 
 	public function testKey(): void

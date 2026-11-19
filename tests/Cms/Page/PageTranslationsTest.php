@@ -136,6 +136,18 @@ class PageTranslationsTest extends ModelTestCase
 		$this->assertSame('de', $translations->last()->code());
 	}
 
+	public function testTranslationsInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$translations = $page->translations();
+
+		$this->assertCount(1, $translations);
+		$this->assertSame('en', $translations->first()->code());
+	}
+
 	public function testTranslationsOnDiskInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
@@ -163,18 +175,6 @@ class PageTranslationsTest extends ModelTestCase
 		$this->assertSame($contentDE, $translations->find('de')->content());
 	}
 
-	public function testTranslationsInSingleLanguageMode(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$translations = $page->translations();
-
-		$this->assertCount(1, $translations);
-		$this->assertSame('en', $translations->first()->code());
-	}
-
 	public function testTranslationsOnDiskInSingleLanguageMode(): void
 	{
 		$page = new Page([
@@ -191,31 +191,6 @@ class PageTranslationsTest extends ModelTestCase
 		$translations = $page->translations();
 
 		$this->assertSame($content, $translations->find('en')->content());
-	}
-
-	public function testUntranslatedFields(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$page = new Page([
-			'slug'         => 'test',
-			'translations' => [
-				[
-					'code'    => 'en',
-					'content' => [
-						'title' => 'Title EN'
-					]
-				],
-				[
-					'code'    => 'de',
-					'content' => []
-				]
-			]
-		]);
-
-		$this->assertSame('Title EN', $page->title()->value());
-		$this->assertSame('Title EN', $page->title('en')->value());
-		$this->assertSame('Title EN', $page->title('de')->value());
 	}
 
 	public function testUntranslatableFields(): void
@@ -261,5 +236,30 @@ class PageTranslationsTest extends ModelTestCase
 
 		$this->assertSame('A (DE)', $contentDE->a()->value());
 		$this->assertSame('B (EN)', $contentDE->b()->value(), 'The untranslated field should have the value of the default language');
+	}
+
+	public function testUntranslatedFields(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug'         => 'test',
+			'translations' => [
+				[
+					'code'    => 'en',
+					'content' => [
+						'title' => 'Title EN'
+					]
+				],
+				[
+					'code'    => 'de',
+					'content' => []
+				]
+			]
+		]);
+
+		$this->assertSame('Title EN', $page->title()->value());
+		$this->assertSame('Title EN', $page->title('en')->value());
+		$this->assertSame('Title EN', $page->title('de')->value());
 	}
 }

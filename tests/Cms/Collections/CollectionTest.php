@@ -12,8 +12,8 @@ use stdClass;
 
 class MockObject
 {
-	protected string|Field $id;
 	protected string|null $group;
+	protected string|Field $id;
 
 	public function __construct(array $props = [])
 	{
@@ -21,14 +21,14 @@ class MockObject
 		$this->group = $props['group'] ?? null;
 	}
 
-	public function id(): string|Field
-	{
-		return $this->id;
-	}
-
 	public function group(): string|null
 	{
 		return $this->group;
+	}
+
+	public function id(): string|Field
+	{
+		return $this->id;
 	}
 
 	public function toArray(): array
@@ -61,6 +61,46 @@ class CollectionTest extends TestCase
 		unset(User::$methods['allowedCustomMethod'], User::$methods['blockedCustomMethod']);
 	}
 
+	public function testAppend(): void
+	{
+		$a = new MockObject(['id' => 'a', 'name' => 'A']);
+		$b = new MockObject(['id' => 'b', 'name' => 'B']);
+		$c = new Obj(['id' => 'c', 'name' => 'C']);
+		$d = new stdClass();
+		$d->id = 'd';
+		$d->name = 'D';
+
+		// with custom keys
+		$collection = new Collection();
+		$collection = $collection->append('key-a', $a);
+		$collection = $collection->append('key-b', $b);
+		$collection = $collection->append('key-c', $c);
+		$collection = $collection->append('key-d', $d);
+		$collection = $collection->append('key-e', 'a simple string');
+
+		$this->assertSame(['key-a', 'key-b', 'key-c', 'key-d', 'key-e'], $collection->keys());
+		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
+
+		// with automatic keys
+		$collection = new Collection();
+		$collection = $collection->append($a);
+		$collection = $collection->append($b);
+		$collection = $collection->append($c);
+		$collection = $collection->append($d);
+		$collection = $collection->append('a simple string');
+
+		$this->assertSame(['a', 'b', 'c', 0, 1], $collection->keys());
+		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
+	}
+
+	public function testAppendWith__CallException(): void
+	{
+		$collection = new Collection();
+		$obj        = new MockObjectWith__CallException();
+		$collection = $collection->append($obj);
+		$this->assertSame([0], $collection->keys());
+	}
+
 	public function testCollectionMethods(): void
 	{
 		$kirby = $this->kirby([
@@ -84,28 +124,44 @@ class CollectionTest extends TestCase
 		Pages::$methods = [];
 	}
 
-	public function testWithValidObjects(): void
+	public function testFilterByPasswordIsBlocked(): void
 	{
-		$collection = new Collection([
-			$a = new MockObject(['id' => 'a', 'name' => 'a']),
-			$b = new MockObject(['id' => 'b', 'name' => 'b']),
-			$c = new MockObject(['id' => 'c', 'name' => 'c'])
+		$users = Users::factory([
+			[
+				'email'    => 'a@getkirby.com',
+				'password' => '$2y$10$abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
+			],
+			[
+				'email'    => 'b@getkirby.com',
+				'password' => '$2y$10$zzzzzzzzzzzzzzzzzzzzzzzzABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
+			]
 		]);
 
-		$this->assertSame($a, $collection->first());
-		$this->assertSame($c, $collection->last());
+		// filtering by password must return no match (null != any value)
+		// rather than exposing hash contents via binary oracle
+		$result = $users->filter('password', '*=', '$2y$');
+		$this->assertCount(0, $result);
 	}
 
-	public function testWithArray(): void
+	public function testFindByUuid(): void
 	{
 		$collection = new Collection([
-			$a = ['id' => 'a', 'name' => 'a'],
-			$b = ['id' => 'b', 'name' => 'b'],
-			$c = ['id' => 'c', 'name' => 'c']
+			$page = new Page([
+				'slug' => 'test',
+				'content' => [
+					'uuid' => 'test'
+				]
+			])
 		]);
 
-		$this->assertSame($a, $collection->first());
-		$this->assertSame($c, $collection->last());
+		$result = $collection->findBy('uuid', 'page://test');
+		$this->assertIsPage($page, $result);
+
+		$result = $collection->findBy('uuid', $page->uuid());
+		$this->assertIsPage($page, $result);
+
+		$result = $collection->findBy('uuid', 'page://foo');
+		$this->assertNull($result);
 	}
 
 	public function testGetAttribute(): void
@@ -117,16 +173,48 @@ class CollectionTest extends TestCase
 		$this->assertSame('a', $value);
 	}
 
-	public function testGetAttributeWithField(): void
+	public function testGetAttributeFromObjectAllowsAccessibleField(): void
 	{
-		$object = new MockObject([
-			'id' => $field = new Field(null, 'id', 'a')
+		$users = Users::factory([
+			['email' => 'test@getkirby.com']
 		]);
 
-		$collection = new Collection();
-		$value      = $collection->getAttribute($object, 'id');
+		$user = $users->first();
 
-		$this->assertSame($field, $value);
+		// email() has no #[BlockCollectionAccess] - must be allowed
+		$this->assertSame('test@getkirby.com', $users->getAttribute($user, 'email'));
+	}
+
+	public function testGetAttributeFromObjectAllowsContentField(): void
+	{
+		$users = Users::factory([
+			[
+				'email'   => 'test@getkirby.com',
+				'content' => ['bio' => 'hello world']
+			]
+		]);
+
+		$user = $users->first();
+
+		// content fields accessed via __call() must always be allowed
+		$this->assertSame('hello world', (string)$users->getAttribute($user, 'bio'));
+	}
+
+	public function testGetAttributeFromObjectBlockedInDebugMode(): void
+	{
+		new App([
+			'roots'   => ['index' => '/dev/null'],
+			'options' => ['debug' => true]
+		]);
+
+		$users = Users::factory([
+			['email' => 'test@getkirby.com', 'password' => 'supersecret']
+		]);
+
+		$user = $users->first();
+
+		$this->expectException(\InvalidArgumentException::class);
+		$users->getAttribute($user, 'password');
 	}
 
 	public function testGetAttributeFromObjectBlocksRegisteredClosure(): void
@@ -170,50 +258,6 @@ class CollectionTest extends TestCase
 		$this->assertNull($users->getAttribute($user, 'secret'));
 	}
 
-	public function testGetAttributeFromObjectAllowsContentField(): void
-	{
-		$users = Users::factory([
-			[
-				'email'   => 'test@getkirby.com',
-				'content' => ['bio' => 'hello world']
-			]
-		]);
-
-		$user = $users->first();
-
-		// content fields accessed via __call() must always be allowed
-		$this->assertSame('hello world', (string)$users->getAttribute($user, 'bio'));
-	}
-
-	public function testGetAttributeFromObjectAllowsAccessibleField(): void
-	{
-		$users = Users::factory([
-			['email' => 'test@getkirby.com']
-		]);
-
-		$user = $users->first();
-
-		// email() has no #[BlockCollectionAccess] - must be allowed
-		$this->assertSame('test@getkirby.com', $users->getAttribute($user, 'email'));
-	}
-
-	public function testGetAttributeFromObjectBlockedInDebugMode(): void
-	{
-		new App([
-			'roots'   => ['index' => '/dev/null'],
-			'options' => ['debug' => true]
-		]);
-
-		$users = Users::factory([
-			['email' => 'test@getkirby.com', 'password' => 'supersecret']
-		]);
-
-		$user = $users->first();
-
-		$this->expectException(\InvalidArgumentException::class);
-		$users->getAttribute($user, 'password');
-	}
-
 	public function testGetAttributeFromObjectWithoutAccessibleFields(): void
 	{
 		// MockObject methods don't have #[BlockCollectionAccess] - access must be allowed
@@ -225,84 +269,16 @@ class CollectionTest extends TestCase
 		$this->assertSame('x', $collection->getAttribute($obj, 'group'));
 	}
 
-	public function testFilterByPasswordIsBlocked(): void
+	public function testGetAttributeWithField(): void
 	{
-		$users = Users::factory([
-			[
-				'email'    => 'a@getkirby.com',
-				'password' => '$2y$10$abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
-			],
-			[
-				'email'    => 'b@getkirby.com',
-				'password' => '$2y$10$zzzzzzzzzzzzzzzzzzzzzzzzABCDEFGHIJKLMNOPQRSTUVWXYZ01234'
-			]
+		$object = new MockObject([
+			'id' => $field = new Field(null, 'id', 'a')
 		]);
 
-		// filtering by password must return no match (null != any value)
-		// rather than exposing hash contents via binary oracle
-		$result = $users->filter('password', '*=', '$2y$');
-		$this->assertCount(0, $result);
-	}
-
-	public function testAppend(): void
-	{
-		$a = new MockObject(['id' => 'a', 'name' => 'A']);
-		$b = new MockObject(['id' => 'b', 'name' => 'B']);
-		$c = new Obj(['id' => 'c', 'name' => 'C']);
-		$d = new stdClass();
-		$d->id = 'd';
-		$d->name = 'D';
-
-		// with custom keys
 		$collection = new Collection();
-		$collection = $collection->append('key-a', $a);
-		$collection = $collection->append('key-b', $b);
-		$collection = $collection->append('key-c', $c);
-		$collection = $collection->append('key-d', $d);
-		$collection = $collection->append('key-e', 'a simple string');
+		$value      = $collection->getAttribute($object, 'id');
 
-		$this->assertSame(['key-a', 'key-b', 'key-c', 'key-d', 'key-e'], $collection->keys());
-		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
-
-		// with automatic keys
-		$collection = new Collection();
-		$collection = $collection->append($a);
-		$collection = $collection->append($b);
-		$collection = $collection->append($c);
-		$collection = $collection->append($d);
-		$collection = $collection->append('a simple string');
-
-		$this->assertSame(['a', 'b', 'c', 0, 1], $collection->keys());
-		$this->assertSame([$a, $b, $c, $d, 'a simple string'], $collection->values());
-	}
-
-	public function testAppendWith__CallException(): void
-	{
-		$collection = new Collection();
-		$obj        = new MockObjectWith__CallException();
-		$collection = $collection->append($obj);
-		$this->assertSame([0], $collection->keys());
-	}
-
-	public function testFindByUuid(): void
-	{
-		$collection = new Collection([
-			$page = new Page([
-				'slug' => 'test',
-				'content' => [
-					'uuid' => 'test'
-				]
-			])
-		]);
-
-		$result = $collection->findBy('uuid', 'page://test');
-		$this->assertIsPage($page, $result);
-
-		$result = $collection->findBy('uuid', $page->uuid());
-		$this->assertIsPage($page, $result);
-
-		$result = $collection->findBy('uuid', 'page://foo');
-		$this->assertNull($result);
+		$this->assertSame($field, $value);
 	}
 
 	public function testGroup(): void
@@ -323,20 +299,6 @@ class CollectionTest extends TestCase
 
 		$this->assertCount(2, $groupA);
 		$this->assertCount(1, $groupB);
-	}
-
-	public function testGroupWithInvalidKey(): void
-	{
-		$collection = new Collection([
-			new MockObject(['id' => 'a', 'group' => 'a']),
-			new MockObject(['id' => 'b', 'group' => 'a']),
-			new MockObject(['id' => 'c', 'group' => 'b']),
-		]);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessageIs('Can only group by string values or by providing a callback function');
-
-		$collection->group(1);
 	}
 
 	public function testGroupCaseSensitive(): void
@@ -360,6 +322,19 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groupB);
 	}
 
+	public function testGroupWithCallableEmptyString(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => '']),
+			new MockObject(['id' => 'b', 'group' => 'test']),
+		]);
+
+		$groups = $collection->group(fn ($item) => $item->group());
+
+		$this->assertCount(2, $groups);
+		$this->assertTrue($groups->has(''));
+	}
+
 	public function testGroupWithClosure(): void
 	{
 		$collection = new Collection([
@@ -380,19 +355,6 @@ class CollectionTest extends TestCase
 		$this->assertCount(1, $groupB);
 	}
 
-	public function testGroupWithCallableEmptyString(): void
-	{
-		$collection = new Collection([
-			new MockObject(['id' => 'a', 'group' => '']),
-			new MockObject(['id' => 'b', 'group' => 'test']),
-		]);
-
-		$groups = $collection->group(fn ($item) => $item->group());
-
-		$this->assertCount(2, $groups);
-		$this->assertTrue($groups->has(''));
-	}
-
 	public function testGroupWithFalsyValues(): void
 	{
 		$collection = new Collection([
@@ -406,6 +368,20 @@ class CollectionTest extends TestCase
 		$this->assertSame(['0', ''], array_map('strval', $groups->keys()));
 		$this->assertSame(['a', 'c'], $groups->first()->keys());
 		$this->assertSame(['b'], $groups->last()->keys());
+	}
+
+	public function testGroupWithInvalidKey(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a', 'group' => 'a']),
+			new MockObject(['id' => 'b', 'group' => 'a']),
+			new MockObject(['id' => 'c', 'group' => 'b']),
+		]);
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessageIs('Can only group by string values or by providing a callback function');
+
+		$collection->group(1);
 	}
 
 	public function testGroupWithNullValue(): void
@@ -451,27 +427,6 @@ class CollectionTest extends TestCase
 		$this->assertFalse($collection->indexOf('d'));
 	}
 
-	public function testNotWithObjects(): void
-	{
-		$collection = new Collection([
-			$a = new MockObject(['id' => 'a']),
-			$b = new MockObject(['id' => 'b']),
-			$c = new MockObject(['id' => 'c'])
-		]);
-
-		$result = $collection->not($a);
-
-		$this->assertCount(2, $result);
-		$this->assertSame($b, $result->first());
-		$this->assertSame($c, $result->last());
-
-		$result = $collection->not($a, $b);
-
-		$this->assertCount(1, $result);
-		$this->assertSame($c, $result->first());
-		$this->assertSame($c, $result->last());
-	}
-
 	public function testNotWithCollection(): void
 	{
 		$collection = new Collection([
@@ -481,21 +436,6 @@ class CollectionTest extends TestCase
 		]);
 
 		$not = $collection->find('a', 'c');
-
-		$result = $collection->not($not);
-		$this->assertCount(1, $result);
-		$this->assertSame('b', $result->first()->id());
-	}
-
-	public function testNotWithSimpleArray(): void
-	{
-		$collection = new Collection([
-			new MockObject(['id' => 'a']),
-			new MockObject(['id' => 'b']),
-			new MockObject(['id' => 'c'])
-		]);
-
-		$not = ['a', 'c', 'non-exists'];
 
 		$result = $collection->not($not);
 		$this->assertCount(1, $result);
@@ -523,6 +463,27 @@ class CollectionTest extends TestCase
 		$result = $collection->not($not);
 		$this->assertCount(1, $result);
 		$this->assertSame('c', $result->first()->id());
+	}
+
+	public function testNotWithObjects(): void
+	{
+		$collection = new Collection([
+			$a = new MockObject(['id' => 'a']),
+			$b = new MockObject(['id' => 'b']),
+			$c = new MockObject(['id' => 'c'])
+		]);
+
+		$result = $collection->not($a);
+
+		$this->assertCount(2, $result);
+		$this->assertSame($b, $result->first());
+		$this->assertSame($c, $result->last());
+
+		$result = $collection->not($a, $b);
+
+		$this->assertCount(1, $result);
+		$this->assertSame($c, $result->first());
+		$this->assertSame($c, $result->last());
 	}
 
 	public function testNotWithObjectsArray(): void
@@ -565,6 +526,21 @@ class CollectionTest extends TestCase
 			new MockObject(['id' => 'data'])
 		]));
 		$this->assertSame(['pagination', 'parent', 'a'], $result->keys());
+	}
+
+	public function testNotWithSimpleArray(): void
+	{
+		$collection = new Collection([
+			new MockObject(['id' => 'a']),
+			new MockObject(['id' => 'b']),
+			new MockObject(['id' => 'c'])
+		]);
+
+		$not = ['a', 'c', 'non-exists'];
+
+		$result = $collection->not($not);
+		$this->assertCount(1, $result);
+		$this->assertSame('b', $result->first()->id());
 	}
 
 	public function testNotWithString(): void
@@ -650,6 +626,23 @@ class CollectionTest extends TestCase
 		$this->assertSame(['a simple string', $d, $c, $b, $a], $collection->values());
 	}
 
+	public function testQueryPagination(): void
+	{
+		$collection = new Collection([
+			new Page(['slug' => 'project-a']),
+			new Page(['slug' => 'project-b']),
+			new Page(['slug' => 'project-c'])
+		]);
+
+		$result = $collection->query([
+			'paginate' => 1
+		]);
+
+		$this->assertCount(1, $result);
+		$this->assertSame('project-a', $result->first()->id());
+		$this->assertSame(3, $result->pagination()->pages());
+	}
+
 	public function testQuerySearch(): void
 	{
 		$collection = new Collection([
@@ -675,23 +668,6 @@ class CollectionTest extends TestCase
 
 		$this->assertCount(1, $result);
 		$this->assertSame('project-b', $result->first()->id());
-	}
-
-	public function testQueryPagination(): void
-	{
-		$collection = new Collection([
-			new Page(['slug' => 'project-a']),
-			new Page(['slug' => 'project-b']),
-			new Page(['slug' => 'project-c'])
-		]);
-
-		$result = $collection->query([
-			'paginate' => 1
-		]);
-
-		$this->assertCount(1, $result);
-		$this->assertSame('project-a', $result->first()->id());
-		$this->assertSame(3, $result->pagination()->pages());
 	}
 
 	public function testToArray(): void
@@ -749,5 +725,29 @@ class CollectionTest extends TestCase
 
 		$this->assertSame('a', $collection->first()->group());
 		$this->assertSame('b', $collection->last()->group());
+	}
+
+	public function testWithArray(): void
+	{
+		$collection = new Collection([
+			$a = ['id' => 'a', 'name' => 'a'],
+			$b = ['id' => 'b', 'name' => 'b'],
+			$c = ['id' => 'c', 'name' => 'c']
+		]);
+
+		$this->assertSame($a, $collection->first());
+		$this->assertSame($c, $collection->last());
+	}
+
+	public function testWithValidObjects(): void
+	{
+		$collection = new Collection([
+			$a = new MockObject(['id' => 'a', 'name' => 'a']),
+			$b = new MockObject(['id' => 'b', 'name' => 'b']),
+			$c = new MockObject(['id' => 'c', 'name' => 'c'])
+		]);
+
+		$this->assertSame($a, $collection->first());
+		$this->assertSame($c, $collection->last());
 	}
 }

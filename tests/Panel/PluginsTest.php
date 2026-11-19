@@ -17,12 +17,12 @@ class PluginsTest extends TestCase
 	protected string $devCssA;
 	protected string $devCssB;
 	protected string $devCssC;
-	protected string $jsA;
-	protected string $jsB;
-	protected string $jsC;
 	protected string $devJsA;
 	protected string $devJsB;
 	protected string $devJsC;
+	protected string $jsA;
+	protected string $jsB;
+	protected string $jsC;
 
 	protected function tearDown(): void
 	{

@@ -26,6 +26,106 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
 	}
 
+	public function testUpdateFailsForStalePageAfterConcurrentMove(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$stalePage = $this->app->site()->find('b')->clone();
+		$freshPage = $this->app->site()->find('b');
+
+		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
+
+		$freshPage = $freshPage->changeSort(3);
+
+		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessageIs('The page was moved during a concurrent operation. Please retry the write with a fresh page instance.');
+
+		try {
+			$stalePage->update(['headline' => 'Test']);
+		} finally {
+			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+			$this->assertDirectoryExists(static::TMP . '/content/3_b');
+			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
+		}
+	}
+
+	public function testUpdateHooks(): void
+	{
+		$phpunit = $this;
+		$calls = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.update:before' => function (Page $page, $values, $strings) use (&$calls, $phpunit) {
+					$calls++;
+					// the value is not updated yet
+					$phpunit->assertSame('foo', $page->category()->value());
+
+					// parent collections are not updated yet
+					$phpunit->assertSame('foo', $page->siblings()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $page->siblings()->pluck('category')[1]->toString());
+					$phpunit->assertSame('foo', $page->parent()->children()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $page->parent()->children()->pluck('category')[1]->toString());
+				},
+				'page.update:after' => function (Page $newPage, Page $oldPage) use (&$calls, $phpunit) {
+					$calls++;
+					// the value should now be updated
+					$phpunit->assertSame('homer', $newPage->category()->value());
+
+					// check if parent collections are updated
+					$phpunit->assertSame('homer', $newPage->siblings()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $newPage->siblings()->pluck('category')[1]->toString());
+					$phpunit->assertSame('homer', $newPage->parent()->children()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $newPage->parent()->children()->pluck('category')[1]->toString());
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parent = Page::create([
+			'slug'  => 'test',
+			'draft' => false,
+		]);
+
+		$a = $parent->createChild([
+			'slug'  => 'a',
+			'draft' => false,
+			'content' => [
+				'category' => 'foo'
+			]
+		]);
+
+		$b = $parent->createChild([
+			'slug'  => 'b',
+			'draft' => false,
+			'content' => [
+				'category' => 'bar'
+			]
+		]);
+
+		$a->update(['category' => 'homer']);
+
+		$this->assertSame(2, $calls);
+	}
+
 	public static function languageProvider(): array
 	{
 		return [
@@ -129,66 +229,6 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertCorrectlyUpdatedPage($modified, $page, $drafts, $childrenAndDrafts);
 	}
 
-	public function testUpdateHooks(): void
-	{
-		$phpunit = $this;
-		$calls = 0;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'page.update:before' => function (Page $page, $values, $strings) use (&$calls, $phpunit) {
-					$calls++;
-					// the value is not updated yet
-					$phpunit->assertSame('foo', $page->category()->value());
-
-					// parent collections are not updated yet
-					$phpunit->assertSame('foo', $page->siblings()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $page->siblings()->pluck('category')[1]->toString());
-					$phpunit->assertSame('foo', $page->parent()->children()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $page->parent()->children()->pluck('category')[1]->toString());
-				},
-				'page.update:after' => function (Page $newPage, Page $oldPage) use (&$calls, $phpunit) {
-					$calls++;
-					// the value should now be updated
-					$phpunit->assertSame('homer', $newPage->category()->value());
-
-					// check if parent collections are updated
-					$phpunit->assertSame('homer', $newPage->siblings()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $newPage->siblings()->pluck('category')[1]->toString());
-					$phpunit->assertSame('homer', $newPage->parent()->children()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $newPage->parent()->children()->pluck('category')[1]->toString());
-				}
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$parent = Page::create([
-			'slug'  => 'test',
-			'draft' => false,
-		]);
-
-		$a = $parent->createChild([
-			'slug'  => 'a',
-			'draft' => false,
-			'content' => [
-				'category' => 'foo'
-			]
-		]);
-
-		$b = $parent->createChild([
-			'slug'  => 'b',
-			'draft' => false,
-			'content' => [
-				'category' => 'bar'
-			]
-		]);
-
-		$a->update(['category' => 'homer']);
-
-		$this->assertSame(2, $calls);
-	}
-
 	public function testUpdateWithDateBasedNumbering(): void
 	{
 		$this->app = $this->app->clone([
@@ -230,45 +270,5 @@ class PageUpdateTest extends ModelTestCase
 		$updated = $updated->update(['test' => null]);
 
 		$this->assertNull($updated->test()->value());
-	}
-
-	public function testUpdateFailsForStalePageAfterConcurrentMove(): void
-	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
-		]);
-
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
-
-		Page::create([
-			'slug' => 'c',
-			'num'  => 3,
-		]);
-
-		$stalePage = $this->app->site()->find('b')->clone();
-		$freshPage = $this->app->site()->find('b');
-
-		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
-
-		$freshPage = $freshPage->changeSort(3);
-
-		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
-		$this->assertDirectoryExists(static::TMP . '/content/3_b');
-		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessageIs('The page was moved during a concurrent operation. Please retry the write with a fresh page instance.');
-
-		try {
-			$stalePage->update(['headline' => 'Test']);
-		} finally {
-			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
-			$this->assertDirectoryExists(static::TMP . '/content/3_b');
-			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
-		}
 	}
 }

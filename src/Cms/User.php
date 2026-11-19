@@ -347,6 +347,25 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the user is the last one
+	 * with the admin role
+	 */
+	public function isLastAdmin(): bool
+	{
+		return
+			$this->role()->isAdmin() === true &&
+			$this->kirby()->users()->filter('role', 'admin')->count() <= 1;
+	}
+
+	/**
+	 * Checks if the user is the last user
+	 */
+	public function isLastUser(): bool
+	{
+		return $this->kirby()->users()->count() === 1;
+	}
+
+	/**
 	 * Checks if the user is listable by the current user
 	 * @since 5.4.0
 	 */
@@ -366,25 +385,6 @@ class User extends ModelWithContent
 	public function isLoggedIn(): bool
 	{
 		return $this->is($this->kirby()->user());
-	}
-
-	/**
-	 * Checks if the user is the last one
-	 * with the admin role
-	 */
-	public function isLastAdmin(): bool
-	{
-		return
-			$this->role()->isAdmin() === true &&
-			$this->kirby()->users()->filter('role', 'admin')->count() <= 1;
-	}
-
-	/**
-	 * Checks if the user is the last user
-	 */
-	public function isLastUser(): bool
-	{
-		return $this->kirby()->users()->count() === 1;
 	}
 
 	/**
@@ -731,20 +731,13 @@ class User extends ModelWithContent
 	}
 
 	/**
-	 * Sets the Blueprint object
-	 *
-	 * @return $this
+	 * Returns the path to the file containing
+	 * all user secrets, including the password
+	 * @since 4.0.0
 	 */
-	protected function setBlueprint(array|null $blueprint = null): static
+	protected function secretsFile(): string
 	{
-		if ($blueprint !== null) {
-			$this->blueprint = new UserBlueprint([
-				...$blueprint,
-				'model' => $this
-			]);
-		}
-
-		return $this;
+		return $this->root() . '/.htpasswd';
 	}
 
 	/**
@@ -762,6 +755,23 @@ class User extends ModelWithContent
 		}
 
 		return $session;
+	}
+
+	/**
+	 * Sets the Blueprint object
+	 *
+	 * @return $this
+	 */
+	protected function setBlueprint(array|null $blueprint = null): static
+	{
+		if ($blueprint !== null) {
+			$this->blueprint = new UserBlueprint([
+				...$blueprint,
+				'model' => $this
+			]);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -865,15 +875,5 @@ class User extends ModelWithContent
 		}
 
 		return true;
-	}
-
-	/**
-	 * Returns the path to the file containing
-	 * all user secrets, including the password
-	 * @since 4.0.0
-	 */
-	protected function secretsFile(): string
-	{
-		return $this->root() . '/.htpasswd';
 	}
 }

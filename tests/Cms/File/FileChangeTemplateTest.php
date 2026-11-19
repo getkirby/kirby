@@ -113,158 +113,6 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testChangeTemplateMultilang(): void
-	{
-		$calls = 0;
-		$phpunit = $this;
-
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test' => [
-					'fields' => [
-						'files-a' => [
-							'type'      => 'filelist',
-							'blueprint' => 'a'
-						],
-						'files-b' => [
-							'type'      => 'filelist',
-							'blueprint' => 'b'
-						]
-					]
-				],
-				'files/a' => [
-					'title' => 'a',
-					'fields' => [
-						'caption' => [
-							'type' => 'text'
-						],
-						'text' => [
-							'type' => 'textarea'
-						]
-					]
-				],
-				'files/b' => [
-					'title' => 'b',
-					'fields' => [
-						'caption' => [
-							'type' => 'info'
-						],
-						'text' => [
-							'type' => 'textarea'
-						]
-					]
-				],
-			],
-			'hooks' => [
-				'file.changeTemplate:before' => function (File $file, $template) use ($phpunit, &$calls) {
-					$phpunit->assertSame('a', $file->template());
-					$phpunit->assertSame('b', $template);
-					$calls++;
-				},
-				'file.changeTemplate:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertSame('b', $newFile->template());
-					$phpunit->assertSame('a', $oldFile->template());
-					$calls++;
-				}
-			],
-			'languages' => [
-				[
-					'code' => 'en',
-					'name' => 'English',
-					'default' => true
-				],
-				[
-					'code' => 'de',
-					'name' => 'Deutsch',
-				],
-				[
-					'code' => 'fr',
-					'name' => 'Français',
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test'
-		]);
-
-		$file = new File([
-			'filename'     => 'test.jpg',
-			'parent'       => $page,
-			'translations' => [
-				[
-					'code' => 'en',
-					'content' => [
-						'template' => 'a',
-						'caption'  => 'This is the caption',
-						'text'     => 'This is the text'
-					]
-				],
-				[
-					'code' => 'de',
-					'content' => [
-						'caption' => 'Das ist die Caption',
-						'text'    => 'Das ist der Text'
-					]
-				],
-				[
-					'code' => 'fr'
-				]
-			],
-		]);
-
-		// make all tests below with real content files
-		$file->changeStorage(PlainTextStorage::class);
-
-		$this->assertSame('a', $file->template());
-
-		$contentEN = $file->content('en');
-		$contentDE = $file->content('de');
-		$contentFR = $file->content('fr');
-
-		$this->assertSame('This is the text', $contentEN->text()->value());
-		$this->assertSame('This is the caption', $contentEN->caption()->value());
-
-		$this->assertSame('Das ist der Text', $contentDE->text()->value());
-		$this->assertSame('Das ist die Caption', $contentDE->caption()->value());
-
-		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
-		$this->assertSame('This is the caption', $contentFR->caption()->value(), 'should fall back to the default language');
-
-		// check for content files
-		$this->assertFileExists($file->version('latest')->contentFile('en'));
-		$this->assertFileExists($file->version('latest')->contentFile('de'));
-		$this->assertFileDoesNotExist($file->version('latest')->contentFile('fr'), 'French does not have any content and should not have a meta file');
-
-		$modified = $file->changeTemplate('b');
-
-		$this->assertSame('b', $modified->template());
-		$this->assertSame(2, $calls);
-
-		$this->assertInstanceOf(PlainTextStorage::class, $modified->storage());
-
-		// check which meta files have been created
-		$this->assertFileExists($modified->version('latest')->contentFile('en'));
-		$this->assertFileExists($modified->version('latest')->contentFile('de'));
-		$this->assertFileDoesNotExist($modified->version('latest')->contentFile('fr'), 'French does not have any content and should not have a meta file');
-
-		$contentEN = $modified->content('en');
-		$contentDE = $modified->content('de');
-		$contentFR = $modified->content('fr');
-
-		$this->assertSame('This is the text', $contentEN->text()->value());
-		$this->assertNull($contentEN->caption()->value(), 'The caption should be null because it turned into an info field');
-
-		$this->assertSame('Das ist der Text', $contentDE->text()->value());
-		$this->assertNull($contentDE->caption()->value(), 'The caption should be null because it turned into an info field');
-
-		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
-		$this->assertNull($contentFR->caption()->value(), 'should fall back to the default language');
-	}
-
 	public function testChangeTemplateDefault(): void
 	{
 		$this->app = $this->app->clone([
@@ -488,6 +336,158 @@ class FileChangeTemplateTest extends ModelTestCase
 
 		$this->assertSame('pdf', $file->extension());
 		$this->assertSame('pdf', $newFile->extension());
+	}
+
+	public function testChangeTemplateMultilang(): void
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'a'
+						],
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'b'
+						]
+					]
+				],
+				'files/a' => [
+					'title' => 'a',
+					'fields' => [
+						'caption' => [
+							'type' => 'text'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+				'files/b' => [
+					'title' => 'b',
+					'fields' => [
+						'caption' => [
+							'type' => 'info'
+						],
+						'text' => [
+							'type' => 'textarea'
+						]
+					]
+				],
+			],
+			'hooks' => [
+				'file.changeTemplate:before' => function (File $file, $template) use ($phpunit, &$calls) {
+					$phpunit->assertSame('a', $file->template());
+					$phpunit->assertSame('b', $template);
+					$calls++;
+				},
+				'file.changeTemplate:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+					$phpunit->assertSame('b', $newFile->template());
+					$phpunit->assertSame('a', $oldFile->template());
+					$calls++;
+				}
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				],
+				[
+					'code' => 'fr',
+					'name' => 'Français',
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$file = new File([
+			'filename'     => 'test.jpg',
+			'parent'       => $page,
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'template' => 'a',
+						'caption'  => 'This is the caption',
+						'text'     => 'This is the text'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'caption' => 'Das ist die Caption',
+						'text'    => 'Das ist der Text'
+					]
+				],
+				[
+					'code' => 'fr'
+				]
+			],
+		]);
+
+		// make all tests below with real content files
+		$file->changeStorage(PlainTextStorage::class);
+
+		$this->assertSame('a', $file->template());
+
+		$contentEN = $file->content('en');
+		$contentDE = $file->content('de');
+		$contentFR = $file->content('fr');
+
+		$this->assertSame('This is the text', $contentEN->text()->value());
+		$this->assertSame('This is the caption', $contentEN->caption()->value());
+
+		$this->assertSame('Das ist der Text', $contentDE->text()->value());
+		$this->assertSame('Das ist die Caption', $contentDE->caption()->value());
+
+		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
+		$this->assertSame('This is the caption', $contentFR->caption()->value(), 'should fall back to the default language');
+
+		// check for content files
+		$this->assertFileExists($file->version('latest')->contentFile('en'));
+		$this->assertFileExists($file->version('latest')->contentFile('de'));
+		$this->assertFileDoesNotExist($file->version('latest')->contentFile('fr'), 'French does not have any content and should not have a meta file');
+
+		$modified = $file->changeTemplate('b');
+
+		$this->assertSame('b', $modified->template());
+		$this->assertSame(2, $calls);
+
+		$this->assertInstanceOf(PlainTextStorage::class, $modified->storage());
+
+		// check which meta files have been created
+		$this->assertFileExists($modified->version('latest')->contentFile('en'));
+		$this->assertFileExists($modified->version('latest')->contentFile('de'));
+		$this->assertFileDoesNotExist($modified->version('latest')->contentFile('fr'), 'French does not have any content and should not have a meta file');
+
+		$contentEN = $modified->content('en');
+		$contentDE = $modified->content('de');
+		$contentFR = $modified->content('fr');
+
+		$this->assertSame('This is the text', $contentEN->text()->value());
+		$this->assertNull($contentEN->caption()->value(), 'The caption should be null because it turned into an info field');
+
+		$this->assertSame('Das ist der Text', $contentDE->text()->value());
+		$this->assertNull($contentDE->caption()->value(), 'The caption should be null because it turned into an info field');
+
+		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
+		$this->assertNull($contentFR->caption()->value(), 'should fall back to the default language');
 	}
 
 	public function testChangeTemplateWhenStorageFails(): void

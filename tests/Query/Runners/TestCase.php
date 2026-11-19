@@ -6,6 +6,73 @@ use Kirby\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+	public static function interceptProvider(): array
+	{
+		return [
+			'field' => [
+				'user.name', // query
+				['user' => $user = ['name' => 'Homer']], // context
+				[$user], // intercept
+			],
+
+			'nested field' => [
+				'user.name.first', // query
+				[
+					'user' => $user = [
+						'name' => $name = ['first' => 'Homer']
+					]
+				], // context
+				[$user, $name] // intercept
+			],
+
+			'method result' => (function () {
+				$closureResult = ['age' => 42];
+				$user = ['get' => fn () => $closureResult];
+
+				return [
+					'user.get("arg").age', // query
+					['user' => $user], // context
+					[$user, $closureResult] // intercept
+				];
+			})(),
+
+			'closure result' => (function () {
+				$result = ['field' => 'value'];
+				$thing = ['call' => fn ($callback) => $callback()];
+
+				return [
+					'thing.call(() => result).field', // query
+					['thing' => $thing, 'result' => $result], // context
+					[$thing, $result] // intercept
+				];
+			})(),
+
+			'function result for explicit global function' => (function () {
+				$result = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
+
+				return [
+					'foo("arg").bar', // query
+					[], // context
+					[$result], // intercept
+					$functions // functions
+				];
+			})(),
+
+			'global function result when function looks like variable - a' => (function () {
+				$result    = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
+
+				return [
+					'foo.bar', // query
+					[], // context
+					[$result], // intercept
+					$functions // functions
+				];
+			})()
+		];
+	}
+
 	public static function resultProvider(): array
 	{
 		return [
@@ -355,73 +422,6 @@ abstract class TestCase extends BaseTestCase
 				['x' => 10, 'y' => 3, 'z' => 2], // context
 				26, // result
 			],
-		];
-	}
-
-	public static function interceptProvider(): array
-	{
-		return [
-			'field' => [
-				'user.name', // query
-				['user' => $user = ['name' => 'Homer']], // context
-				[$user], // intercept
-			],
-
-			'nested field' => [
-				'user.name.first', // query
-				[
-					'user' => $user = [
-						'name' => $name = ['first' => 'Homer']
-					]
-				], // context
-				[$user, $name] // intercept
-			],
-
-			'method result' => (function () {
-				$closureResult = ['age' => 42];
-				$user = ['get' => fn () => $closureResult];
-
-				return [
-					'user.get("arg").age', // query
-					['user' => $user], // context
-					[$user, $closureResult] // intercept
-				];
-			})(),
-
-			'closure result' => (function () {
-				$result = ['field' => 'value'];
-				$thing = ['call' => fn ($callback) => $callback()];
-
-				return [
-					'thing.call(() => result).field', // query
-					['thing' => $thing, 'result' => $result], // context
-					[$thing, $result] // intercept
-				];
-			})(),
-
-			'function result for explicit global function' => (function () {
-				$result = ['bar' => 'baz'];
-				$functions = ['foo' => fn () => $result];
-
-				return [
-					'foo("arg").bar', // query
-					[], // context
-					[$result], // intercept
-					$functions // functions
-				];
-			})(),
-
-			'global function result when function looks like variable - a' => (function () {
-				$result    = ['bar' => 'baz'];
-				$functions = ['foo' => fn () => $result];
-
-				return [
-					'foo.bar', // query
-					[], // context
-					[$result], // intercept
-					$functions // functions
-				];
-			})()
 		];
 	}
 }

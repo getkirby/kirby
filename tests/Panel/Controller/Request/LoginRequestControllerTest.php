@@ -16,11 +16,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 
 class SwitchTestChallenge extends Challenge
 {
-	public function isAvailable(): bool
-	{
-		return true;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
@@ -31,6 +26,11 @@ class SwitchTestChallenge extends Challenge
 		return new Component(component: 'k-test-form');
 	}
 
+	public function isAvailable(): bool
+	{
+		return true;
+	}
+
 	public function verify(mixed $input, Pending $data): bool
 	{
 		return true;
@@ -39,11 +39,6 @@ class SwitchTestChallenge extends Challenge
 
 class SwitchTestChallenge2 extends Challenge
 {
-	public function isAvailable(): bool
-	{
-		return true;
-	}
-
 	public function create(): Pending|null
 	{
 		return null;
@@ -52,6 +47,11 @@ class SwitchTestChallenge2 extends Challenge
 	public function form(Pending $pending): Component
 	{
 		return new Component(component: 'k-test2-form');
+	}
+
+	public function isAvailable(): bool
+	{
+		return true;
 	}
 
 	public function verify(mixed $input, Pending $data): bool
@@ -217,29 +217,6 @@ class LoginRequestControllerTest extends TestCase
 		$this->assertSame('switch-test2', $session->get('kirby.challenge.type'));
 	}
 
-	public function testSwitchWithoutPendingState(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'csrf' => 'test-csrf'
-				]
-			]
-		]);
-
-		// no challenge in session = not pending = nothing to switch from
-		$exception = null;
-
-		try {
-			new LoginRequestController('switch', 'email')->load();
-		} catch (Redirect $e) {
-			$exception = $e;
-		}
-
-		$this->assertInstanceOf(Redirect::class, $exception);
-		$this->assertStringEndsWith('/panel/login', $exception->location());
-	}
-
 	public function testSwitchWithoutName(): void
 	{
 		$this->app = $this->app->clone([
@@ -263,35 +240,27 @@ class LoginRequestControllerTest extends TestCase
 		$controller->load();
 	}
 
-	public function testVerifySuccessfulRedirectsAfterLogin(): void
+	public function testSwitchWithoutPendingState(): void
 	{
 		$this->app = $this->app->clone([
 			'request' => [
 				'query' => [
-					'csrf' => 'test-csrf',
-					'code' => '123456',
+					'csrf' => 'test-csrf'
 				]
 			]
 		]);
 
-		$session = $this->app->session();
-		$session->set('kirby.challenge.email', 'test@example.com');
-		$session->set('kirby.challenge.type', 'email');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.data', ['secret' => static::$code]);
-		$session->set('kirby.challenge.timeout', time() + 600);
-
+		// no challenge in session = not pending = nothing to switch from
 		$exception = null;
 
 		try {
-			$controller = new LoginRequestController('challenge', 'email');
-			$controller->load();
+			new LoginRequestController('switch', 'email')->load();
 		} catch (Redirect $e) {
 			$exception = $e;
 		}
 
 		$this->assertInstanceOf(Redirect::class, $exception);
-		$this->assertStringEndsWith('/panel/site', $exception->location());
+		$this->assertStringEndsWith('/panel/login', $exception->location());
 	}
 
 	public function testVerifyDestroyedChallengeRedirectsToLogin(): void
@@ -318,6 +287,30 @@ class LoginRequestControllerTest extends TestCase
 
 		$this->assertInstanceOf(Redirect::class, $exception);
 		$this->assertStringEndsWith('/panel/login', $exception->location());
+	}
+
+	public function testVerifyInactiveChallenge(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'csrf' => 'test-csrf',
+					'code' => '123456',
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'test@example.com');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 600);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('Login challenge "totp" is not active');
+
+		$controller = new LoginRequestController('challenge', 'totp');
+		$controller->load();
 	}
 
 	public function testVerifyRedirectsToPasswordReset(): void
@@ -353,30 +346,6 @@ class LoginRequestControllerTest extends TestCase
 		$this->assertStringEndsWith('reset-password', $exception->location());
 	}
 
-	public function testVerifyInactiveChallenge(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'csrf' => 'test-csrf',
-					'code' => '123456',
-				]
-			]
-		]);
-
-		$session = $this->app->session();
-		$session->set('kirby.challenge.email', 'test@example.com');
-		$session->set('kirby.challenge.type', 'email');
-		$session->set('kirby.challenge.mode', 'login');
-		$session->set('kirby.challenge.timeout', time() + 600);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('Login challenge "totp" is not active');
-
-		$controller = new LoginRequestController('challenge', 'totp');
-		$controller->load();
-	}
-
 	public function testVerifyRethrowsWhenCodeIsInvalid(): void
 	{
 		$this->app = $this->app->clone([
@@ -398,5 +367,36 @@ class LoginRequestControllerTest extends TestCase
 		$this->expectException(PermissionException::class);
 		$controller = new LoginRequestController('challenge', 'email');
 		$controller->load();
+	}
+
+	public function testVerifySuccessfulRedirectsAfterLogin(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'csrf' => 'test-csrf',
+					'code' => '123456',
+				]
+			]
+		]);
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'test@example.com');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.data', ['secret' => static::$code]);
+		$session->set('kirby.challenge.timeout', time() + 600);
+
+		$exception = null;
+
+		try {
+			$controller = new LoginRequestController('challenge', 'email');
+			$controller->load();
+		} catch (Redirect $e) {
+			$exception = $e;
+		}
+
+		$this->assertInstanceOf(Redirect::class, $exception);
+		$this->assertStringEndsWith('/panel/site', $exception->location());
 	}
 }

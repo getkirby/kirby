@@ -31,22 +31,38 @@ class AppResolveTest extends TestCase
 		$this->assertSame('test', $result->id());
 	}
 
-	public function testResolveMissingPageReturnsNull(): void
+	public function testResolveFile(): void
 	{
-		$app = new App([
+		$props = [
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'site' => [
 				'children' => [
-					['slug' => 'test']
+					[
+						'slug'  => 'test',
+						'files' => [
+							['filename' => 'test.jpg']
+						]
+					]
 				]
 			]
-		]);
+		];
 
-		// a NotFoundException from the resolver is turned into null
-		// so the router can fall through to the error page
-		$this->assertNull($app->resolve('does-not-exist'));
+		// disabled by default
+		$app = new App($props);
+		$this->assertNull($app->resolveFile($app->page('test')->file('test.jpg')));
+
+		// enabled
+		$app = new App([
+			...$props,
+			'options' => ['content' => ['fileRedirects' => true]]
+		]);
+		$file = $app->page('test')->file('test.jpg');
+		$this->assertSame($file, $app->resolveFile($file));
+
+		// non-existing file
+		$this->assertNull($app->resolveFile(null));
 	}
 
 	public function testResolveInaccessibleFileReturnsNull(): void
@@ -88,6 +104,24 @@ class AppResolveTest extends TestCase
 		$this->expectExceptionMessageIs('The home page does not exist');
 
 		$app->resolve(null);
+	}
+
+	public function testResolveMissingPageReturnsNull(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		// a NotFoundException from the resolver is turned into null
+		// so the router can fall through to the error page
+		$this->assertNull($app->resolve('does-not-exist'));
 	}
 
 	public function testResolveWithLanguage(): void
@@ -138,39 +172,5 @@ class AppResolveTest extends TestCase
 		// a missing representation still returns null in the given language
 		$this->assertNull($app->resolve('test.json', 'en'));
 		$this->assertSame('en', $app->language()->code());
-	}
-
-	public function testResolveFile(): void
-	{
-		$props = [
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'test',
-						'files' => [
-							['filename' => 'test.jpg']
-						]
-					]
-				]
-			]
-		];
-
-		// disabled by default
-		$app = new App($props);
-		$this->assertNull($app->resolveFile($app->page('test')->file('test.jpg')));
-
-		// enabled
-		$app = new App([
-			...$props,
-			'options' => ['content' => ['fileRedirects' => true]]
-		]);
-		$file = $app->page('test')->file('test.jpg');
-		$this->assertSame($file, $app->resolveFile($file));
-
-		// non-existing file
-		$this->assertNull($app->resolveFile(null));
 	}
 }

@@ -86,97 +86,6 @@ class ModelCommitTest extends TestCase
 		$this->assertSame(null, $this->app->cache('pages')->get('test'));
 	}
 
-	public function testAfterHookArgumentsForPageCreate(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'create'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $page
-		);
-
-		$this->assertSame([
-			'page' => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageDuplicate(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$copy = new Page([
-			'slug' => 'test-copy',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'duplicate'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $copy
-		);
-
-		$this->assertSame([
-			'duplicatePage' => $copy,
-			'originalPage'  => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageDelete(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'delete'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: true
-		);
-
-		$this->assertSame([
-			'status' => true,
-			'page'   => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageUpdate(): void
-	{
-		$oldPage = new Page([
-			'slug' => 'test',
-		]);
-
-		$newPage = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $oldPage,
-			action: 'update'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $newPage
-		);
-
-		$this->assertSame([
-			'newPage' => $newPage,
-			'oldPage' => $oldPage
-		], $args);
-	}
-
 	public function testAfterHookArgumentsForFileCreate(): void
 	{
 		$file = new File([
@@ -244,6 +153,97 @@ class ModelCommitTest extends TestCase
 		$this->assertSame([
 			'newFile' => $newFile,
 			'oldFile' => $oldFile
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageCreate(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'create'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $page
+		);
+
+		$this->assertSame([
+			'page' => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageDelete(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'delete'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
+
+		$this->assertSame([
+			'status' => true,
+			'page'   => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageDuplicate(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$copy = new Page([
+			'slug' => 'test-copy',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'duplicate'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $copy
+		);
+
+		$this->assertSame([
+			'duplicatePage' => $copy,
+			'originalPage'  => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageUpdate(): void
+	{
+		$oldPage = new Page([
+			'slug' => 'test',
+		]);
+
+		$newPage = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $oldPage,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newPage
+		);
+
+		$this->assertSame([
+			'newPage' => $newPage,
+			'oldPage' => $oldPage
 		], $args);
 	}
 

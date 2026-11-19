@@ -240,6 +240,31 @@ class PageViewControllerTest extends TestCase
 		$this->assertSame('/pages/foo?tab=test', $prev['link']);
 	}
 
+	public function testPrevNextSameStatus(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'foo', 'num' => 0],
+					['slug' => 'bar', 'num' => null],
+					['slug' => 'baz', 'num' => 0]
+				]
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageViewController($this->app->page('foo'));
+		$this->assertSame('/pages/baz', $controller->next()['link']);
+
+		$controller = new PageViewController($this->app->page('bar'));
+		$this->assertNull($controller->prev());
+		$this->assertNull($controller->next());
+
+		$controller = new PageViewController($this->app->page('baz'));
+		$this->assertSame('/pages/foo', $controller->prev()['link']);
+	}
+
 	public function testPrevNextSameTemplate(): void
 	{
 		$this->app = $this->app->clone([
@@ -265,29 +290,68 @@ class PageViewControllerTest extends TestCase
 		$this->assertSame('/pages/foo', $controller->prev()['link']);
 	}
 
-	public function testPrevNextSameStatus(): void
+	public function testPrevNextWithNavigationFour(): void
 	{
 		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'foo', 'num' => 0],
-					['slug' => 'bar', 'num' => null],
-					['slug' => 'baz', 'num' => 0]
+			'blueprints' => [
+				'pages/g' => [
+					'title' => 'A',
+					'navigation' => [
+						'status' => 'all',
+						'template' => 'all',
+						'sortBy' => 'slug desc'
+					]
+				],
+				'pages/h' => [
+					'title' => 'B',
+					'navigation' => [
+						'status' => 'all',
+						'template' => 'all',
+						'sortBy' => 'slug desc'
+					]
 				]
-			],
+			]
 		]);
 
 		$this->app->impersonate('kirby');
 
-		$controller = new PageViewController($this->app->page('foo'));
-		$this->assertSame('/pages/baz', $controller->next()['link']);
+		$parent = Page::create([
+			'slug' => 'test'
+		]);
 
-		$controller = new PageViewController($this->app->page('bar'));
-		$this->assertNull($controller->prev());
-		$this->assertNull($controller->next());
+		$parent->createChild([
+			'slug'     => 'a',
+			'template' => 'g'
+		]);
 
-		$controller = new PageViewController($this->app->page('baz'));
-		$this->assertSame('/pages/foo', $controller->prev()['link']);
+		$expectedNext = $parent->createChild([
+			'slug'     => 'b',
+			'template' => 'h'
+		]);
+
+		$parent->createChild([
+			'slug'     => 'c',
+			'template' => 'g'
+		]);
+
+		$expectedPrev = $parent->createChild([
+			'slug'     => 'd',
+			'template' => 'h'
+		]);
+
+		$page  = $this->app->page('test/c');
+		$navigation = $page->blueprint()->navigation();
+		$this->assertSame([
+			'status' => 'all',
+			'template' => 'all',
+			'sortBy' => 'slug desc'
+		], $navigation);
+
+		$controller = new PageViewController($page);
+		$this->assertNotNull($controller->prev());
+		$this->assertNotNull($controller->next());
+		$this->assertSame($expectedNext->panel()->toLink(), $controller->next());
+		$this->assertSame($expectedPrev->panel()->toLink(), $controller->prev());
 	}
 
 	public function testPrevNextWithNavigationOne(): void
@@ -343,76 +407,6 @@ class PageViewControllerTest extends TestCase
 		$this->assertNotNull($controller->prev());
 		$this->assertNotNull($controller->next());
 
-		$this->assertSame($expectedNext->panel()->toLink(), $controller->next());
-		$this->assertSame($expectedPrev->panel()->toLink(), $controller->prev());
-	}
-
-	public function testPrevNextWithNavigationTwo(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/c' => [
-					'title' => 'C',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['c']
-					]
-				],
-				'pages/d' => [
-					'title' => 'D',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['c']
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$parent = Page::create(['slug' => 'test']);
-
-		$expectedPrev = $parent->createChild([
-			'slug'     => 'a',
-			'template' => 'c'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'b',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'c',
-			'template' => 'c'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'd',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$expectedNext = $parent->createChild([
-			'slug'     => 'e',
-			'template' => 'c'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'f',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$page       = $this->app->page('test/d');
-		$navigation = $page->blueprint()->navigation();
-		$this->assertSame([
-			'status' => ['listed'],
-			'template' => ['c']
-		], $navigation);
-
-
-		$controller = new PageViewController($page);
-		$this->assertNotNull($controller->prev());
-		$this->assertNotNull($controller->next());
 		$this->assertSame($expectedNext->panel()->toLink(), $controller->next());
 		$this->assertSame($expectedPrev->panel()->toLink(), $controller->prev());
 	}
@@ -488,24 +482,22 @@ class PageViewControllerTest extends TestCase
 		$this->assertSame($expectedPrev->panel()->toLink(), $controller->prev());
 	}
 
-	public function testPrevNextWithNavigationFour(): void
+	public function testPrevNextWithNavigationTwo(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
-				'pages/g' => [
-					'title' => 'A',
+				'pages/c' => [
+					'title' => 'C',
 					'navigation' => [
-						'status' => 'all',
-						'template' => 'all',
-						'sortBy' => 'slug desc'
+						'status' => ['listed'],
+						'template' => ['c']
 					]
 				],
-				'pages/h' => [
-					'title' => 'B',
+				'pages/d' => [
+					'title' => 'D',
 					'navigation' => [
-						'status' => 'all',
-						'template' => 'all',
-						'sortBy' => 'slug desc'
+						'status' => ['listed'],
+						'template' => ['c']
 					]
 				]
 			]
@@ -513,36 +505,43 @@ class PageViewControllerTest extends TestCase
 
 		$this->app->impersonate('kirby');
 
-		$parent = Page::create([
-			'slug' => 'test'
-		]);
+		$parent = Page::create(['slug' => 'test']);
+
+		$expectedPrev = $parent->createChild([
+			'slug'     => 'a',
+			'template' => 'c'
+		])->changeStatus('listed');
 
 		$parent->createChild([
-			'slug'     => 'a',
-			'template' => 'g'
-		]);
-
-		$expectedNext = $parent->createChild([
 			'slug'     => 'b',
-			'template' => 'h'
-		]);
+			'template' => 'd'
+		])->changeStatus('listed');
 
 		$parent->createChild([
 			'slug'     => 'c',
-			'template' => 'g'
+			'template' => 'c'
 		]);
 
-		$expectedPrev = $parent->createChild([
+		$parent->createChild([
 			'slug'     => 'd',
-			'template' => 'h'
-		]);
+			'template' => 'd'
+		])->changeStatus('listed');
 
-		$page  = $this->app->page('test/c');
+		$expectedNext = $parent->createChild([
+			'slug'     => 'e',
+			'template' => 'c'
+		])->changeStatus('listed');
+
+		$parent->createChild([
+			'slug'     => 'f',
+			'template' => 'd'
+		])->changeStatus('listed');
+
+		$page       = $this->app->page('test/d');
 		$navigation = $page->blueprint()->navigation();
 		$this->assertSame([
-			'status' => 'all',
-			'template' => 'all',
-			'sortBy' => 'slug desc'
+			'status' => ['listed'],
+			'template' => ['c']
 		], $navigation);
 
 		$controller = new PageViewController($page);

@@ -15,6 +15,13 @@ use Kirby\Filesystem\Dir;
 class Inventory
 {
 	/**
+	 * Separator between num and slug in page directory names
+	 * (e.g. `1_about` → num: 1, slug: 'about')
+	 * @since 6.0.0
+	 */
+	public static string $numSeparator = '_';
+
+	/**
 	 * Resolved children
 	 */
 	protected array|null $children = null;
@@ -39,13 +46,6 @@ class Inventory
 	 * split into children and files only when those are requested
 	 */
 	protected array $items = [];
-
-	/**
-	 * Separator between num and slug in page directory names
-	 * (e.g. `1_about` → num: 1, slug: 'about')
-	 * @since 6.0.0
-	 */
-	public static string $numSeparator = '_';
 
 	/**
 	 * @since 6.0.0

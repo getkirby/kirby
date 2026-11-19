@@ -77,15 +77,6 @@ class ElementTest extends TestCase
 		$this->assertSame('Bold', $child->innerText());
 	}
 
-	public function testFindWithoutResult(): void
-	{
-		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
-		$p       = $dom->query('//p')[0];
-		$element = new Element($p);
-
-		$this->assertNull($element->find('//a'));
-	}
-
 	public function testFindAndQueryWithInvalidQuery(): void
 	{
 		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
@@ -95,6 +86,15 @@ class ElementTest extends TestCase
 		$this->assertNull(@$element->query('[['));
 		$this->assertNull(@$element->find('[['));
 		$this->assertSame([], @$element->filter('[['));
+	}
+
+	public function testFindWithoutResult(): void
+	{
+		$dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
+		$p       = $dom->query('//p')[0];
+		$element = new Element($p);
+
+		$this->assertNull($element->find('//a'));
 	}
 
 	public function testInnerHtml(): void

@@ -18,20 +18,20 @@ class AccountViewControllerTest extends UserViewControllerTest
 		$this->app->impersonate('test');
 	}
 
-	public function testButtons(): void
-	{
-		$controller = new AccountViewController($this->user);
-		$buttons    = $controller->buttons();
-		$this->assertInstanceOf(ViewButtons::class, $buttons);
-		$this->assertCount(2, $buttons->render());
-	}
-
 	public function testBreadcrumb(): void
 	{
 		$controller = new AccountViewController($this->user);
 		$breadcrumb = $controller->breadcrumb();
 		$this->assertSame('Test User', $breadcrumb[0]['label']);
 		$this->assertSame('/account', $breadcrumb[0]['link']);
+	}
+
+	public function testButtons(): void
+	{
+		$controller = new AccountViewController($this->user);
+		$buttons    = $controller->buttons();
+		$this->assertInstanceOf(ViewButtons::class, $buttons);
+		$this->assertCount(2, $buttons->render());
 	}
 
 	public function testComponent(): void

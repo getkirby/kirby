@@ -74,6 +74,11 @@ class FilePickerField extends ModelPickerField implements ProvidesAcceptedFileBl
 		];
 	}
 
+	public function parent(): string
+	{
+		return $this->parentModel()->apiUrl(true);
+	}
+
 	public function parentModel(): ModelWithContent
 	{
 		if (is_string($this->parent) === false) {
@@ -81,11 +86,6 @@ class FilePickerField extends ModelPickerField implements ProvidesAcceptedFileBl
 		}
 
 		return $this->model()->query($this->parent, ModelWithContent::class) ?? $this->model();
-	}
-
-	public function parent(): string
-	{
-		return $this->parentModel()->apiUrl(true);
 	}
 
 	public function query(): string|null

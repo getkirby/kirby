@@ -15,13 +15,11 @@ use Generator;
  */
 class Tokenizer
 {
-	private int $length = 0;
+	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
+	"([^"\\]*(?:\\.[^"\\]*)*)"
+	REGEX;
 
 	/**
-	 * The more complex regexes are written here in nowdoc format
-	 * so we don't need to double or triple escape backslashes
-	 * (that becomes ridiculous rather fast).
-	 *
 	 * Identifiers can contain letters, numbers and underscores.
 	 * They can't start with a number.
 	 * For more complex identifier strings, subscript member access
@@ -33,9 +31,8 @@ class Tokenizer
 	private const string SINGLEQUOTE_STRING_REGEX = <<<'REGEX'
 	'([^'\\]*(?:\\.[^'\\]*)*)'
 	REGEX;
-	private const string DOUBLEQUOTE_STRING_REGEX = <<<'REGEX'
-	"([^"\\]*(?:\\.[^"\\]*)*)"
-	REGEX;
+
+	private int $length = 0;
 
 	public function __construct(
 		private readonly string $query,

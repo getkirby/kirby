@@ -81,6 +81,35 @@ class Sane
 	}
 
 	/**
+	 * Returns all handler objects that apply to the given file based on
+	 * file extension and MIME type
+	 *
+	 * @param $lazy If set to `true`, undefined handlers are skipped
+	 * @return list<Handler>
+	 */
+	protected static function handlersForFile(
+		string $file,
+		bool $lazy = false
+	): array {
+		$handlers = [];
+
+		// all values that can be used for the handler search;
+		// filter out all empty options
+		$options = array_filter([F::extension($file), F::mime($file)]);
+
+		foreach ($options as $option) {
+			$handler = static::handler($option, $lazy);
+
+			// ensure that each handler class is only returned once
+			if ($handler !== null) {
+				$handlers[$handler::class] ??= $handler;
+			}
+		}
+
+		return array_values($handlers);
+	}
+
+	/**
 	 * Sanitizes the given string with the specified handler
 	 * @since 3.6.0
 	 *
@@ -199,34 +228,5 @@ class Sane
 		foreach ($handlers as $handler) {
 			$handler->validateFile($file);
 		}
-	}
-
-	/**
-	 * Returns all handler objects that apply to the given file based on
-	 * file extension and MIME type
-	 *
-	 * @param $lazy If set to `true`, undefined handlers are skipped
-	 * @return list<Handler>
-	 */
-	protected static function handlersForFile(
-		string $file,
-		bool $lazy = false
-	): array {
-		$handlers = [];
-
-		// all values that can be used for the handler search;
-		// filter out all empty options
-		$options = array_filter([F::extension($file), F::mime($file)]);
-
-		foreach ($options as $option) {
-			$handler = static::handler($option, $lazy);
-
-			// ensure that each handler class is only returned once
-			if ($handler !== null) {
-				$handlers[$handler::class] ??= $handler;
-			}
-		}
-
-		return array_values($handlers);
 	}
 }

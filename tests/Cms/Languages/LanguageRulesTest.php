@@ -59,35 +59,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::create($language);
 	}
 
-	public function testCreateWithInvalidCode(): void
-	{
-		$this->app->impersonate('admin@getkirby.com');
-
-		$language = new Language([
-			'code' => 'l',
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.language.code');
-
-		LanguageRules::create($language);
-	}
-
-	public function testCreateWithInvalidName(): void
-	{
-		$this->app->impersonate('admin@getkirby.com');
-
-		$language = new Language([
-			'code' => 'de',
-			'name' => ''
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.language.name');
-
-		LanguageRules::create($language);
-	}
-
 	public function testCreateWhenDefaultExists(): void
 	{
 		$this->app = $this->app->clone([
@@ -133,6 +104,35 @@ class LanguageRulesTest extends TestCase
 
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionCode('error.language.duplicate');
+
+		LanguageRules::create($language);
+	}
+
+	public function testCreateWithInvalidCode(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$language = new Language([
+			'code' => 'l',
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.code');
+
+		LanguageRules::create($language);
+	}
+
+	public function testCreateWithInvalidName(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$language = new Language([
+			'code' => 'de',
+			'name' => ''
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.name');
 
 		LanguageRules::create($language);
 	}
@@ -239,64 +239,6 @@ class LanguageRulesTest extends TestCase
 		LanguageRules::update($language);
 	}
 
-	public function testUpdateWithoutCode(): void
-	{
-		$this->app->impersonate('admin@getkirby.com');
-
-		$language = new Language([
-			'code' => 'd',
-			'name' => 'Deutsch'
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.language.code');
-
-		LanguageRules::update($language);
-	}
-
-	public function testUpdateWithoutName(): void
-	{
-		$this->app->impersonate('admin@getkirby.com');
-
-		$language = new Language([
-			'code' => 'de',
-			'name' => ''
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.language.name');
-
-		LanguageRules::update($language);
-	}
-
-	public function testUpdateWithoutCurrentUser(): void
-	{
-		$language = new Language([
-			'code' => 'de',
-			'name' => 'Deutsch'
-		]);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.language.update.permission');
-
-		LanguageRules::update($language);
-	}
-
-	public function testUpdateWithoutPermissions(): void
-	{
-		$this->app->impersonate('test@getkirby.com');
-
-		$language = new Language([
-			'code' => 'de',
-			'name' => 'Deutsch'
-		]);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.language.update.permission');
-
-		LanguageRules::update($language);
-	}
-
 	public function testUpdateDemoteDefault(): void
 	{
 		$this->app = $this->app->clone([
@@ -325,5 +267,63 @@ class LanguageRulesTest extends TestCase
 		$this->expectExceptionMessageIs('Please select another language to be the primary language');
 
 		LanguageRules::update($newLanguage, $oldLanguage);
+	}
+
+	public function testUpdateWithoutCode(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$language = new Language([
+			'code' => 'd',
+			'name' => 'Deutsch'
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.code');
+
+		LanguageRules::update($language);
+	}
+
+	public function testUpdateWithoutCurrentUser(): void
+	{
+		$language = new Language([
+			'code' => 'de',
+			'name' => 'Deutsch'
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.language.update.permission');
+
+		LanguageRules::update($language);
+	}
+
+	public function testUpdateWithoutName(): void
+	{
+		$this->app->impersonate('admin@getkirby.com');
+
+		$language = new Language([
+			'code' => 'de',
+			'name' => ''
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.language.name');
+
+		LanguageRules::update($language);
+	}
+
+	public function testUpdateWithoutPermissions(): void
+	{
+		$this->app->impersonate('test@getkirby.com');
+
+		$language = new Language([
+			'code' => 'de',
+			'name' => 'Deutsch'
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.language.update.permission');
+
+		LanguageRules::update($language);
 	}
 }

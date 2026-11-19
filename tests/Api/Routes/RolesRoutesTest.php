@@ -31,16 +31,6 @@ class RolesRoutesTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
-	public function testList(): void
-	{
-		$app = $this->app;
-
-		$response = $app->api()->call('roles');
-
-		$this->assertSame('admin', $response['data'][0]['name']);
-		$this->assertSame('editor', $response['data'][1]['name']);
-	}
-
 	public function testGet(): void
 	{
 		$app = $this->app;
@@ -49,5 +39,15 @@ class RolesRoutesTest extends TestCase
 
 		$this->assertSame('editor', $response['data']['name']);
 		$this->assertSame('Editor', $response['data']['title']);
+	}
+
+	public function testList(): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('roles');
+
+		$this->assertSame('admin', $response['data'][0]['name']);
+		$this->assertSame('editor', $response['data'][1]['name']);
 	}
 }

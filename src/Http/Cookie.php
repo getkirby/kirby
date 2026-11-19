@@ -30,68 +30,11 @@ class Cookie
 	public static string $key = 'KirbyHttpCookieKey';
 
 	/**
-	 * Set a new cookie
-	 *
-	 * ```php
-	 * // expires in 1 hour
-	 * Cookie::set('mycookie', 'hello', ['lifetime' => 60]);
-	 * ```
-	 *
-	 * @param $key The name of the cookie
-	 * @param $value The cookie content
-	 * @param $options Array of options:
-	 *                lifetime, path, domain, secure, httpOnly, sameSite
-	 * @return bool true: cookie was created,
-	 *              false: cookie creation failed
+	 * Checks if a cookie exists
 	 */
-	public static function set(
-		string $key,
-		string $value,
-		array $options = []
-	): bool {
-		// modify CMS caching behavior
-		static::trackUsage($key);
-
-		// extract options
-		$expires  = static::lifetime($options['lifetime'] ?? 0);
-		$path     = $options['path']     ?? '/';
-		$domain   = $options['domain']   ?? null;
-		$secure   = $options['secure']   ?? Url::scheme() === 'https';
-		$httponly = $options['httpOnly'] ?? true;
-		$samesite = $options['sameSite'] ?? 'Lax';
-
-		// add an HMAC signature of the value
-		$value = static::hmac($value) . '+' . $value;
-
-		// store that thing in the cookie global
-		$_COOKIE[$key] = $value;
-
-		// store the cookie
-		return setcookie(
-			$key,
-			$value,
-			compact('expires', 'path', 'domain', 'secure', 'httponly', 'samesite')
-		);
-	}
-
-	/**
-	 * Calculates the lifetime for a cookie
-	 *
-	 * @param $minutes Number of minutes or timestamp
-	 */
-	public static function lifetime(int $minutes): int
+	public static function exists(string $key): bool
 	{
-		// absolute timestamp
-		if ($minutes > 1000000000) {
-			return $minutes;
-		}
-
-		// minutes from now
-		if ($minutes > 0) {
-			return time() + ($minutes * 60);
-		}
-
-		return 0;
+		return static::get($key) !== null;
 	}
 
 	/**
@@ -153,14 +96,6 @@ class Cookie
 	}
 
 	/**
-	 * Checks if a cookie exists
-	 */
-	public static function exists(string $key): bool
-	{
-		return static::get($key) !== null;
-	}
-
-	/**
 	 * Creates a HMAC for the cookie value
 	 * Used as a cookie signature to prevent easy tampering with cookie data
 	 */
@@ -172,6 +107,26 @@ class Cookie
 		$key = App::instance(lazy: true)?->option('cookie.key') ?: static::$key;
 
 		return hash_hmac('sha256', $value, $key);
+	}
+
+	/**
+	 * Calculates the lifetime for a cookie
+	 *
+	 * @param $minutes Number of minutes or timestamp
+	 */
+	public static function lifetime(int $minutes): int
+	{
+		// absolute timestamp
+		if ($minutes > 1000000000) {
+			return $minutes;
+		}
+
+		// minutes from now
+		if ($minutes > 0) {
+			return time() + ($minutes * 60);
+		}
+
+		return 0;
 	}
 
 	/**
@@ -226,6 +181,51 @@ class Cookie
 		}
 
 		return false;
+	}
+
+	/**
+	 * Set a new cookie
+	 *
+	 * ```php
+	 * // expires in 1 hour
+	 * Cookie::set('mycookie', 'hello', ['lifetime' => 60]);
+	 * ```
+	 *
+	 * @param $key The name of the cookie
+	 * @param $value The cookie content
+	 * @param $options Array of options:
+	 *                lifetime, path, domain, secure, httpOnly, sameSite
+	 * @return bool true: cookie was created,
+	 *              false: cookie creation failed
+	 */
+	public static function set(
+		string $key,
+		string $value,
+		array $options = []
+	): bool {
+		// modify CMS caching behavior
+		static::trackUsage($key);
+
+		// extract options
+		$expires  = static::lifetime($options['lifetime'] ?? 0);
+		$path     = $options['path']     ?? '/';
+		$domain   = $options['domain']   ?? null;
+		$secure   = $options['secure']   ?? Url::scheme() === 'https';
+		$httponly = $options['httpOnly'] ?? true;
+		$samesite = $options['sameSite'] ?? 'Lax';
+
+		// add an HMAC signature of the value
+		$value = static::hmac($value) . '+' . $value;
+
+		// store that thing in the cookie global
+		$_COOKIE[$key] = $value;
+
+		// store the cookie
+		return setcookie(
+			$key,
+			$value,
+			compact('expires', 'path', 'domain', 'secure', 'httponly', 'samesite')
+		);
 	}
 
 	/**

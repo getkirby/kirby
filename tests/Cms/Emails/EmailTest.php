@@ -11,30 +11,51 @@ class EmailTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures/emails';
 
-	public function testToArray(): void
+	public function testBeforeSend(): void
 	{
-		$props = [
-			'one' => 'eins',
-			'two' => 'zwei',
-		];
+		new App([
+			'options' => [
+				'email' => [
+					'beforeSend' => function ($mailer) {
+						$mailer->SMTPOptions = [
+							'ssl' => [
+								'verify_peer'       => false,
+								'verify_peer_name'  => false,
+								'allow_self_signed' => true
+							]
+						];
 
-		$expected = [
-			'one'         => 'eins',
-			'two'         => 'zwei',
-			'transport'   => [],
-			'beforeSend'  => null,
-			'from'        => null,
-			'fromName'    => null,
-			'replyTo'     => null,
-			'replyToName' => null,
-			'to'          => [],
-			'cc'          => [],
-			'bcc'         => [],
-			'attachments' => []
-		];
+						return $mailer;
+					}
+				]
+			]
+		]);
 
-		$email = new Email($props);
-		$this->assertSame($expected, $email->toArray());
+		$email = new Email([
+			'to' => 'ceo@company.com'
+		]);
+		$beforeSend = $email->toArray()['beforeSend'];
+
+		$this->assertInstanceOf('Closure', $beforeSend);
+		$this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $beforeSend(new Mailer()));
+	}
+
+	public function testInvalidPreset(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionCode('error.email.preset.notFound');
+
+		$email = new Email('not-a-preset', []);
+	}
+
+	public function testInvalidTemplate(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessageIs('The email template "subscription" cannot be found');
+
+		$email = new Email([
+			'template' => 'subscription'
+		]);
 	}
 
 	public function testPresets(): void
@@ -57,14 +78,6 @@ class EmailTest extends TestCase
 
 		$this->assertSame([$to], $email->toArray()['to']);
 		$this->assertSame([$cc], $email->toArray()['cc']);
-	}
-
-	public function testInvalidPreset(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionCode('error.email.preset.notFound');
-
-		$email = new Email('not-a-preset', []);
 	}
 
 	public function testTemplate(): void
@@ -111,41 +124,45 @@ class EmailTest extends TestCase
 		], $email->toArray()['body']);
 	}
 
-	public function testInvalidTemplate(): void
+	public function testToArray(): void
 	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessageIs('The email template "subscription" cannot be found');
+		$props = [
+			'one' => 'eins',
+			'two' => 'zwei',
+		];
 
-		$email = new Email([
-			'template' => 'subscription'
-		]);
+		$expected = [
+			'one'         => 'eins',
+			'two'         => 'zwei',
+			'transport'   => [],
+			'beforeSend'  => null,
+			'from'        => null,
+			'fromName'    => null,
+			'replyTo'     => null,
+			'replyToName' => null,
+			'to'          => [],
+			'cc'          => [],
+			'bcc'         => [],
+			'attachments' => []
+		];
+
+		$email = new Email($props);
+		$this->assertSame($expected, $email->toArray());
 	}
 
-	public function testTransformSimple(): void
+	public function testTransformCollection(): void
 	{
-		$email = new Email([
-			'from'     => 'sales@company.com',
-			'fromName' => 'Company Sales',
-			'to'       => 'ceo@company.com',
-			'cc'       => [
-				'someone@gmail.com',
-				'another@gmail.com' => 'Another Gmail',
-			],
-			'attachments' => [
-				'/amazing/absolute/path.txt'
-			]
+		$to = new Users([
+			new User(['email' => 'ceo@company.com', 'name' => 'Company CEO']),
+			new User(['email' => 'marketing@company.com', 'name' => 'Company Marketing'])
 		]);
 
-		$this->assertSame('sales@company.com', $email->toArray()['from']);
-		$this->assertSame('Company Sales', $email->toArray()['fromName']);
-		$this->assertSame(['ceo@company.com'], $email->toArray()['to']);
+		$email = new Email(['to' => $to]);
+
 		$this->assertSame([
-			'someone@gmail.com',
-			'another@gmail.com' => 'Another Gmail'
-		], $email->toArray()['cc']);
-		$this->assertSame([
-			'/amazing/absolute/path.txt'
-		], $email->toArray()['attachments']);
+			'ceo@company.com' => 'Company CEO',
+			'marketing@company.com' => 'Company Marketing'
+		], $email->toArray()['to']);
 	}
 
 	public function testTransformComplex(): void
@@ -201,19 +218,31 @@ class EmailTest extends TestCase
 		], $email->toArray()['attachments']);
 	}
 
-	public function testTransformCollection(): void
+	public function testTransformSimple(): void
 	{
-		$to = new Users([
-			new User(['email' => 'ceo@company.com', 'name' => 'Company CEO']),
-			new User(['email' => 'marketing@company.com', 'name' => 'Company Marketing'])
+		$email = new Email([
+			'from'     => 'sales@company.com',
+			'fromName' => 'Company Sales',
+			'to'       => 'ceo@company.com',
+			'cc'       => [
+				'someone@gmail.com',
+				'another@gmail.com' => 'Another Gmail',
+			],
+			'attachments' => [
+				'/amazing/absolute/path.txt'
+			]
 		]);
 
-		$email = new Email(['to' => $to]);
-
+		$this->assertSame('sales@company.com', $email->toArray()['from']);
+		$this->assertSame('Company Sales', $email->toArray()['fromName']);
+		$this->assertSame(['ceo@company.com'], $email->toArray()['to']);
 		$this->assertSame([
-			'ceo@company.com' => 'Company CEO',
-			'marketing@company.com' => 'Company Marketing'
-		], $email->toArray()['to']);
+			'someone@gmail.com',
+			'another@gmail.com' => 'Another Gmail'
+		], $email->toArray()['cc']);
+		$this->assertSame([
+			'/amazing/absolute/path.txt'
+		], $email->toArray()['attachments']);
 	}
 
 	#[RunInSeparateProcess]
@@ -244,34 +273,5 @@ class EmailTest extends TestCase
 
 		$this->assertSame(['ceo@company.com' => 'Mario'], $email->toArray()['to']);
 		$this->assertSame('Welcome, Mario!', trim($email->toArray()['body']));
-	}
-
-	public function testBeforeSend(): void
-	{
-		new App([
-			'options' => [
-				'email' => [
-					'beforeSend' => function ($mailer) {
-						$mailer->SMTPOptions = [
-							'ssl' => [
-								'verify_peer'       => false,
-								'verify_peer_name'  => false,
-								'allow_self_signed' => true
-							]
-						];
-
-						return $mailer;
-					}
-				]
-			]
-		]);
-
-		$email = new Email([
-			'to' => 'ceo@company.com'
-		]);
-		$beforeSend = $email->toArray()['beforeSend'];
-
-		$this->assertInstanceOf('Closure', $beforeSend);
-		$this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $beforeSend(new Mailer()));
 	}
 }

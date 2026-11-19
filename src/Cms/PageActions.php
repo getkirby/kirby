@@ -219,6 +219,19 @@ trait PageActions
 	}
 
 	/**
+	 * Change the position of the page in its siblings
+	 * collection. Siblings will be resorted. If the page
+	 * status isn't yet `listed`, it will be changed to it.
+	 *
+	 * @return $this|static
+	 */
+	#[BlockCollectionAccess]
+	public function changeSort(int|null $position = null): static
+	{
+		return $this->changeStatus('listed', $position);
+	}
+
+	/**
 	 * Change the status of the current page
 	 * to either draft, listed or unlisted.
 	 * If changing to `listed`, you can pass a position for the
@@ -312,19 +325,6 @@ trait PageActions
 		$this->resortSiblingsAfterUnlisting();
 
 		return $page;
-	}
-
-	/**
-	 * Change the position of the page in its siblings
-	 * collection. Siblings will be resorted. If the page
-	 * status isn't yet `listed`, it will be changed to it.
-	 *
-	 * @return $this|static
-	 */
-	#[BlockCollectionAccess]
-	public function changeSort(int|null $position = null): static
-	{
-		return $this->changeStatus('listed', $position);
 	}
 
 	/**
