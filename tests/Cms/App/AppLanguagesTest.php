@@ -33,9 +33,6 @@ class AppLanguagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @backupGlobals enabled
-	 */
 	#[DataProvider('detectedLanguageProvider')]
 	public function testDetectedLanguage($accept, $expected): void
 	{
@@ -85,9 +82,6 @@ class AppLanguagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @backupGlobals enabled
-	 */
 	#[DataProvider('detectedLanguageWithLocaleProvider')]
 	public function testDetectedLanguageWithLocale($accept, $expected): void
 	{
