@@ -148,6 +148,8 @@ class PreviewViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PreviewViewController($model, 'latest');
 		$redirect   = $controller->redirect();
 		$this->assertSame('/panel/pages/notes/preview/latest?_query=foo%3Dbar&_params=page%3A2', $redirect);
@@ -235,6 +237,8 @@ class PreviewViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PreviewViewController($model, 'latest');
 		$redirect   = $controller->redirect();
 		$this->assertSame('https://getkirby.com/demo/panel/pages/notes/preview/latest', $redirect);
@@ -259,9 +263,54 @@ class PreviewViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$controller = new PreviewViewController($model, 'latest');
 		$redirect   = $controller->redirect();
 		$this->assertSame('https://getkirby.com/demo/panel/pages/home/preview/latest', $redirect);
+	}
+
+	public function testRedirectNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test'],
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/hidden-page'
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'latest');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The page "hidden-page" cannot be found');
+
+		$controller->redirect();
 	}
 
 	public function testRedirectOutsideSubfolder(): void
@@ -436,6 +485,49 @@ class PreviewViewControllerTest extends TestCase
 
 		$this->assertStringStartsWith('/notes?', $src['latest']);
 		$this->assertSame('de', I18n::$locale);
+	}
+
+	public function testSrcBrowserNotAccessible(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/forbidden' => [
+					'options' => [
+						'access' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test'],
+					[
+						'slug'     => 'hidden-page',
+						'template' => 'forbidden'
+					]
+				]
+			],
+			'roles' => [
+				['name' => 'admin'],
+				['name' => 'editor']
+			],
+			'users' => [
+				['id' => 'editor', 'role' => 'editor']
+			],
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/hidden-page'
+				],
+			]
+		]);
+
+		$this->app->impersonate('editor');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'changes');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The page "hidden-page" cannot be found');
+
+		$controller->src();
 	}
 
 	public function testSrcBrowserOutsideSubfolder(): void

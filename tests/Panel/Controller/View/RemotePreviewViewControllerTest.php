@@ -40,6 +40,8 @@ class RemotePreviewViewControllerTest extends TestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$model      = $this->app->page('notes');
 		$controller = new RemotePreviewViewController($model, 'form');
 		$redirect   = $controller->redirect();

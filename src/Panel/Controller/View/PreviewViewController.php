@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Uri;
 use Kirby\Panel\Controller\ViewController;
@@ -97,6 +98,7 @@ class PreviewViewController extends ViewController
 	/**
 	 * Resolves the provided URL to an existing site/page.
 	 * @throws Redirect When no model can be found for the URL
+	 * @throws NotFoundException When the model is not accessible
 	 */
 	protected function modelFromUri(Uri $url): Site|Page
 	{
@@ -117,6 +119,13 @@ class PreviewViewController extends ViewController
 			$model instanceof Page === false
 		) {
 			throw new Redirect(location: $url->toString());
+		}
+
+		if ($model->isAccessible() === false) {
+			throw new NotFoundException(
+				key: $model instanceof Site ? 'site.notAccessible' : 'page.notFound',
+				data: ['slug' => $model->id()]
+			);
 		}
 
 		return $model;
