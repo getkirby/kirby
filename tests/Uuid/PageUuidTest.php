@@ -125,6 +125,12 @@ class PageUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
+	public function testFindByIndexWithZeroId(): void
+	{
+		$uuid = new PageUuid('page://0');
+		$this->assertNull($uuid->model());
+	}
+
 	public function testId(): void
 	{
 		$uuid = new PageUuid('page://just-a-file');
@@ -148,6 +154,12 @@ class PageUuidTest extends TestCase
 		$uuid = $page->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
+	}
+
+	public function testIdWithZero(): void
+	{
+		$uuid = new PageUuid('page://0');
+		$this->assertSame('0', $uuid->id());
 	}
 
 	public function testIndex(): void

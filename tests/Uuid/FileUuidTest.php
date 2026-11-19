@@ -82,6 +82,12 @@ class FileUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
+	public function testFindByIndexWithZeroId(): void
+	{
+		$uuid = new FileUuid('file://0');
+		$this->assertNull($uuid->model());
+	}
+
 	public function testId(): void
 	{
 		$uuid = new FileUuid('file://just-a-file');
@@ -105,6 +111,12 @@ class FileUuidTest extends TestCase
 		$uuid = $file->uuid();
 		$this->assertSame(16, strlen($uuid->id()));
 		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
+	}
+
+	public function testIdWithZero(): void
+	{
+		$uuid = new FileUuid('file://0');
+		$this->assertSame('0', $uuid->id());
 	}
 
 	public function testIndex(): void
