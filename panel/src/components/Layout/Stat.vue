@@ -77,18 +77,7 @@ export default {
 		value: String
 	},
 	computed: {
-		component() {
-			if (this.link) {
-				return "k-link";
-			}
-
-			if (this.target !== null) {
-				return "button";
-			}
-
-			return "div";
-		},
-		target() {
+		action() {
 			if (this.click) {
 				return this.click;
 			}
@@ -103,6 +92,17 @@ export default {
 
 			return null;
 		},
+		component() {
+			if (this.link) {
+				return "k-link";
+			}
+
+			if (this.action !== null) {
+				return "button";
+			}
+
+			return "div";
+		},
 		type() {
 			return this.component === "button" ? "button" : null;
 		}
@@ -110,7 +110,7 @@ export default {
 	methods: {
 		onClick() {
 			if (this.component === "button") {
-				this.target();
+				this.action();
 			}
 		}
 	}
