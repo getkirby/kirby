@@ -247,23 +247,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	public function testTitle(): void
-	{
-		// default
-		$field = Field::title();
-
-		$this->assertSame('Title', $field['label']);
-		$this->assertSame('text', $field['type']);
-		$this->assertSame('title', $field['icon']);
-
-		// with custom props
-		$field = Field::title([
-			'required' => true
-		]);
-
-		$this->assertTrue($field['required']);
-	}
-
 	public function testTemplate(): void
 	{
 		// default = no templates available
@@ -328,6 +311,23 @@ class FieldTest extends TestCase
 
 		// with custom props
 		$field = Field::template([], ['required' => true]);
+		$this->assertTrue($field['required']);
+	}
+
+	public function testTitle(): void
+	{
+		// default
+		$field = Field::title();
+
+		$this->assertSame('Title', $field['label']);
+		$this->assertSame('text', $field['type']);
+		$this->assertSame('title', $field['icon']);
+
+		// with custom props
+		$field = Field::title([
+			'required' => true
+		]);
+
 		$this->assertTrue($field['required']);
 	}
 

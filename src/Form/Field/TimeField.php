@@ -15,15 +15,15 @@ class TimeField extends DateTimeField
 {
 	public const ISO = 'H:i:s';
 
-	#[Prop]
-	protected string|null $format = self::ISO;
-
 	/**
 	 * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
 	 * used to display the field in the Panel
 	 */
 	#[Prop(computed: true)]
 	protected string|null $display = null;
+
+	#[Prop]
+	protected string|null $format = self::ISO;
 
 	#[Prop]
 	protected string|null $icon = 'clock';

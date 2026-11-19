@@ -68,22 +68,6 @@ abstract class Cache
 	}
 
 	/**
-	 * Checks when an item in the cache expires;
-	 * returns the expiry timestamp on success, null if the
-	 * item never expires and false if the item does not exist
-	 */
-	public function expires(string $key): int|false|null
-	{
-		$value = $this->retrieve($key);
-
-		if ($value instanceof Value === false) {
-			return false;
-		}
-
-		return $value->expires();
-	}
-
-	/**
 	 * Checks if an item in the cache is expired
 	 */
 	public function expired(string $key): bool
@@ -99,6 +83,22 @@ abstract class Cache
 		}
 
 		return time() >= $expires;
+	}
+
+	/**
+	 * Checks when an item in the cache expires;
+	 * returns the expiry timestamp on success, null if the
+	 * item never expires and false if the item does not exist
+	 */
+	public function expires(string $key): int|false|null
+	{
+		$value = $this->retrieve($key);
+
+		if ($value instanceof Value === false) {
+			return false;
+		}
+
+		return $value->expires();
 	}
 
 	/**

@@ -97,6 +97,16 @@ class ModelPermissionsTest extends ModelTestCase
 		$this->assertNull($this->permissions()->ensure('does-not-exist', default: true));
 	}
 
+	public function testError(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionCode('error.test');
+
+		$permissions = $this->permissions();
+		$method      = new ReflectionMethod($permissions, 'error');
+		$method->invoke($permissions, 'error.test');
+	}
+
 	public function testMay(): void
 	{
 		$this->assertTrue($this->permissions()->may('update'));
@@ -113,16 +123,6 @@ class ModelPermissionsTest extends ModelTestCase
 
 		$this->assertFalse($permissions->may('does-not-exist'));
 		$this->assertTrue($permissions->may('does-not-exist', default: true));
-	}
-
-	public function testError(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.test');
-
-		$permissions = $this->permissions();
-		$method      = new ReflectionMethod($permissions, 'error');
-		$method->invoke($permissions, 'error.test');
 	}
 
 	public function testSetting(): void

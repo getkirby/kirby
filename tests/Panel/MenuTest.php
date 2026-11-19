@@ -141,6 +141,76 @@ class MenuTest extends TestCase
 		$this->assertFalse($item->props()['disabled']);
 	}
 
+	public function testItemCurrent(): void
+	{
+		$menu = new Menu();
+		$item = $menu->item('users');
+		$this->assertFalse($item->props()['current']);
+
+		$menu = new Menu(current: 'users');
+		$item = $menu->item('users');
+		$this->assertTrue($item->props()['current']);
+	}
+
+	public function testItems(): void
+	{
+		$menu = new Menu();
+		$items = $menu->items();
+
+		$this->assertCount(7, $items);
+		$this->assertSame('site', $items[0]->props()['link']);
+		$this->assertSame('users', $items[1]->props()['link']);
+		$this->assertSame('system', $items[2]->props()['link']);
+		$this->assertSame('-', $items[3]);
+		$this->assertSame('changes', $items[4]->props()['dialog']);
+		$this->assertSame('account', $items[5]->props()['link']);
+		$this->assertSame('logout', $items[6]->props()['link']);
+	}
+
+	public function testItemsWithCustomConfig(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'menu' => [
+						'foo' => [
+							'label' => 'Heart',
+							'link'  => 'heart'
+						],
+						'-',
+						'nothing',
+						'site' => [
+							'icon' => 'home',
+							'link' => 'site'
+						],
+						'users',
+						'system' => true,
+						'magic'  => new Button(link: 'magic')
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$menu = new Menu();
+		$items = $menu->items();
+
+		$this->assertCount(10, $items);
+		$this->assertSame('heart', $items[0]->props()['link']);
+		$this->assertSame('-', $items[1]);
+		$this->assertSame('home', $items[2]->props()['icon']);
+		$this->assertSame('Site', $items[2]->props()['text']);
+		$this->assertSame('site', $items[2]->props()['link']);
+		$this->assertSame('users', $items[3]->props()['link']);
+		$this->assertSame('system', $items[4]->props()['link']);
+		$this->assertSame('magic', $items[5]->props()['link']);
+		$this->assertSame('-', $items[6]);
+		$this->assertSame('changes', $items[7]->props()['dialog']);
+		$this->assertSame('account', $items[8]->props()['link']);
+		$this->assertSame('logout', $items[9]->props()['link']);
+	}
+
 	public function testItemWithAreaProps(): void
 	{
 		$areas = new Areas([
@@ -215,76 +285,6 @@ class MenuTest extends TestCase
 		$menu = new Menu(permissions: ['access' => ['users' => false]]);
 		$item = $menu->item('users');
 		$this->assertNull($item);
-	}
-
-	public function testItemCurrent(): void
-	{
-		$menu = new Menu();
-		$item = $menu->item('users');
-		$this->assertFalse($item->props()['current']);
-
-		$menu = new Menu(current: 'users');
-		$item = $menu->item('users');
-		$this->assertTrue($item->props()['current']);
-	}
-
-	public function testItems(): void
-	{
-		$menu = new Menu();
-		$items = $menu->items();
-
-		$this->assertCount(7, $items);
-		$this->assertSame('site', $items[0]->props()['link']);
-		$this->assertSame('users', $items[1]->props()['link']);
-		$this->assertSame('system', $items[2]->props()['link']);
-		$this->assertSame('-', $items[3]);
-		$this->assertSame('changes', $items[4]->props()['dialog']);
-		$this->assertSame('account', $items[5]->props()['link']);
-		$this->assertSame('logout', $items[6]->props()['link']);
-	}
-
-	public function testItemsWithCustomConfig(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'panel' => [
-					'menu' => [
-						'foo' => [
-							'label' => 'Heart',
-							'link'  => 'heart'
-						],
-						'-',
-						'nothing',
-						'site' => [
-							'icon' => 'home',
-							'link' => 'site'
-						],
-						'users',
-						'system' => true,
-						'magic'  => new Button(link: 'magic')
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-
-		$menu = new Menu();
-		$items = $menu->items();
-
-		$this->assertCount(10, $items);
-		$this->assertSame('heart', $items[0]->props()['link']);
-		$this->assertSame('-', $items[1]);
-		$this->assertSame('home', $items[2]->props()['icon']);
-		$this->assertSame('Site', $items[2]->props()['text']);
-		$this->assertSame('site', $items[2]->props()['link']);
-		$this->assertSame('users', $items[3]->props()['link']);
-		$this->assertSame('system', $items[4]->props()['link']);
-		$this->assertSame('magic', $items[5]->props()['link']);
-		$this->assertSame('-', $items[6]);
-		$this->assertSame('changes', $items[7]->props()['dialog']);
-		$this->assertSame('account', $items[8]->props()['link']);
-		$this->assertSame('logout', $items[9]->props()['link']);
 	}
 
 	public function testRender(): void

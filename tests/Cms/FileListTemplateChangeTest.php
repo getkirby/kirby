@@ -92,6 +92,28 @@ class FileListTemplateChangeTest extends TestCase
 		}
 	}
 
+	public function testFileCanChangeTemplateWithMultipleBlueprintsAvailable(): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page(['slug' => 'test', 'template' => 'default']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		// This should return true because multiple templates are available
+		$this->assertTrue($file->permissions()->can('changeTemplate'));
+
+		// Verify we get templates that can actually handle jpg files
+		$availableTemplates = $file->blueprints();
+		$templateNames = array_map(fn ($bp) => $bp['name'], $availableTemplates);
+
+		// Should include default and images (which accepts jpg), but not documents/videos
+		$expectedNames = ['default', 'images'];
+		sort($expectedNames);
+		sort($templateNames);
+
+		$this->assertSame($expectedNames, $templateNames);
+	}
+
 	public function testFileListWithoutTemplateShowsAllAvailableTemplates(): void
 	{
 		$this->app->impersonate('admin');
@@ -123,27 +145,5 @@ class FileListTemplateChangeTest extends TestCase
 		sort($blueprints);
 
 		$this->assertSame($expected, $blueprints);
-	}
-
-	public function testFileCanChangeTemplateWithMultipleBlueprintsAvailable(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page(['slug' => 'test', 'template' => 'default']);
-		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
-
-		// This should return true because multiple templates are available
-		$this->assertTrue($file->permissions()->can('changeTemplate'));
-
-		// Verify we get templates that can actually handle jpg files
-		$availableTemplates = $file->blueprints();
-		$templateNames = array_map(fn ($bp) => $bp['name'], $availableTemplates);
-
-		// Should include default and images (which accepts jpg), but not documents/videos
-		$expectedNames = ['default', 'images'];
-		sort($expectedNames);
-		sort($templateNames);
-
-		$this->assertSame($expectedNames, $templateNames);
 	}
 }

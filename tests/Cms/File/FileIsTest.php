@@ -57,30 +57,6 @@ class FileIsTest extends ModelTestCase
 		return $page;
 	}
 
-	public function testIsReadable(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/foo' => [
-					'options' => ['read' => false]
-				]
-			]
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site()
-		]);
-		$this->assertTrue($file->isReadable());
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'template' => 'foo',
-			'parent'   => $this->app->site()
-		]);
-		$this->assertFalse($file->isReadable());
-	}
-
 	public function testIsAccessible(): void
 	{
 		$this->app = $this->app->clone([
@@ -135,6 +111,46 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isReadable());
 		$this->assertFalse($file->isAccessible());
 		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsIdentical(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'test']
+		]);
+
+		$this->assertTrue($file->isIdentical($upload));
+	}
+
+	public function testIsIdenticalWithDifferentTemplate(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'cover']
+		]);
+
+		$this->assertFalse($file->isIdentical($upload));
+	}
+
+	public function testIsIdenticalWithMissingFile(): void
+	{
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+
+		$this->assertFalse($file->isIdentical($upload));
 	}
 
 	public function testIsListable(): void
@@ -193,43 +209,27 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isListable());
 	}
 
-	public function testIsIdentical(): void
+	public function testIsReadable(): void
 	{
-		$page   = $this->pageWithFile(template: 'test');
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'content'  => ['template' => 'test']
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/foo' => [
+					'options' => ['read' => false]
+				]
+			]
 		]);
-
-		$this->assertTrue($file->isIdentical($upload));
-	}
-
-	public function testIsIdenticalWithDifferentTemplate(): void
-	{
-		$page   = $this->pageWithFile(template: 'test');
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'content'  => ['template' => 'cover']
-		]);
-
-		$this->assertFalse($file->isIdentical($upload));
-	}
-
-	public function testIsIdenticalWithMissingFile(): void
-	{
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
 
 		$file = new File([
 			'filename' => 'test.jpg',
 			'parent'   => $this->app->site()
 		]);
+		$this->assertTrue($file->isReadable());
 
-		$this->assertFalse($file->isIdentical($upload));
+		$file = new File([
+			'filename' => 'test.jpg',
+			'template' => 'foo',
+			'parent'   => $this->app->site()
+		]);
+		$this->assertFalse($file->isReadable());
 	}
 }

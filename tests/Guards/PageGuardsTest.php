@@ -90,11 +90,6 @@ class PageGuardsTest extends ModelTestCase
 		return $this->app->page('parent-a/child');
 	}
 
-	protected function user(): User
-	{
-		return $this->app->user() ?? new User(['id' => 'test']);
-	}
-
 	public function testChangeNum(): void
 	{
 		$this->assertNull($this->guards()->ensureExecutable('changeNum', 1));
@@ -162,6 +157,15 @@ class PageGuardsTest extends ModelTestCase
 		);
 	}
 
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$guards = $this->guards();
+
+		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
+		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
+		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
+	}
+
 	public function testChangeStatusToListedWithUnsortablePage(): void
 	{
 		$this->app = $this->app->clone([
@@ -182,15 +186,6 @@ class PageGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.sort.mode');
 
 		$this->guards($page)->ensureExecutable('changeStatus', 'listed', 2);
-	}
-
-	public function testChangeStatusToListedWithoutPosition(): void
-	{
-		$guards = $this->guards();
-
-		$this->assertNull($guards->ensureExecutable('changeStatus', 'listed'));
-		$this->assertNull($guards->ensureExecutable('changeStatusToListed'));
-		$this->assertTrue($guards->isExecutable('changeStatus', 'listed'));
 	}
 
 	public function testChangeStatusToUnlisted(): void
@@ -491,5 +486,10 @@ class PageGuardsTest extends ModelTestCase
 		$this->expectExceptionCode('error.page.changeStatus.errorPage');
 
 		$this->guards($this->app->page('error'))->ensureExecutable('publish');
+	}
+
+	protected function user(): User
+	{
+		return $this->app->user() ?? new User(['id' => 'test']);
 	}
 }

@@ -35,14 +35,14 @@ class TestController extends Controller
 
 class TestControllerWithFactory extends Controller
 {
-	public function load(): array
-	{
-		return ['factory'];
-	}
-
 	public static function factory(): static
 	{
 		return new static();
+	}
+
+	public function load(): array
+	{
+		return ['factory'];
 	}
 }
 
@@ -106,19 +106,6 @@ class RoutesTest extends TestCase
 		$this->assertTrue($params['submit']());
 	}
 
-	public function testControllerWithInvalidClassname(): void
-	{
-		$routes = new TestRoutes($this->area, []);
-		$params = $routes->controller([
-			'action' => Closure::class
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
-
-		$params['load']();
-	}
-
 	public function testControllerWithControllerObject(): void
 	{
 		$routes = new TestRoutes($this->area, []);
@@ -139,6 +126,19 @@ class RoutesTest extends TestCase
 
 		$this->assertSame(['bar'], $params['load']());
 		$this->assertTrue($params['submit']());
+	}
+
+	public function testControllerWithInvalidClassname(): void
+	{
+		$routes = new TestRoutes($this->area, []);
+		$params = $routes->controller([
+			'action' => Closure::class
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid controller class "Closure" expected child of"Kirby\Panel\Controller\Controller"');
+
+		$params['load']();
 	}
 
 	public function testParams(): void

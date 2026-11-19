@@ -122,7 +122,6 @@ class Dom
 			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
 			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
-
 			// Newer libxml2 versions may not attach the injected XML node
 			// inside <html>. Instead, they may convert it into a top-level
 			// comment node that sits before <html>:
@@ -186,11 +185,230 @@ class Dom
 	}
 
 	/**
+	 * Collects all comments and CDATA sections in document order
+	 *
+	 * @since 5.6.4
+	 *
+	 * @return array<DOMComment|DOMCdataSection>
+	 */
+	protected function characterData(): array
+	{
+		// walk the tree by hand instead of using XPath: libxml sorts the
+		// results of a query by comparing comment nodes along their
+		// siblings, which takes quadratic time for many siblings
+		$nodes = [];
+		$next  = $this->doc->firstChild;
+
+		while ($next !== null) {
+			$node = $next;
+
+			if (
+				$node->nodeType === XML_COMMENT_NODE ||
+				$node->nodeType === XML_CDATA_SECTION_NODE
+			) {
+				$nodes[] = $node;
+			}
+
+			// entity references point into the declarations of the doctype,
+			// which may already be removed, so don't walk into them
+			if (
+				$node->nodeType !== XML_ENTITY_REF_NODE &&
+				$node->firstChild !== null
+			) {
+				$next = $node->firstChild;
+				continue;
+			}
+
+			// continue with the next sibling of the closest
+			// ancestor that has one
+			while ($node !== null && $node->nextSibling === null) {
+				$node = $node->parentNode;
+			}
+
+			$next = $node?->nextSibling;
+		}
+
+		return $nodes;
+	}
+
+	/**
+	 * Determines how an HTML parser reads the content of a node once the
+	 * document is embedded in an HTML page: whether the node sits in
+	 * foreign content (SVG/MathML) and which raw text element holds it
+	 *
+	 * @since 5.6.0
+	 *
+	 * @return array{element: DOMElement|null, foreign: bool, markup: bool, rawText: string|null}
+	 */
+	protected static function context(DOMNode $node): array
+	{
+		$ancestors = [];
+
+		for (
+			$parent = $node->parentNode;
+			$parent instanceof DOMElement;
+			$parent = $parent->parentNode
+		) {
+			$ancestors[] = $parent;
+		}
+
+		// the foreign root the current element sits in (`math`, `svg` or
+		// `null` in HTML content) and whether it is an integration point
+		$root        = null;
+		$integration = false;
+
+		// whether the current element sits in an HTML `<select>`
+		$select = false;
+
+		// walk from the outermost element inwards, the order in which an
+		// HTML parser assigns a namespace to each of them
+		foreach (array_reverse($ancestors) as $ancestor) {
+			$name = Str::lower($ancestor->nodeName);
+
+			// these leave the foreign subtree behind entirely, whatever
+			// the surrounding namespace is
+			if (static::isBreakout($ancestor) === true) {
+				$root        = null;
+				$integration = false;
+			} else {
+				// in HTML content only `<svg>`/`<math>` open foreign
+				// content; inside it everything stays foreign until an
+				// integration point hands the children back to HTML
+				if ($root === null || $integration === true) {
+					$root = match ($name) {
+						'math', 'svg' => $name,
+						default       => null
+					};
+				}
+
+				$integration =
+					$root !== null &&
+					static::isIntegration($ancestor, $root) === true;
+			}
+
+			if ($root === null && $name === 'select') {
+				$select = true;
+			}
+
+			// a parser enters raw text at the outermost such element and
+			// reads everything below it as text, so nothing deeper is an
+			// element to it at all
+			if (
+				$root === null &&
+				in_array($name, static::RAW_TEXT, true) === true
+			) {
+				// but `<noscript>` is only raw text while scripting is
+				// enabled and inside a `<select>` the parser ignores the
+				// start tag of most raw text elements, so in both cases
+				// it may read their content as markup after all
+				return [
+					'element' => $ancestor,
+					'foreign' => false,
+					'markup'  => $name === 'noscript' || $select === true,
+					'rawText' => $name
+				];
+			}
+		}
+
+		// the content of an integration point itself is not treated as
+		// foreign either: older Chromium versions already degrade
+		// `<![CDATA[` to a bogus comment there, unlike the spec
+		return [
+			'element' => null,
+			'foreign' => $root !== null && $integration === false,
+			'markup'  => false,
+			'rawText' => null
+		];
+	}
+
+	/**
 	 * Returns the document object
 	 */
 	public function document(): DOMDocument
 	{
 		return $this->doc;
+	}
+
+	/**
+	 * Returns the document markup as HTML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with full HTML markup
+	 *                  even if the input didn't have it
+	 */
+	protected function exportHtml(bool $normalize = false): string
+	{
+		// enforce export as UTF-8 by injecting a <meta> tag
+		// at the beginning of the document
+		$metaTag = $this->doc->createElement('meta');
+		$metaTag->setAttribute('http-equiv', 'Content-Type');
+		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
+		$metaTag->setAttribute('id', Str::random(10));
+		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
+
+		if (
+			preg_match('/<html[> ]/i', $this->code) === 1 ||
+			$this->doc->doctype !== null ||
+			$normalize === true
+		) {
+			// full document
+			$html = $this->doc->saveHTML();
+		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
+			// there was a <body>, but no <html>; export just the <body>
+			$html = $this->doc->saveHTML($this->body());
+		} else {
+			// just an HTML snippet
+			$html = $this->innerMarkup($this->body());
+		}
+
+		// remove the <meta> tag from the document and from the output
+		static::remove($metaTag);
+		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
+
+		// if the original input contained an HTML doctype, some libxml
+		// implementations expand it to the long HTML4 transitional doctype
+		// when saving. Normalize it back to the short `<!DOCTYPE html>`
+		// to keep behavior consistent across environments.
+		if (
+			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
+			preg_match('/<!doctype\s+html/i', $this->code) === 1
+		) {
+			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
+		}
+
+		return trim($html);
+	}
+
+	/**
+	 * Returns the document markup as XML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration
+	 *                  even if the input didn't have it
+	 */
+	protected function exportXml(bool $normalize = false): string
+	{
+		if (
+			Str::contains($this->code, '<?xml ', true) === false &&
+			$normalize === false
+		) {
+			// the input didn't contain an XML declaration;
+			// only return child nodes, which omits it
+			$result = [];
+
+			foreach ($this->doc->childNodes as $node) {
+				$result[] = $this->doc->saveXML($node);
+			}
+
+			return implode("\n", $result);
+		}
+
+		// ensure that the document is encoded as UTF-8
+		// unless a different encoding was specified in
+		// the input or before exporting
+		$this->doc->encoding ??= 'UTF-8';
+
+		return trim($this->doc->saveXML());
 	}
 
 	/**
@@ -261,6 +479,54 @@ class Dom
 		}
 
 		return $urls;
+	}
+
+	/**
+	 * Checks if the element has at least one child element
+	 *
+	 * @since 5.6.4
+	 */
+	protected function hasElementChild(DOMElement $element): bool
+	{
+		// finding the first child element walks all non-element children
+		// before it, so only do this once for each element instead of for
+		// each of the many comments or CDATA sections it may hold
+		if (isset($this->elementChildren[$element]) === false) {
+			$this->elementChildren[$element] = $element->firstElementChild !== null;
+		}
+
+		return $this->elementChildren[$element];
+	}
+
+	/**
+	 * Checks if the URL contains a directory traversal sequence;
+	 * a dot segment may be percent-encoded, which the browser
+	 * decodes before it resolves the path
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function hasTraversal(string $url): bool
+	{
+		$url = str_replace(['%2e', '%2E'], '.', $url);
+
+		return
+			Str::contains($url, '../') !== false ||
+			Str::contains($url, '..\\') !== false;
+	}
+
+	/**
+	 * Returns the XML or HTML markup contained in the node
+	 */
+	public function innerMarkup(DOMNode $node): string
+	{
+		$markup = '';
+		$method = 'save' . $this->type;
+
+		foreach ($node->childNodes as $child) {
+			$markup .= $node->ownerDocument->$method($child);
+		}
+
+		return $markup;
 	}
 
 	/**
@@ -502,6 +768,57 @@ class Dom
 	}
 
 	/**
+	 * Checks if an element makes an HTML parser leave foreign content
+	 * (SVG/MathML) and continue in the HTML namespace
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isBreakout(DOMElement $node): bool
+	{
+		$name = Str::lower($node->nodeName);
+
+		// the spec lists `<font>` in a rule of its own that only applies
+		// when it carries one of these three attributes
+		if ($name === 'font') {
+			return
+				$node->hasAttribute('color') === true ||
+				$node->hasAttribute('face') === true ||
+				$node->hasAttribute('size') === true;
+		}
+
+		return in_array($name, static::BREAKOUT, true) === true;
+	}
+
+	/**
+	 * Checks if an element hands its children back to HTML content,
+	 * which only elements of its own foreign root can do
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isIntegration(
+		DOMElement $node,
+		string $root
+	): bool {
+		$name = Str::lower($node->nodeName);
+
+		if (in_array($name, static::INTEGRATION[$root], true) === false) {
+			return false;
+		}
+
+		// `<annotation-xml>` is only an HTML integration point when it
+		// declares one of these two encodings
+		if ($name === 'annotation-xml') {
+			$encoding = Str::lower($node->getAttribute('encoding'));
+
+			return
+				$encoding === 'text/html' ||
+				$encoding === 'application/xhtml+xml';
+		}
+
+		return true;
+	}
+
+	/**
 	 * Check if the XML extension is installed on the server.
 	 * Otherwise DOMDocument won't be available and the Dom cannot
 	 * work at all.
@@ -511,21 +828,6 @@ class Dom
 	public static function isSupported(): bool
 	{
 		return class_exists('DOMDocument') === true;
-	}
-
-	/**
-	 * Returns the XML or HTML markup contained in the node
-	 */
-	public function innerMarkup(DOMNode $node): string
-	{
-		$markup = '';
-		$method = 'save' . $this->type;
-
-		foreach ($node->childNodes as $child) {
-			$markup .= $node->ownerDocument->$method($child);
-		}
-
-		return $markup;
 	}
 
 	/**
@@ -611,11 +913,33 @@ class Dom
 	}
 
 	/**
-	 * Removes a node from the document
+	 * Ensures that all options are set in the user-provided
+	 * options array (otherwise setting the default option)
 	 */
-	public static function remove(DOMNode $node): void
+	protected static function normalizeSanitizeOptions(array $options): array
 	{
-		$node->parentNode->removeChild($node);
+		// increase performance for already normalized option arrays
+		if (($options['_normalized'] ?? false) === true) {
+			return $options;
+		}
+
+		return [
+			'allowedAttrPrefixes'   => [],
+			'allowedAttrs'          => true,
+			'allowedDataUris'       => true,
+			'allowedDomains'        => true,
+			'allowHostRelativeUrls' => true,
+			'allowedNamespaces'     => true,
+			'allowedPIs'            => true,
+			'allowedTags'           => true,
+			'attrCallback'          => null,
+			'disallowedTags'        => [],
+			'doctypeCallback'       => null,
+			'elementCallback'       => null,
+			'urlAttrs'              => ['href', 'src', 'xlink:href'],
+			...$options,
+			'_normalized'           => true
+		];
 	}
 
 	/**
@@ -638,6 +962,14 @@ class Dom
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Removes a node from the document
+	 */
+	public static function remove(DOMNode $node): void
+	{
+		$node->parentNode->removeChild($node);
 	}
 
 	/**
@@ -721,401 +1053,6 @@ class Dom
 		}
 
 		return $errors;
-	}
-
-	/**
-	 * Returns the document markup as string
-	 *
-	 * @param $normalize If set to `true`, the document
-	 *                  is exported with an XML declaration/
-	 *                  full HTML markup even if the input
-	 *                  didn't have them
-	 */
-	public function toString(bool $normalize = false): string
-	{
-		$string = match ($this->type) {
-			'HTML'  => $this->exportHtml($normalize),
-			default => $this->exportXml($normalize)
-		};
-
-		// add trailing newline if the input contained one
-		if (rtrim($this->code, "\r\n") !== $this->code) {
-			$string .= "\n";
-		}
-
-		return $string;
-	}
-
-	/**
-	 * Removes a node from the document but keeps its children
-	 * by moving them one level up
-	 */
-	public static function unwrap(DOMNode $node): void
-	{
-		// snapshot because `insertBefore` moves children out of `$node`,
-		// shifting the live `DOMNodeList`
-		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
-			// discard text nodes as they can be unexpected
-			// directly in the parent element
-			if ($childNode instanceof DOMText) {
-				continue;
-			}
-
-			// the child may use a default namespace (`xmlns="…"`)
-			// that was declared on `$node`; once `$node` is gone,
-			// libxml would rename it to `<default:child>`, so we
-			// copy the declaration to the child to suppress it
-			if (
-				$childNode instanceof DOMElement &&
-				($childNode->prefix === '' || $childNode->prefix === null) &&
-				is_string($childNode->namespaceURI) === true
-			) {
-				$childNode->setAttributeNS(
-					'http://www.w3.org/2000/xmlns/',
-					'xmlns',
-					$childNode->namespaceURI
-				);
-			}
-
-			// move (don't clone) so descendants pending in the
-			// `Dom::sanitize()` snapshot are still sanitized
-			$node->parentNode->insertBefore($childNode, $node);
-		}
-
-		static::remove($node);
-	}
-
-	/**
-	 * Returns the document markup as HTML string
-	 *
-	 * @param $normalize If set to `true`, the document
-	 *                  is exported with full HTML markup
-	 *                  even if the input didn't have it
-	 */
-	protected function exportHtml(bool $normalize = false): string
-	{
-		// enforce export as UTF-8 by injecting a <meta> tag
-		// at the beginning of the document
-		$metaTag = $this->doc->createElement('meta');
-		$metaTag->setAttribute('http-equiv', 'Content-Type');
-		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
-		$metaTag->setAttribute('id', Str::random(10));
-		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
-
-		if (
-			preg_match('/<html[> ]/i', $this->code) === 1 ||
-			$this->doc->doctype !== null ||
-			$normalize === true
-		) {
-			// full document
-			$html = $this->doc->saveHTML();
-		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
-			// there was a <body>, but no <html>; export just the <body>
-			$html = $this->doc->saveHTML($this->body());
-		} else {
-			// just an HTML snippet
-			$html = $this->innerMarkup($this->body());
-		}
-
-		// remove the <meta> tag from the document and from the output
-		static::remove($metaTag);
-		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
-
-		// if the original input contained an HTML doctype, some libxml
-		// implementations expand it to the long HTML4 transitional doctype
-		// when saving. Normalize it back to the short `<!DOCTYPE html>`
-		// to keep behavior consistent across environments.
-		if (
-			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
-			preg_match('/<!doctype\s+html/i', $this->code) === 1
-		) {
-			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
-		}
-
-		return trim($html);
-	}
-
-	/**
-	 * Returns the document markup as XML string
-	 *
-	 * @param $normalize If set to `true`, the document
-	 *                  is exported with an XML declaration
-	 *                  even if the input didn't have it
-	 */
-	protected function exportXml(bool $normalize = false): string
-	{
-		if (
-			Str::contains($this->code, '<?xml ', true) === false &&
-			$normalize === false
-		) {
-			// the input didn't contain an XML declaration;
-			// only return child nodes, which omits it
-			$result = [];
-
-			foreach ($this->doc->childNodes as $node) {
-				$result[] = $this->doc->saveXML($node);
-			}
-
-			return implode("\n", $result);
-		}
-
-		// ensure that the document is encoded as UTF-8
-		// unless a different encoding was specified in
-		// the input or before exporting
-		$this->doc->encoding ??= 'UTF-8';
-
-		return trim($this->doc->saveXML());
-	}
-
-	/**
-	 * Ensures that all options are set in the user-provided
-	 * options array (otherwise setting the default option)
-	 */
-	protected static function normalizeSanitizeOptions(array $options): array
-	{
-		// increase performance for already normalized option arrays
-		if (($options['_normalized'] ?? false) === true) {
-			return $options;
-		}
-
-		return [
-			'allowedAttrPrefixes'   => [],
-			'allowedAttrs'          => true,
-			'allowedDataUris'       => true,
-			'allowedDomains'        => true,
-			'allowHostRelativeUrls' => true,
-			'allowedNamespaces'     => true,
-			'allowedPIs'            => true,
-			'allowedTags'           => true,
-			'attrCallback'          => null,
-			'disallowedTags'        => [],
-			'doctypeCallback'       => null,
-			'elementCallback'       => null,
-			'urlAttrs'              => ['href', 'src', 'xlink:href'],
-			...$options,
-			'_normalized'           => true
-		];
-	}
-
-	/**
-	 * Collects all comments and CDATA sections in document order
-	 *
-	 * @since 5.6.4
-	 *
-	 * @return array<DOMComment|DOMCdataSection>
-	 */
-	protected function characterData(): array
-	{
-		// walk the tree by hand instead of using XPath: libxml sorts the
-		// results of a query by comparing comment nodes along their
-		// siblings, which takes quadratic time for many siblings
-		$nodes = [];
-		$next  = $this->doc->firstChild;
-
-		while ($next !== null) {
-			$node = $next;
-
-			if (
-				$node->nodeType === XML_COMMENT_NODE ||
-				$node->nodeType === XML_CDATA_SECTION_NODE
-			) {
-				$nodes[] = $node;
-			}
-
-			// entity references point into the declarations of the doctype,
-			// which may already be removed, so don't walk into them
-			if (
-				$node->nodeType !== XML_ENTITY_REF_NODE &&
-				$node->firstChild !== null
-			) {
-				$next = $node->firstChild;
-				continue;
-			}
-
-			// continue with the next sibling of the closest
-			// ancestor that has one
-			while ($node !== null && $node->nextSibling === null) {
-				$node = $node->parentNode;
-			}
-
-			$next = $node?->nextSibling;
-		}
-
-		return $nodes;
-	}
-
-	/**
-	 * Determines how an HTML parser reads the content of a node once the
-	 * document is embedded in an HTML page: whether the node sits in
-	 * foreign content (SVG/MathML) and which raw text element holds it
-	 *
-	 * @since 5.6.0
-	 *
-	 * @return array{element: DOMElement|null, foreign: bool, markup: bool, rawText: string|null}
-	 */
-	protected static function context(DOMNode $node): array
-	{
-		$ancestors = [];
-
-		for (
-			$parent = $node->parentNode;
-			$parent instanceof DOMElement;
-			$parent = $parent->parentNode
-		) {
-			$ancestors[] = $parent;
-		}
-
-		// the foreign root the current element sits in (`math`, `svg` or
-		// `null` in HTML content) and whether it is an integration point
-		$root        = null;
-		$integration = false;
-
-		// whether the current element sits in an HTML `<select>`
-		$select = false;
-
-		// walk from the outermost element inwards, the order in which an
-		// HTML parser assigns a namespace to each of them
-		foreach (array_reverse($ancestors) as $ancestor) {
-			$name = Str::lower($ancestor->nodeName);
-
-			// these leave the foreign subtree behind entirely, whatever
-			// the surrounding namespace is
-			if (static::isBreakout($ancestor) === true) {
-				$root        = null;
-				$integration = false;
-			} else {
-				// in HTML content only `<svg>`/`<math>` open foreign
-				// content; inside it everything stays foreign until an
-				// integration point hands the children back to HTML
-				if ($root === null || $integration === true) {
-					$root = match ($name) {
-						'math', 'svg' => $name,
-						default       => null
-					};
-				}
-
-				$integration =
-					$root !== null &&
-					static::isIntegration($ancestor, $root) === true;
-			}
-
-			if ($root === null && $name === 'select') {
-				$select = true;
-			}
-
-			// a parser enters raw text at the outermost such element and
-			// reads everything below it as text, so nothing deeper is an
-			// element to it at all
-			if (
-				$root === null &&
-				in_array($name, static::RAW_TEXT, true) === true
-			) {
-				// but `<noscript>` is only raw text while scripting is
-				// enabled and inside a `<select>` the parser ignores the
-				// start tag of most raw text elements, so in both cases
-				// it may read their content as markup after all
-				return [
-					'element' => $ancestor,
-					'foreign' => false,
-					'markup'  => $name === 'noscript' || $select === true,
-					'rawText' => $name
-				];
-			}
-		}
-
-		// the content of an integration point itself is not treated as
-		// foreign either: older Chromium versions already degrade
-		// `<![CDATA[` to a bogus comment there, unlike the spec
-		return [
-			'element' => null,
-			'foreign' => $root !== null && $integration === false,
-			'markup'  => false,
-			'rawText' => null
-		];
-	}
-
-	/**
-	 * Checks if the element has at least one child element
-	 *
-	 * @since 5.6.4
-	 */
-	protected function hasElementChild(DOMElement $element): bool
-	{
-		// finding the first child element walks all non-element children
-		// before it, so only do this once for each element instead of for
-		// each of the many comments or CDATA sections it may hold
-		if (isset($this->elementChildren[$element]) === false) {
-			$this->elementChildren[$element] = $element->firstElementChild !== null;
-		}
-
-		return $this->elementChildren[$element];
-	}
-
-	/**
-	 * Checks if the URL contains a directory traversal sequence;
-	 * a dot segment may be percent-encoded, which the browser
-	 * decodes before it resolves the path
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function hasTraversal(string $url): bool
-	{
-		$url = str_replace(['%2e', '%2E'], '.', $url);
-
-		return
-			Str::contains($url, '../') !== false ||
-			Str::contains($url, '..\\') !== false;
-	}
-
-	/**
-	 * Checks if an element makes an HTML parser leave foreign content
-	 * (SVG/MathML) and continue in the HTML namespace
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function isBreakout(DOMElement $node): bool
-	{
-		$name = Str::lower($node->nodeName);
-
-		// the spec lists `<font>` in a rule of its own that only applies
-		// when it carries one of these three attributes
-		if ($name === 'font') {
-			return
-				$node->hasAttribute('color') === true ||
-				$node->hasAttribute('face') === true ||
-				$node->hasAttribute('size') === true;
-		}
-
-		return in_array($name, static::BREAKOUT, true) === true;
-	}
-
-	/**
-	 * Checks if an element hands its children back to HTML content,
-	 * which only elements of its own foreign root can do
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function isIntegration(
-		DOMElement $node,
-		string $root
-	): bool {
-		$name = Str::lower($node->nodeName);
-
-		if (in_array($name, static::INTEGRATION[$root], true) === false) {
-			return false;
-		}
-
-		// `<annotation-xml>` is only an HTML integration point when it
-		// declares one of these two encodings
-		if ($name === 'annotation-xml') {
-			$encoding = Str::lower($node->getAttribute('encoding'));
-
-			return
-				$encoding === 'text/html' ||
-				$encoding === 'application/xhtml+xml';
-		}
-
-		return true;
 	}
 
 	/**
@@ -1416,6 +1353,68 @@ class Dom
 		);
 
 		static::remove($pi);
+	}
+
+	/**
+	 * Returns the document markup as string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration/
+	 *                  full HTML markup even if the input
+	 *                  didn't have them
+	 */
+	public function toString(bool $normalize = false): string
+	{
+		$string = match ($this->type) {
+			'HTML'  => $this->exportHtml($normalize),
+			default => $this->exportXml($normalize)
+		};
+
+		// add trailing newline if the input contained one
+		if (rtrim($this->code, "\r\n") !== $this->code) {
+			$string .= "\n";
+		}
+
+		return $string;
+	}
+
+	/**
+	 * Removes a node from the document but keeps its children
+	 * by moving them one level up
+	 */
+	public static function unwrap(DOMNode $node): void
+	{
+		// snapshot because `insertBefore` moves children out of `$node`,
+		// shifting the live `DOMNodeList`
+		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
+			// discard text nodes as they can be unexpected
+			// directly in the parent element
+			if ($childNode instanceof DOMText) {
+				continue;
+			}
+
+			// the child may use a default namespace (`xmlns="…"`)
+			// that was declared on `$node`; once `$node` is gone,
+			// libxml would rename it to `<default:child>`, so we
+			// copy the declaration to the child to suppress it
+			if (
+				$childNode instanceof DOMElement &&
+				($childNode->prefix === '' || $childNode->prefix === null) &&
+				is_string($childNode->namespaceURI) === true
+			) {
+				$childNode->setAttributeNS(
+					'http://www.w3.org/2000/xmlns/',
+					'xmlns',
+					$childNode->namespaceURI
+				);
+			}
+
+			// move (don't clone) so descendants pending in the
+			// `Dom::sanitize()` snapshot are still sanitized
+			$node->parentNode->insertBefore($childNode, $node);
+		}
+
+		static::remove($node);
 	}
 
 	/**

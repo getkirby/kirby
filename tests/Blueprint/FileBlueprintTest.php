@@ -11,179 +11,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileBlueprint::class)]
 class FileBlueprintTest extends TestCase
 {
-	public static function acceptAttributeProvider()
-	{
-		return [
-			'wildcard' => [ // case name
-				'image/*', // accept option in blueprint
-				['.jpg', '.jpeg', '.gif', '.png'], // expected extensions
-				['.js', '.pdf', '.docx', '.zip'] // not expected extensions
-			],
-			'mimeAsString' => [
-				'image/jpeg, image/png',
-				['.jpg', '.jpeg', '.png'],
-				['.gif', '.js', '.pdf', '.docx', '.zip']
-			],
-			'mimeAsProperty' => [
-				['mime' => 'image/jpeg, image/png'],
-				['.jpg', '.jpeg', '.png'],
-				['.gif', '.js', '.pdf', '.docx', '.zip']
-			],
-			'extensions' => [
-				['extension' => 'jpg, png'],
-				['.jpg', '.png'],
-				['.gif', '.jpeg', '.js', '.pdf', '.docx', '.zip']
-			],
-			'extensionsAndMime' => [
-				['extension' => 'foo, bar', 'mime' => 'image/jpeg, image/png'],
-				['.jpg', '.jpeg', '.png'],
-				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
-			],
-			'type' => [
-				['type' => 'image'],
-				['.jpg', '.jpeg', '.gif', '.png'],
-				['.js', '.pdf', '.docx', '.zip']
-			],
-			'typeAndMime' => [
-				['type' => 'document', 'mime' => 'image/jpeg, image/png'],
-				['.jpg', '.jpeg', '.png'],
-				['.gif', '.js', '.pdf', '.docx', '.zip']
-			],
-			'intersect' => [
-				['type' => 'image', 'extension' => 'jpg, png, foo, bar'],
-				['.jpg', '.png'],
-				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
-			],
-		];
-	}
-
-	#[DataProvider('acceptAttributeProvider')]
-	public function testAcceptAttribute($accept, $expected, $notExpected): void
-	{
-		Blueprint::$loaded['files/acceptAttribute'] = [
-			'accept' => $accept
-		];
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename' => 'tmp',
-			'parent'   => $page,
-			'template' => 'acceptAttribute'
-		]);
-
-		$acceptAttribute = $file->blueprint()->acceptAttribute();
-
-		foreach ($expected as $extension) {
-			$this->assertStringContainsString($extension, $acceptAttribute);
-		}
-
-		foreach ($notExpected as $extension) {
-			$this->assertStringNotContainsString($extension, $acceptAttribute);
-		}
-	}
-
-	public function testOptions(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$blueprint = new FileBlueprint([
-			'model' => new File(['filename' => 'test.jpg', 'parent' => $page])
-		]);
-
-		$expected = [
-			'access' 	 	 => null,
-			'changeName' 	 => null,
-			'changeTemplate' => null,
-			'create'     	 => null,
-			'delete'     	 => null,
-			'list'     	 	 => null,
-			'read'       	 => null,
-			'replace'    	 => null,
-			'sort'           => null,
-			'update'     	 => null,
-		];
-
-		$this->assertSame($expected, $blueprint->options());
-	}
-
-	public function testTemplateFromContent(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent' => $page,
-			'content' => [
-				'template' => 'gallery'
-			]
-		]);
-
-		$this->assertSame('gallery', $file->template());
-	}
-
-	public function testCustomTemplate(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'gallery'
-		]);
-
-		$this->assertSame('gallery', $file->template());
-	}
-
-	public function testDefaultBlueprint(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'does-not-exist',
-		]);
-
-		$blueprint = $file->blueprint();
-
-		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
-	}
-
-	public function testCustomBlueprint(): void
-	{
-		new App([
-			'blueprints' => [
-				'files/gallery' => [
-					'name'  => 'gallery',
-					'title' => 'Gallery',
-				]
-			]
-		]);
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'gallery',
-		]);
-
-		$blueprint = $file->blueprint();
-
-		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
-		$this->assertSame('Gallery', $blueprint->title());
-	}
-
 	public function testAccept(): void
 	{
 		$page = new Page([
@@ -343,6 +170,136 @@ class FileBlueprintTest extends TestCase
 		], $blueprint->accept());
 	}
 
+	public static function acceptAttributeProvider()
+	{
+		return [
+			'wildcard' => [ // case name
+				'image/*', // accept option in blueprint
+				['.jpg', '.jpeg', '.gif', '.png'], // expected extensions
+				['.js', '.pdf', '.docx', '.zip'] // not expected extensions
+			],
+			'mimeAsString' => [
+				'image/jpeg, image/png',
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
+			],
+			'mimeAsProperty' => [
+				['mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
+			],
+			'extensions' => [
+				['extension' => 'jpg, png'],
+				['.jpg', '.png'],
+				['.gif', '.jpeg', '.js', '.pdf', '.docx', '.zip']
+			],
+			'extensionsAndMime' => [
+				['extension' => 'foo, bar', 'mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
+			],
+			'type' => [
+				['type' => 'image'],
+				['.jpg', '.jpeg', '.gif', '.png'],
+				['.js', '.pdf', '.docx', '.zip']
+			],
+			'typeAndMime' => [
+				['type' => 'document', 'mime' => 'image/jpeg, image/png'],
+				['.jpg', '.jpeg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip']
+			],
+			'intersect' => [
+				['type' => 'image', 'extension' => 'jpg, png, foo, bar'],
+				['.jpg', '.png'],
+				['.gif', '.js', '.pdf', '.docx', '.zip', '.foo', '.bar']
+			],
+		];
+	}
+
+	#[DataProvider('acceptAttributeProvider')]
+	public function testAcceptAttribute($accept, $expected, $notExpected): void
+	{
+		Blueprint::$loaded['files/acceptAttribute'] = [
+			'accept' => $accept
+		];
+
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'tmp',
+			'parent'   => $page,
+			'template' => 'acceptAttribute'
+		]);
+
+		$acceptAttribute = $file->blueprint()->acceptAttribute();
+
+		foreach ($expected as $extension) {
+			$this->assertStringContainsString($extension, $acceptAttribute);
+		}
+
+		foreach ($notExpected as $extension) {
+			$this->assertStringNotContainsString($extension, $acceptAttribute);
+		}
+	}
+
+	public function testCustomBlueprint(): void
+	{
+		new App([
+			'blueprints' => [
+				'files/gallery' => [
+					'name'  => 'gallery',
+					'title' => 'Gallery',
+				]
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'gallery',
+		]);
+
+		$blueprint = $file->blueprint();
+
+		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
+		$this->assertSame('Gallery', $blueprint->title());
+	}
+
+	public function testCustomTemplate(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'gallery'
+		]);
+
+		$this->assertSame('gallery', $file->template());
+	}
+
+	public function testDefaultBlueprint(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'template' => 'does-not-exist',
+		]);
+
+		$blueprint = $file->blueprint();
+
+		$this->assertInstanceOf(FileBlueprint::class, $blueprint);
+	}
+
 	public function testExtendAccept(): void
 	{
 		new App([
@@ -377,5 +334,48 @@ class FileBlueprintTest extends TestCase
 
 		$blueprint = $file->blueprint();
 		$this->assertSame(['image/jpeg'], $blueprint->accept()['mime']);
+	}
+
+	public function testOptions(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$blueprint = new FileBlueprint([
+			'model' => new File(['filename' => 'test.jpg', 'parent' => $page])
+		]);
+
+		$expected = [
+			'access' 	 	 => null,
+			'changeName' 	 => null,
+			'changeTemplate' => null,
+			'create'     	 => null,
+			'delete'     	 => null,
+			'list'     	 	 => null,
+			'read'       	 => null,
+			'replace'    	 => null,
+			'sort'           => null,
+			'update'     	 => null,
+		];
+
+		$this->assertSame($expected, $blueprint->options());
+	}
+
+	public function testTemplateFromContent(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent' => $page,
+			'content' => [
+				'template' => 'gallery'
+			]
+		]);
+
+		$this->assertSame('gallery', $file->template());
 	}
 }

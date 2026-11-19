@@ -13,19 +13,6 @@ class LanguageAbilitiesTest extends ModelTestCase
 {
 	public const TMP = KIRBY_TMP_DIR . '/Guards.LanguageAbilities';
 
-	public function testDeleteWithSingleLanguageObject(): void
-	{
-		$abilities = new LanguageAbilities(
-			model: Language::single(),
-			user: $this->user()
-		);
-
-		$this->expectException(AbilityException::class);
-		$this->expectExceptionCode('error.language.delete.single');
-
-		$abilities->ensure('delete');
-	}
-
 	public function testDeleteWithDefaultLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -83,6 +70,19 @@ class LanguageAbilitiesTest extends ModelTestCase
 		);
 
 		$this->assertNull($abilities->ensure('delete'));
+	}
+
+	public function testDeleteWithSingleLanguageObject(): void
+	{
+		$abilities = new LanguageAbilities(
+			model: Language::single(),
+			user: $this->user()
+		);
+
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.language.delete.single');
+
+		$abilities->ensure('delete');
 	}
 
 	public function testDeleteWithTranslation(): void

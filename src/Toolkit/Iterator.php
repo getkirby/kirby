@@ -32,6 +32,32 @@ class Iterator implements Countable, IteratorAggregate
 	}
 
 	/**
+	 * Simplified var_dump output
+	 * @codeCoverageIgnore
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Checks if the current key is set
+	 * @param TKey $key
+	 */
+	public function __isset(mixed $key): bool
+	{
+		return $this->has($key);
+	}
+
+	/**
+	 * Counts all elements
+	 */
+	public function count(): int
+	{
+		return count($this->data);
+	}
+
+	/**
 	 * Returns an iterator for the elements
 	 * @return PhpIterator<TKey, TValue>
 	 */
@@ -41,19 +67,12 @@ class Iterator implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * Returns an array of all keys
+	 * Checks by key if an element is included
+	 * @param TKey $key
 	 */
-	public function keys(): array
+	public function has(mixed $key): bool
 	{
-		return array_keys($this->data);
-	}
-
-	/**
-	 * Counts all elements
-	 */
-	public function count(): int
-	{
-		return count($this->data);
+		return array_key_exists($key, $this->data) === true;
 	}
 
 	/**
@@ -79,29 +98,10 @@ class Iterator implements Countable, IteratorAggregate
 	}
 
 	/**
-	 * Checks by key if an element is included
-	 * @param TKey $key
+	 * Returns an array of all keys
 	 */
-	public function has(mixed $key): bool
+	public function keys(): array
 	{
-		return array_key_exists($key, $this->data) === true;
-	}
-
-	/**
-	 * Checks if the current key is set
-	 * @param TKey $key
-	 */
-	public function __isset(mixed $key): bool
-	{
-		return $this->has($key);
-	}
-
-	/**
-	 * Simplified var_dump output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->data;
+		return array_keys($this->data);
 	}
 }

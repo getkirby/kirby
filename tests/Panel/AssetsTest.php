@@ -264,6 +264,25 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
 	}
 
+	public function testFaviconsWithCustomInvalidSetup(): void
+	{
+		// array
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'favicon' => 5
+				]
+			]
+		]);
+
+		$assets = new Assets();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid panel.favicon option');
+
+		$assets->favicons();
+	}
+
 	public function testFaviconsWithCustomStringSetup(): void
 	{
 		// array
@@ -283,25 +302,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('shortcut icon', $favicons[0]['rel']);
 		$this->assertSame('image/x-icon', $favicons[0]['type']);
 		$this->assertSame('/assets/favicon.ico', $favicons[0]['href']);
-	}
-
-	public function testFaviconsWithCustomInvalidSetup(): void
-	{
-		// array
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'favicon' => 5
-				]
-			]
-		]);
-
-		$assets = new Assets();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid panel.favicon option');
-
-		$assets->favicons();
 	}
 
 	public function testFaviconsWithCustomUrl(): void
@@ -343,6 +343,28 @@ class AssetsTest extends TestCase
 		);
 	}
 
+	public function testIconsRoot(): void
+	{
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/dist/img/icons.svg',
+			$assets->iconsRoot()
+		);
+	}
+
+	public function testIconsRootInDevMode(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/public/img/icons.svg',
+			$assets->iconsRoot()
+		);
+	}
+
 	public function testIconsWithCustomMediaUrl(): void
 	{
 		$this->app = $this->app->clone([
@@ -376,28 +398,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(
 			'/admin/assets/' . $this->app->versionHash() . '/icons.svg',
 			$assets->icons()
-		);
-	}
-
-	public function testIconsRoot(): void
-	{
-		$assets = new Assets();
-
-		$this->assertSame(
-			$this->app->root('panel') . '/dist/img/icons.svg',
-			$assets->iconsRoot()
-		);
-	}
-
-	public function testIconsRootInDevMode(): void
-	{
-		$this->setDevMode();
-
-		$assets = new Assets();
-
-		$this->assertSame(
-			$this->app->root('panel') . '/public/img/icons.svg',
-			$assets->iconsRoot()
 		);
 	}
 
@@ -464,7 +464,6 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$assets = $assets->custom('panel.js');
 		$this->assertStringContainsString('/panel.js', $assets['custom-0']);
-
 
 		// multiple
 		$this->app->clone([

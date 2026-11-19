@@ -13,13 +13,6 @@ class PasswordsTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Passwords';
 
-	protected function assertValid(
-		Passwords $policy,
-		string $password
-	): void {
-		$this->assertTrue($policy->validate($password));
-	}
-
 	protected function assertInvalid(
 		Passwords $policy,
 		string $password,
@@ -33,37 +26,11 @@ class PasswordsTest extends TestCase
 		}
 	}
 
-	public function testFactoryDefault(): void
-	{
-		$app    = new App(['roots' => ['index' => static::TMP]]);
-		$policy = Passwords::factory($app);
-
-		$this->assertValid($policy, '12345678');
-		$this->assertInvalid($policy, '1234567', 'user.password.invalid');
-	}
-
-	public function testFactoryRegexShorthand(): void
-	{
-		$app = new App([
-			'roots'   => ['index' => static::TMP],
-			'options' => ['auth' => ['passwords' => '/^[a-z]{8,}$/']]
-		]);
-
-		$policy = Passwords::factory($app);
-		$this->assertValid($policy, 'abcdefgh');
-		$this->assertInvalid($policy, 'Abcdefgh', 'user.password.policy');
-	}
-
-	public function testFactoryPresetShorthand(): void
-	{
-		$app = new App([
-			'roots'   => ['index' => static::TMP],
-			'options' => ['auth' => ['passwords' => ['minlength' => 12]]]
-		]);
-
-		$policy = Passwords::factory($app);
-		$this->assertSame(12, $policy->minlength());
-		$this->assertInvalid($policy, '12345678901', 'user.password.minlength');
+	protected function assertValid(
+		Passwords $policy,
+		string $password
+	): void {
+		$this->assertTrue($policy->validate($password));
 	}
 
 	public function testFactoryCallableShorthand(): void
@@ -80,6 +47,15 @@ class PasswordsTest extends TestCase
 		$policy = Passwords::factory($app);
 		$this->assertValid($policy, 'lizard12');
 		$this->assertInvalid($policy, 'abcdefgh', 'user.password.policy');
+	}
+
+	public function testFactoryDefault(): void
+	{
+		$app    = new App(['roots' => ['index' => static::TMP]]);
+		$policy = Passwords::factory($app);
+
+		$this->assertValid($policy, '12345678');
+		$this->assertInvalid($policy, '1234567', 'user.password.invalid');
 	}
 
 	public function testFactoryExplicit(): void
@@ -106,6 +82,30 @@ class PasswordsTest extends TestCase
 		} catch (InvalidArgumentException $e) {
 			$this->assertSame('Wrong start', $e->getMessage());
 		}
+	}
+
+	public function testFactoryPresetShorthand(): void
+	{
+		$app = new App([
+			'roots'   => ['index' => static::TMP],
+			'options' => ['auth' => ['passwords' => ['minlength' => 12]]]
+		]);
+
+		$policy = Passwords::factory($app);
+		$this->assertSame(12, $policy->minlength());
+		$this->assertInvalid($policy, '12345678901', 'user.password.minlength');
+	}
+
+	public function testFactoryRegexShorthand(): void
+	{
+		$app = new App([
+			'roots'   => ['index' => static::TMP],
+			'options' => ['auth' => ['passwords' => '/^[a-z]{8,}$/']]
+		]);
+
+		$policy = Passwords::factory($app);
+		$this->assertValid($policy, 'abcdefgh');
+		$this->assertInvalid($policy, 'Abcdefgh', 'user.password.policy');
 	}
 
 	public function testFail(): void
@@ -185,15 +185,15 @@ class PasswordsTest extends TestCase
 		$this->assertSame('English hint', $policy->hint());
 	}
 
-	public function testHintNoneForRegex(): void
-	{
-		$policy = new Passwords(rules: '/^x/');
-		$this->assertNull($policy->hint());
-	}
-
 	public function testHintNoneForCallback(): void
 	{
 		$policy = new Passwords(rules: fn () => true);
+		$this->assertNull($policy->hint());
+	}
+
+	public function testHintNoneForRegex(): void
+	{
+		$policy = new Passwords(rules: '/^x/');
 		$this->assertNull($policy->hint());
 	}
 
@@ -243,6 +243,16 @@ class PasswordsTest extends TestCase
 		$this->assertInvalid($policy, 'abcdefgh', 'user.password.policy');
 	}
 
+	public function testValidateCallbackReturningNull(): void
+	{
+		$policy = new Passwords(rules: function ($password): void {
+		});
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Passwords rule callback must return boolean');
+		$this->assertValid($policy, 'abcdefgh');
+	}
+
 	public function testValidateCallbackThatThrows(): void
 	{
 		$policy = new Passwords(rules: function ($password) {
@@ -260,14 +270,88 @@ class PasswordsTest extends TestCase
 		$policy->validate('abcdefgh');
 	}
 
-	public function testValidateCallbackReturningNull(): void
+	public function testValidatePresetCombined(): void
 	{
-		$policy = new Passwords(rules: function ($password): void {
-		});
+		$policy = new Passwords(rules: [
+			'minlength' => 10,
+			'uppercase' => true,
+			'lowercase' => true,
+			'digits'    => true,
+			'symbols'   => true
+		]);
 
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Passwords rule callback must return boolean');
-		$this->assertValid($policy, 'abcdefgh');
+		$this->assertValid($policy, 'Abcdefg1!2');
+	}
+
+	public function testValidatePresetCount(): void
+	{
+		$policy = new Passwords(rules: ['digits' => 2]);
+
+		$this->assertValid($policy, 'abcdef12');
+		$this->assertInvalid($policy, 'abcdefg1', 'user.password.digits');
+	}
+
+	public function testValidatePresetCountDisabled(): void
+	{
+		$this->assertValid(new Passwords(rules: ['digits' => 0]), 'abcdefgh');
+		$this->assertValid(new Passwords(rules: ['digits' => false]), 'abcdefgh');
+	}
+
+	public function testValidatePresetCountMessage(): void
+	{
+		$policy = new Passwords(rules: ['symbols' => 2]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('at least 2 symbol(s)');
+		$policy->validate('abcdefg!');
+	}
+
+	public function testValidatePresetCountTrueMeansOne(): void
+	{
+		$policy = new Passwords(rules: ['digits' => true]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('at least 1 digit(s)');
+		$policy->validate('abcdefgh');
+	}
+
+	public function testValidatePresetDigits(): void
+	{
+		$policy = new Passwords(rules: ['digits' => true]);
+
+		$this->assertValid($policy, 'abcdefg1');
+		$this->assertInvalid($policy, 'abcdefgh', 'user.password.digits');
+	}
+
+	public function testValidatePresetFirstFailureWins(): void
+	{
+		// minlength is checked before the character classes
+		$policy = new Passwords(rules: [
+			'minlength' => 10,
+			'digits'    => true,
+			'symbols'   => true
+		]);
+		$this->assertInvalid($policy, 'abcdefgh', 'user.password.minlength');
+
+		// digits is checked before symbols
+		$policy = new Passwords(rules: ['digits' => true, 'symbols' => true]);
+		$this->assertInvalid($policy, 'abcdefghij', 'user.password.digits');
+	}
+
+	public function testValidatePresetLowercase(): void
+	{
+		$policy = new Passwords(rules: ['lowercase' => true]);
+
+		$this->assertValid($policy, 'ABCDEFGh');
+		$this->assertInvalid($policy, 'ABCDEFGH', 'user.password.lowercase');
+	}
+
+	public function testValidatePresetMaxlength(): void
+	{
+		$policy = new Passwords(rules: ['maxlength' => 10]);
+
+		$this->assertValid($policy, '1234567890');
+		$this->assertInvalid($policy, '12345678901', 'user.password.maxlength');
 	}
 
 	public function testValidatePresetMinlength(): void
@@ -291,76 +375,12 @@ class PasswordsTest extends TestCase
 		$policy->validate('12345678901');
 	}
 
-	public function testValidatePresetMaxlength(): void
-	{
-		$policy = new Passwords(rules: ['maxlength' => 10]);
-
-		$this->assertValid($policy, '1234567890');
-		$this->assertInvalid($policy, '12345678901', 'user.password.maxlength');
-	}
-
-	public function testValidatePresetLowercase(): void
-	{
-		$policy = new Passwords(rules: ['lowercase' => true]);
-
-		$this->assertValid($policy, 'ABCDEFGh');
-		$this->assertInvalid($policy, 'ABCDEFGH', 'user.password.lowercase');
-	}
-
-	public function testValidatePresetUppercase(): void
-	{
-		$policy = new Passwords(rules: ['uppercase' => true]);
-
-		$this->assertValid($policy, 'Abcdefgh');
-		$this->assertInvalid($policy, 'abcdefgh', 'user.password.uppercase');
-	}
-
-	public function testValidatePresetDigits(): void
-	{
-		$policy = new Passwords(rules: ['digits' => true]);
-
-		$this->assertValid($policy, 'abcdefg1');
-		$this->assertInvalid($policy, 'abcdefgh', 'user.password.digits');
-	}
-
 	public function testValidatePresetSymbols(): void
 	{
 		$policy = new Passwords(rules: ['symbols' => true]);
 
 		$this->assertValid($policy, 'abcdefg!');
 		$this->assertInvalid($policy, 'abcdefgh', 'user.password.symbols');
-	}
-
-	public function testValidatePresetCount(): void
-	{
-		$policy = new Passwords(rules: ['digits' => 2]);
-
-		$this->assertValid($policy, 'abcdef12');
-		$this->assertInvalid($policy, 'abcdefg1', 'user.password.digits');
-	}
-
-	public function testValidatePresetCountTrueMeansOne(): void
-	{
-		$policy = new Passwords(rules: ['digits' => true]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('at least 1 digit(s)');
-		$policy->validate('abcdefgh');
-	}
-
-	public function testValidatePresetCountMessage(): void
-	{
-		$policy = new Passwords(rules: ['symbols' => 2]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('at least 2 symbol(s)');
-		$policy->validate('abcdefg!');
-	}
-
-	public function testValidatePresetCountDisabled(): void
-	{
-		$this->assertValid(new Passwords(rules: ['digits' => 0]), 'abcdefgh');
-		$this->assertValid(new Passwords(rules: ['digits' => false]), 'abcdefgh');
 	}
 
 	public function testValidatePresetUnicode(): void
@@ -374,32 +394,12 @@ class PasswordsTest extends TestCase
 		$this->assertInvalid($uppercase, 'äöüäöüäö', 'user.password.uppercase');
 	}
 
-	public function testValidatePresetFirstFailureWins(): void
+	public function testValidatePresetUppercase(): void
 	{
-		// minlength is checked before the character classes
-		$policy = new Passwords(rules: [
-			'minlength' => 10,
-			'digits'    => true,
-			'symbols'   => true
-		]);
-		$this->assertInvalid($policy, 'abcdefgh', 'user.password.minlength');
+		$policy = new Passwords(rules: ['uppercase' => true]);
 
-		// digits is checked before symbols
-		$policy = new Passwords(rules: ['digits' => true, 'symbols' => true]);
-		$this->assertInvalid($policy, 'abcdefghij', 'user.password.digits');
-	}
-
-	public function testValidatePresetCombined(): void
-	{
-		$policy = new Passwords(rules: [
-			'minlength' => 10,
-			'uppercase' => true,
-			'lowercase' => true,
-			'digits'    => true,
-			'symbols'   => true
-		]);
-
-		$this->assertValid($policy, 'Abcdefg1!2');
+		$this->assertValid($policy, 'Abcdefgh');
+		$this->assertInvalid($policy, 'abcdefgh', 'user.password.uppercase');
 	}
 
 	public function testValidateRegex(): void

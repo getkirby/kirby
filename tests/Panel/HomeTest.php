@@ -281,6 +281,32 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', $home->url());
 	}
 
+	public function testUrlWithAccountAccessOnly(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'access' => [
+							'site'  => false,
+							'users' => false,
+							'system' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/account', $home->url());
+	}
+
 	public static function customHomeProvider(): array
 	{
 		return [
@@ -359,21 +385,6 @@ class HomeTest extends TestCase
 		$home->url();
 	}
 
-	public function testUrlWithRememberedPath(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				['email' => 'test@getkirby.com', 'role' => 'admin']
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$this->app->session()->set('panel.path', 'users');
-
-		$home = $this->app->panel()->home();
-		$this->assertSame('/panel/users', $home->url());
-	}
-
 	public function testUrlWithInvalidRememberedPath(): void
 	{
 		$this->app = $this->app->clone([
@@ -413,30 +424,10 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/users', $home->url());
 	}
 
-	public function testUrlWithAccountAccessOnly(): void
+	public function testUrlWithoutUser(): void
 	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'users/editor' => [
-					'name' => 'editor',
-					'permissions' => [
-						'access' => [
-							'site'  => false,
-							'users' => false,
-							'system' => false
-						]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$this->app->impersonate('editor@getkirby.com');
-
 		$home = $this->app->panel()->home();
-		$this->assertSame('/panel/account', $home->url());
+		$this->assertSame('/panel/login', $home->url());
 	}
 
 	public function testUrlWithPasswordReset(): void
@@ -454,9 +445,18 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/reset-password', $home->url());
 	}
 
-	public function testUrlWithoutUser(): void
+	public function testUrlWithRememberedPath(): void
 	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$this->app->session()->set('panel.path', 'users');
+
 		$home = $this->app->panel()->home();
-		$this->assertSame('/panel/login', $home->url());
+		$this->assertSame('/panel/users', $home->url());
 	}
 }

@@ -40,17 +40,17 @@ class NumberField extends InputField
 	protected float|string|null $step = null;
 	protected float|null $value = null;
 
-	public function fill(mixed $value): static
-	{
-		return parent::fill(
-			value: static::toNumber($value)
-		);
-	}
-
 	public function default(): float|null
 	{
 		return static::toNumber(
 			value: parent::default()
+		);
+	}
+
+	public function fill(mixed $value): static
+	{
+		return parent::fill(
+			value: static::toNumber($value)
 		);
 	}
 

@@ -18,6 +18,10 @@ use InvalidArgumentException;
  */
 class A
 {
+	public const int MERGE_APPEND    = 1;
+	public const int MERGE_OVERWRITE = 0;
+	public const int MERGE_REPLACE   = 2;
+
 	/**
 	 * Appends the given array
 	 */
@@ -70,25 +74,6 @@ class A
 	}
 
 	/**
-	 * Merges arrays recursively; values of the same key are
-	 * combined, not overwritten (use `A::merge()` for that)
-	 *
-	 * ```php
-	 * $array = A::extend(
-	 *   ['tags' => ['php'], 'cms' => 'kirby'],
-	 *   ['tags' => ['js']]
-	 * );
-	 * // returns: ['tags' => ['php', 'js'], 'cms' => 'kirby']
-	 * ```
-	 *
-	 * @psalm-suppress NamedArgumentNotAllowed
-	 */
-	public static function extend(array ...$arrays): array
-	{
-		return array_merge_recursive(...$arrays);
-	}
-
-	/**
 	 * Checks if every element in the array passes the test
 	 *
 	 * ```php
@@ -113,6 +98,25 @@ class A
 		}
 
 		return true;
+	}
+
+	/**
+	 * Merges arrays recursively; values of the same key are
+	 * combined, not overwritten (use `A::merge()` for that)
+	 *
+	 * ```php
+	 * $array = A::extend(
+	 *   ['tags' => ['php'], 'cms' => 'kirby'],
+	 *   ['tags' => ['js']]
+	 * );
+	 * // returns: ['tags' => ['php', 'js'], 'cms' => 'kirby']
+	 * ```
+	 *
+	 * @psalm-suppress NamedArgumentNotAllowed
+	 */
+	public static function extend(array ...$arrays): array
+	{
+		return array_merge_recursive(...$arrays);
 	}
 
 	/**
@@ -526,10 +530,6 @@ class A
 		return array_map($map, $array);
 	}
 
-	public const int MERGE_OVERWRITE = 0;
-	public const int MERGE_APPEND    = 1;
-	public const int MERGE_REPLACE   = 2;
-
 	/**
 	 * Merges arrays recursively
 	 *
@@ -600,70 +600,6 @@ class A
 		}
 
 		return $merged;
-	}
-
-	/**
-	 * Plucks a single column from an array
-	 *
-	 * ```php
-	 * $array[] = [
-	 *   'id' => 1,
-	 *   'username' => 'homer',
-	 * ];
-	 *
-	 * $array[] = [
-	 *   'id' => 2,
-	 *   'username' => 'marge',
-	 * ];
-	 *
-	 * $array[] = [
-	 *   'id' => 3,
-	 *   'username' => 'lisa',
-	 * ];
-	 *
-	 * var_dump(A::pluck($array, 'username'));
-	 * // result: ['homer', 'marge', 'lisa'];
-	 * ```
-	 *
-	 * @return list<mixed>
-	 */
-	public static function pluck(array $array, string $key): array
-	{
-		$output = [];
-
-		foreach ($array as $a) {
-			if (isset($a[$key]) === true) {
-				$output[] = $a[$key];
-			}
-		}
-
-		return $output;
-	}
-
-	/**
-	 * Prepends the given array
-	 */
-	public static function prepend(array $array, array $prepend): array
-	{
-		return static::merge($prepend, $array, A::MERGE_APPEND);
-	}
-
-	/**
-	 * Reduce an array to a single value
-	 *
-	 * @template TValue
-	 * @template TCarry
-	 * @param array<TValue> $array
-	 * @param callable(TCarry, TValue):TCarry $callback
-	 * @param TCarry $initial
-	 * @return TCarry
-	 */
-	public static function reduce(
-		array $array,
-		callable $callback,
-		$initial = null
-	): mixed {
-		return array_reduce($array, $callback, $initial);
 	}
 
 	/**
@@ -800,6 +736,52 @@ class A
 	}
 
 	/**
+	 * Plucks a single column from an array
+	 *
+	 * ```php
+	 * $array[] = [
+	 *   'id' => 1,
+	 *   'username' => 'homer',
+	 * ];
+	 *
+	 * $array[] = [
+	 *   'id' => 2,
+	 *   'username' => 'marge',
+	 * ];
+	 *
+	 * $array[] = [
+	 *   'id' => 3,
+	 *   'username' => 'lisa',
+	 * ];
+	 *
+	 * var_dump(A::pluck($array, 'username'));
+	 * // result: ['homer', 'marge', 'lisa'];
+	 * ```
+	 *
+	 * @return list<mixed>
+	 */
+	public static function pluck(array $array, string $key): array
+	{
+		$output = [];
+
+		foreach ($array as $a) {
+			if (isset($a[$key]) === true) {
+				$output[] = $a[$key];
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Prepends the given array
+	 */
+	public static function prepend(array $array, array $prepend): array
+	{
+		return static::merge($prepend, $array, A::MERGE_APPEND);
+	}
+
+	/**
 	 * Returns a number of random elements from an array,
 	 * either in original or shuffled order
 	 *
@@ -831,6 +813,24 @@ class A
 		}
 
 		return self::get($array, array_rand($array, $count));
+	}
+
+	/**
+	 * Reduce an array to a single value
+	 *
+	 * @template TValue
+	 * @template TCarry
+	 * @param array<TValue> $array
+	 * @param callable(TCarry, TValue):TCarry $callback
+	 * @param TCarry $initial
+	 * @return TCarry
+	 */
+	public static function reduce(
+		array $array,
+		callable $callback,
+		$initial = null
+	): mixed {
+		return array_reduce($array, $callback, $initial);
 	}
 
 	/**

@@ -13,6 +13,39 @@ class ContentConvertToTest extends TestCase
 		$this->setUpSingleLanguage();
 	}
 
+	public function testConvertToForFile(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content'  => [
+							'alt'      => 'Test',
+							'template' => 'content-a'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'files/content-a' => [],
+				'files/content-b' => []
+			],
+		]);
+
+		$file    = $app->file('test.jpg');
+		$content = $file->content();
+
+		$new = $content->convertTo('content-b');
+
+		$expected = [
+			'alt'      => 'Test',
+			'template' => 'content-b'
+		];
+
+		$this->assertSame($expected, $new, 'The template should be changed in the new content array');
+	}
+
 	public function testConvertToForPage(): void
 	{
 		$app = $this->app->clone([
@@ -114,38 +147,5 @@ class ContentConvertToTest extends TestCase
 		$new = $app->page('test')->content()->convertTo('content-b');
 
 		$this->assertSame('- page://abc', $new['related']);
-	}
-
-	public function testConvertToForFile(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'test.jpg',
-						'content'  => [
-							'alt'      => 'Test',
-							'template' => 'content-a'
-						]
-					]
-				]
-			],
-			'blueprints' => [
-				'files/content-a' => [],
-				'files/content-b' => []
-			],
-		]);
-
-		$file    = $app->file('test.jpg');
-		$content = $file->content();
-
-		$new = $content->convertTo('content-b');
-
-		$expected = [
-			'alt'      => 'Test',
-			'template' => 'content-b'
-		];
-
-		$this->assertSame($expected, $new, 'The template should be changed in the new content array');
 	}
 }

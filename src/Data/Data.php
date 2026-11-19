@@ -48,6 +48,33 @@ class Data
 	];
 
 	/**
+	 * Decodes data with the specified handler
+	 */
+	public static function decode(
+		$string,
+		string $type,
+		bool $fail = true
+	): array {
+		try {
+			return static::handler($type)->decode($string);
+		} catch (Throwable $e) {
+			if ($fail === false) {
+				return [];
+			}
+
+			throw $e;
+		}
+	}
+
+	/**
+	 * Encodes data with the specified handler
+	 */
+	public static function encode($data, string $type): string
+	{
+		return static::handler($type)->encode($data);
+	}
+
+	/**
 	 * Handler getter
 	 */
 	public static function handler(string $type): Handler
@@ -74,33 +101,6 @@ class Data
 		}
 
 		return $handler;
-	}
-
-	/**
-	 * Decodes data with the specified handler
-	 */
-	public static function decode(
-		$string,
-		string $type,
-		bool $fail = true
-	): array {
-		try {
-			return static::handler($type)->decode($string);
-		} catch (Throwable $e) {
-			if ($fail === false) {
-				return [];
-			}
-
-			throw $e;
-		}
-	}
-
-	/**
-	 * Encodes data with the specified handler
-	 */
-	public static function encode($data, string $type): string
-	{
-		return static::handler($type)->encode($data);
 	}
 
 	/**

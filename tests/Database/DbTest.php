@@ -58,6 +58,50 @@ class DbTest extends TestCase
 		]);
 	}
 
+	public function testAvg(): void
+	{
+		$this->assertSame(2.0, Db::avg('users', 'id'));
+	}
+
+	public function testCallStatic(): void
+	{
+		Db::connect([
+			'database' => ':memory:',
+			'type'     => 'sqlite',
+			'prefix'   => 'myprefix_'
+		]);
+
+		Db::$queries['test'] = fn ($test) => $test . ' test';
+		$this->assertSame('This is a test', Db::test('This is a'));
+		unset(Db::$queries['test']);
+
+		$this->assertSame('sqlite', Db::type());
+		$this->assertSame('myprefix_', Db::prefix());
+	}
+
+	public function testCallStaticInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid static Db method: thisIsInvalid');
+
+		Db::thisIsInvalid();
+	}
+
+	public function testColumn(): void
+	{
+		$result = Db::column('users', 'username');
+		$this->assertSame(['john', 'paul', 'george'], $result->toArray());
+
+		$result = Db::column('users', 'username', ['username' => 'paul']);
+		$this->assertSame(['paul'], $result->toArray());
+
+		$result = Db::column('users', 'username', null, 'username ASC');
+		$this->assertSame(['george', 'john', 'paul'], $result->toArray());
+
+		$result = Db::column('users', 'username', null, 'username ASC', 1, 1);
+		$this->assertSame(['john'], $result->toArray());
+	}
+
 	public function testConnect(): void
 	{
 		$db = Db::connect();
@@ -89,19 +133,17 @@ class DbTest extends TestCase
 		$this->assertInstanceOf(Database::class, Db::connection());
 	}
 
-	public function testTable(): void
+	public function testCount(): void
 	{
-		$tableProp = new ReflectionProperty(Query::class, 'table');
-
-		$query = Db::table('users');
-		$this->assertInstanceOf(Query::class, $query);
-		$this->assertSame('users', $tableProp->getValue($query));
+		$this->assertSame(3, Db::count('users'));
 	}
 
-	public function testQuery(): void
+	public function testDelete(): void
 	{
-		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
-		$this->assertSame('paul', $result[0]['username']);
+		$result = Db::delete('users', ['username' => 'john']);
+		$this->assertTrue($result);
+		$this->assertFalse(Db::one('users', '*', ['username' => 'john']));
+		$this->assertSame(2, Db::count('users'));
 	}
 
 	public function testExecute(): void
@@ -114,48 +156,6 @@ class DbTest extends TestCase
 
 		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
 		$this->assertEmpty($result);
-	}
-
-	public function testCallStatic(): void
-	{
-		Db::connect([
-			'database' => ':memory:',
-			'type'     => 'sqlite',
-			'prefix'   => 'myprefix_'
-		]);
-
-		Db::$queries['test'] = fn ($test) => $test . ' test';
-		$this->assertSame('This is a test', Db::test('This is a'));
-		unset(Db::$queries['test']);
-
-		$this->assertSame('sqlite', Db::type());
-		$this->assertSame('myprefix_', Db::prefix());
-	}
-
-	public function testCallStaticInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid static Db method: thisIsInvalid');
-
-		Db::thisIsInvalid();
-	}
-
-	public function testSelect(): void
-	{
-		$result = Db::select('users');
-		$this->assertCount(3, $result);
-
-		$result = Db::select('users', 'username', ['username' => 'paul']);
-		$this->assertCount(1, $result);
-		$this->assertSame('paul', $result->first()->username());
-
-		$result = Db::select('users', 'username', null, 'username ASC', 1, 1);
-		$this->assertCount(1, $result);
-		$this->assertSame('john', $result->first()->username());
-
-		$result = Db::select('users', 'username', ['active' => false]);
-		$this->assertCount(1, $result);
-		$this->assertSame('george', $result->first()->username());
 	}
 
 	public function testFirst(): void
@@ -176,21 +176,6 @@ class DbTest extends TestCase
 		$this->assertSame('john', $result->username());
 	}
 
-	public function testColumn(): void
-	{
-		$result = Db::column('users', 'username');
-		$this->assertSame(['john', 'paul', 'george'], $result->toArray());
-
-		$result = Db::column('users', 'username', ['username' => 'paul']);
-		$this->assertSame(['paul'], $result->toArray());
-
-		$result = Db::column('users', 'username', null, 'username ASC');
-		$this->assertSame(['george', 'john', 'paul'], $result->toArray());
-
-		$result = Db::column('users', 'username', null, 'username ASC', 1, 1);
-		$this->assertSame(['john'], $result->toArray());
-	}
-
 	public function testInsert(): void
 	{
 		$result = Db::insert('users', [
@@ -206,6 +191,54 @@ class DbTest extends TestCase
 		$this->assertSame('0', Db::row('users', '*', ['username' => 'ringo'])->active());
 	}
 
+	public function testMax(): void
+	{
+		$this->assertSame(3.0, Db::max('users', 'id'));
+	}
+
+	public function testMin(): void
+	{
+		$this->assertSame(1.0, Db::min('users', 'id'));
+	}
+
+	public function testQuery(): void
+	{
+		$result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
+		$this->assertSame('paul', $result[0]['username']);
+	}
+
+	public function testSelect(): void
+	{
+		$result = Db::select('users');
+		$this->assertCount(3, $result);
+
+		$result = Db::select('users', 'username', ['username' => 'paul']);
+		$this->assertCount(1, $result);
+		$this->assertSame('paul', $result->first()->username());
+
+		$result = Db::select('users', 'username', null, 'username ASC', 1, 1);
+		$this->assertCount(1, $result);
+		$this->assertSame('john', $result->first()->username());
+
+		$result = Db::select('users', 'username', ['active' => false]);
+		$this->assertCount(1, $result);
+		$this->assertSame('george', $result->first()->username());
+	}
+
+	public function testSum(): void
+	{
+		$this->assertSame(6.0, Db::sum('users', 'id'));
+	}
+
+	public function testTable(): void
+	{
+		$tableProp = new ReflectionProperty(Query::class, 'table');
+
+		$query = Db::table('users');
+		$this->assertInstanceOf(Query::class, $query);
+		$this->assertSame('users', $tableProp->getValue($query));
+	}
+
 	public function testUpdate(): void
 	{
 		$result = Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
@@ -217,38 +250,5 @@ class DbTest extends TestCase
 		$this->assertTrue($result);
 		$this->assertSame('0', Db::row('users', '*', ['username' => 'john'])->active());
 		$this->assertSame('1', Db::row('users', '*', ['username' => 'paul'])->active());
-	}
-
-	public function testDelete(): void
-	{
-		$result = Db::delete('users', ['username' => 'john']);
-		$this->assertTrue($result);
-		$this->assertFalse(Db::one('users', '*', ['username' => 'john']));
-		$this->assertSame(2, Db::count('users'));
-	}
-
-	public function testCount(): void
-	{
-		$this->assertSame(3, Db::count('users'));
-	}
-
-	public function testMin(): void
-	{
-		$this->assertSame(1.0, Db::min('users', 'id'));
-	}
-
-	public function testMax(): void
-	{
-		$this->assertSame(3.0, Db::max('users', 'id'));
-	}
-
-	public function testAvg(): void
-	{
-		$this->assertSame(2.0, Db::avg('users', 'id'));
-	}
-
-	public function testSum(): void
-	{
-		$this->assertSame(6.0, Db::sum('users', 'id'));
 	}
 }

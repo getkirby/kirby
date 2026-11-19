@@ -16,16 +16,10 @@ class TestCache extends Cache
 		return true;
 	}
 
-	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
+	public function flush(): bool
 	{
-		$value = new Value($value, $minutes, $created);
-		$this->store[$key] = $value;
+		$this->store = [];
 		return true;
-	}
-
-	public function retrieve(string $key): Value|null
-	{
-		return $this->store[$key] ?? null;
 	}
 
 	public function remove(string $key): bool
@@ -34,9 +28,15 @@ class TestCache extends Cache
 		return true;
 	}
 
-	public function flush(): bool
+	public function retrieve(string $key): Value|null
 	{
-		$this->store = [];
+		return $this->store[$key] ?? null;
+	}
+
+	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
+	{
+		$value = new Value($value, $minutes, $created);
+		$this->store[$key] = $value;
 		return true;
 	}
 }

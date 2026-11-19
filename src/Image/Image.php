@@ -22,24 +22,12 @@ use Kirby\Toolkit\Html;
  */
 class Image extends File
 {
-	protected Exif|null $exif = null;
-	protected Dimensions|null $dimensions = null;
-
 	public static array $resizableTypes = [
 		'avif',
 		'jpg',
 		'jpeg',
 		'gif',
 		'png',
-		'webp'
-	];
-	public static array $viewableTypes = [
-		'avif',
-		'jpg',
-		'jpeg',
-		'gif',
-		'png',
-		'svg',
 		'webp'
 	];
 
@@ -57,6 +45,18 @@ class Image extends File
 		'minheight'   => ['height', 'min'],
 		'orientation' => ['orientation', 'same']
 	];
+	public static array $viewableTypes = [
+		'avif',
+		'jpg',
+		'jpeg',
+		'gif',
+		'png',
+		'svg',
+		'webp'
+	];
+
+	protected Dimensions|null $dimensions = null;
+	protected Exif|null $exif = null;
 
 	/**
 	 * Returns the `<img>` tag for the image object
@@ -164,14 +164,6 @@ class Image extends File
 	}
 
 	/**
-	 * Checks if the dimensions of the asset are portrait
-	 */
-	public function isPortrait(): bool
-	{
-		return $this->dimensions()->portrait();
-	}
-
-	/**
 	 * Checks if the dimensions of the asset are landscape
 	 */
 	public function isLandscape(): bool
@@ -180,11 +172,11 @@ class Image extends File
 	}
 
 	/**
-	 * Checks if the dimensions of the asset are square
+	 * Checks if the dimensions of the asset are portrait
 	 */
-	public function isSquare(): bool
+	public function isPortrait(): bool
 	{
-		return $this->dimensions()->square();
+		return $this->dimensions()->portrait();
 	}
 
 	/**
@@ -208,6 +200,14 @@ class Image extends File
 	}
 
 	/**
+	 * Checks if the dimensions of the asset are square
+	 */
+	public function isSquare(): bool
+	{
+		return $this->dimensions()->square();
+	}
+
+	/**
 	 * Checks if a preview can be displayed for the file
 	 * in the Panel or in the frontend
 	 */
@@ -217,20 +217,20 @@ class Image extends File
 	}
 
 	/**
-	 * Returns the ratio of the asset
-	 */
-	public function ratio(): float
-	{
-		return $this->dimensions()->ratio();
-	}
-
-	/**
 	 * Returns the orientation as string
 	 * `landscape` | `portrait` | `square`
 	 */
 	public function orientation(): string|false
 	{
 		return $this->dimensions()->orientation();
+	}
+
+	/**
+	 * Returns the ratio of the asset
+	 */
+	public function ratio(): float
+	{
+		return $this->dimensions()->ratio();
 	}
 
 	/**

@@ -66,11 +66,6 @@ class ModelGuardsTest extends ModelTestCase
 		);
 	}
 
-	protected function user(): User
-	{
-		return $this->app->user() ?? new User(['id' => 'test']);
-	}
-
 	public function testAbilities(): void
 	{
 		$this->assertInstanceOf(PageAbilities::class, $this->guards()->abilities());
@@ -452,5 +447,10 @@ class ModelGuardsTest extends ModelTestCase
 	public function testValidators(): void
 	{
 		$this->assertInstanceOf(PageValidators::class, $this->guards()->validators());
+	}
+
+	protected function user(): User
+	{
+		return $this->app->user() ?? new User(['id' => 'test']);
 	}
 }

@@ -13,6 +13,32 @@ class LockTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Content.LockTest';
 
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test'
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'admin@getkirby.com',
+					'id'    => 'admin',
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'id'    => 'editor',
+				]
+			]
+		]);
+	}
+
 	protected function createChangesVersion(
 		Language|string $language = 'default'
 	): Version {
@@ -41,32 +67,6 @@ class LockTest extends TestCase
 		], $language);
 
 		return $latest;
-	}
-
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test'
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'admin@getkirby.com',
-					'id'    => 'admin',
-				],
-				[
-					'email' => 'editor@getkirby.com',
-					'id'    => 'editor',
-				]
-			]
-		]);
 	}
 
 	public function testForWithAuthenticatedUser(): void
@@ -98,17 +98,6 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isActive());
 		$this->assertTrue($lock->isLocked());
 		$this->assertSame($this->app->user('admin'), $lock->user());
-	}
-
-	public function testForWithoutUser(): void
-	{
-		// create the version with the admin user
-		$this->app->impersonate('admin');
-
-		$latest = $this->createLatestVersion();
-		$lock   = Lock::for($latest);
-
-		$this->assertNull($lock->user());
 	}
 
 	public function testForWithLanguageWildcard(): void
@@ -201,6 +190,17 @@ class LockTest extends TestCase
 		$this->assertTrue($lock->isLocked());
 	}
 
+	public function testForWithoutUser(): void
+	{
+		// create the version with the admin user
+		$this->app->impersonate('admin');
+
+		$latest = $this->createLatestVersion();
+		$lock   = Lock::for($latest);
+
+		$this->assertNull($lock->user());
+	}
+
 	public function testIsActive(): void
 	{
 		// just modified
@@ -261,6 +261,26 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
+	public function testIsLockedWhenDisabled(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'locking' => false
+				]
+			]
+		]);
+
+		$this->app->impersonate('admin');
+
+		$lock = new Lock(
+			modified: time(),
+			user: $this->app->user('editor')
+		);
+
+		$this->assertFalse($lock->isLocked());
+	}
+
 	public function testIsLockedWithCurrentUser(): void
 	{
 		$this->app->impersonate('admin');
@@ -283,26 +303,6 @@ class LockTest extends TestCase
 		);
 
 		$this->assertTrue($lock->isLocked());
-	}
-
-	public function testIsLockedWhenDisabled(): void
-	{
-		$this->app = $this->app->clone([
-			'options' => [
-				'content' => [
-					'locking' => false
-				]
-			]
-		]);
-
-		$this->app->impersonate('admin');
-
-		$lock = new Lock(
-			modified: time(),
-			user: $this->app->user('editor')
-		);
-
-		$this->assertFalse($lock->isLocked());
 	}
 
 	public function testIsLockedWithDifferentUserAndOldTimestamp(): void
@@ -340,15 +340,12 @@ class LockTest extends TestCase
 		$this->assertSame($time, $lock->modified());
 	}
 
-	public function testLegacyWithoutLockInfo(): void
+	public function testLegacyFile(): void
 	{
 		$page = $this->app->page('test');
-		$file = $page->root() . '/.lock';
+		$expected = $page->root() . '/.lock';
 
-		Data::write($file, [], 'yml');
-
-		$lock = Lock::legacy($page);
-		$this->assertNull($lock);
+		$this->assertSame($expected, Lock::legacyFile($page));
 	}
 
 	public function testLegacyWithOutdatedFile(): void
@@ -371,6 +368,17 @@ class LockTest extends TestCase
 		$this->assertFalse($lock->isLocked());
 	}
 
+	public function testLegacyWithoutLockInfo(): void
+	{
+		$page = $this->app->page('test');
+		$file = $page->root() . '/.lock';
+
+		Data::write($file, [], 'yml');
+
+		$lock = Lock::legacy($page);
+		$this->assertNull($lock);
+	}
+
 	public function testLegacyWithUnlockedFile(): void
 	{
 		$page = $this->app->page('test');
@@ -388,14 +396,6 @@ class LockTest extends TestCase
 
 		$lock = Lock::legacy($page);
 		$this->assertNull($lock);
-	}
-
-	public function testLegacyFile(): void
-	{
-		$page = $this->app->page('test');
-		$expected = $page->root() . '/.lock';
-
-		$this->assertSame($expected, Lock::legacyFile($page));
 	}
 
 	public function testModified(): void

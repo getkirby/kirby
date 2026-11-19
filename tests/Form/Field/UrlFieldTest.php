@@ -45,24 +45,6 @@ class UrlFieldTest extends TestCase
 		$this->assertSame($expected, $props);
 	}
 
-	public function testValidationsUrl(): void
-	{
-		$field = $this->field('url', [
-			'value' => 'https://getkirby.com'
-		]);
-
-		$this->assertTrue($field->isValid());
-
-		$field = $this->field('url', [
-			'value' => 'getkirby.com'
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame([
-			'url' => 'Please enter a valid URL'
-		], $field->errors());
-	}
-
 	public function testValidationsMaxLength(): void
 	{
 		$field = $this->field('url', [
@@ -83,5 +65,23 @@ class UrlFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('minlength', $field->errors());
+	}
+
+	public function testValidationsUrl(): void
+	{
+		$field = $this->field('url', [
+			'value' => 'https://getkirby.com'
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field = $this->field('url', [
+			'value' => 'getkirby.com'
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame([
+			'url' => 'Please enter a valid URL'
+		], $field->errors());
 	}
 }

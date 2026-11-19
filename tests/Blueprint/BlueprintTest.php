@@ -43,15 +43,6 @@ class BlueprintTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testAcceptRules(): void
-	{
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-		]);
-
-		$this->assertInstanceOf(AcceptRules::class, $blueprint->acceptRules());
-	}
-
 	public function testAcceptedFileTemplates(): void
 	{
 		$blueprint = new Blueprint([
@@ -68,12 +59,63 @@ class BlueprintTest extends TestCase
 		$this->assertSame(['a'], $blueprint->acceptedFileTemplates());
 	}
 
-	public function testConstructWithoutModel(): void
+	public function testAcceptRules(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('A blueprint model is required');
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+		]);
 
-		new Blueprint([]);
+		$this->assertInstanceOf(AcceptRules::class, $blueprint->acceptRules());
+	}
+
+	public function testAutomaticLabelForFields()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'fields' => [
+				'emailAddress' => [
+					'type' => 'email'
+				],
+			]
+		]);
+
+		$this->assertSame('Email address', $blueprint->fields()['emailAddress']['label']);
+	}
+
+	public function testAutomaticLabelForTabs()
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'tabs'  => [
+				'contentTab' => [
+
+				],
+			]
+		]);
+
+		$this->assertSame('Content tab', $blueprint->tabs()->first()->label());
+	}
+
+	public function testButtons(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'buttons' => ['foo', 'bar']
+		]);
+
+		$this->assertSame(['foo', 'bar'], $blueprint->buttons());
+	}
+
+	public function testButtonsDisabled(): void
+	{
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'buttons' => false
+		]);
+
+		$this->assertSame(false, $blueprint->buttons());
 	}
 
 	public function testConstructInvalidModel(): void
@@ -82,6 +124,14 @@ class BlueprintTest extends TestCase
 		$this->expectExceptionMessage('Invalid blueprint model');
 
 		new Blueprint(['model' => new stdClass()]);
+	}
+
+	public function testConstructWithoutModel(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('A blueprint model is required');
+
+		new Blueprint([]);
 	}
 
 	public function testConvertColumnsToTabs(): void
@@ -141,28 +191,6 @@ class BlueprintTest extends TestCase
 		$this->assertSame($expected['main'], $blueprint->tab()->toViewProps());
 	}
 
-	public function testButtons(): void
-	{
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'name'  => 'default',
-			'buttons' => ['foo', 'bar']
-		]);
-
-		$this->assertSame(['foo', 'bar'], $blueprint->buttons());
-	}
-
-	public function testButtonsDisabled(): void
-	{
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'name'  => 'default',
-			'buttons' => false
-		]);
-
-		$this->assertSame(false, $blueprint->buttons());
-	}
-
 	public function testDebugInfo(): void
 	{
 		$blueprint = new Blueprint([
@@ -177,249 +205,6 @@ class BlueprintTest extends TestCase
 		];
 
 		$this->assertSame($expected, $blueprint->__debugInfo());
-	}
-
-	public function testSectionsToFields(): void
-	{
-		$blueprint = new Blueprint([
-			'model'    => $this->model,
-			'sections' => [
-				'pages' => [
-					'type' => 'pages'
-				],
-				'files' => [
-					'type' => 'files'
-				]
-			]
-		]);
-
-		$expected = [
-			'main' => [
-				'name'    => 'main',
-				'label'   => 'Main',
-				'columns' => [
-					[
-						'width'  => '1/1',
-						'fields' => [
-							'pages' => [
-								'label' => 'Pages',
-								'name'  => 'pages',
-								'type'  => 'pagelist',
-								'width' => '1/1'
-							],
-							'files' => [
-								'label' => 'Files',
-								'name'  => 'files',
-								'type'  => 'filelist',
-								'width' => '1/1'
-							]
-						]
-					]
-				],
-				'icon'    => null,
-				'link'    => '/pages/a/?tab=main'
-			]
-		];
-
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
-	}
-
-	public function testSectionsToFieldsWithHeadline(): void
-	{
-		$blueprint = new Blueprint([
-			'model'    => $this->model,
-			'sections' => [
-				'pages' => [
-					'headline' => 'My pages',
-					'type'     => 'pages'
-				]
-			]
-		]);
-
-		$field = $blueprint->field('pages');
-
-		$this->assertSame('pagelist', $field['type']);
-		$this->assertSame('My pages', $field['label']);
-		$this->assertArrayNotHasKey('headline', $field);
-	}
-
-	public function testSectionsToFieldsWithUnknownType(): void
-	{
-		$blueprint = new Blueprint([
-			'model'    => $this->model,
-			'sections' => [
-				'mysection' => [
-					'type' => 'does-not-exist'
-				]
-			]
-		]);
-
-		$field = $blueprint->field('mysection');
-
-		$this->assertSame('info', $field['type']);
-		$this->assertSame('negative', $field['theme']);
-		$this->assertSame('Invalid section type ("does-not-exist")', $field['label']);
-		$this->assertSame(
-			'The following section types are available: ' . PHP_EOL .
-			'- *fields*' . PHP_EOL .
-			'- *files*' . PHP_EOL .
-			'- *info*' . PHP_EOL .
-			'- *pages*' . PHP_EOL .
-			'- *stats*',
-			$field['text']
-		);
-	}
-
-	public function testFieldsSectionWithWhen(): void
-	{
-		$blueprint = new Blueprint([
-			'model'    => $this->model,
-			'sections' => [
-				'mysection' => [
-					'type'   => 'fields',
-					'when'   => ['toggle' => true],
-					'fields' => [
-						'a' => [
-							'type' => 'text'
-						],
-						'b' => [
-							'type' => 'text',
-							'when' => ['other' => true]
-						]
-					]
-				]
-			]
-		]);
-
-		// the condition of the section is pushed down onto its fields
-		$this->assertSame(['toggle' => true], $blueprint->field('a')['when']);
-
-		// while an own condition of a field wins
-		$this->assertSame(
-			['toggle' => true, 'other' => true],
-			$blueprint->field('b')['when']
-		);
-	}
-
-	public function testFieldsSectionWithInvalidFields(): void
-	{
-		$blueprint = new Blueprint([
-			'model'    => $this->model,
-			'sections' => [
-				'mysection' => [
-					'type'   => 'fields',
-					'fields' => 'nonsense'
-				]
-			]
-		]);
-
-		$fields = $blueprint->tab('main')->columns()[0]['fields'];
-
-		// the section is unwrapped into no fields at all,
-		// which leaves the column with the guide field
-		$this->assertSame(['main-info-0'], array_keys($fields));
-		$this->assertSame('No fields yet', $fields['main-info-0']['text']);
-	}
-
-	public function testFieldsToColumns(): void
-	{
-		$fields = [
-			'headline' => [
-				'label' => 'Headline',
-				'name'  => 'headline',
-				'type'  => 'text',
-				'width' => '1/1'
-			]
-		];
-
-		$blueprint = new Blueprint([
-			'model'  => $this->model,
-			'fields' => $fields
-		]);
-
-		$expected = [
-			'main' => [
-				'name'    => 'main',
-				'label'   => 'Main',
-				'columns' => [
-					[
-						'width'  => '1/1',
-						'fields' => $fields
-					]
-				],
-				'icon'    => null,
-				'link'    => '/pages/a/?tab=main'
-			]
-		];
-
-		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
-	}
-
-	public function testTitle(): void
-	{
-		$blueprint = new Blueprint([
-			'title' => 'Test',
-			'model' => $this->model
-		]);
-
-		$this->assertSame('Test', $blueprint->title());
-	}
-
-	public function testTitleTranslated(): void
-	{
-		$blueprint = new Blueprint([
-			'title' => ['en' => 'Test'],
-			'model' => $this->model
-		]);
-
-		$this->assertSame('Test', $blueprint->title());
-	}
-
-	public function testTitleTranslatedFallback(): void
-	{
-		I18n::$locale       = 'de';
-		I18n::$translations = ['en' => ['my.i18n.string' => 'success']];
-
-		$blueprint = new Blueprint([
-			'title' => 'my.i18n.string',
-			'model' => $this->model
-		]);
-
-		$this->assertSame('success', $blueprint->title());
-	}
-
-	public function testTitleTranslatedFallbackForRoles(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true,
-					'translations' => [
-						'my.custom.role' => 'My custom role'
-					]
-				],
-				[
-					'code' => 'de',
-					'translations' => []
-				]
-			],
-			'blueprints' => [
-				'users/editor' => [
-					'name' => 'editor',
-					'title' => 'my.custom.role'
-				]
-			]
-		]);
-
-		$app->setCurrentTranslation('de');
-		$app->setCurrentLanguage('de');
-
-		$role = $app->roles()->get('editor')->title();
-		$this->assertSame('My custom role', $role);
 	}
 
 	public function testExtend(): void
@@ -438,16 +223,6 @@ class BlueprintTest extends TestCase
 		]);
 
 		$this->assertSame('Extension Test', $blueprint->title());
-	}
-
-	public function testExtendWithInvalidSnippet(): void
-	{
-		$blueprint = new Blueprint([
-			'extends' => 'notFound',
-			'model'   => new Page(['slug' => 'test'])
-		]);
-
-		$this->assertSame('Default', $blueprint->title());
 	}
 
 	public function testExtendMultiple(): void
@@ -490,6 +265,16 @@ class BlueprintTest extends TestCase
 		$this->assertSame('1/3', $field['width']);
 	}
 
+	public function testExtendWithInvalidSnippet(): void
+	{
+		$blueprint = new Blueprint([
+			'extends' => 'notFound',
+			'model'   => new Page(['slug' => 'test'])
+		]);
+
+		$this->assertSame('Default', $blueprint->title());
+	}
+
 	public function testFactory(): void
 	{
 		$this->app = $this->app->clone([
@@ -502,108 +287,6 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame('Test', $blueprint->title());
 		$this->assertSame('pages/test', $blueprint->name());
-	}
-
-	public function testFactoryWithCallbackArray(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test' => fn () => ['title' => 'Test']
-			]
-		]);
-
-		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
-
-		$this->assertSame('Test', $blueprint->title());
-		$this->assertSame('pages/test', $blueprint->name());
-	}
-
-	public function testFactoryWithCallbackString(): void
-	{
-		$this->app = $this->app->clone([
-			'roots' => [
-				'index' => '/dev/null',
-				'blueprints' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/test' => fn () => static::TMP . '/custom/test.yml'
-			]
-		]);
-
-		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
-
-		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
-
-		$this->assertSame('Test', $blueprint->title());
-		$this->assertSame('pages/test', $blueprint->name());
-	}
-
-	public function testFactoryWithExtends(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/base'  => ['title' => 'Base'],
-				'pages/child' => ['extends' => 'pages/base']
-			]
-		]);
-
-		// the title must be inherited through `extends`, which only
-		// works as long as `::load()` does not add its own fallback
-		// title before the mixin is merged in
-		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/child');
-
-		$this->assertSame('Base', $blueprint->title());
-		$this->assertSame('pages/child', $blueprint->name());
-	}
-
-	public function testFactoryForMissingBlueprint(): void
-	{
-		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'notFound');
-		$this->assertNull($blueprint);
-	}
-
-	public function testFindInSubfolder(): void
-	{
-		$this->app = $this->app->clone([
-			'roots' => [
-				'index'      => '/dev/null',
-				'blueprints' => static::TMP,
-			]
-		]);
-
-		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
-
-		$this->assertSame('Photo', Blueprint::find('files/gallery/photo')['title']);
-	}
-
-	public static function pathTraversalProvider(): array
-	{
-		return [
-			['files/../pages/public'],
-			['files/gallery/../../pages/public'],
-			['files/./../pages/public'],
-			['files/..\\pages\\public'],
-		];
-	}
-
-	#[DataProvider('pathTraversalProvider')]
-	public function testFindWithPathTraversal(string $name): void
-	{
-		$this->app = $this->app->clone([
-			'roots' => [
-				'index'      => '/dev/null',
-				'blueprints' => static::TMP,
-			]
-		]);
-
-		// the type folders have to exist for the path to resolve
-		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
-		Data::write(static::TMP . '/pages/public.yml', ['title' => 'Public']);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The blueprint "' . $name . '" could not be loaded');
-
-		Blueprint::find($name);
 	}
 
 	public function testFactoryCache(): void
@@ -698,19 +381,62 @@ class BlueprintTest extends TestCase
 		$this->assertSame('/pages/b/?tab=main', $b->tab()->link());
 	}
 
-	public function testReset(): void
+	public function testFactoryForMissingBlueprint(): void
 	{
-		Blueprint::$loaded['pages/test'] = ['title' => 'Test'];
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'notFound');
+		$this->assertNull($blueprint);
+	}
 
-		Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+	public function testFactoryWithCallbackArray(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => fn () => ['title' => 'Test']
+			]
+		]);
 
-		$this->assertNotSame([], Blueprint::$loaded);
-		$this->assertNotSame([], Blueprint::$normalized);
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
 
-		Blueprint::reset();
+		$this->assertSame('Test', $blueprint->title());
+		$this->assertSame('pages/test', $blueprint->name());
+	}
 
-		$this->assertSame([], Blueprint::$loaded);
-		$this->assertSame([], Blueprint::$normalized);
+	public function testFactoryWithCallbackString(): void
+	{
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index' => '/dev/null',
+				'blueprints' => static::TMP,
+			],
+			'blueprints' => [
+				'pages/test' => fn () => static::TMP . '/custom/test.yml'
+			]
+		]);
+
+		Data::write(static::TMP . '/custom/test.yml', ['title' => 'Test']);
+
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/test');
+
+		$this->assertSame('Test', $blueprint->title());
+		$this->assertSame('pages/test', $blueprint->name());
+	}
+
+	public function testFactoryWithExtends(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/base'  => ['title' => 'Base'],
+				'pages/child' => ['extends' => 'pages/base']
+			]
+		]);
+
+		// the title must be inherited through `extends`, which only
+		// works as long as `::load()` does not add its own fallback
+		// title before the mixin is merged in
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/child');
+
+		$this->assertSame('Base', $blueprint->title());
+		$this->assertSame('pages/child', $blueprint->name());
 	}
 
 	public function testFields(): void
@@ -731,22 +457,89 @@ class BlueprintTest extends TestCase
 		$this->assertSame($fields['test'], $blueprint->field('test'));
 	}
 
-	public function testFieldWithNormalizedName(): void
+	public function testFieldsSectionWithInvalidFields(): void
 	{
 		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'fields' => $fields = [
-				'mixedCasing' => [
-					'type'  => 'text',
-					'name'  => 'mixedCasing',
-					'label' => 'Mixed Casing',
-					'width' => '1/1'
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type'   => 'fields',
+					'fields' => 'nonsense'
 				]
 			]
 		]);
 
-		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedCasing'));
-		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedcasing'));
+		$fields = $blueprint->tab('main')->columns()[0]['fields'];
+
+		// the section is unwrapped into no fields at all,
+		// which leaves the column with the guide field
+		$this->assertSame(['main-info-0'], array_keys($fields));
+		$this->assertSame('No fields yet', $fields['main-info-0']['text']);
+	}
+
+	public function testFieldsSectionWithWhen(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type'   => 'fields',
+					'when'   => ['toggle' => true],
+					'fields' => [
+						'a' => [
+							'type' => 'text'
+						],
+						'b' => [
+							'type' => 'text',
+							'when' => ['other' => true]
+						]
+					]
+				]
+			]
+		]);
+
+		// the condition of the section is pushed down onto its fields
+		$this->assertSame(['toggle' => true], $blueprint->field('a')['when']);
+
+		// while an own condition of a field wins
+		$this->assertSame(
+			['toggle' => true, 'other' => true],
+			$blueprint->field('b')['when']
+		);
+	}
+
+	public function testFieldsToColumns(): void
+	{
+		$fields = [
+			'headline' => [
+				'label' => 'Headline',
+				'name'  => 'headline',
+				'type'  => 'text',
+				'width' => '1/1'
+			]
+		];
+
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'fields' => $fields
+		]);
+
+		$expected = [
+			'main' => [
+				'name'    => 'main',
+				'label'   => 'Main',
+				'columns' => [
+					[
+						'width'  => '1/1',
+						'fields' => $fields
+					]
+				],
+				'icon'    => null,
+				'link'    => '/pages/a/?tab=main'
+			]
+		];
+
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
 	public function testFieldWithDuplicateNormalizedName(): void
@@ -779,38 +572,66 @@ class BlueprintTest extends TestCase
 		);
 	}
 
-	public function testNestedFields(): void
+	public function testFieldWithNormalizedName(): void
 	{
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'fields' => $fields = [
-				'test' => [
-					'type'   => 'structure',
-					'fields' => [
-						'child-field' => [
-							'type' => 'text'
-						]
-					]
+				'mixedCasing' => [
+					'type'  => 'text',
+					'name'  => 'mixedCasing',
+					'label' => 'Mixed Casing',
+					'width' => '1/1'
 				]
 			]
 		]);
 
-		$this->assertCount(1, $blueprint->fields());
-		$this->assertArrayHasKey('test', $blueprint->fields());
-		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
+		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedCasing'));
+		$this->assertSame($fields['mixedCasing'], $blueprint->field('mixedcasing'));
 	}
 
-	public function testNormalizeOptionsFalse(): void
+	public function testFindInSubfolder(): void
 	{
-		$blueprint = new PageBlueprint([
-			'model'   => $this->model,
-			'options' => false,
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index'      => '/dev/null',
+				'blueprints' => static::TMP,
+			]
 		]);
 
-		// all keys from defaults are present and every value is false, not null
-		foreach ($blueprint->options() as $key => $value) {
-			$this->assertFalse($value, "Option '$key' should be false");
-		}
+		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
+
+		$this->assertSame('Photo', Blueprint::find('files/gallery/photo')['title']);
+	}
+
+	public static function pathTraversalProvider(): array
+	{
+		return [
+			['files/../pages/public'],
+			['files/gallery/../../pages/public'],
+			['files/./../pages/public'],
+			['files/..\\pages\\public'],
+		];
+	}
+
+	#[DataProvider('pathTraversalProvider')]
+	public function testFindWithPathTraversal(string $name): void
+	{
+		$this->app = $this->app->clone([
+			'roots' => [
+				'index'      => '/dev/null',
+				'blueprints' => static::TMP,
+			]
+		]);
+
+		// the type folders have to exist for the path to resolve
+		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
+		Data::write(static::TMP . '/pages/public.yml', ['title' => 'Public']);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The blueprint "' . $name . '" could not be loaded');
+
+		Blueprint::find($name);
 	}
 
 	public function testInvalidSectionType(): void
@@ -854,28 +675,53 @@ class BlueprintTest extends TestCase
 		$this->assertTrue($blueprint->isDefault());
 	}
 
-	public function testSectionTypeFromName(): void
+	public function testNestedFields(): void
 	{
-		// with options
 		$blueprint = new Blueprint([
 			'model' => $this->model,
-			'sections' => [
-				'info' => [
+			'fields' => $fields = [
+				'test' => [
+					'type'   => 'structure',
+					'fields' => [
+						'child-field' => [
+							'type' => 'text'
+						]
+					]
 				]
 			]
 		]);
 
-		$this->assertSame('info', $blueprint->field('info')['type']);
+		$this->assertCount(1, $blueprint->fields());
+		$this->assertArrayHasKey('test', $blueprint->fields());
+		$this->assertArrayNotHasKey('child-field', $blueprint->fields());
+	}
 
-		// by just passing true
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'sections' => [
-				'info' => true
-			]
+	public function testNormalizeOptionsFalse(): void
+	{
+		$blueprint = new PageBlueprint([
+			'model'   => $this->model,
+			'options' => false,
 		]);
 
-		$this->assertSame('info', $blueprint->field('info')['type']);
+		// all keys from defaults are present and every value is false, not null
+		foreach ($blueprint->options() as $key => $value) {
+			$this->assertFalse($value, "Option '$key' should be false");
+		}
+	}
+
+	public function testReset(): void
+	{
+		Blueprint::$loaded['pages/test'] = ['title' => 'Test'];
+
+		Blueprint::factory(new Page(['slug' => 'a']), 'pages/test');
+
+		$this->assertNotSame([], Blueprint::$loaded);
+		$this->assertNotSame([], Blueprint::$normalized);
+
+		Blueprint::reset();
+
+		$this->assertSame([], Blueprint::$loaded);
+		$this->assertSame([], Blueprint::$normalized);
 	}
 
 	public function testSectionAndFieldOfSameName(): void
@@ -1011,32 +857,119 @@ class BlueprintTest extends TestCase
 		$this->assertSame('info', $docs[0]['fields']['files-duplicate-1']['type']);
 	}
 
-	public function testAutomaticLabelForFields()
+	public function testSectionsToFields(): void
 	{
 		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'fields' => [
-				'emailAddress' => [
-					'type' => 'email'
+			'model'    => $this->model,
+			'sections' => [
+				'pages' => [
+					'type' => 'pages'
 				],
+				'files' => [
+					'type' => 'files'
+				]
 			]
 		]);
 
-		$this->assertSame('Email address', $blueprint->fields()['emailAddress']['label']);
+		$expected = [
+			'main' => [
+				'name'    => 'main',
+				'label'   => 'Main',
+				'columns' => [
+					[
+						'width'  => '1/1',
+						'fields' => [
+							'pages' => [
+								'label' => 'Pages',
+								'name'  => 'pages',
+								'type'  => 'pagelist',
+								'width' => '1/1'
+							],
+							'files' => [
+								'label' => 'Files',
+								'name'  => 'files',
+								'type'  => 'filelist',
+								'width' => '1/1'
+							]
+						]
+					]
+				],
+				'icon'    => null,
+				'link'    => '/pages/a/?tab=main'
+			]
+		];
+
+		$this->assertEquals($expected, $blueprint->toArray()['tabs']); // cannot use strict assertion (array order)
 	}
 
-	public function testAutomaticLabelForTabs()
+	public function testSectionsToFieldsWithHeadline(): void
 	{
 		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'tabs'  => [
-				'contentTab' => [
-
-				],
+			'model'    => $this->model,
+			'sections' => [
+				'pages' => [
+					'headline' => 'My pages',
+					'type'     => 'pages'
+				]
 			]
 		]);
 
-		$this->assertSame('Content tab', $blueprint->tabs()->first()->label());
+		$field = $blueprint->field('pages');
+
+		$this->assertSame('pagelist', $field['type']);
+		$this->assertSame('My pages', $field['label']);
+		$this->assertArrayNotHasKey('headline', $field);
+	}
+
+	public function testSectionsToFieldsWithUnknownType(): void
+	{
+		$blueprint = new Blueprint([
+			'model'    => $this->model,
+			'sections' => [
+				'mysection' => [
+					'type' => 'does-not-exist'
+				]
+			]
+		]);
+
+		$field = $blueprint->field('mysection');
+
+		$this->assertSame('info', $field['type']);
+		$this->assertSame('negative', $field['theme']);
+		$this->assertSame('Invalid section type ("does-not-exist")', $field['label']);
+		$this->assertSame(
+			'The following section types are available: ' . PHP_EOL .
+			'- *fields*' . PHP_EOL .
+			'- *files*' . PHP_EOL .
+			'- *info*' . PHP_EOL .
+			'- *pages*' . PHP_EOL .
+			'- *stats*',
+			$field['text']
+		);
+	}
+
+	public function testSectionTypeFromName(): void
+	{
+		// with options
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'sections' => [
+				'info' => [
+				]
+			]
+		]);
+
+		$this->assertSame('info', $blueprint->field('info')['type']);
+
+		// by just passing true
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'sections' => [
+				'info' => true
+			]
+		]);
+
+		$this->assertSame('info', $blueprint->field('info')['type']);
 	}
 
 	public function testTabs(): void
@@ -1072,5 +1005,72 @@ class BlueprintTest extends TestCase
 
 		$this->assertCount(0, $blueprint->tabs());
 		$this->assertNull($blueprint->tab());
+	}
+
+	public function testTitle(): void
+	{
+		$blueprint = new Blueprint([
+			'title' => 'Test',
+			'model' => $this->model
+		]);
+
+		$this->assertSame('Test', $blueprint->title());
+	}
+
+	public function testTitleTranslated(): void
+	{
+		$blueprint = new Blueprint([
+			'title' => ['en' => 'Test'],
+			'model' => $this->model
+		]);
+
+		$this->assertSame('Test', $blueprint->title());
+	}
+
+	public function testTitleTranslatedFallback(): void
+	{
+		I18n::$locale       = 'de';
+		I18n::$translations = ['en' => ['my.i18n.string' => 'success']];
+
+		$blueprint = new Blueprint([
+			'title' => 'my.i18n.string',
+			'model' => $this->model
+		]);
+
+		$this->assertSame('success', $blueprint->title());
+	}
+
+	public function testTitleTranslatedFallbackForRoles(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true,
+					'translations' => [
+						'my.custom.role' => 'My custom role'
+					]
+				],
+				[
+					'code' => 'de',
+					'translations' => []
+				]
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'title' => 'my.custom.role'
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('de');
+		$app->setCurrentLanguage('de');
+
+		$role = $app->roles()->get('editor')->title();
+		$this->assertSame('My custom role', $role);
 	}
 }

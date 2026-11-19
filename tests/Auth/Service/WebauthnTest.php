@@ -25,17 +25,6 @@ class WebauthnTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	protected function webauthn(): Webauthn
-	{
-		return new Webauthn(
-			id:    'example.com',
-			title: 'Example',
-			user:  'user-123',
-			email: 'user@example.com',
-			name:  'User Name'
-		);
-	}
-
 	protected function app(array $props = []): App
 	{
 		return new App([
@@ -186,24 +175,10 @@ class WebauthnTest extends TestCase
 		return $head . $value;
 	}
 
-	/**
-	 * Wraps assertion() with the matching stored credential, for the
-	 * service tests that verify a full login end to end
-	 *
-	 * @return array{0: Webauthn, 1: array, 2: array, 3: string}
-	 */
-	protected function validAssertion(int $signCount = 5): array
+	public function testDecodeHandlesEmptyInput(): void
 	{
-		$webauthn = $this->webauthn();
-		$assert   = static::assertion($webauthn, $signCount);
-
-		$credentials = [[
-			'id'        => $assert['id'],
-			'publicKey' => $assert['publicKey'],
-			'counter'   => 0
-		]];
-
-		return [$webauthn, $credentials, $assert['payload'], $assert['challenge']];
+		$this->assertSame('', $this->webauthn()->decode(null));
+		$this->assertSame('', $this->webauthn()->decode(''));
 	}
 
 	public function testEncodeDecode(): void
@@ -219,10 +194,25 @@ class WebauthnTest extends TestCase
 		$this->assertSame("\xff", $webauthn->decode('_w'));
 	}
 
-	public function testDecodeHandlesEmptyInput(): void
+	public function testForUser(): void
 	{
-		$this->assertSame('', $this->webauthn()->decode(null));
-		$this->assertSame('', $this->webauthn()->decode(''));
+		$app  = $this->app([
+			'users' => [
+				['id' => 'abc', 'email' => 'jane@example.com', 'name' => 'Jane']
+			]
+		]);
+		$user = $app->user('jane@example.com');
+
+		$options = Webauthn::for($user)->registerOptions([]);
+
+		// relying party derives from the site
+		$this->assertSame('example.com', $options['rpId']);
+		$this->assertSame('example.com', $options['rp']['id']);
+		$this->assertSame('Example Site', $options['rp']['name']);
+
+		// user identity derives from the account
+		$this->assertSame('jane@example.com', $options['user']['name']);
+		$this->assertSame('Jane', $options['user']['displayName']);
 	}
 
 	public function testLoginOptions(): void
@@ -296,12 +286,6 @@ class WebauthnTest extends TestCase
 		$this->assertSame('bbb', $remaining[0]['id']);
 	}
 
-	public function testRemoveCredentialToEmpty(): void
-	{
-		$remaining = $this->webauthn()->removeCredential([['id' => 'aaa']], 'aaa');
-		$this->assertSame([], $remaining);
-	}
-
 	public function testRemoveCredentialNotFound(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -310,61 +294,19 @@ class WebauthnTest extends TestCase
 		$this->webauthn()->removeCredential([['id' => 'aaa']], 'zzz');
 	}
 
-	public function testVerifyLoginMissingId(): void
+	public function testRemoveCredentialToEmpty(): void
 	{
-		// login failures all report the same generic message so they
-		// cannot be used to distinguish why verification failed
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
-
-		$this->webauthn()->verifyLogin([], ['client' => 'x'], 'challenge');
+		$remaining = $this->webauthn()->removeCredential([['id' => 'aaa']], 'aaa');
+		$this->assertSame([], $remaining);
 	}
 
-	public function testVerifyLoginUnknownCredential(): void
+	public function testSite(): void
 	{
-		// same generic message as a missing id (no credential-existence oracle)
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$options = Webauthn::site($this->app())->loginOptions([]);
 
-		$this->webauthn()->verifyLogin([['id' => 'aaa']], ['id' => 'zzz'], 'challenge');
-	}
-
-	public function testVerifyLoginUniformsLibraryFailure(): void
-	{
-		// a well-formed request that fails inside the WebAuthn library
-		// (here: empty authenticator data) is reported with the same
-		// generic error, never the library's specific reason
-		$credentials = [[
-			'id'        => 'AQID',
-			'publicKey' => 'dummy',
-			'counter'   => 0
-		]];
-		$payload = [
-			'id'     => 'AQID',
-			'rawId'  => 'AQID',
-			'client' => ''
-		];
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
-
-		$this->webauthn()->verifyLogin($credentials, $payload, 'AQID');
-	}
-
-	public function testVerifyLoginMissingChallenge(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey challenge is missing or expired');
-
-		$this->webauthn()->verifyLogin([], ['id' => 'aaa'], '');
-	}
-
-	public function testVerifyLoginInvalidPayload(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid passkey data');
-
-		$this->webauthn()->verifyLogin([], 123, 'challenge');
+		$this->assertSame('example.com', $options['rpId']);
+		$this->assertSame('required', $options['userVerification']);
+		$this->assertIsString($options['challenge']);
 	}
 
 	public function testVerifyLoginAcceptsJsonStringPayload(): void
@@ -381,6 +323,32 @@ class WebauthnTest extends TestCase
 		$this->expectExceptionMessage('The passkey could not be verified');
 
 		$this->webauthn()->verifyLogin([], (object)['id' => 'zzz'], 'challenge');
+	}
+
+	public function testVerifyLoginInvalidPayload(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid passkey data');
+
+		$this->webauthn()->verifyLogin([], 123, 'challenge');
+	}
+
+	public function testVerifyLoginMissingChallenge(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+
+		$this->webauthn()->verifyLogin([], ['id' => 'aaa'], '');
+	}
+
+	public function testVerifyLoginMissingId(): void
+	{
+		// login failures all report the same generic message so they
+		// cannot be used to distinguish why verification failed
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey could not be verified');
+
+		$this->webauthn()->verifyLogin([], ['client' => 'x'], 'challenge');
 	}
 
 	public function testVerifyLoginRejectsNonStringPublicKey(): void
@@ -417,12 +385,35 @@ class WebauthnTest extends TestCase
 		$this->assertSame(5, $result['credentials'][0]['counter']);
 	}
 
-	public function testVerifyRegisterMissingChallenge(): void
+	public function testVerifyLoginUniformsLibraryFailure(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+		// a well-formed request that fails inside the WebAuthn library
+		// (here: empty authenticator data) is reported with the same
+		// generic error, never the library's specific reason
+		$credentials = [[
+			'id'        => 'AQID',
+			'publicKey' => 'dummy',
+			'counter'   => 0
+		]];
+		$payload = [
+			'id'     => 'AQID',
+			'rawId'  => 'AQID',
+			'client' => ''
+		];
 
-		$this->webauthn()->verifyRegister(['client' => 'x'], '');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey could not be verified');
+
+		$this->webauthn()->verifyLogin($credentials, $payload, 'AQID');
+	}
+
+	public function testVerifyLoginUnknownCredential(): void
+	{
+		// same generic message as a missing id (no credential-existence oracle)
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey could not be verified');
+
+		$this->webauthn()->verifyLogin([['id' => 'aaa']], ['id' => 'zzz'], 'challenge');
 	}
 
 	public function testVerifyRegisterInvalidPayload(): void
@@ -433,18 +424,12 @@ class WebauthnTest extends TestCase
 		$this->webauthn()->verifyRegister(3.14, 'challenge');
 	}
 
-	public function testVerifyRegisterUniformsLibraryFailure(): void
+	public function testVerifyRegisterMissingChallenge(): void
 	{
-		// a well-formed payload that fails inside the WebAuthn library
-		// (here: empty attestation) is reported with the same generic
-		// error instead of leaking the library's internal exception
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The passkey could not be verified');
+		$this->expectExceptionMessage('The passkey challenge is missing or expired');
 
-		$this->webauthn()->verifyRegister(
-			['client' => '', 'attestation' => '', 'rawId' => 'AQID'],
-			'AQID'
-		);
+		$this->webauthn()->verifyRegister(['client' => 'x'], '');
 	}
 
 	public function testVerifyRegisterSucceeds(): void
@@ -470,33 +455,48 @@ class WebauthnTest extends TestCase
 		$this->assertIsInt($credential['createdAt']);
 	}
 
-	public function testForUser(): void
+	public function testVerifyRegisterUniformsLibraryFailure(): void
 	{
-		$app  = $this->app([
-			'users' => [
-				['id' => 'abc', 'email' => 'jane@example.com', 'name' => 'Jane']
-			]
-		]);
-		$user = $app->user('jane@example.com');
+		// a well-formed payload that fails inside the WebAuthn library
+		// (here: empty attestation) is reported with the same generic
+		// error instead of leaking the library's internal exception
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey could not be verified');
 
-		$options = Webauthn::for($user)->registerOptions([]);
-
-		// relying party derives from the site
-		$this->assertSame('example.com', $options['rpId']);
-		$this->assertSame('example.com', $options['rp']['id']);
-		$this->assertSame('Example Site', $options['rp']['name']);
-
-		// user identity derives from the account
-		$this->assertSame('jane@example.com', $options['user']['name']);
-		$this->assertSame('Jane', $options['user']['displayName']);
+		$this->webauthn()->verifyRegister(
+			['client' => '', 'attestation' => '', 'rawId' => 'AQID'],
+			'AQID'
+		);
 	}
 
-	public function testSite(): void
+	/**
+	 * Wraps assertion() with the matching stored credential, for the
+	 * service tests that verify a full login end to end
+	 *
+	 * @return array{0: Webauthn, 1: array, 2: array, 3: string}
+	 */
+	protected function validAssertion(int $signCount = 5): array
 	{
-		$options = Webauthn::site($this->app())->loginOptions([]);
+		$webauthn = $this->webauthn();
+		$assert   = static::assertion($webauthn, $signCount);
 
-		$this->assertSame('example.com', $options['rpId']);
-		$this->assertSame('required', $options['userVerification']);
-		$this->assertIsString($options['challenge']);
+		$credentials = [[
+			'id'        => $assert['id'],
+			'publicKey' => $assert['publicKey'],
+			'counter'   => 0
+		]];
+
+		return [$webauthn, $credentials, $assert['payload'], $assert['challenge']];
+	}
+
+	protected function webauthn(): Webauthn
+	{
+		return new Webauthn(
+			id:    'example.com',
+			title: 'Example',
+			user:  'user-123',
+			email: 'user@example.com',
+			name:  'User Name'
+		);
 	}
 }

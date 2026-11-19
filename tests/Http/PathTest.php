@@ -34,15 +34,15 @@ class PathTest extends TestCase
 		$this->assertSame('docs/reference', (string)$path);
 	}
 
-	public function testToStringWithLeadingSlash(): void
-	{
-		$path = new Path('/docs/reference');
-		$this->assertSame('/docs/reference', $path->toString(true));
-	}
-
 	public function testToStringWithLeadingAndTrailingSlash(): void
 	{
 		$path = new Path('/docs/reference');
 		$this->assertSame('/docs/reference/', $path->toString(true, true));
+	}
+
+	public function testToStringWithLeadingSlash(): void
+	{
+		$path = new Path('/docs/reference');
+		$this->assertSame('/docs/reference', $path->toString(true));
 	}
 }

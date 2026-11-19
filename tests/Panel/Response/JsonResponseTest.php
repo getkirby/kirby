@@ -17,14 +17,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(JsonResponse::class)]
 class JsonResponseTest extends TestCase
 {
-	public function testConstruct(): void
-	{
-		$response = new JsonResponse();
-
-		$this->assertSame(200, $response->code());
-		$this->assertSame('application/json', $response->type());
-	}
-
 	public function testBody(): void
 	{
 		$response = new JsonResponse(['foo' => 'bar']);
@@ -37,6 +29,19 @@ class JsonResponseTest extends TestCase
 		];
 
 		$this->assertSame(Json::encode(['response' => $expected]), $response->body());
+	}
+
+	public function testBodyWithHtmlString(): void
+	{
+		$response = new JsonResponse([
+			'help' => new HtmlString('<b>trusted</b>'),
+			'text' => 'plain'
+		]);
+
+		$body = Json::decode($response->body());
+
+		$this->assertSame('<b>trusted</b>', $body['response']['<help>']);
+		$this->assertSame('plain', $body['response']['text']);
 	}
 
 	public function testBodyWithPrettyPrinting(): void
@@ -57,17 +62,12 @@ class JsonResponseTest extends TestCase
 		$this->assertSame(Json::encode(['response' => $expected], true), $response->body());
 	}
 
-	public function testBodyWithHtmlString(): void
+	public function testConstruct(): void
 	{
-		$response = new JsonResponse([
-			'help' => new HtmlString('<b>trusted</b>'),
-			'text' => 'plain'
-		]);
+		$response = new JsonResponse();
 
-		$body = Json::decode($response->body());
-
-		$this->assertSame('<b>trusted</b>', $body['response']['<help>']);
-		$this->assertSame('plain', $body['response']['text']);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('application/json', $response->type());
 	}
 
 	public function testData(): void
@@ -114,20 +114,44 @@ class JsonResponseTest extends TestCase
 		$this->assertSame($details, $response->data()['details']);
 	}
 
+	public function testFromArray(): void
+	{
+		$input  = ['foo' => 'bar'];
+		$output = JsonResponse::from($input);
+
+		$this->assertSame('bar', $output->data()['foo']);
+	}
+
+	public function testFromEmptyArray(): void
+	{
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The response is empty');
+
+		JsonResponse::from([]);
+	}
+
+	public function testFromException(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Error message');
+
+		JsonResponse::from(new Exception('Error message'));
+	}
+
+	public function testFromInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid response');
+
+		JsonResponse::from(5);
+	}
+
 	public function testFromJsonResponse(): void
 	{
 		$input  = new JsonResponse(['foo' => 'bar']);
 		$output = JsonResponse::from($input);
 
 		$this->assertSame($input, $output);
-	}
-
-	public function testFromRedirect(): void
-	{
-		$input  = new Redirect('https://getkirby.com');
-		$output = JsonResponse::from($input);
-
-		$this->assertSame('https://getkirby.com', $output->data()['redirect']);
 	}
 
 	public function testFromKirbyException(): void
@@ -159,20 +183,20 @@ class JsonResponseTest extends TestCase
 		JsonResponse::from(new KirbyException('Error message'));
 	}
 
-	public function testFromException(): void
+	public function testFromNull(): void
 	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Error message');
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The data could not be found');
 
-		JsonResponse::from(new Exception('Error message'));
+		JsonResponse::from(null);
 	}
 
-	public function testFromUiComponent(): void
+	public function testFromRedirect(): void
 	{
-		$input  = new Button('k-my-button');
+		$input  = new Redirect('https://getkirby.com');
 		$output = JsonResponse::from($input);
 
-		$this->assertSame('k-my-button', $output->data()['component']);
+		$this->assertSame('https://getkirby.com', $output->data()['redirect']);
 	}
 
 	public function testFromString(): void
@@ -183,36 +207,12 @@ class JsonResponseTest extends TestCase
 		JsonResponse::from('test');
 	}
 
-	public function testFromArray(): void
+	public function testFromUiComponent(): void
 	{
-		$input  = ['foo' => 'bar'];
+		$input  = new Button('k-my-button');
 		$output = JsonResponse::from($input);
 
-		$this->assertSame('bar', $output->data()['foo']);
-	}
-
-	public function testFromEmptyArray(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The response is empty');
-
-		JsonResponse::from([]);
-	}
-
-	public function testFromNull(): void
-	{
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The data could not be found');
-
-		JsonResponse::from(null);
-	}
-
-	public function testFromInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid response');
-
-		JsonResponse::from(5);
+		$this->assertSame('k-my-button', $output->data()['component']);
 	}
 
 	public function testHeaders(): void

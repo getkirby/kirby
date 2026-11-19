@@ -12,6 +12,43 @@ class SystemRoutesTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.SystemRoutes';
 
+	protected function setUp(): void
+	{
+		static::setUpTmp();
+
+		$this->app = new App([
+			'options' => [
+				'api' => [
+					'allowImpersonation' => true,
+				],
+				'panel' => [
+					'install' => true
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'access' => [
+							'system' => false
+						]
+					]
+				]
+			]
+		]);
+	}
+
+	public function tearDown(): void
+	{
+		chmod($this->app->root('content'), 0o755);
+
+		static::tearDownTmp();
+		App::destroy();
+	}
+
 	protected function assertUserWithAuthView(array $user): void
 	{
 		$this->assertArrayHasKey('email', $user);
@@ -59,43 +96,6 @@ class SystemRoutesTest extends TestCase
 	protected function createValidInstallation(): void
 	{
 		$this->app->system();
-	}
-
-	protected function setUp(): void
-	{
-		static::setUpTmp();
-
-		$this->app = new App([
-			'options' => [
-				'api' => [
-					'allowImpersonation' => true,
-				],
-				'panel' => [
-					'install' => true
-				]
-			],
-			'roots' => [
-				'index' => static::TMP
-			],
-			'blueprints' => [
-				'users/editor' => [
-					'name' => 'editor',
-					'permissions' => [
-						'access' => [
-							'system' => false
-						]
-					]
-				]
-			]
-		]);
-	}
-
-	public function tearDown(): void
-	{
-		chmod($this->app->root('content'), 0o755);
-
-		static::tearDownTmp();
-		App::destroy();
 	}
 
 	public function testGetLoginView(): void

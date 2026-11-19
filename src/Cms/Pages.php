@@ -30,6 +30,13 @@ class Pages extends Collection
 	use HasUuids;
 
 	/**
+	 * All registered pages methods
+	 *
+	 * @var array<string, Closure>
+	 */
+	public static array $methods = [];
+
+	/**
 	 * Cache for the index only listed and unlisted pages
 	 */
 	protected Pages|null $index = null;
@@ -38,13 +45,6 @@ class Pages extends Collection
 	 * Cache for the index all statuses also including drafts
 	 */
 	protected Pages|null $indexWithDrafts = null;
-
-	/**
-	 * All registered pages methods
-	 *
-	 * @var array<string, Closure>
-	 */
-	public static array $methods = [];
 
 	/**
 	 * @var Page|Site|null
@@ -413,15 +413,6 @@ class Pages extends Collection
 	}
 
 	/**
-	 * Returns all unlisted pages in the collection
-	 * @return static<TValue>
-	 */
-	public function unlisted(): static
-	{
-		return $this->filter('isUnlisted', '==', true);
-	}
-
-	/**
 	 * Include all given items in the collection
 	 *
 	 * ```php
@@ -541,6 +532,15 @@ class Pages extends Collection
 		return $this->filter(
 			fn ($page) => in_array($page->intendedTemplate()->name(), $templates, true)
 		);
+	}
+
+	/**
+	 * Returns all unlisted pages in the collection
+	 * @return static<TValue>
+	 */
+	public function unlisted(): static
+	{
+		return $this->filter('isUnlisted', '==', true);
 	}
 
 	/**

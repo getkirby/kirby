@@ -23,6 +23,13 @@ use ZipArchive;
 class F
 {
 	/**
+	 * Cache for loaded files when using `load()` with `cache: true`
+	 *
+	 * @var array<string, mixed>
+	 */
+	public static array $loadCache = [];
+
+	/**
 	 * File types with their extensions
 	 *
 	 * @var array<string, list<string>>
@@ -140,13 +147,6 @@ class F
 	];
 
 	/**
-	 * Cache for loaded files when using `load()` with `cache: true`
-	 *
-	 * @var array<string, mixed>
-	 */
-	public static array $loadCache = [];
-
-	/**
 	 * Appends new content to an existing file
 	 *
 	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
@@ -238,6 +238,20 @@ class F
 	}
 
 	/**
+	 * Returns all extensions for a certain file type
+	 *
+	 * @return list<string>
+	 */
+	public static function extensions(string|null $type = null): array
+	{
+		if ($type === null) {
+			return array_keys(Mime::types());
+		}
+
+		return static::$types[$type] ?? [];
+	}
+
+	/**
 	 * Converts a file extension to a mime type
 	 */
 	public static function extensionToMime(string $extension): string|null
@@ -257,20 +271,6 @@ class F
 		}
 
 		return false;
-	}
-
-	/**
-	 * Returns all extensions for a certain file type
-	 *
-	 * @return list<string>
-	 */
-	public static function extensions(string|null $type = null): array
-	{
-		if ($type === null) {
-			return array_keys(Mime::types());
-		}
-
-		return static::$types[$type] ?? [];
 	}
 
 	/**
@@ -630,6 +630,30 @@ class F
 	}
 
 	/**
+	 * Writes the content into the file in place
+	 *
+	 * @since 5.7.0
+	 */
+	protected static function put(
+		string $file,
+		mixed $content,
+		bool $append = false
+	): bool {
+		// create the parent directory if it does not exist yet
+		if (Dir::make(dirname($file)) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+
+		return file_put_contents($file, $content, $flags) !== false;
+	}
+
+	/**
 	 * Reads a specific byte range from a file
 	 * @since 5.3.0
 	 *
@@ -676,30 +700,6 @@ class F
 	}
 
 	/**
-	 * Writes the content into the file in place
-	 *
-	 * @since 5.7.0
-	 */
-	protected static function put(
-		string $file,
-		mixed $content,
-		bool $append = false
-	): bool {
-		// create the parent directory if it does not exist yet
-		if (Dir::make(dirname($file)) === false) {
-			return false;
-		}
-
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
-		}
-
-		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
-
-		return file_put_contents($file, $content, $flags) !== false;
-	}
-
-	/**
 	 * Reads the content of a file; returns `false`
 	 * for URLs and files that don't exist
 	 */
@@ -742,35 +742,6 @@ class F
 		}
 
 		return false;
-	}
-
-	/**
-	 * Changes the name of the file without
-	 * touching the extension
-	 *
-	 * @param $overwrite Force overwrite existing files
-	 */
-	public static function rename(
-		string $file,
-		string $newName,
-		bool $overwrite = false
-	): string|false {
-		// create the new name
-		$name = static::safeName(basename($newName));
-
-		// overwrite the root
-		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
-
-		// nothing has changed
-		if ($newRoot === $file) {
-			return $newRoot;
-		}
-
-		if (F::move($file, $newRoot, $overwrite) !== true) {
-			return false;
-		}
-
-		return $newRoot;
 	}
 
 	/**
@@ -876,24 +847,32 @@ class F
 	}
 
 	/**
-	 * Sanitize a file's full name (filename and extension)
-	 * to strip unwanted special characters
+	 * Changes the name of the file without
+	 * touching the extension
 	 *
-	 * ```php
-	 * $safe = F::safeName('über genius.txt');
-	 * // safe will be ueber-genius.txt
-	 * ```
+	 * @param $overwrite Force overwrite existing files
 	 */
-	public static function safeName(string $string): string
-	{
-		$basename  = static::safeBasename($string);
-		$extension = static::safeExtension($string);
+	public static function rename(
+		string $file,
+		string $newName,
+		bool $overwrite = false
+	): string|false {
+		// create the new name
+		$name = static::safeName(basename($newName));
 
-		if ($extension !== '') {
-			$extension = '.' . $extension;
+		// overwrite the root
+		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
+
+		// nothing has changed
+		if ($newRoot === $file) {
+			return $newRoot;
 		}
 
-		return $basename . $extension;
+		if (F::move($file, $newRoot, $overwrite) !== true) {
+			return false;
+		}
+
+		return $newRoot;
 	}
 
 	/**
@@ -926,6 +905,27 @@ class F
 		}
 
 		return Str::slug($string);
+	}
+
+	/**
+	 * Sanitize a file's full name (filename and extension)
+	 * to strip unwanted special characters
+	 *
+	 * ```php
+	 * $safe = F::safeName('über genius.txt');
+	 * // safe will be ueber-genius.txt
+	 * ```
+	 */
+	public static function safeName(string $string): string
+	{
+		$basename  = static::safeBasename($string);
+		$extension = static::safeExtension($string);
+
+		if ($extension !== '') {
+			$extension = '.' . $extension;
+		}
+
+		return $basename . $extension;
 	}
 
 	/**

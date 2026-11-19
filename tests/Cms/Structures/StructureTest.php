@@ -16,32 +16,6 @@ class StructureTest extends TestCase
 		$this->assertSame(1, $structure->count());
 	}
 
-	public function testParent(): void
-	{
-		$parent    = new Page(['slug' => 'test']);
-		$structure = Structure::factory([
-			['test' => 'Test']
-		], ['parent' => $parent]);
-
-		$this->assertSame($parent, $structure->first()->parent());
-	}
-
-	public function testToArray(): void
-	{
-		$data = [
-			['name' => 'A', 'field' => 'C'],
-			['name' => 'B', 'field' => 'D']
-		];
-		$structure = Structure::factory($data)->toArray();
-
-		$this->assertSame('A', $structure[0]['name']);
-		$this->assertSame('C', $structure[0]['field']);
-		$this->assertArrayHasKey('id', $structure[0]);
-		$this->assertSame('B', $structure[1]['name']);
-		$this->assertSame('D', $structure[1]['field']);
-		$this->assertArrayHasKey('id', $structure[1]);
-	}
-
 	public function testGroup(): void
 	{
 		$structure = Structure::factory([
@@ -74,6 +48,16 @@ class StructureTest extends TestCase
 		$this->assertSame('B', $grouped->last()->first()->name()->value());
 	}
 
+	public function testParent(): void
+	{
+		$parent    = new Page(['slug' => 'test']);
+		$structure = Structure::factory([
+			['test' => 'Test']
+		], ['parent' => $parent]);
+
+		$this->assertSame($parent, $structure->first()->parent());
+	}
+
 	public function testSiblings(): void
 	{
 		$structure = Structure::factory([
@@ -100,6 +84,22 @@ class StructureTest extends TestCase
 		$this->assertTrue($structure->last()->isLast());
 		$this->assertFalse($structure->last()->isFirst());
 		$this->assertFalse($structure->first()->isLast());
+	}
+
+	public function testToArray(): void
+	{
+		$data = [
+			['name' => 'A', 'field' => 'C'],
+			['name' => 'B', 'field' => 'D']
+		];
+		$structure = Structure::factory($data)->toArray();
+
+		$this->assertSame('A', $structure[0]['name']);
+		$this->assertSame('C', $structure[0]['field']);
+		$this->assertArrayHasKey('id', $structure[0]);
+		$this->assertSame('B', $structure[1]['name']);
+		$this->assertSame('D', $structure[1]['field']);
+		$this->assertArrayHasKey('id', $structure[1]);
 	}
 
 	public function testWithInvalidData(): void

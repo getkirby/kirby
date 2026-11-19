@@ -22,56 +22,6 @@ class FilePermissionsTest extends ModelTestCase
 		]);
 	}
 
-	public static function actionProvider(): array
-	{
-		return [
-			['access'],
-			['changeName'],
-			// ['changeTemplate'], Tested separately because of the needed blueprints
-			['create'],
-			['delete'],
-			['list'],
-			['replace'],
-			['sort'],
-			['update']
-		];
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithAdmin(string $action): void
-	{
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$perms = $file->permissions();
-
-		$this->assertTrue($perms->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithNobody(string $action): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
-		$perms = $file->permissions();
-
-		$this->assertFalse($perms->can($action));
-	}
-
-	public function testCannotChangeTemplate(): void
-	{
-		$this->app->impersonate('kirby');
-
-		$page = new Page(['slug' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
-
-		$this->assertFalse($file->permissions()->can('changeTemplate'));
-	}
-
 	public function testCanChangeTemplate(): void
 	{
 		$this->app = $this->app->clone([
@@ -136,6 +86,56 @@ class FilePermissionsTest extends ModelTestCase
 
 		// Should be able to change template because multiple templates are available
 		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
+
+	public function testCannotChangeTemplate(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page = new Page(['slug' => 'test']);
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		$this->assertFalse($file->permissions()->can('changeTemplate'));
+	}
+
+	public static function actionProvider(): array
+	{
+		return [
+			['access'],
+			['changeName'],
+			// ['changeTemplate'], Tested separately because of the needed blueprints
+			['create'],
+			['delete'],
+			['list'],
+			['replace'],
+			['sort'],
+			['update']
+		];
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$perms = $file->permissions();
+
+		$this->assertTrue($perms->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$perms = $file->permissions();
+
+		$this->assertFalse($perms->can($action));
 	}
 
 	public function testWithPathTraversalTemplate(): void

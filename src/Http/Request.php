@@ -178,6 +178,30 @@ class Request
 	}
 
 	/**
+	 * Returns the raw auth string from the `auth` option
+	 * or `Authorization` header unless both are empty
+	 */
+	protected function authString(): string|null
+	{
+		// both variants need to be checked separately
+		// because empty strings are treated as invalid
+		// but the `??` operator wouldn't do the fallback
+		$option = $this->options['auth'] ?? null;
+
+		if (is_string($option) === true && $option !== '') {
+			return $option;
+		}
+
+		$header = $this->header('authorization');
+
+		if (is_string($header) === true && $header !== '') {
+			return $header;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns the Body object
 	 */
 	public function body(): Body
@@ -398,29 +422,5 @@ class Request
 		}
 
 		return $this->url ??= Uri::current();
-	}
-
-	/**
-	 * Returns the raw auth string from the `auth` option
-	 * or `Authorization` header unless both are empty
-	 */
-	protected function authString(): string|null
-	{
-		// both variants need to be checked separately
-		// because empty strings are treated as invalid
-		// but the `??` operator wouldn't do the fallback
-		$option = $this->options['auth'] ?? null;
-
-		if (is_string($option) === true && $option !== '') {
-			return $option;
-		}
-
-		$header = $this->header('authorization');
-
-		if (is_string($header) === true && $header !== '') {
-			return $header;
-		}
-
-		return null;
 	}
 }

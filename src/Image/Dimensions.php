@@ -56,14 +56,6 @@ class Dimensions implements Stringable
 	}
 
 	/**
-	 * Returns the height
-	 */
-	public function height(): int
-	{
-		return $this->height;
-	}
-
-	/**
 	 * Recalculates the width and height to fit into the given box.
 	 *
 	 * ```php
@@ -262,6 +254,14 @@ class Dimensions implements Stringable
 			(int)round($svg->width() ?? 0),
 			(int)round($svg->height() ?? 0)
 		);
+	}
+
+	/**
+	 * Returns the height
+	 */
+	public function height(): int
+	{
+		return $this->height;
 	}
 
 	/**

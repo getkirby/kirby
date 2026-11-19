@@ -11,7 +11,7 @@ namespace Kirby\Exception;
  */
 class AbilityException extends LogicException
 {
-	protected static string $defaultKey = 'ability';
 	protected static string $defaultFallback = 'This action cannot be executed';
 	protected static int $defaultHttpCode = 403;
+	protected static string $defaultKey = 'ability';
 }

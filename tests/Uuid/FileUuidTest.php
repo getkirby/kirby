@@ -115,27 +115,6 @@ class FileUuidTest extends TestCase
 		$this->assertSame(4, iterator_count($index));
 	}
 
-	public function testRetrieveId(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$this->assertSame('my-file', ModelUuid::retrieveId($file));
-	}
-
-	public function testToPermalink(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$url  = 'https://getkirby.com/@/file/my-file';
-		$this->assertSame($url, $file->uuid()->toPermalink());
-	}
-
-	public function testValue(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$uuid = $file->uuid();
-		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
-		$this->assertSame($expected, $uuid->value());
-	}
-
 	public static function multilangProvider(): array
 	{
 		return [
@@ -216,5 +195,26 @@ class FileUuidTest extends TestCase
 
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($file->version()->read('de')['uuid'] ?? null);
+	}
+
+	public function testRetrieveId(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$this->assertSame('my-file', ModelUuid::retrieveId($file));
+	}
+
+	public function testToPermalink(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$url  = 'https://getkirby.com/@/file/my-file';
+		$this->assertSame($url, $file->uuid()->toPermalink());
+	}
+
+	public function testValue(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$uuid = $file->uuid();
+		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
+		$this->assertSame($expected, $uuid->value());
 	}
 }

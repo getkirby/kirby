@@ -22,6 +22,26 @@ class AppUsersTest extends TestCase
 		]);
 	}
 
+	public function basicAuthApp()
+	{
+		return $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth' => true
+				]
+			],
+			'users' => [
+				[
+					'email'    => 'test@getkirby.com',
+					'password' => User::hashPassword('correct-horse-battery-staple')
+				]
+			],
+			'request' => [
+				'url' => 'https://getkirby.com/login'
+			]
+		]);
+	}
+
 	public function testImpersonate(): void
 	{
 		$self = $this;
@@ -110,7 +130,7 @@ class AppUsersTest extends TestCase
 		$this->app->impersonate('homer@simpsons.com');
 	}
 
-	public function testRolesSet(): void
+	public function testRoleFromImpersonatedUser(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -118,38 +138,19 @@ class AppUsersTest extends TestCase
 					'name'  => 'editor',
 					'title' => 'Editor'
 				]
-			]
-		]);
-
-		$this->assertCount(2, $app->roles());
-		$this->assertSame('editor', $app->roles()->last()->name());
-	}
-
-	public function testRolesLoad(): void
-	{
-		$app = new App([
-			'roots' => [
-				'site' => static::FIXTURES
-			]
-		]);
-
-		$this->assertCount(2, $app->roles());
-		$this->assertSame('editor', $app->roles()->last()->name());
-	}
-
-	public function testRoleManual(): void
-	{
-		$app = new App([
-			'roles' => [
+			],
+			'users' => [
 				[
-					'name'  => 'editor',
-					'title' => 'Editor'
+					'email' => 'user@getkirby.com',
+					'role'  => 'editor'
 				]
 			]
 		]);
 
-		$this->assertSame('editor', $app->role('editor')->name());
-		$this->assertNull($app->role('something'));
+		$app->impersonate('user@getkirby.com');
+
+		$this->assertSame('editor', $app->role()->name());
+		$this->assertNull($app->role(null, false));
 	}
 
 	public function testRoleFromUser(): void
@@ -175,7 +176,7 @@ class AppUsersTest extends TestCase
 		$this->assertSame('editor', $app->role(null, false)->name());
 	}
 
-	public function testRoleFromImpersonatedUser(): void
+	public function testRoleManual(): void
 	{
 		$app = new App([
 			'roles' => [
@@ -183,65 +184,38 @@ class AppUsersTest extends TestCase
 					'name'  => 'editor',
 					'title' => 'Editor'
 				]
-			],
-			'users' => [
-				[
-					'email' => 'user@getkirby.com',
-					'role'  => 'editor'
-				]
 			]
 		]);
 
-		$app->impersonate('user@getkirby.com');
-
-		$this->assertSame('editor', $app->role()->name());
-		$this->assertNull($app->role(null, false));
+		$this->assertSame('editor', $app->role('editor')->name());
+		$this->assertNull($app->role('something'));
 	}
 
-	public function testUsersLoad(): void
+	public function testRolesLoad(): void
 	{
-		$app = $this->app->clone([
+		$app = new App([
 			'roots' => [
 				'site' => static::FIXTURES
 			]
 		]);
 
-		$this->assertCount(1, $app->users());
-		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
+		$this->assertCount(2, $app->roles());
+		$this->assertSame('editor', $app->roles()->last()->name());
 	}
 
-	public function testUsersSet(): void
+	public function testRolesSet(): void
 	{
-		$app = $this->app->clone([
-			'users' => [
+		$app = new App([
+			'roles' => [
 				[
-					'email' => 'user@getkirby.com'
+					'name'  => 'editor',
+					'title' => 'Editor'
 				]
 			]
 		]);
 
-		$this->assertCount(1, $app->users());
-		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
-	}
-
-	public function basicAuthApp()
-	{
-		return $this->app->clone([
-			'options' => [
-				'api' => [
-					'basicAuth' => true
-				]
-			],
-			'users' => [
-				[
-					'email'    => 'test@getkirby.com',
-					'password' => User::hashPassword('correct-horse-battery-staple')
-				]
-			],
-			'request' => [
-				'url' => 'https://getkirby.com/login'
-			]
-		]);
+		$this->assertCount(2, $app->roles());
+		$this->assertSame('editor', $app->roles()->last()->name());
 	}
 
 	public function testUserFromBasicAuth(): void
@@ -298,5 +272,31 @@ class AppUsersTest extends TestCase
 		]);
 
 		$user = $app->auth()->currentUserFromBasicAuth();
+	}
+
+	public function testUsersLoad(): void
+	{
+		$app = $this->app->clone([
+			'roots' => [
+				'site' => static::FIXTURES
+			]
+		]);
+
+		$this->assertCount(1, $app->users());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
+	}
+
+	public function testUsersSet(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'user@getkirby.com'
+				]
+			]
+		]);
+
+		$this->assertCount(1, $app->users());
+		$this->assertSame('user@getkirby.com', $app->users()->first()->email());
 	}
 }

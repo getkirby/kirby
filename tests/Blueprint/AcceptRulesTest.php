@@ -24,6 +24,62 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['default'], $rules->fileBlueprints());
 	}
 
+	public function testFileBlueprintsFromAllAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/image' => [
+					'name' => 'image',
+				],
+				'files/document' => [
+					'name' => 'document',
+				],
+				'files/video' => [
+					'name' => 'video',
+				],
+			]
+		]);
+
+		// a file list without blueprint accepts all available blueprints
+		$blueprint = new Blueprint([
+			'model' => $this->model,
+			'name'  => 'default',
+			'fields' => [
+				'files' => [
+					'type' => 'filelist',
+					// no blueprint specified - should get all available
+				],
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		$expected = ['default', 'image', 'document', 'video'];
+		$result   = $rules->fileBlueprints();
+		sort($expected);
+		sort($result);
+		$this->assertSame($expected, $result);
+	}
+
+	public function testFileBlueprintsFromDefaultFieldsets(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'name'   => 'default',
+			'fields' => [
+				'blocks' => [
+					'type' => 'blocks'
+				]
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		// the core image, gallery and video blocks
+		// upload their files as `blocks/image`
+		$this->assertContains('blocks/image', $rules->fileBlueprints());
+	}
+
 	public function testFileBlueprintsFromFields(): void
 	{
 		$this->app = $this->app->clone([
@@ -110,66 +166,6 @@ class AcceptRulesTest extends BlueprintTest
 		$rules = new AcceptRules($blueprint);
 
 		$this->assertSame(['a', 'b', 'c', 'd', 'e'], $rules->fileBlueprints());
-	}
-
-	public function testFileBlueprintsFromFieldsWithUnknownType(): void
-	{
-		$blueprint = new Blueprint([
-			'model'  => $this->model,
-			'name'   => 'default',
-			'fields' => [
-				'blocks' => [
-					'type'      => 'blocks',
-					'fieldsets' => [
-						'text' => [
-							'fields' => [
-								'text' => [
-									'type'    => 'does-not-exist',
-									'uploads' => [
-										'blueprint' => 'a'
-									]
-								]
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$rules = new AcceptRules($blueprint);
-
-		// a field type that cannot be resolved becomes
-		// an error field, which does not support uploads
-		$this->assertSame([], $rules->fileBlueprints());
-	}
-
-	public function testFileBlueprintsFromFieldsWithDifferentParent(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/a' => [
-					'name' => 'a',
-				]
-			]
-		]);
-
-		$blueprint = new Blueprint([
-			'model' => $this->model,
-			'name'  => 'default',
-			'fields' => [
-				'a' => [
-					'type' => 'filepicker',
-					'uploads' => [
-						'parent'    => 'site',
-						'blueprint' => 'a'
-					]
-				],
-			]
-		]);
-
-		$rules = new AcceptRules($blueprint);
-
-		$this->assertSame([], $rules->fileBlueprints());
 	}
 
 	public function testFileBlueprintsFromFieldsAndFileLists(): void
@@ -286,26 +282,7 @@ class AcceptRulesTest extends BlueprintTest
 		);
 	}
 
-	public function testFileBlueprintsFromDefaultFieldsets(): void
-	{
-		$blueprint = new Blueprint([
-			'model'  => $this->model,
-			'name'   => 'default',
-			'fields' => [
-				'blocks' => [
-					'type' => 'blocks'
-				]
-			]
-		]);
-
-		$rules = new AcceptRules($blueprint);
-
-		// the core image, gallery and video blocks
-		// upload their files as `blocks/image`
-		$this->assertContains('blocks/image', $rules->fileBlueprints());
-	}
-
-	public function testFileBlueprintsInField(): void
+	public function testFileBlueprintsFromFieldsWithDifferentParent(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
@@ -320,19 +297,49 @@ class AcceptRulesTest extends BlueprintTest
 			'name'  => 'default',
 			'fields' => [
 				'a' => [
-					'type'      => 'filelist',
-					'blueprint' => 'a'
-				],
-				'b' => [
-					'type'      => 'filelist',
-					'blueprint' => 'b'
+					'type' => 'filepicker',
+					'uploads' => [
+						'parent'    => 'site',
+						'blueprint' => 'a'
+					]
 				],
 			]
 		]);
 
 		$rules = new AcceptRules($blueprint);
 
-		$this->assertSame(['a'], $rules->fileBlueprints('a'));
+		$this->assertSame([], $rules->fileBlueprints());
+	}
+
+	public function testFileBlueprintsFromFieldsWithUnknownType(): void
+	{
+		$blueprint = new Blueprint([
+			'model'  => $this->model,
+			'name'   => 'default',
+			'fields' => [
+				'blocks' => [
+					'type'      => 'blocks',
+					'fieldsets' => [
+						'text' => [
+							'fields' => [
+								'text' => [
+									'type'    => 'does-not-exist',
+									'uploads' => [
+										'blueprint' => 'a'
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$rules = new AcceptRules($blueprint);
+
+		// a field type that cannot be resolved becomes
+		// an error field, which does not support uploads
+		$this->assertSame([], $rules->fileBlueprints());
 	}
 
 	public function testFileBlueprintsFromFileLists(): void
@@ -368,41 +375,34 @@ class AcceptRulesTest extends BlueprintTest
 		$this->assertSame(['a', 'b'], $rules->fileBlueprints());
 	}
 
-	public function testFileBlueprintsFromAllAvailable(): void
+	public function testFileBlueprintsInField(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
-				'files/image' => [
-					'name' => 'image',
-				],
-				'files/document' => [
-					'name' => 'document',
-				],
-				'files/video' => [
-					'name' => 'video',
-				],
+				'files/a' => [
+					'name' => 'a',
+				]
 			]
 		]);
 
-		// a file list without blueprint accepts all available blueprints
 		$blueprint = new Blueprint([
 			'model' => $this->model,
 			'name'  => 'default',
 			'fields' => [
-				'files' => [
-					'type' => 'filelist',
-					// no blueprint specified - should get all available
+				'a' => [
+					'type'      => 'filelist',
+					'blueprint' => 'a'
+				],
+				'b' => [
+					'type'      => 'filelist',
+					'blueprint' => 'b'
 				],
 			]
 		]);
 
 		$rules = new AcceptRules($blueprint);
 
-		$expected = ['default', 'image', 'document', 'video'];
-		$result   = $rules->fileBlueprints();
-		sort($expected);
-		sort($result);
-		$this->assertSame($expected, $result);
+		$this->assertSame(['a'], $rules->fileBlueprints('a'));
 	}
 
 	public function testPageBlueprints(): void

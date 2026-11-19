@@ -22,11 +22,6 @@ use Throwable;
 class Str
 {
 	/**
-	 * Language translation table
-	 */
-	public static array $language = [];
-
-	/**
 	 * Ascii translation table
 	 */
 	public static array $ascii = [
@@ -118,6 +113,11 @@ class Str
 			'allowed'   => 'a-z0-9'
 		]
 	];
+
+	/**
+	 * Language translation table
+	 */
+	public static array $language = [];
 
 	/**
 	 * Parse accepted values and their quality from an
@@ -344,6 +344,33 @@ class Str
 	}
 
 	/**
+	 * Converts a string to a different encoding
+	 *
+	 * @throws InvalidArgumentException when conversion failed
+	 */
+	public static function convert(
+		string $string,
+		string $targetEncoding,
+		string|null $sourceEncoding = null
+	): string {
+		$sourceEncoding ??= static::encoding($string);
+
+		if (strtolower($sourceEncoding) === strtolower($targetEncoding)) {
+			return $string;
+		}
+
+		$result = @iconv($sourceEncoding, $targetEncoding, $string);
+
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Could not convert string "' . $string . '" from "' . $sourceEncoding . '" to "' . $targetEncoding . '"'
+			);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Convert timestamp to date string
 	 * according to locale settings
 	 *
@@ -389,33 +416,6 @@ class Str
 		}
 
 		return $handler($format, $time);
-	}
-
-	/**
-	 * Converts a string to a different encoding
-	 *
-	 * @throws InvalidArgumentException when conversion failed
-	 */
-	public static function convert(
-		string $string,
-		string $targetEncoding,
-		string|null $sourceEncoding = null
-	): string {
-		$sourceEncoding ??= static::encoding($string);
-
-		if (strtolower($sourceEncoding) === strtolower($targetEncoding)) {
-			return $string;
-		}
-
-		$result = @iconv($sourceEncoding, $targetEncoding, $string);
-
-		if ($result === false) {
-			throw new InvalidArgumentException(
-				message: 'Could not convert string "' . $string . '" from "' . $sourceEncoding . '" to "' . $targetEncoding . '"'
-			);
-		}
-
-		return $result;
 	}
 
 	/**
@@ -713,20 +713,6 @@ class Str
 	}
 
 	/**
-	 * Check whether a string matches a regular expression
-	 *
-	 * @param $flags Optional flags for PHP `preg_match()`
-	 */
-	public static function matches(
-		string $string,
-		string $pattern,
-		int $flags = 0,
-		int $offset = 0
-	): bool {
-		return static::match($string, $pattern, $flags, $offset) !== null;
-	}
-
-	/**
 	 * Match string against a regular expression and return all matches
 	 *
 	 * @param $flags Optional flags for PHP `preg_match_all()`
@@ -743,6 +729,20 @@ class Str
 			true  => $matches,
 			false => null
 		};
+	}
+
+	/**
+	 * Check whether a string matches a regular expression
+	 *
+	 * @param $flags Optional flags for PHP `preg_match()`
+	 */
+	public static function matches(
+		string $string,
+		string $pattern,
+		int $flags = 0,
+		int $offset = 0
+	): bool {
+		return static::match($string, $pattern, $flags, $offset) !== null;
 	}
 
 	/**

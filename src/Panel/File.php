@@ -46,7 +46,6 @@ class File extends Model
 			default => $this->model->url()
 		};
 
-
 		if ($callback = $this->dragTextFromCallback($type, $url)) {
 			return $callback;
 		}

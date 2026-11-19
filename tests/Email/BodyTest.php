@@ -15,6 +15,17 @@ class BodyTest extends TestCase
 		$this->assertSame('', $body->text());
 	}
 
+	public function testConstructNullParams(): void
+	{
+		$body = new Body([
+			'html' => null,
+			'text' => null
+		]);
+
+		$this->assertSame('', $body->html());
+		$this->assertSame('', $body->text());
+	}
+
 	public function testConstructParams(): void
 	{
 		$data = [
@@ -26,16 +37,5 @@ class BodyTest extends TestCase
 
 		$this->assertSame($data['html'], $body->html());
 		$this->assertSame($data['text'], $body->text());
-	}
-
-	public function testConstructNullParams(): void
-	{
-		$body = new Body([
-			'html' => null,
-			'text' => null
-		]);
-
-		$this->assertSame('', $body->html());
-		$this->assertSame('', $body->text());
 	}
 }

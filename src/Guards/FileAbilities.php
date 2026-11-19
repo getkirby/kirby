@@ -15,6 +15,13 @@ use Kirby\Cms\File;
  */
 class FileAbilities extends ModelAbilities
 {
+	protected function ensureToChangeTemplate(): void
+	{
+		if (count($this->model->blueprints()) <= 1) {
+			$this->error(key: 'changeTemplate');
+		}
+	}
+
 	protected function error(
 		string $key,
 		array $data = [],
@@ -28,12 +35,5 @@ class FileAbilities extends ModelAbilities
 			],
 			details: $details
 		);
-	}
-
-	protected function ensureToChangeTemplate(): void
-	{
-		if (count($this->model->blueprints()) <= 1) {
-			$this->error(key: 'changeTemplate');
-		}
 	}
 }

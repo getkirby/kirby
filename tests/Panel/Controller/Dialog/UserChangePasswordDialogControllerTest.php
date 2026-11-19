@@ -33,6 +33,50 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->app->impersonate('kirby');
 	}
 
+	public function testChangePasswordOnSubmitWithInvalidConfirmation(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'currentPassword'      => '12345678',
+					'password'             => 'abcdefgh',
+					'passwordConfirmation' => 'abcdefg'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.password.notSame');
+
+		$user       = $this->app->user('test');
+		$controller = new UserChangePasswordDialogController($user);
+		$controller->submit();
+	}
+
+	public function testChangePasswordOnSubmitWithInvalidPassword(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'currentPassword'      => '12345678',
+					'password'             => 'abcdef',
+					'passwordConfirmation' => 'abcdef'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.user.password.invalid');
+
+		$user       = $this->app->user('test');
+		$controller = new UserChangePasswordDialogController($user);
+		$controller->submit();
+	}
+
 	public function testFactory(): void
 	{
 		$controller = UserChangePasswordDialogController::factory('test');
@@ -52,34 +96,6 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertSame('New password', $props['fields']['password']['label']);
 		$this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
 		$this->assertSame('Change password', $props['submitButton']);
-	}
-
-	public function testLoadWithoutPasswordForCurrentUser(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'id'       => 'editor',
-					'email'    => 'editor@getkirby.com',
-					'role'     => 'admin',
-					'password' => '',
-				]
-			]
-		]);
-
-		$this->app->impersonate('editor@getkirby.com');
-
-		$user       = $this->app->user('editor');
-		$controller = new UserChangePasswordDialogController($user);
-		$dialog     = $controller->load();
-		$props      = $dialog->props();
-
-		// a user without password can change their own password
-		// without providing the current (non-existing) password
-		$this->assertArrayNotHasKey('currentPassword', $props['fields']);
-		$this->assertArrayNotHasKey('line', $props['fields']);
-
-		$this->assertSame('Set password', $props['submitButton']);
 	}
 
 	public function testLoadWithoutPasswordForAnotherUser(): void
@@ -115,6 +131,34 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertArrayHasKey('line', $props['fields']);
 	}
 
+	public function testLoadWithoutPasswordForCurrentUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'       => 'editor',
+					'email'    => 'editor@getkirby.com',
+					'role'     => 'admin',
+					'password' => '',
+				]
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$user       = $this->app->user('editor');
+		$controller = new UserChangePasswordDialogController($user);
+		$dialog     = $controller->load();
+		$props      = $dialog->props();
+
+		// a user without password can change their own password
+		// without providing the current (non-existing) password
+		$this->assertArrayNotHasKey('currentPassword', $props['fields']);
+		$this->assertArrayNotHasKey('line', $props['fields']);
+
+		$this->assertSame('Set password', $props['submitButton']);
+	}
+
 	public function testSubmit(): void
 	{
 		$this->app = $this->app->clone([
@@ -142,36 +186,29 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertTrue($user->validatePassword('abcdefgh'));
 	}
 
-	public function testSubmitWithoutPasswordForCurrentUser(): void
+	public function testSubmitRateLimited(): void
 	{
 		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]],
 			'request' => [
 				'query' => [
+					'currentPassword'      => '12345678',
 					'password'             => 'abcdefgh',
 					'passwordConfirmation' => 'abcdefgh'
-				]
-			],
-			'users' => [
-				[
-					'id'       => 'editor',
-					'email'    => 'editor@getkirby.com',
-					'role'     => 'admin',
-					'password' => ''
 				]
 			]
 		]);
 
-		$this->app->impersonate('editor@getkirby.com');
+		$this->app->impersonate('test@getkirby.com');
 
-		$user       = $this->app->user('editor');
-		$controller = new UserChangePasswordDialogController($user);
-		$response   = $controller->submit();
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com', triggerHook: false);
 
-		$this->assertSame('user.changePassword', $response['event']);
+		$controller = new UserChangePasswordDialogController($this->app->user('test'));
 
-		// reload the user freshly
-		$user = $this->app->user('editor');
-		$this->assertTrue($user->validatePassword('abcdefgh'));
+		// the limit surfaces as itself, not masked as a wrong password
+		$this->expectException(RateLimitException::class);
+		$controller->submit();
 	}
 
 	public function testSubmitWithInvalidCurrentPassword(): void
@@ -225,72 +262,35 @@ class UserChangePasswordDialogControllerTest extends TestCase
 		$this->assertSame(1, $log['by-email']['test@getkirby.com']['trials']);
 	}
 
-	public function testSubmitRateLimited(): void
+	public function testSubmitWithoutPasswordForCurrentUser(): void
 	{
 		$this->app = $this->app->clone([
-			'options' => ['auth' => ['trials' => 1]],
 			'request' => [
 				'query' => [
-					'currentPassword'      => '12345678',
 					'password'             => 'abcdefgh',
 					'passwordConfirmation' => 'abcdefgh'
 				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-
-		// exhaust the limit for this visitor
-		$this->app->auth()->limits()->track('test@getkirby.com', triggerHook: false);
-
-		$controller = new UserChangePasswordDialogController($this->app->user('test'));
-
-		// the limit surfaces as itself, not masked as a wrong password
-		$this->expectException(RateLimitException::class);
-		$controller->submit();
-	}
-
-	public function testChangePasswordOnSubmitWithInvalidPassword(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'currentPassword'      => '12345678',
-					'password'             => 'abcdef',
-					'passwordConfirmation' => 'abcdef'
+			],
+			'users' => [
+				[
+					'id'       => 'editor',
+					'email'    => 'editor@getkirby.com',
+					'role'     => 'admin',
+					'password' => ''
 				]
 			]
 		]);
 
-		$this->app->impersonate('test@getkirby.com');
+		$this->app->impersonate('editor@getkirby.com');
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.password.invalid');
-
-		$user       = $this->app->user('test');
+		$user       = $this->app->user('editor');
 		$controller = new UserChangePasswordDialogController($user);
-		$controller->submit();
-	}
+		$response   = $controller->submit();
 
-	public function testChangePasswordOnSubmitWithInvalidConfirmation(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'currentPassword'      => '12345678',
-					'password'             => 'abcdefgh',
-					'passwordConfirmation' => 'abcdefg'
-				]
-			]
-		]);
+		$this->assertSame('user.changePassword', $response['event']);
 
-		$this->app->impersonate('test@getkirby.com');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.user.password.notSame');
-
-		$user       = $this->app->user('test');
-		$controller = new UserChangePasswordDialogController($user);
-		$controller->submit();
+		// reload the user freshly
+		$user = $this->app->user('editor');
+		$this->assertTrue($user->validatePassword('abcdefgh'));
 	}
 }

@@ -16,6 +16,71 @@ class FileRulesTest extends ModelTestCase
 	public const string FIXTURES = __DIR__ . '/fixtures/files';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
 
+	/**
+	 * Creates a file that really exists in the page root,
+	 * so that the extension, filename and MIME type can be detected
+	 */
+	protected function fileOnDisk(string $filename): File
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		F::copy(static::FIXTURES . '/' . $filename, $page->root() . '/' . $filename);
+
+		return new File([
+			'filename' => $filename,
+			'parent'   => $page
+		]);
+	}
+
+	/**
+	 * Creates a file with more than one available template
+	 */
+	protected function fileWithMultipleTemplates(): File
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'fields' => [
+						'files' => [
+							'type'      => 'filelist',
+							'blueprint' => 'b'
+						]
+					]
+				],
+				'files/a' => ['title' => 'a'],
+				'files/b' => ['title' => 'b'],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'foo',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'a']
+							]
+						]
+					]
+				]
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return $this->app->page('test')->file('test.jpg');
+	}
+
 	public function testChangeName(): void
 	{
 		$page = new Page([
@@ -30,6 +95,72 @@ class FileRulesTest extends ModelTestCase
 
 		$file = $page->file('a.jpg');
 		FileRules::changeName($file, 'c');
+	}
+
+	public function testChangeNameRejectsForbiddenExtension(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg']
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'shell', 'php');
+	}
+
+	public function testChangeNameRejectsForbiddenFilename(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg']
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, '.hidden');
+	}
+
+	public function testChangeNameToExistingFile(): void
+	{
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "b.jpg" already exists');
+
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg']
+			]
+		]);
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b');
+	}
+
+	public function testChangeNameToExistingFileWithNewExtension(): void
+	{
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "b.png" already exists');
+
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.png']
+			]
+		]);
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b', 'png');
 	}
 
 	public function testChangeNameWithEmptyInput(): void
@@ -85,105 +216,11 @@ class FileRulesTest extends ModelTestCase
 		FileRules::changeSort($file, 1);
 	}
 
-	public function testChangeToSameNameWithDifferentException(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.png']
-			]
-		]);
-
-		$this->expectNotToPerformAssertions();
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'b');
-	}
-
-	public function testChangeNameToExistingFile(): void
-	{
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "b.jpg" already exists');
-
-		$page = new Page([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg']
-			]
-		]);
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'b');
-	}
-
-	public function testChangeNameToExistingFileWithNewExtension(): void
-	{
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "b.png" already exists');
-
-		$page = new Page([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.png']
-			]
-		]);
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'b', 'png');
-	}
-
-	public function testChangeNameRejectsForbiddenExtension(): void
-	{
-		$page = new Page([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg']
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'shell', 'php');
-	}
-
-	public function testChangeNameRejectsForbiddenFilename(): void
-	{
-		$page = new Page([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg']
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload invisible files');
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, '.hidden');
-	}
-
 	public function testChangeTemplate(): void
 	{
 		$file = $this->fileWithMultipleTemplates();
 
 		$this->expectNotToPerformAssertions();
-
-		FileRules::changeTemplate($file, 'b');
-	}
-
-	public function testChangeTemplateWithoutPermissions(): void
-	{
-		$file = $this->fileWithMultipleTemplates();
-
-		$this->app->impersonate('nobody');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for the file "test/test.jpg"');
 
 		FileRules::changeTemplate($file, 'b');
 	}
@@ -207,6 +244,86 @@ class FileRulesTest extends ModelTestCase
 		$this->expectExceptionCode('error.file.changeTemplate.invalid');
 
 		FileRules::changeTemplate($file, 'c');
+	}
+
+	public function testChangeTemplateWithoutPermissions(): void
+	{
+		$file = $this->fileWithMultipleTemplates();
+
+		$this->app->impersonate('nobody');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for the file "test/test.jpg"');
+
+		FileRules::changeTemplate($file, 'b');
+	}
+
+	public function testChangeToSameNameWithDifferentException(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.png']
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b');
+	}
+
+	public function testCreateDifferentFileWithSameFilename(): void
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg', 'content' => ['template' => 'test']],
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		// create real file with content and move into page root
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: test');
+
+		$newFile = new File([
+			'filename' => 'test.jpg',
+			'parent' => $page,
+			'content' => [
+				'template' => 'test'
+			]
+		]);
+
+		$this->expectException(DuplicateException::class);
+		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
+
+		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
+		FileRules::create($newFile, $upload);
+	}
+
+	public function testCreateHarmfulContents(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.svg', 'parent' => $parent]);
+		$upload = new BaseFile(static::FIXTURES . '/test.svg');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
+
+		FileRules::create($file, $upload);
 	}
 
 	public function testCreateSameFile(): void
@@ -287,58 +404,6 @@ class FileRulesTest extends ModelTestCase
 		FileRules::create($newFile, $upload);
 	}
 
-	public function testCreateDifferentFileWithSameFilename(): void
-	{
-		$testImage = static::FIXTURES . '/test.jpg';
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg', 'content' => ['template' => 'test']],
-						]
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = $this->app->page('test');
-
-		// create real file with content and move into page root
-		F::copy($testImage, $page->root() . '/test.jpg');
-		F::write($page->root() . '/test.jpg.txt', 'Template: test');
-
-		$newFile = new File([
-			'filename' => 'test.jpg',
-			'parent' => $page,
-			'content' => [
-				'template' => 'test'
-			]
-		]);
-
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
-
-		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
-		FileRules::create($newFile, $upload);
-	}
-
-	public function testCreateHarmfulContents(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-		$file   = new File(['filename' => 'test.svg', 'parent' => $parent]);
-		$upload = new BaseFile(static::FIXTURES . '/test.svg');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
-
-		FileRules::create($file, $upload);
-	}
-
 	public function testCreateWithoutPermissions(): void
 	{
 		$this->app->impersonate('nobody');
@@ -366,16 +431,13 @@ class FileRulesTest extends ModelTestCase
 		FileRules::delete($file);
 	}
 
-	public function testReplaceWithoutPermissions(): void
+	public function testReplaceHarmfulContents(): void
 	{
-		$this->app->impersonate('nobody');
+		$file   = $this->fileOnDisk('test.svg');
+		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
-		$parent = new Page(['slug' => 'test']);
-		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be replaced');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
 		FileRules::replace($file, $upload);
 	}
@@ -391,13 +453,16 @@ class FileRulesTest extends ModelTestCase
 		FileRules::replace($file, $upload);
 	}
 
-	public function testReplaceHarmfulContents(): void
+	public function testReplaceWithoutPermissions(): void
 	{
-		$file   = $this->fileOnDisk('test.svg');
-		$upload = new BaseFile(static::FIXTURES . '/test.svg');
+		$this->app->impersonate('nobody');
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The file cannot be replaced');
 
 		FileRules::replace($file, $upload);
 	}
@@ -445,15 +510,25 @@ class FileRulesTest extends ModelTestCase
 		FileRules::validFile($file);
 	}
 
-	public function testValidFileWithForbiddenFilename(): void
+	public function testValidFilename(): void
 	{
 		$parent = new Page(['slug' => 'test']);
-		$file   = new File(['filename' => '.htaccess', 'parent' => $parent]);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectNotToPerformAssertions();
+
+		FileRules::validFilename($file, 'test.jpg');
+	}
+
+	public function testValidFilenameWithInvisibleFile(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload Apache config files');
+		$this->expectExceptionMessage('You are not allowed to upload invisible files');
 
-		FileRules::validFile($file, false);
+		FileRules::validFilename($file, '.gitignore');
 	}
 
 	public function testValidFileSkipMime(): void
@@ -487,25 +562,15 @@ class FileRulesTest extends ModelTestCase
 		FileRules::validFile($file);
 	}
 
-	public function testValidFilename(): void
+	public function testValidFileWithForbiddenFilename(): void
 	{
 		$parent = new Page(['slug' => 'test']);
-		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
-
-		$this->expectNotToPerformAssertions();
-
-		FileRules::validFilename($file, 'test.jpg');
-	}
-
-	public function testValidFilenameWithInvisibleFile(): void
-	{
-		$parent = new Page(['slug' => 'test']);
-		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$file   = new File(['filename' => '.htaccess', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+		$this->expectExceptionMessage('You are not allowed to upload Apache config files');
 
-		FileRules::validFilename($file, '.gitignore');
+		FileRules::validFile($file, false);
 	}
 
 	public function testValidMime(): void
@@ -527,70 +592,5 @@ class FileRulesTest extends ModelTestCase
 		$this->expectExceptionMessage('The media type "text/html" is not allowed');
 
 		FileRules::validMime($file, 'text/html');
-	}
-
-	/**
-	 * Creates a file that really exists in the page root,
-	 * so that the extension, filename and MIME type can be detected
-	 */
-	protected function fileOnDisk(string $filename): File
-	{
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'test']
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = $this->app->page('test');
-
-		F::copy(static::FIXTURES . '/' . $filename, $page->root() . '/' . $filename);
-
-		return new File([
-			'filename' => $filename,
-			'parent'   => $page
-		]);
-	}
-
-	/**
-	 * Creates a file with more than one available template
-	 */
-	protected function fileWithMultipleTemplates(): File
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/foo' => [
-					'fields' => [
-						'files' => [
-							'type'      => 'filelist',
-							'blueprint' => 'b'
-						]
-					]
-				],
-				'files/a' => ['title' => 'a'],
-				'files/b' => ['title' => 'b'],
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'foo',
-						'files' => [
-							[
-								'filename' => 'test.jpg',
-								'content'  => ['template' => 'a']
-							]
-						]
-					]
-				]
-			],
-		]);
-
-		$this->app->impersonate('kirby');
-
-		return $this->app->page('test')->file('test.jpg');
 	}
 }

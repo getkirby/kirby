@@ -35,18 +35,18 @@ class Snippet extends Tpl
 	public static self|null $current = null;
 
 	/**
+	 * An empty dummy slots object used for snippets
+	 * that were loaded without passing slots
+	 */
+	protected static Slots|null $dummySlots = null;
+
+	/**
 	 * Contains all slots that are opened
 	 * but not yet closed
 	 *
 	 * @var list<Slot>
 	 */
 	protected array $capture = [];
-
-	/**
-	 * An empty dummy slots object used for snippets
-	 * that were loaded without passing slots
-	 */
-	protected static Slots|null $dummySlots = null;
 
 	/**
 	 * Keeps track of the state of the snippet
@@ -135,6 +135,73 @@ class Snippet extends Tpl
 	}
 
 	/**
+	 * Closes the last opened slot
+	 */
+	public function endslot(): void
+	{
+		$slot = array_pop($this->capture);
+		$slot->close();
+		$this->slots[$slot->name()] = $slot;
+	}
+
+	/**
+	 * Returns either an open snippet capturing slots
+	 * or the template string for self-enclosed snippets
+	 */
+	public static function factory(
+		string|array|null $name,
+		array $data = [],
+		bool $slots = false
+	): static|string {
+		// instead of returning empty string when `$name` is null,
+		// allow rest of code to run, otherwise the wrong snippet would
+		// be closed and potential issues for nested snippets may occur
+		$file = $name !== null ? static::file($name) : null;
+
+		// for snippets with slots, make sure to open a new
+		// snippet and start capturing slots
+		if ($slots === true) {
+			return static::begin($file, $data);
+		}
+
+		// for snippets without slots, directly load and return
+		// the snippet's template file
+		return static::load($file, $data);
+	}
+
+	/**
+	 * Absolute path to the file for
+	 * the snippet/s taking snippets defined in plugins
+	 * into account
+	 */
+	public static function file(string|array $name): string|null
+	{
+		$kirby = App::instance();
+		$root  = static::root();
+		$names = A::wrap($name);
+
+		foreach ($names as $name) {
+			$name = (string)$name;
+
+			if (isset(static::$cache[$name]) === true) {
+				return static::$cache[$name];
+			}
+
+			$file = $root . '/' . $name . '.php';
+
+			if (F::exists($file, $root) === false) {
+				$file = $kirby->extensions('snippets')[$name] ?? null;
+			}
+
+			if ($file) {
+				return static::$cache[$name] = $file;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Returns whether the snippet has any closed slots
 	 * @since 5.5.0
 	 */
@@ -208,73 +275,6 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Closes the last opened slot
-	 */
-	public function endslot(): void
-	{
-		$slot = array_pop($this->capture);
-		$slot->close();
-		$this->slots[$slot->name()] = $slot;
-	}
-
-	/**
-	 * Returns either an open snippet capturing slots
-	 * or the template string for self-enclosed snippets
-	 */
-	public static function factory(
-		string|array|null $name,
-		array $data = [],
-		bool $slots = false
-	): static|string {
-		// instead of returning empty string when `$name` is null,
-		// allow rest of code to run, otherwise the wrong snippet would
-		// be closed and potential issues for nested snippets may occur
-		$file = $name !== null ? static::file($name) : null;
-
-		// for snippets with slots, make sure to open a new
-		// snippet and start capturing slots
-		if ($slots === true) {
-			return static::begin($file, $data);
-		}
-
-		// for snippets without slots, directly load and return
-		// the snippet's template file
-		return static::load($file, $data);
-	}
-
-	/**
-	 * Absolute path to the file for
-	 * the snippet/s taking snippets defined in plugins
-	 * into account
-	 */
-	public static function file(string|array $name): string|null
-	{
-		$kirby = App::instance();
-		$root  = static::root();
-		$names = A::wrap($name);
-
-		foreach ($names as $name) {
-			$name = (string)$name;
-
-			if (isset(static::$cache[$name]) === true) {
-				return static::$cache[$name];
-			}
-
-			$file = $root . '/' . $name . '.php';
-
-			if (F::exists($file, $root) === false) {
-				$file = $kirby->extensions('snippets')[$name] ?? null;
-			}
-
-			if ($file) {
-				return static::$cache[$name] = $file;
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Opens the snippet and starts output
 	 * buffering to catch all slots in between
 	 *
@@ -343,27 +343,6 @@ class Snippet extends Tpl
 	}
 
 	/**
-	 * Starts a new slot with the given name
-	 */
-	public function slot(string $name = 'default'): Slot
-	{
-		$slot = new Slot($name);
-		$slot->open();
-
-		$this->capture[] = $slot;
-
-		return $slot;
-	}
-
-	/**
-	 * Returns the slots collection
-	 */
-	public function slots(): Slots
-	{
-		return new Slots($this->slots);
-	}
-
-	/**
 	 * Returns the data variables that get passed to a snippet
 	 *
 	 * @param $slots If null, an empty dummy object is used
@@ -390,5 +369,26 @@ class Snippet extends Tpl
 			'slot'  => $slots->default,
 			'slots' => $slots,
 		];
+	}
+
+	/**
+	 * Starts a new slot with the given name
+	 */
+	public function slot(string $name = 'default'): Slot
+	{
+		$slot = new Slot($name);
+		$slot->open();
+
+		$this->capture[] = $slot;
+
+		return $slot;
+	}
+
+	/**
+	 * Returns the slots collection
+	 */
+	public function slots(): Slots
+	{
+		return new Slots($this->slots);
 	}
 }

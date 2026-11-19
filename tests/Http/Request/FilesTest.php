@@ -8,30 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Files::class)]
 class FilesTest extends TestCase
 {
-	public function testMultipleUploads(): void
-	{
-		$upload = [
-			'upload' => [
-				'name'     => ['a.txt', 'b.txt'],
-				'tmp_name' => ['/tmp/a', '/tmp/b'],
-				'size'     => [123, 456],
-				'error'    => [0, 0]
-			]
-		];
-
-		$files = new Files($upload);
-
-		$this->assertSame('a.txt', $files->get('upload')[0]['name']);
-		$this->assertSame('/tmp/a', $files->get('upload')[0]['tmp_name']);
-		$this->assertSame(123, $files->get('upload')[0]['size']);
-		$this->assertSame(0, $files->get('upload')[0]['error']);
-
-		$this->assertSame('b.txt', $files->get('upload')[1]['name']);
-		$this->assertSame('/tmp/b', $files->get('upload')[1]['tmp_name']);
-		$this->assertSame(456, $files->get('upload')[1]['size']);
-		$this->assertSame(0, $files->get('upload')[1]['error']);
-	}
-
 	public function testData(): void
 	{
 		// default
@@ -69,6 +45,30 @@ class FilesTest extends TestCase
 		]);
 
 		$this->assertSame(123, $files->get('upload')['size']);
+	}
+
+	public function testMultipleUploads(): void
+	{
+		$upload = [
+			'upload' => [
+				'name'     => ['a.txt', 'b.txt'],
+				'tmp_name' => ['/tmp/a', '/tmp/b'],
+				'size'     => [123, 456],
+				'error'    => [0, 0]
+			]
+		];
+
+		$files = new Files($upload);
+
+		$this->assertSame('a.txt', $files->get('upload')[0]['name']);
+		$this->assertSame('/tmp/a', $files->get('upload')[0]['tmp_name']);
+		$this->assertSame(123, $files->get('upload')[0]['size']);
+		$this->assertSame(0, $files->get('upload')[0]['error']);
+
+		$this->assertSame('b.txt', $files->get('upload')[1]['name']);
+		$this->assertSame('/tmp/b', $files->get('upload')[1]['tmp_name']);
+		$this->assertSame(456, $files->get('upload')[1]['size']);
+		$this->assertSame(0, $files->get('upload')[1]['error']);
 	}
 
 	public function testToArrayAndDebuginfo(): void

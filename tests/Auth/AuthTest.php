@@ -21,10 +21,10 @@ class AuthTest extends TestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Auth.Auth';
 
-	public string|null $failedEmail = null;
-
 	protected static string $passwordA;
 	protected static string $passwordB;
+
+	public string|null $failedEmail = null;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -158,6 +158,14 @@ class AuthTest extends TestCase
 		$this->assertSame('session-csrf', $this->auth->csrfFromSession());
 	}
 
+	public function testCurrentUserFromBasicAuth(): void
+	{
+		$data = base64_encode('marge@simpsons.com:springfield123');
+		$auth = new BasicAuth($data);
+		$user = $this->auth->currentUserFromBasicAuth($auth);
+		$this->assertSame('marge@simpsons.com', $user->email());
+	}
+
 	public function testCurrentUserFromImpersonation(): void
 	{
 		$this->auth->impersonate('marge');
@@ -174,14 +182,6 @@ class AuthTest extends TestCase
 		$session->set('kirby.loginTimestamp', $loginTimestamp);
 
 		$user = $this->auth->currentUserFromSession($session);
-		$this->assertSame('marge@simpsons.com', $user->email());
-	}
-
-	public function testCurrentUserFromBasicAuth(): void
-	{
-		$data = base64_encode('marge@simpsons.com:springfield123');
-		$auth = new BasicAuth($data);
-		$user = $this->auth->currentUserFromBasicAuth($auth);
 		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
@@ -512,16 +512,19 @@ class AuthTest extends TestCase
 		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
 	}
 
-	public function testLoginLong(): void
+	public function testLoginInvalidPassword(): void
 	{
-		$this->auth->status();
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => ['debug' => false]
+			]
+		]);
+		$this->auth = $this->app->auth();
 
-		$user = $this->auth->login('marge@simpsons.com', 'springfield123', true);
-		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Invalid login');
 
-		$this->assertInstanceOf(User::class, $this->app->user());
-		$this->assertFalse($this->app->session()->timeout());
-		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
+		$this->auth->login('marge@simpsons.com', 'springfield456');
 	}
 
 	public static function unknownUserProvider(): array
@@ -554,27 +557,6 @@ class AuthTest extends TestCase
 		$this->assertNull($this->app->user());
 	}
 
-	public function testLoginInvalidPassword(): void
-	{
-		$this->app  = $this->app->clone([
-			'options' => [
-				'auth' => ['debug' => false]
-			]
-		]);
-		$this->auth = $this->app->auth();
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('Invalid login');
-
-		$this->auth->login('marge@simpsons.com', 'springfield456');
-	}
-
-	public function testLoginWithMixedCaseEmail(): void
-	{
-		$user = $this->auth->login('Marge@Simpsons.com', 'springfield123');
-		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
-	}
-
 	public function testLoginKirby(): void
 	{
 		$this->expectException(PermissionException::class);
@@ -584,6 +566,24 @@ class AuthTest extends TestCase
 		);
 
 		$this->auth->login('kirby@getkirby.com', 'somewhere-in-japan');
+	}
+
+	public function testLoginLong(): void
+	{
+		$this->auth->status();
+
+		$user = $this->auth->login('marge@simpsons.com', 'springfield123', true);
+		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
+
+		$this->assertInstanceOf(User::class, $this->app->user());
+		$this->assertFalse($this->app->session()->timeout());
+		$this->assertSame('marge@simpsons.com', $this->auth->status()->email());
+	}
+
+	public function testLoginWithMixedCaseEmail(): void
+	{
+		$user = $this->auth->login('Marge@Simpsons.com', 'springfield123');
+		$this->assertSame($this->app->user('marge@simpsons.com'), $user);
 	}
 
 	public function testLogoutActive(): void
@@ -608,19 +608,31 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
-	public function testLogoutResetPassword(): void
+	public function testLogoutClearsMethodState(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.method.data', 'nonce');
+
+		$this->auth->logout();
+
+		$this->assertNull($session->get('kirby.method.data'));
+	}
+
+	public function testLogoutDestroysSession(): void
 	{
 		$session = $this->app->session();
 
 		$this->app->user('marge@simpsons.com')->loginPasswordless();
-		$session->set('kirby.resetPassword', 'marge');
 
-		$this->assertSame('marge', $session->get('kirby.resetPassword'));
+		// the Panel stores a CSRF token in the session on every request
+		$this->app->csrf();
+
+		$this->assertTrue(Cookie::exists('kirby_session'));
 
 		$this->auth->logout();
 
-		$this->assertNull($session->get('kirby.userId'));
-		$this->assertNull($session->get('kirby.resetPassword'));
+		$this->assertSame([], $session->data()->get());
+		$this->assertFalse(Cookie::exists('kirby_session'));
 	}
 
 	public function testLogoutPending(): void
@@ -647,31 +659,19 @@ class AuthTest extends TestCase
 		], $this->auth->status()->toArray());
 	}
 
-	public function testLogoutDestroysSession(): void
+	public function testLogoutResetPassword(): void
 	{
 		$session = $this->app->session();
 
 		$this->app->user('marge@simpsons.com')->loginPasswordless();
+		$session->set('kirby.resetPassword', 'marge');
 
-		// the Panel stores a CSRF token in the session on every request
-		$this->app->csrf();
-
-		$this->assertTrue(Cookie::exists('kirby_session'));
+		$this->assertSame('marge', $session->get('kirby.resetPassword'));
 
 		$this->auth->logout();
 
-		$this->assertSame([], $session->data()->get());
-		$this->assertFalse(Cookie::exists('kirby_session'));
-	}
-
-	public function testLogoutClearsMethodState(): void
-	{
-		$session = $this->app->session();
-		$session->set('kirby.method.data', 'nonce');
-
-		$this->auth->logout();
-
-		$this->assertNull($session->get('kirby.method.data'));
+		$this->assertNull($session->get('kirby.userId'));
+		$this->assertNull($session->get('kirby.resetPassword'));
 	}
 
 	public function testMethods(): void
@@ -691,16 +691,16 @@ class AuthTest extends TestCase
 		$this->assertSame(12, $app->auth()->passwords()->minlength());
 	}
 
-	public function testSessionHelperWithOptions(): void
-	{
-		$session = $this->auth->session(['detect' => true]);
-		$this->assertInstanceOf(Session::class, $session);
-	}
-
 	public function testSessionHelperWithObject(): void
 	{
 		$session = $this->app->session();
 		$this->assertSame($session, $this->auth->session($session));
+	}
+
+	public function testSessionHelperWithOptions(): void
+	{
+		$session = $this->auth->session(['detect' => true]);
+		$this->assertInstanceOf(Session::class, $session);
 	}
 
 	public function testStatus(): void
@@ -714,21 +714,24 @@ class AuthTest extends TestCase
 		$this->assertSame(State::Active, $status->state());
 	}
 
-	public function testTypeBasicPreferredOverImpersonation(): void
+	public function testTypeBasicDisabledOption(): void
 	{
 		$app = $this->app->clone([
+			'options' => [
+				'api' => [
+					'basicAuth' => false
+				]
+			],
 			'server' => [
 				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('testuser:testpass')
 			]
 		]);
 
-		// existing basic auth should be preferred
-		// over impersonation
-		$app->auth()->impersonate('kirby');
-		$this->assertSame('basic', $app->auth()->type());
+		// disabled option should fall back to session
+		$this->assertSame('session', $app->auth()->type());
 
-		// auth object should have been accessed
-		$this->assertTrue($app->response()->usesAuth());
+		// auth object should *not* have been accessed
+		$this->assertFalse($app->response()->usesAuth());
 	}
 
 	public function testTypeBasicFallsBackToImpersonation(): void
@@ -752,24 +755,21 @@ class AuthTest extends TestCase
 		$this->assertTrue($this->app->response()->usesAuth());
 	}
 
-	public function testTypeBasicDisabledOption(): void
+	public function testTypeBasicPreferredOverImpersonation(): void
 	{
 		$app = $this->app->clone([
-			'options' => [
-				'api' => [
-					'basicAuth' => false
-				]
-			],
 			'server' => [
 				'HTTP_AUTHORIZATION' => 'Basic ' . base64_encode('testuser:testpass')
 			]
 		]);
 
-		// disabled option should fall back to session
-		$this->assertSame('session', $app->auth()->type());
+		// existing basic auth should be preferred
+		// over impersonation
+		$app->auth()->impersonate('kirby');
+		$this->assertSame('basic', $app->auth()->type());
 
-		// auth object should *not* have been accessed
-		$this->assertFalse($app->response()->usesAuth());
+		// auth object should have been accessed
+		$this->assertTrue($app->response()->usesAuth());
 	}
 
 	public function testTypeBasicWithInvalidConfiguration(): void
@@ -849,12 +849,6 @@ class AuthTest extends TestCase
 		$this->auth->validatePassword($email, 'springfield123');
 	}
 
-	public function testValidatePasswordWithMixedCaseEmail(): void
-	{
-		$user = $this->auth->validatePassword('Marge@Simpsons.com', 'springfield123');
-		$this->assertSame('marge@simpsons.com', $user->email());
-	}
-
 	public function testValidatePasswordIsGuarded(): void
 	{
 		// validatePassword() routes failures through Auth::guard(),
@@ -918,19 +912,10 @@ class AuthTest extends TestCase
 		$this->assertSame(10, $log['by-email']['marge@simpsons.com']['trials']);
 	}
 
-	public function testValidatePasswordWithUnicodeEmail(): void
+	public function testValidatePasswordWithMixedCaseEmail(): void
 	{
-		copy(
-			static::FIXTURES . '/logins.json',
-			static::TMP . '/site/accounts/.logins'
-		);
-
-		$this->app->visitor()->ip('10.3.123.234');
-
-		$user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
-
-		$this->assertIsUser($user);
-		$this->assertSame('test@exämple.com', $user->email());
+		$user = $this->auth->validatePassword('Marge@Simpsons.com', 'springfield123');
+		$this->assertSame('marge@simpsons.com', $user->email());
 	}
 
 	public function testValidatePasswordWithPunycodeEmail(): void
@@ -942,6 +927,21 @@ class AuthTest extends TestCase
 
 		$this->app->visitor()->ip('10.3.123.234');
 		$user = $this->auth->validatePassword('test@xn--exmple-cua.com', 'springfield123');
+
+		$this->assertIsUser($user);
+		$this->assertSame('test@exämple.com', $user->email());
+	}
+
+	public function testValidatePasswordWithUnicodeEmail(): void
+	{
+		copy(
+			static::FIXTURES . '/logins.json',
+			static::TMP . '/site/accounts/.logins'
+		);
+
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
 
 		$this->assertIsUser($user);
 		$this->assertSame('test@exämple.com', $user->email());

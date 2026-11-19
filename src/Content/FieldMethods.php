@@ -72,6 +72,18 @@ trait FieldMethods
 	}
 
 	/**
+	 * Aliases
+	 */
+
+	/**
+	 * @see self::toBool()
+	 */
+	public function bool(bool $default = false): bool
+	{
+		return $this->toBool($default);
+	}
+
+	/**
 	 * Applies the callback function to the field
 	 *
 	 * ```php
@@ -86,6 +98,14 @@ trait FieldMethods
 	public function callback(Closure $callback): mixed
 	{
 		return $callback($this);
+	}
+
+	/**
+	 * @see self::escape()
+	 */
+	public function esc(string $context = 'html'): static
+	{
+		return $this->escape($context);
 	}
 
 	/**
@@ -117,6 +137,22 @@ trait FieldMethods
 	}
 
 	/**
+	 * @see self::toFloat()
+	 */
+	public function float(float $default = 0): float
+	{
+		return $this->toFloat($default);
+	}
+
+	/**
+	 * @see self::html()
+	 */
+	public function h(): static
+	{
+		return $this->html();
+	}
+
+	/**
 	 * Converts the field content to valid HTML
 	 */
 	public function html(): static
@@ -140,6 +176,14 @@ trait FieldMethods
 		return $this->value(
 			fn ($value) => strip_tags($value ?? '', Html::$inlineList)
 		);
+	}
+
+	/**
+	 * @see self::toInt()
+	 */
+	public function int(int $default = 0): int
+	{
+		return $this->toInt($default);
 	}
 
 	/**
@@ -242,11 +286,37 @@ trait FieldMethods
 	}
 
 	/**
+	 * @see self::kirbytext()
+	 */
+	public function kt(array $options = []): static
+	{
+		return $this->kirbytext($options);
+	}
+
+	/**
+	 * @see self::kirbytextInline()
+	 */
+	public function kti(array $options = []): static
+	{
+		return $this->kirbytextinline($options);
+	}
+
+	/**
 	 * Returns the length of the field content
 	 */
 	public function length(): int
 	{
 		return Str::length($this->value);
+	}
+
+	/**
+	 * @see self::toLink()
+	 */
+	public function link(
+		string|array|null $attr1 = null,
+		array|null $attr2 = null
+	): string {
+		return $this->toLink($attr1, $attr2);
 	}
 
 	/**
@@ -265,6 +335,14 @@ trait FieldMethods
 		return $this->value(
 			fn ($value) => $this->kirby()->markdown($value, $options)
 		);
+	}
+
+	/**
+	 * @see self::markdown()
+	 */
+	public function md(array $options = []): static
+	{
+		return $this->markdown($options);
 	}
 
 	/**
@@ -420,6 +498,14 @@ trait FieldMethods
 	public function smartypants(): static
 	{
 		return $this->value(fn ($value) => $this->kirby()->smartypants($value));
+	}
+
+	/**
+	 * @see self::smartypants()
+	 */
+	public function sp(): static
+	{
+		return $this->smartypants();
 	}
 
 	/**
@@ -736,6 +822,14 @@ trait FieldMethods
 	}
 
 	/**
+	 * @see self::isValid()
+	 */
+	public function v(string $validator, ...$arguments): bool
+	{
+		return $this->isValid($validator, ...$arguments);
+	}
+
+	/**
 	 * Avoids typographical widows in strings by replacing
 	 * the last space with `&nbsp;`
 	 */
@@ -754,6 +848,14 @@ trait FieldMethods
 	}
 
 	/**
+	 * @see self::xml()
+	 */
+	public function x(): static
+	{
+		return $this->xml();
+	}
+
+	/**
 	 * Converts the field content to valid XML
 	 */
 	public function xml(): static
@@ -767,107 +869,5 @@ trait FieldMethods
 	public function yaml(): array
 	{
 		return $this->toData('yaml');
-	}
-
-	/**
-	 * Aliases
-	 */
-
-	/**
-	 * @see self::toBool()
-	 */
-	public function bool(bool $default = false): bool
-	{
-		return $this->toBool($default);
-	}
-
-	/**
-	 * @see self::escape()
-	 */
-	public function esc(string $context = 'html'): static
-	{
-		return $this->escape($context);
-	}
-
-	/**
-	 * @see self::toFloat()
-	 */
-	public function float(float $default = 0): float
-	{
-		return $this->toFloat($default);
-	}
-
-	/**
-	 * @see self::html()
-	 */
-	public function h(): static
-	{
-		return $this->html();
-	}
-
-	/**
-	 * @see self::toInt()
-	 */
-	public function int(int $default = 0): int
-	{
-		return $this->toInt($default);
-	}
-
-	/**
-	 * @see self::kirbytext()
-	 */
-	public function kt(array $options = []): static
-	{
-		return $this->kirbytext($options);
-	}
-
-	/**
-	 * @see self::kirbytextInline()
-	 */
-	public function kti(array $options = []): static
-	{
-		return $this->kirbytextinline($options);
-	}
-
-	/**
-	 * @see self::toLink()
-	 */
-	public function link(
-		string|array|null $attr1 = null,
-		array|null $attr2 = null
-	): string {
-		return $this->toLink($attr1, $attr2);
-	}
-
-	/**
-	 * @see self::markdown()
-	 */
-	public function md(array $options = []): static
-	{
-		return $this->markdown($options);
-	}
-
-	/**
-	 * @see self::smartypants()
-	 */
-	public function sp(): static
-	{
-		return $this->smartypants();
-	}
-
-	/**
-	 * @see self::isValid()
-	 */
-	public function v(string $validator, ...$arguments): bool
-	{
-		return $this->isValid($validator, ...$arguments);
-	}
-
-	/**
-	 * @see self::xml()
-	 */
-	public function x(): static
-	{
-		return $this->xml();
 	}
 }

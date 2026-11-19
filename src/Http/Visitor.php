@@ -17,10 +17,10 @@ use Kirby\Toolkit\Str;
  */
 class Visitor
 {
-	protected string|null $ip = null;
-	protected string|null $userAgent = null;
 	protected string|null $acceptedLanguage = null;
 	protected string|null $acceptedMimeType = null;
+	protected string|null $ip = null;
+	protected string|null $userAgent = null;
 
 	/**
 	 * Creates a new visitor object.
@@ -95,22 +95,6 @@ class Visitor
 	}
 
 	/**
-	 * Checks if the user accepts the given language
-	 */
-	public function acceptsLanguage(string $code): bool
-	{
-		$mode = Str::contains($code, '_') === true ? 'locale' : 'code';
-
-		foreach ($this->acceptedLanguages() as $language) {
-			if ($language->$mode() === $code) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Sets the accepted mime type if
 	 * provided or returns the user's
 	 * accepted mime type otherwise
@@ -146,6 +130,22 @@ class Visitor
 		}
 
 		return new Collection($mimes);
+	}
+
+	/**
+	 * Checks if the user accepts the given language
+	 */
+	public function acceptsLanguage(string $code): bool
+	{
+		$mode = Str::contains($code, '_') === true ? 'locale' : 'code';
+
+		foreach ($this->acceptedLanguages() as $language) {
+			if ($language->$mode() === $code) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**

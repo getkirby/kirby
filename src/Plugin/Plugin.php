@@ -160,6 +160,18 @@ class Plugin
 	}
 
 	/**
+	 * Returns the license object
+	 */
+	public function license(): License
+	{
+		// resolve license info from Closure, array or string
+		return License::from(
+			plugin: $this,
+			license: $this->license
+		);
+	}
+
+	/**
 	 * Returns the link to the plugin homepage
 	 */
 	public function link(): string|null
@@ -178,18 +190,6 @@ class Plugin
 		$link ??= $info['support']['source'] ?? null;
 
 		return V::url($link) === true ? $link : null;
-	}
-
-	/**
-	 * Returns the license object
-	 */
-	public function license(): License
-	{
-		// resolve license info from Closure, array or string
-		return License::from(
-			plugin: $this,
-			license: $this->license
-		);
 	}
 
 	/**

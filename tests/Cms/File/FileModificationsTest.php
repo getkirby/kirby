@@ -26,161 +26,6 @@ class FileModificationsTest extends ModelTestCase
 		]);
 	}
 
-	public function testThumb(): void
-	{
-		$input = [
-			'width'  => 300,
-			'height' => 200,
-			'focus'  => '20%, 80%'
-		];
-
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) use ($input) {
-					$this->assertSame($input, $options);
-					return $file;
-				}
-			],
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'test.jpg',
-						'content' => ['focus' => '70%, 30%']
-					]
-				]
-			]
-		]);
-
-		$file = $app->file('test.jpg');
-		$file->thumb($input);
-	}
-
-	public function testThumbWithAssetObject(): void
-	{
-		$app = $this->app->clone();
-		$asset = new Asset('');
-		$result = $asset->thumb([
-			'crop' => true
-		]);
-
-		$this->assertInstanceOf(Asset::class, $result);
-	}
-
-	public function testThumbWithDefaultPreset(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					$expected = [
-						'width' => 300
-					];
-
-					$this->assertSame($expected, $options);
-					return $file;
-				}
-			],
-			'options' => [
-				'thumbs' => [
-					'presets' => [
-						'default' => ['width' => 300]
-					]
-				]
-			]
-		]);
-
-		$file = $app->file('test.jpg');
-		$file->thumb();
-		$file->thumb('default');
-	}
-
-	public function testThumbWithCustomPreset(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					$expected = [
-						'width' => 300
-					];
-
-					$this->assertSame($expected, $options);
-					return $file;
-				}
-			],
-			'options' => [
-				'thumbs' => [
-					'presets' => [
-						'test' => ['width' => 300]
-					]
-				]
-			]
-		]);
-
-		$file = $app->file('test.jpg');
-		$file->thumb('test');
-	}
-
-	public function testThumbWithInvalidReturnValue(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => fn ($kirby, $file, $options = []) => 'image'
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The file::version component must return a File, FileVersion or Asset object');
-
-		$file = $app->file('test.jpg');
-		$file->thumb(['width' => 100]);
-	}
-
-	public function testThumbWithFormatOption(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					$this->assertSame('webp', $options['format']);
-					return $file;
-				}
-			],
-			'options' => [
-				'thumbs.format' => 'webp'
-			]
-		]);
-
-		$file = $app->file('test.jpg');
-		$file->thumb(['width' => 100]);
-	}
-
-	public function testThumbWithFocusFromContent(): void
-	{
-		$app = $this->app->clone([
-			'components' => [
-				'file::version' => function ($kirby, $file, $options = []) {
-					$this->assertSame('70%, 30%', $options['crop']);
-					return $file;
-				}
-			],
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'test.jpg',
-						'content' => ['focus' => '70%, 30%']
-					]
-				]
-			]
-		]);
-
-		$file = $app->file('test.jpg');
-		$file->thumb(['width' => 100, 'crop' => true]);
-	}
-
-	public function testThumbWithNoOptions(): void
-	{
-		$file = $this->app->file('test.jpg');
-		$this->assertIsFile($file, $file->thumb([]));
-	}
-
 	public function testBlur(): void
 	{
 		$app = $this->app->clone([
@@ -351,5 +196,160 @@ class FileModificationsTest extends ModelTestCase
 
 		$file = $app->file('test.jpg');
 		$file->sharpen(20);
+	}
+
+	public function testThumb(): void
+	{
+		$input = [
+			'width'  => 300,
+			'height' => 200,
+			'focus'  => '20%, 80%'
+		];
+
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) use ($input) {
+					$this->assertSame($input, $options);
+					return $file;
+				}
+			],
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content' => ['focus' => '70%, 30%']
+					]
+				]
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb($input);
+	}
+
+	public function testThumbWithAssetObject(): void
+	{
+		$app = $this->app->clone();
+		$asset = new Asset('');
+		$result = $asset->thumb([
+			'crop' => true
+		]);
+
+		$this->assertInstanceOf(Asset::class, $result);
+	}
+
+	public function testThumbWithCustomPreset(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$expected = [
+						'width' => 300
+					];
+
+					$this->assertSame($expected, $options);
+					return $file;
+				}
+			],
+			'options' => [
+				'thumbs' => [
+					'presets' => [
+						'test' => ['width' => 300]
+					]
+				]
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb('test');
+	}
+
+	public function testThumbWithDefaultPreset(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$expected = [
+						'width' => 300
+					];
+
+					$this->assertSame($expected, $options);
+					return $file;
+				}
+			],
+			'options' => [
+				'thumbs' => [
+					'presets' => [
+						'default' => ['width' => 300]
+					]
+				]
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb();
+		$file->thumb('default');
+	}
+
+	public function testThumbWithFocusFromContent(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame('70%, 30%', $options['crop']);
+					return $file;
+				}
+			],
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content' => ['focus' => '70%, 30%']
+					]
+				]
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb(['width' => 100, 'crop' => true]);
+	}
+
+	public function testThumbWithFormatOption(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => function ($kirby, $file, $options = []) {
+					$this->assertSame('webp', $options['format']);
+					return $file;
+				}
+			],
+			'options' => [
+				'thumbs.format' => 'webp'
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$file->thumb(['width' => 100]);
+	}
+
+	public function testThumbWithInvalidReturnValue(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'file::version' => fn ($kirby, $file, $options = []) => 'image'
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The file::version component must return a File, FileVersion or Asset object');
+
+		$file = $app->file('test.jpg');
+		$file->thumb(['width' => 100]);
+	}
+
+	public function testThumbWithNoOptions(): void
+	{
+		$file = $this->app->file('test.jpg');
+		$this->assertIsFile($file, $file->thumb([]));
 	}
 }

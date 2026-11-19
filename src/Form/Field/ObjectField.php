@@ -63,13 +63,6 @@ class ObjectField extends InputField implements ProvidesNestedForm
 			->toStoredValues();
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'object' => fn ($value) => $this->validateObject($value)
-		];
-	}
-
 	protected function validateObject(array|string|null $value): void
 	{
 		if ($this->isEmptyValue($value) === true) {
@@ -93,5 +86,12 @@ class ObjectField extends InputField implements ProvidesNestedForm
 				'message' => implode("\n", $error['message'])
 			]
 		);
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'object' => fn ($value) => $this->validateObject($value)
+		];
 	}
 }

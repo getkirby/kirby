@@ -171,11 +171,6 @@ class LoginViewController extends ViewController
 		);
 	}
 
-	protected function value(): array
-	{
-		return [];
-	}
-
 	/**
 	 * Returns the user the pending challenge belongs to.
 	 *
@@ -192,5 +187,10 @@ class LoginViewController extends ViewController
 	{
 		$email = $this->status->email();
 		return $this->kirby->users()->findByEmail($email) ?? new User(['email' => $email]);
+	}
+
+	protected function value(): array
+	{
+		return [];
 	}
 }

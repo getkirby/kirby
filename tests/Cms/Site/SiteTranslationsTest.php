@@ -15,29 +15,6 @@ class SiteTranslationsTest extends ModelTestCase
 		$this->setUpMultiLanguage();
 	}
 
-	public function testContentInEnglish(): void
-	{
-		$site = new Site([
-			'translations' => [
-				[
-					'code' => 'en',
-					'content' => [
-						'title'        => 'Site',
-						'untranslated' => 'Untranslated'
-					]
-				],
-				[
-					'code' => 'de',
-					'content' => [
-						'title' => 'Seite',
-					]
-				],
-			]
-		]);
-		$this->assertSame('Site', $site->title()->value());
-		$this->assertSame('Untranslated', $site->untranslated()->value());
-	}
-
 	public function testContentInDeutsch(): void
 	{
 		$site = new Site([
@@ -62,6 +39,29 @@ class SiteTranslationsTest extends ModelTestCase
 		$this->app->setCurrentTranslation('de');
 
 		$this->assertSame('Seite', $site->title()->value());
+		$this->assertSame('Untranslated', $site->untranslated()->value());
+	}
+
+	public function testContentInEnglish(): void
+	{
+		$site = new Site([
+			'translations' => [
+				[
+					'code' => 'en',
+					'content' => [
+						'title'        => 'Site',
+						'untranslated' => 'Untranslated'
+					]
+				],
+				[
+					'code' => 'de',
+					'content' => [
+						'title' => 'Seite',
+					]
+				],
+			]
+		]);
+		$this->assertSame('Site', $site->title()->value());
 		$this->assertSame('Untranslated', $site->untranslated()->value());
 	}
 

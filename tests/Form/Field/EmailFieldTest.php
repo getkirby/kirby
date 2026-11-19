@@ -20,17 +20,6 @@ class EmailFieldTest extends TestCase
 		$this->assertFalse($field->isValid());
 	}
 
-	public function testMinLength(): void
-	{
-		$field = $this->field('email', [
-			'value' => 'mail@test.com',
-			'minlength' => 14
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('minlength', $field->errors());
-	}
-
 	public function testMaxLength(): void
 	{
 		$field = $this->field('email', [
@@ -40,6 +29,17 @@ class EmailFieldTest extends TestCase
 
 		$this->assertFalse($field->isValid());
 		$this->assertArrayHasKey('maxlength', $field->errors());
+	}
+
+	public function testMinLength(): void
+	{
+		$field = $this->field('email', [
+			'value' => 'mail@test.com',
+			'minlength' => 14
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
 	public function testProps(): void

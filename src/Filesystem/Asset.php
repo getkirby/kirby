@@ -19,9 +19,9 @@ use Kirby\Toolkit\Str;
  */
 class Asset
 {
-	use IsFile;
 	use FileModifications;
 	use HasMethods;
+	use IsFile;
 
 	/**
 	 * Relative file path

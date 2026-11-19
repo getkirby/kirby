@@ -42,32 +42,6 @@ abstract class Routes
 	}
 
 	/**
-	 * Creates a route handler closure which handles
-	 * array results as well as resolving a controller object
-	 */
-	protected function controllerHandler(
-		Closure|Controller|array $controller,
-		string $method,
-		bool $preserve = true
-	): Closure {
-		return function (...$args) use ($controller, $method, $preserve) {
-			if ($controller instanceof Closure) {
-				$controller = $controller(...$args);
-			}
-
-			if ($controller instanceof Controller) {
-				return $controller->$method();
-			}
-
-			if ($preserve === true) {
-				return $controller;
-			}
-
-			return true;
-		};
-	}
-
-	/**
 	 * Creates a controller closure from a Controller class name
 	 */
 	protected function controllerFromClass(string $class): Closure
@@ -90,6 +64,32 @@ abstract class Routes
 			}
 
 			return new $class(...$args);
+		};
+	}
+
+	/**
+	 * Creates a route handler closure which handles
+	 * array results as well as resolving a controller object
+	 */
+	protected function controllerHandler(
+		Closure|Controller|array $controller,
+		string $method,
+		bool $preserve = true
+	): Closure {
+		return function (...$args) use ($controller, $method, $preserve) {
+			if ($controller instanceof Closure) {
+				$controller = $controller(...$args);
+			}
+
+			if ($controller instanceof Controller) {
+				return $controller->$method();
+			}
+
+			if ($preserve === true) {
+				return $controller;
+			}
+
+			return true;
 		};
 	}
 

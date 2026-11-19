@@ -15,11 +15,6 @@ class MyPage extends Page
 		return [['name' => 'foo'], ['name' => 'bar']];
 	}
 
-	public function mySimpleArray(): array
-	{
-		return ['tag1', 'tag2', 'tag3'];
-	}
-
 	public function myAssocArray(): array
 	{
 		return ['myValue' => 'My text', 'otherValue' => 'Other text'];
@@ -36,6 +31,11 @@ class MyPage extends Page
 	public function myOptions(): Options
 	{
 		return Options::factory(['foo', 'bar']);
+	}
+
+	public function mySimpleArray(): array
+	{
+		return ['tag1', 'tag2', 'tag3'];
 	}
 }
 
@@ -133,37 +133,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('Other text', (string)$options[1]['text']);
 	}
 
-	public function testResolveForStructure(): void
-	{
-		$model = new Page([
-			'slug' => 'a',
-			'content' => [
-				'foo' => '
--
-  name: foo
--
-  name: bar'
-			]
-		]);
-
-		$options = (new OptionsQuery(
-			query: 'page.foo.toStructure',
-			value: '{{ structureItem.name }}',
-		))->render($model);
-
-		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('bar', $options[1]['value']);
-
-		// with shorter alias
-		$options = (new OptionsQuery(
-			query: 'page.foo.toStructure',
-			value: '{{ item.name }}',
-		))->render($model);
-
-		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('bar', $options[1]['value']);
-	}
-
 	public function testResolveForBlock(): void
 	{
 		$model = new Page([
@@ -188,6 +157,40 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
+	public function testResolveForFile(): void
+	{
+		$app = new App([
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg'],
+					['filename' => 'b.pdf']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$options = new OptionsQuery(
+			query: 'site.files',
+		);
+		$options = $options->render($app->site());
+
+		$this->assertSame('a.jpg', (string)$options[0]['text']);
+		$this->assertSame('b.pdf', (string)$options[1]['text']);
+	}
+
+	public function testResolveForOptions(): void
+	{
+		$model   = new MyPage(['slug' => 'a']);
+		$options = new OptionsQuery('page.myOptions');
+		$options = $options->render($model);
+
+		$this->assertSame('foo', (string)$options[0]['text']);
+		$this->assertSame('foo', $options[0]['value']);
+		$this->assertSame('bar', (string)$options[1]['text']);
+		$this->assertSame('bar', $options[1]['value']);
+	}
+
 	public function testResolveForPages(): void
 	{
 		$app = new App([
@@ -208,54 +211,10 @@ class OptionsQueryTest extends TestCase
 		);
 		$options = $options->render($app->site());
 
-
 		$this->assertSame('a', (string)$options[0]['text']);
 		$this->assertSame('a', $options[0]['value']);
 		$this->assertSame('b', (string)$options[1]['text']);
 		$this->assertSame('c', (string)$options[2]['text']);
-	}
-
-	public function testResolveForFile(): void
-	{
-		$app = new App([
-			'site' => [
-				'files' => [
-					['filename' => 'a.jpg'],
-					['filename' => 'b.pdf']
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$options = new OptionsQuery(
-			query: 'site.files',
-		);
-		$options = $options->render($app->site());
-
-
-		$this->assertSame('a.jpg', (string)$options[0]['text']);
-		$this->assertSame('b.pdf', (string)$options[1]['text']);
-	}
-
-	public function testResolveForUser(): void
-	{
-		$app = new App([
-			'users' => [
-				['email' => 'homer@simpson.com', 'name' => 'homer']
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$options = new OptionsQuery(
-			query: 'kirby.users',
-		);
-		$options = $options->render($app->site());
-
-
-		$this->assertSame('homer@simpson.com', $options[0]['value']);
-		$this->assertSame('homer', (string)$options[0]['text']);
 	}
 
 	public function testResolveForProtectedFiles(): void
@@ -384,57 +343,54 @@ class OptionsQueryTest extends TestCase
 		$this->assertInstanceOf(ProtectedOption::class, $options->get('admin@getkirby.com'));
 	}
 
-	public function testResolveForOptions(): void
+	public function testResolveForStructure(): void
 	{
-		$model   = new MyPage(['slug' => 'a']);
-		$options = new OptionsQuery('page.myOptions');
-		$options = $options->render($model);
+		$model = new Page([
+			'slug' => 'a',
+			'content' => [
+				'foo' => '
+-
+  name: foo
+-
+  name: bar'
+			]
+		]);
 
-		$this->assertSame('foo', (string)$options[0]['text']);
+		$options = (new OptionsQuery(
+			query: 'page.foo.toStructure',
+			value: '{{ structureItem.name }}',
+		))->render($model);
+
 		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('bar', (string)$options[1]['text']);
+		$this->assertSame('bar', $options[1]['value']);
+
+		// with shorter alias
+		$options = (new OptionsQuery(
+			query: 'page.foo.toStructure',
+			value: '{{ item.name }}',
+		))->render($model);
+
+		$this->assertSame('foo', $options[0]['value']);
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	public function testResolveNoDoubleResolution(): void
+	public function testResolveForUser(): void
 	{
-		// a page whose title contains a query pattern simulates an editor
-		// injecting a template expression into user-controlled content;
-		// the pattern must survive as a literal string after render()
 		$app = new App([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'title' => '{{ page.slug }}'
-						]
-					],
-				]
+			'users' => [
+				['email' => 'homer@simpson.com', 'name' => 'homer']
 			]
 		]);
 
 		$app->impersonate('kirby');
 
-		$options = (new OptionsQuery('site.children'))->render($app->site());
+		$options = new OptionsQuery(
+			query: 'kirby.users',
+		);
+		$options = $options->render($app->site());
 
-		$this->assertSame('{{ page.slug }}', (string)$options[0]['text']);
-	}
-
-	public function testResolveInvalid(): void
-	{
-		$app = new App([
-			'site' => [
-				'content' => [
-					'foo' => 'a'
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
-
-		$options = (new OptionsQuery('site.foo'))->render($app->site());
+		$this->assertSame('homer@simpson.com', $options[0]['value']);
+		$this->assertSame('homer', (string)$options[0]['text']);
 	}
 
 	public function testResolveHtmlEscape(): void
@@ -474,5 +430,46 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('We are <b>great</b>', $options[0]['value']);
 		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
 		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+	}
+
+	public function testResolveInvalid(): void
+	{
+		$app = new App([
+			'site' => [
+				'content' => [
+					'foo' => 'a'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
+
+		$options = (new OptionsQuery('site.foo'))->render($app->site());
+	}
+
+	public function testResolveNoDoubleResolution(): void
+	{
+		// a page whose title contains a query pattern simulates an editor
+		// injecting a template expression into user-controlled content;
+		// the pattern must survive as a literal string after render()
+		$app = new App([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'title' => '{{ page.slug }}'
+						]
+					],
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$options = (new OptionsQuery('site.children'))->render($app->site());
+
+		$this->assertSame('{{ page.slug }}', (string)$options[0]['text']);
 	}
 }

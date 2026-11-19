@@ -25,21 +25,6 @@ class LoaderTest extends TestCase
 		$this->assertSame('Site', $area['label']);
 	}
 
-	public function testAreaPlugin(): void
-	{
-		$this->app = $this->app->clone([
-			'areas' => [
-				'todos' => [
-					'label' => 'Todos'
-				]
-			]
-		]);
-
-		$area = $this->app->load()->area('todos');
-
-		$this->assertSame('Todos', $area['label']);
-	}
-
 	public function testAreaCorePlugin(): void
 	{
 		$this->app = $this->app->clone([
@@ -72,6 +57,21 @@ class LoaderTest extends TestCase
 
 		$this->assertSame('pages/(:any)', $dropdown['pattern']);
 		$this->assertSame('foo', $dropdown['options']());
+	}
+
+	public function testAreaPlugin(): void
+	{
+		$this->app = $this->app->clone([
+			'areas' => [
+				'todos' => [
+					'label' => 'Todos'
+				]
+			]
+		]);
+
+		$area = $this->app->load()->area('todos');
+
+		$this->assertSame('Todos', $area['label']);
 	}
 
 	public function testAreas(): void
@@ -116,13 +116,13 @@ class LoaderTest extends TestCase
 		$this->assertArrayHasKey('video', $extensions);
 	}
 
-	public function testResolveArray(): void
+	public function testResolveAll(): void
 	{
-		$resolved = $this->loader->resolve([
-			'test' => 'Test'
+		$resolved = $this->loader->resolveAll([
+			'test' => static::FIXTURES . '/resolve.php'
 		]);
 
-		$this->assertSame('Test', $resolved['test']);
+		$this->assertSame('Test', $resolved['test']['test']);
 	}
 
 	public function testResolveArea(): void
@@ -138,6 +138,15 @@ class LoaderTest extends TestCase
 			Closure::class,
 			$resolved['dropdowns']['test']['options']
 		);
+	}
+
+	public function testResolveArray(): void
+	{
+		$resolved = $this->loader->resolve([
+			'test' => 'Test'
+		]);
+
+		$this->assertSame('Test', $resolved['test']);
 	}
 
 	public function testResolveClosure(): void
@@ -161,15 +170,6 @@ class LoaderTest extends TestCase
 		$resolved = $this->loader->resolve(static::FIXTURES . '/resolve.yml');
 
 		$this->assertSame('Test', $resolved['test']);
-	}
-
-	public function testResolveAll(): void
-	{
-		$resolved = $this->loader->resolveAll([
-			'test' => static::FIXTURES . '/resolve.php'
-		]);
-
-		$this->assertSame('Test', $resolved['test']['test']);
 	}
 
 	public function testWithPlugins(): void

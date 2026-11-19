@@ -104,13 +104,6 @@ abstract class DateTimeField extends InputField
 		return $this->value?->format($this->format()) ?? '';
 	}
 
-	protected function validations(): array
-	{
-		return [
-			'minMax' => fn ($value) => $this->validateMinMax($value)
-		];
-	}
-
 	protected function validateMinMax(mixed $value): void
 	{
 		if (!$value = Date::optional($value)) {
@@ -144,5 +137,12 @@ abstract class DateTimeField extends InputField
 				data: [$this->type() => $max->format($format)]
 			);
 		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'minMax' => fn ($value) => $this->validateMinMax($value)
+		];
 	}
 }

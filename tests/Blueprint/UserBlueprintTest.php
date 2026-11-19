@@ -9,19 +9,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserBlueprint::class)]
 class UserBlueprintTest extends TestCase
 {
-	public function testTranslatedDescription(): void
-	{
-		$blueprint = new UserBlueprint([
-			'model' => new User(['email' => 'test@getkirby.com']),
-			'description' => [
-				'en' => 'User',
-				'de' => 'Benutzer'
-			]
-		]);
-
-		$this->assertSame('User', $blueprint->description());
-	}
-
 	public function testOptions(): void
 	{
 		$blueprint = new UserBlueprint([
@@ -84,41 +71,6 @@ class UserBlueprintTest extends TestCase
 		// since $user object has not `->purge()` method
 		$app = $app->clone();
 		$app->setCurrentTranslation('en');
-		$user = $app->user('editor@getkirby.com');
-		$this->assertSame('Editor role', $user->role()->title());
-	}
-
-	public function testTitleI18nWithFallbackLanguage(): void
-	{
-		$app = new App([
-			'blueprints' => [
-				'users/editor' => [
-					'name'  => 'editor',
-					'title' => 'role.editor'
-				]
-			],
-			'languages' => [
-				[
-					'code' => 'en',
-					'default' => true,
-					'translations' => [
-						'role.editor' => 'Editor role'
-					]
-				],
-				[
-					'code' => 'de',
-					'translations' => [],
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor'
-				]
-			]
-		]);
-
-		$app->setCurrentTranslation('fr');
 		$user = $app->user('editor@getkirby.com');
 		$this->assertSame('Editor role', $user->role()->title());
 	}
@@ -198,6 +150,41 @@ class UserBlueprintTest extends TestCase
 		$this->assertSame('Editor role', $user->role()->title());
 	}
 
+	public function testTitleI18nWithFallbackLanguage(): void
+	{
+		$app = new App([
+			'blueprints' => [
+				'users/editor' => [
+					'name'  => 'editor',
+					'title' => 'role.editor'
+				]
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'default' => true,
+					'translations' => [
+						'role.editor' => 'Editor role'
+					]
+				],
+				[
+					'code' => 'de',
+					'translations' => [],
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		$app->setCurrentTranslation('fr');
+		$user = $app->user('editor@getkirby.com');
+		$this->assertSame('Editor role', $user->role()->title());
+	}
+
 	public function testToArray(): void
 	{
 		$blueprint = new UserBlueprint([
@@ -210,5 +197,18 @@ class UserBlueprintTest extends TestCase
 
 		// the description must be resolved just like in `description()`
 		$this->assertSame('User', $blueprint->toArray()['description']);
+	}
+
+	public function testTranslatedDescription(): void
+	{
+		$blueprint = new UserBlueprint([
+			'model' => new User(['email' => 'test@getkirby.com']),
+			'description' => [
+				'en' => 'User',
+				'de' => 'Benutzer'
+			]
+		]);
+
+		$this->assertSame('User', $blueprint->description());
 	}
 }

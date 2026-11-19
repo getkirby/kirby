@@ -8,6 +8,19 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Pending::class)]
 class PendingTest extends TestCase
 {
+	public function testFrom(): void
+	{
+		$session = ['public' => 'shown', 'secret' => 'hidden'];
+		$pending = Pending::from($session);
+
+		$this->assertSame('shown', $pending->public());
+		$this->assertSame('hidden', $pending->secret());
+
+		$pending = Pending::from();
+		$this->assertNull($pending->public());
+		$this->assertNull($pending->secret());
+	}
+
 	public function testPublic(): void
 	{
 		$pending = new Pending();
@@ -38,18 +51,5 @@ class PendingTest extends TestCase
 		);
 		$expected = ['public' => $public, 'secret' => $secret];
 		$this->assertSame($expected, $data->toArray());
-	}
-
-	public function testFrom(): void
-	{
-		$session = ['public' => 'shown', 'secret' => 'hidden'];
-		$pending = Pending::from($session);
-
-		$this->assertSame('shown', $pending->public());
-		$this->assertSame('hidden', $pending->secret());
-
-		$pending = Pending::from();
-		$this->assertNull($pending->public());
-		$this->assertNull($pending->secret());
 	}
 }

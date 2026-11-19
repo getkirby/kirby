@@ -61,13 +61,6 @@ class UsersCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(UsersCollector::class);
 	}
 
-	public function testCollectWithoutAccess(): void
-	{
-		$this->setUpUsers();
-		$this->app->impersonate('nobody');
-		$this->assertCollectUnauthenticated(UsersCollector::class);
-	}
-
 	public function testCollectWithNonListableUsers(): void
 	{
 		// use a uuid-based role to avoid static permission cache
@@ -112,6 +105,13 @@ class UsersCollectorTest extends TestCase
 		$this->assertCollect(UsersCollector::class, ['a']);
 	}
 
+	public function testCollectWithoutAccess(): void
+	{
+		$this->setUpUsers();
+		$this->app->impersonate('nobody');
+		$this->assertCollectUnauthenticated(UsersCollector::class);
+	}
+
 	public function testFilterByRole(): void
 	{
 		$this->setUpUsers();
@@ -121,7 +121,7 @@ class UsersCollectorTest extends TestCase
 			role: 'editor'
 		);
 
-		$this->assertModelsInCollector($collector, ['b', 'c'], );
+		$this->assertModelsInCollector($collector, ['b', 'c']);
 	}
 
 	public function testFlip(): void

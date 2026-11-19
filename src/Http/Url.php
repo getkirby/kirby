@@ -15,14 +15,14 @@ use Whoops\Handler\PrettyPageHandler;
 class Url
 {
 	/**
-	 * The base Url to build absolute Urls from
-	 */
-	public static string|null $home = '/';
-
-	/**
 	 * The current Uri object as string
 	 */
 	public static string|null $current = null;
+
+	/**
+	 * The base Url to build absolute Urls from
+	 */
+	public static string|null $home = '/';
 
 	/**
 	 * Facade for all Uri object methods
@@ -110,22 +110,6 @@ class Url
 	}
 
 	/**
-	 * Returns the home url if defined
-	 */
-	public static function home(): string
-	{
-		return static::$home ?? '/';
-	}
-
-	/**
-	 * Returns the url to the executed script
-	 */
-	public static function index(array $props = []): string
-	{
-		return Uri::index($props)->toString();
-	}
-
-	/**
 	 * Checks if a URL starts with a dangerous URI scheme
 	 * (e.g. javascript:) that must never appear in rendered href
 	 * or src attributes.
@@ -150,6 +134,22 @@ class Url
 	}
 
 	/**
+	 * Returns the home url if defined
+	 */
+	public static function home(): string
+	{
+		return static::$home ?? '/';
+	}
+
+	/**
+	 * Returns the url to the executed script
+	 */
+	public static function index(array $props = []): string
+	{
+		return Uri::index($props)->toString();
+	}
+
+	/**
 	 * Checks if an URL is absolute
 	 *
 	 * @psalm-assert-if-true non-empty-string $url
@@ -165,6 +165,14 @@ class Url
 		//  http://example.com/uri, https://example.com/uri, ftp://example.com/uri
 		//  mailto:example@example.com, geo:49.0158,8.3239?z=11
 		return preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
+	}
+
+	/**
+	 * Return the last url the user has been on if detectable
+	 */
+	public static function last(): string
+	{
+		return Environment::getGlobally('HTTP_REFERER', '');
 	}
 
 	/**
@@ -246,14 +254,6 @@ class Url
 	}
 
 	/**
-	 * Return the last url the user has been on if detectable
-	 */
-	public static function last(): string
-	{
-		return Environment::getGlobally('HTTP_REFERER', '');
-	}
-
-	/**
 	 * Whether two URLs point to the same host
 	 *
 	 * @since 6.0.0
@@ -299,6 +299,14 @@ class Url
 	}
 
 	/**
+	 * Removes the fragment (hash) from the Url
+	 */
+	public static function stripFragment(string|null $url = null): string
+	{
+		return static::toObject($url)->setFragment(null)->toString();
+	}
+
+	/**
 	 * Removes the path from the Url
 	 */
 	public static function stripPath(string|null $url = null): string
@@ -312,14 +320,6 @@ class Url
 	public static function stripQuery(string|null $url = null): string
 	{
 		return static::toObject($url)->setQuery(null)->toString();
-	}
-
-	/**
-	 * Removes the fragment (hash) from the Url
-	 */
-	public static function stripFragment(string|null $url = null): string
-	{
-		return static::toObject($url)->setFragment(null)->toString();
 	}
 
 	/**

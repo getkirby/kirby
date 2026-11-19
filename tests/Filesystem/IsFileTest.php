@@ -27,14 +27,6 @@ class IsFileTest extends TestCase
 		]);
 	}
 
-	public function testConstruct(): void
-	{
-		$asset = $this->_asset();
-
-		$this->assertSame('/dev/null/blank.pdf', $asset->root());
-		$this->assertSame('https://foo.bar/blank.pdf', $asset->url());
-	}
-
 	public function testAsset(): void
 	{
 		$asset = $this->_asset();
@@ -42,6 +34,12 @@ class IsFileTest extends TestCase
 
 		$this->assertInstanceOf(File::class, $file);
 		$this->assertSame($file, $asset->asset());
+	}
+
+	public function testAssetImage(): void
+	{
+		$asset = $this->_asset('cat.jpg');
+		$this->assertInstanceOf(Image::class, $asset->asset());
 	}
 
 	public function testAssetStringProp(): void
@@ -53,28 +51,10 @@ class IsFileTest extends TestCase
 		$this->assertSame('/dev/null/blank.pdf', $file->root());
 	}
 
-	public function testAssetImage(): void
-	{
-		$asset = $this->_asset('cat.jpg');
-		$this->assertInstanceOf(Image::class, $asset->asset());
-	}
-
-	public function testKirby(): void
-	{
-		$asset = $this->_asset();
-		$this->assertInstanceOf(App::class, $asset->kirby());
-	}
-
 	public function testCall(): void
 	{
 		$asset = $this->_asset();
 		$this->assertSame('pdf', $asset->extension());
-	}
-
-	public function testCallPublicProperty(): void
-	{
-		$asset = $this->_asset();
-		$this->assertSame('bar', $asset->foo());
 	}
 
 	public function testCallNotExisting(): void
@@ -83,5 +63,25 @@ class IsFileTest extends TestCase
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
+	}
+
+	public function testCallPublicProperty(): void
+	{
+		$asset = $this->_asset();
+		$this->assertSame('bar', $asset->foo());
+	}
+
+	public function testConstruct(): void
+	{
+		$asset = $this->_asset();
+
+		$this->assertSame('/dev/null/blank.pdf', $asset->root());
+		$this->assertSame('https://foo.bar/blank.pdf', $asset->url());
+	}
+
+	public function testKirby(): void
+	{
+		$asset = $this->_asset();
+		$this->assertInstanceOf(App::class, $asset->kirby());
 	}
 }

@@ -15,6 +15,8 @@ use Kirby\Panel\Ui\Item\ModelItem;
  */
 abstract class ModelsSearchController extends SearchController
 {
+	abstract public function item($model): ModelItem;
+
 	public function load(): array
 	{
 		$models = $this->models();
@@ -30,8 +32,6 @@ abstract class ModelsSearchController extends SearchController
 			),
 		];
 	}
-
-	abstract public function item($model): ModelItem;
 
 	abstract public function models(): Collection;
 }

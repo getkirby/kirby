@@ -18,6 +18,25 @@ use Kirby\Filesystem\F;
 abstract class Handler
 {
 	/**
+	 * Reads the contents of a file
+	 * for sanitization or validation
+	 *
+	 * @throws Exception If the file does not exist
+	 */
+	protected static function readFile(string $file): string
+	{
+		$contents = F::read($file);
+
+		if ($contents === false) {
+			throw new Exception(
+				message: 'The file "' . $file . '" does not exist'
+			);
+		}
+
+		return $contents;
+	}
+
+	/**
 	 * Sanitizes the given string
 	 *
 	 * @param $isExternal Whether the string is from an external file
@@ -73,24 +92,5 @@ abstract class Handler
 	{
 		$content = static::readFile($file);
 		static::validate($content, isExternal: true);
-	}
-
-	/**
-	 * Reads the contents of a file
-	 * for sanitization or validation
-	 *
-	 * @throws Exception If the file does not exist
-	 */
-	protected static function readFile(string $file): string
-	{
-		$contents = F::read($file);
-
-		if ($contents === false) {
-			throw new Exception(
-				message: 'The file "' . $file . '" does not exist'
-			);
-		}
-
-		return $contents;
 	}
 }

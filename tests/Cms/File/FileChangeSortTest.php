@@ -58,32 +58,6 @@ class FileChangeSortTest extends ModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
-	public function testChangeSortWhenChangesExist(): void
-	{
-		$page = Page::create([
-			'slug' => 'test'
-		]);
-
-		$file = File::create([
-			'filename' => 'doc.pdf',
-			'parent'   => $page,
-			'source'   => __DIR__ . '/fixtures/files/doc.pdf'
-		]);
-
-		$file->version('changes')->save([
-			'text' => 'Some additional text'
-		]);
-
-		$modified = $file->changeSort(3);
-
-		$this->assertSame(3, $modified->sort()->toInt());
-
-		$changes = $modified->version('changes')->content();
-
-		$this->assertSame(3, $changes->get('sort')->toInt());
-		$this->assertSame('Some additional text', $changes->get('text')->value());
-	}
-
 	public function testChangeSortInMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -138,5 +112,31 @@ class FileChangeSortTest extends ModelTestCase
 		$this->assertFalse($file1->translation('de')->exists());
 		$this->assertFalse($file2->translation('de')->exists());
 		$this->assertFalse($file3->translation('de')->exists());
+	}
+
+	public function testChangeSortWhenChangesExist(): void
+	{
+		$page = Page::create([
+			'slug' => 'test'
+		]);
+
+		$file = File::create([
+			'filename' => 'doc.pdf',
+			'parent'   => $page,
+			'source'   => __DIR__ . '/fixtures/files/doc.pdf'
+		]);
+
+		$file->version('changes')->save([
+			'text' => 'Some additional text'
+		]);
+
+		$modified = $file->changeSort(3);
+
+		$this->assertSame(3, $modified->sort()->toInt());
+
+		$changes = $modified->version('changes')->content();
+
+		$this->assertSame(3, $changes->get('sort')->toInt());
+		$this->assertSame('Some additional text', $changes->get('text')->value());
 	}
 }

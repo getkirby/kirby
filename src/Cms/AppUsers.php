@@ -63,14 +63,6 @@ trait AppUsers
 	}
 
 	/**
-	 * Returns all user roles
-	 */
-	public function roles(): Roles
-	{
-		return $this->roles ??= Roles::load($this->root('roles'));
-	}
-
-	/**
 	 * Returns a specific user role by id
 	 * or the role of the current user if no id is given
 	 *
@@ -87,6 +79,14 @@ trait AppUsers
 		}
 
 		return $this->user(null, $allowImpersonation)?->role();
+	}
+
+	/**
+	 * Returns all user roles
+	 */
+	public function roles(): Roles
+	{
+		return $this->roles ??= Roles::load($this->root('roles'));
 	}
 
 	/**

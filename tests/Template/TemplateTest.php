@@ -11,34 +11,6 @@ class TemplateTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 
-	public function testTemplate(): void
-	{
-		$template = new Template('Test', 'foo', 'bar');
-		$this->assertSame('test', $template->name());
-		$this->assertSame('test', $template->__toString());
-		$this->assertSame('foo', $template->type());
-		$this->assertSame('bar', $template->defaultType());
-
-		$this->assertSame('php', $template->extension());
-	}
-
-	public function testSanitizeName(): void
-	{
-		// valid names are kept, dots are allowed for representations
-		$this->assertSame('default', Template::sanitizeName('default'));
-		$this->assertSame('the-template', Template::sanitizeName('the-template'));
-		$this->assertSame('foo.bar', Template::sanitizeName('foo.bar'));
-
-		// path traversal characters are removed
-		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
-		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
-
-		// empty or invalid names result in an empty string
-		$this->assertSame('', Template::sanitizeName(null));
-		$this->assertSame('', Template::sanitizeName(''));
-		$this->assertSame('', Template::sanitizeName('..'));
-	}
-
 	public function testExists(): void
 	{
 		new App([
@@ -97,34 +69,6 @@ class TemplateTest extends TestCase
 
 		$template = new Template('test', 'foo', 'bar');
 		$this->assertFalse($template->hasDefaultType());
-	}
-
-	public function testRoot(): void
-	{
-		new App([
-			'roots' => [
-				'templates' => $root = static::FIXTURES
-			]
-		]);
-
-		$template = new Template('test');
-		$this->assertSame('templates', $template->store());
-		$this->assertSame($root, $template->root());
-	}
-
-	public function testRootInvalid(): void
-	{
-		$template = new class ('test') extends Template {
-			public function store(): string
-			{
-				return 'foo';
-			}
-		};
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Kirby root "foo" does not exist');
-
-		$template->root();
 	}
 
 	public function testRender(): void
@@ -290,5 +234,61 @@ class TemplateTest extends TestCase
 			"<footer>with other stuff</footer>\n",
 			$template->render()
 		);
+	}
+
+	public function testRoot(): void
+	{
+		new App([
+			'roots' => [
+				'templates' => $root = static::FIXTURES
+			]
+		]);
+
+		$template = new Template('test');
+		$this->assertSame('templates', $template->store());
+		$this->assertSame($root, $template->root());
+	}
+
+	public function testRootInvalid(): void
+	{
+		$template = new class ('test') extends Template {
+			public function store(): string
+			{
+				return 'foo';
+			}
+		};
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Kirby root "foo" does not exist');
+
+		$template->root();
+	}
+
+	public function testSanitizeName(): void
+	{
+		// valid names are kept, dots are allowed for representations
+		$this->assertSame('default', Template::sanitizeName('default'));
+		$this->assertSame('the-template', Template::sanitizeName('the-template'));
+		$this->assertSame('foo.bar', Template::sanitizeName('foo.bar'));
+
+		// path traversal characters are removed
+		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
+		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
+
+		// empty or invalid names result in an empty string
+		$this->assertSame('', Template::sanitizeName(null));
+		$this->assertSame('', Template::sanitizeName(''));
+		$this->assertSame('', Template::sanitizeName('..'));
+	}
+
+	public function testTemplate(): void
+	{
+		$template = new Template('Test', 'foo', 'bar');
+		$this->assertSame('test', $template->name());
+		$this->assertSame('test', $template->__toString());
+		$this->assertSame('foo', $template->type());
+		$this->assertSame('bar', $template->defaultType());
+
+		$this->assertSame('php', $template->extension());
 	}
 }

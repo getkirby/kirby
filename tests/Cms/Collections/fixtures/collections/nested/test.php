@@ -1,4 +1,3 @@
 <?php
 
-
 return fn () => 'a';

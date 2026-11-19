@@ -67,20 +67,6 @@ enum LicenseType: string
 	}
 
 	/**
-	 * The expected lengths of the license code
-	 */
-	public function length(): int
-	{
-		return match ($this) {
-			static::Basic      => 38,
-			static::Enterprise => 38,
-			static::Free       => strlen(static::Free->prefix()),
-			static::Legacy     => 39,
-			static::Invalid    => 0,
-		};
-	}
-
-	/**
 	 * A human-readable license type label
 	 */
 	public function label(): string
@@ -91,6 +77,20 @@ enum LicenseType: string
 			static::Free       => I18n::translate('license.free.label'),
 			static::Legacy     => 'Kirby 3',
 			static::Invalid    => I18n::translate('license.unregistered.label'),
+		};
+	}
+
+	/**
+	 * The expected lengths of the license code
+	 */
+	public function length(): int
+	{
+		return match ($this) {
+			static::Basic      => 38,
+			static::Enterprise => 38,
+			static::Free       => strlen(static::Free->prefix()),
+			static::Legacy     => 39,
+			static::Invalid    => 0,
 		};
 	}
 

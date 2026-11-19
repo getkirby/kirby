@@ -34,34 +34,6 @@ abstract class TestCase extends BaseTestCase
 		ErrorLog::$log = '';
 	}
 
-	public function kirby($props = [])
-	{
-		return new App($props);
-	}
-
-	public function site()
-	{
-		return $this->kirby()->site();
-	}
-
-	public function pages()
-	{
-		return $this->site()->children();
-	}
-
-	public function page(string|null $id = null)
-	{
-		if ($id !== null) {
-			return $this->site()->find($id);
-		}
-
-		if ($this->page !== null) {
-			return $this->site()->find($this->page);
-		}
-
-		return $this->site()->homePage();
-	}
-
 	public function assertHooks(
 		array $hooks,
 		Closure $action,
@@ -94,5 +66,33 @@ abstract class TestCase extends BaseTestCase
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);
+	}
+
+	public function kirby($props = [])
+	{
+		return new App($props);
+	}
+
+	public function page(string|null $id = null)
+	{
+		if ($id !== null) {
+			return $this->site()->find($id);
+		}
+
+		if ($this->page !== null) {
+			return $this->site()->find($this->page);
+		}
+
+		return $this->site()->homePage();
+	}
+
+	public function pages()
+	{
+		return $this->site()->children();
+	}
+
+	public function site()
+	{
+		return $this->kirby()->site();
 	}
 }

@@ -18,15 +18,15 @@ trait HasChildren
 	public Pages|null $children = null;
 
 	/**
-	 * The list of available draft children
-	 */
-	public Pages|null $drafts = null;
-
-	/**
 	 * The combined list of available published
 	 * and draft children
 	 */
 	public Pages|null $childrenAndDrafts = null;
+
+	/**
+	 * The list of available draft children
+	 */
+	public Pages|null $drafts = null;
 
 	/**
 	 * Returns all published children

@@ -52,6 +52,19 @@ class FileContentFileDataTest extends ModelTestCase
 		$this->assertSame([], $file->contentFileData([]));
 	}
 
+	public function testContentFileDataInSingleLanguageModeWithOverwrittenTemplate(): void
+	{
+		$file = new File([
+			'parent'   => $this->app->site(),
+			'filename' => 'test.jpg',
+			'template' => 'test'
+		]);
+
+		$this->assertSame(['template' => null], $file->contentFileData([
+			'template' => null
+		]));
+	}
+
 	public function testContentFileDataInSingleLanguageModeWithSort(): void
 	{
 		$file = new File([
@@ -79,18 +92,5 @@ class FileContentFileDataTest extends ModelTestCase
 		];
 
 		$this->assertSame($expected, $file->contentFileData([]));
-	}
-
-	public function testContentFileDataInSingleLanguageModeWithOverwrittenTemplate(): void
-	{
-		$file = new File([
-			'parent'   => $this->app->site(),
-			'filename' => 'test.jpg',
-			'template' => 'test'
-		]);
-
-		$this->assertSame(['template' => null], $file->contentFileData([
-			'template' => null
-		]));
 	}
 }

@@ -20,6 +20,22 @@ class AppIoTest extends TestCase
 		]);
 	}
 
+	public function testArray(): void
+	{
+		$response = $this->app()->io($array = ['foo' => 'bar']);
+
+		$this->assertSame(200, $response->code());
+		$this->assertSame(json_encode($array), $response->body());
+	}
+
+	public function testEmpty(): void
+	{
+		$response = $this->app()->io('');
+
+		$this->assertSame(404, $response->code());
+		$this->assertSame('Not found', $response->body());
+	}
+
 	public function testException(): void
 	{
 		$response = $this->app()->io(new Exception(
@@ -56,55 +72,6 @@ class AppIoTest extends TestCase
 
 		$this->assertSame(500, $response->code());
 		$this->assertSame('Nope', $response->body());
-	}
-
-	public function testEmpty(): void
-	{
-		$response = $this->app()->io('');
-
-		$this->assertSame(404, $response->code());
-		$this->assertSame('Not found', $response->body());
-	}
-
-	public function testResponder(): void
-	{
-		$app   = $this->app();
-		$input = $app->response()->code(201)->body('Test');
-
-		$response = $app->io($input);
-
-		$this->assertSame(201, $response->code());
-		$this->assertSame('Test', $response->body());
-	}
-
-	public function testResponse(): void
-	{
-		$input = new Response([
-			'code' => 200,
-			'body' => 'Test',
-			'type' => 'text/plain',
-			'headers' => [
-				'X-Foo'  => 'Foobar',
-				'X-Test' => 'Test'
-			]
-		]);
-
-		$app = $this->app();
-		$app->response()->header('Cache-Control', 'no-cache');
-		$app->response()->header('X-Foo', 'Bar');
-		$response = $app->io($input);
-
-		$this->assertSame([
-			'type' => 'text/plain',
-			'charset' => 'UTF-8',
-			'code' => 200,
-			'headers' => [
-				'Cache-Control' => 'no-cache',
-				'X-Foo'         => 'Foobar',
-				'X-Test'        => 'Test'
-			],
-			'body' => 'Test',
-		], $response->toArray());
 	}
 
 	public function testPage(): void
@@ -157,19 +124,52 @@ class AppIoTest extends TestCase
 		$this->assertSame('Error: Exception message', $response->body());
 	}
 
+	public function testResponder(): void
+	{
+		$app   = $this->app();
+		$input = $app->response()->code(201)->body('Test');
+
+		$response = $app->io($input);
+
+		$this->assertSame(201, $response->code());
+		$this->assertSame('Test', $response->body());
+	}
+
+	public function testResponse(): void
+	{
+		$input = new Response([
+			'code' => 200,
+			'body' => 'Test',
+			'type' => 'text/plain',
+			'headers' => [
+				'X-Foo'  => 'Foobar',
+				'X-Test' => 'Test'
+			]
+		]);
+
+		$app = $this->app();
+		$app->response()->header('Cache-Control', 'no-cache');
+		$app->response()->header('X-Foo', 'Bar');
+		$response = $app->io($input);
+
+		$this->assertSame([
+			'type' => 'text/plain',
+			'charset' => 'UTF-8',
+			'code' => 200,
+			'headers' => [
+				'Cache-Control' => 'no-cache',
+				'X-Foo'         => 'Foobar',
+				'X-Test'        => 'Test'
+			],
+			'body' => 'Test',
+		], $response->toArray());
+	}
+
 	public function testString(): void
 	{
 		$response = $this->app()->io('Test');
 
 		$this->assertSame(200, $response->code());
 		$this->assertSame('Test', $response->body());
-	}
-
-	public function testArray(): void
-	{
-		$response = $this->app()->io($array = ['foo' => 'bar']);
-
-		$this->assertSame(200, $response->code());
-		$this->assertSame(json_encode($array), $response->body());
 	}
 }

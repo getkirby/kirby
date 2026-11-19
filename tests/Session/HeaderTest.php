@@ -9,6 +9,15 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Header::class)]
 class HeaderTest extends TestCase
 {
+	protected function setAuthorization(string $value): void
+	{
+		new App([
+			'server' => [
+				'HTTP_AUTHORIZATION' => $value
+			]
+		]);
+	}
+
 	public function testGet(): void
 	{
 		$header = new Header();
@@ -29,14 +38,5 @@ class HeaderTest extends TestCase
 	{
 		$header = new Header();
 		$this->assertSame('Session theToken', $header->value('theToken'));
-	}
-
-	protected function setAuthorization(string $value): void
-	{
-		new App([
-			'server' => [
-				'HTTP_AUTHORIZATION' => $value
-			]
-		]);
 	}
 }

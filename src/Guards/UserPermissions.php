@@ -24,17 +24,6 @@ class UserPermissions extends ModelPermissions
 		return $this->user->is($this->model) === true ? 'user' : 'users';
 	}
 
-	protected function error(string $key, array $data = []): never
-	{
-		parent::error(
-			key: 'user.' . $key . '.permission',
-			data: [
-				'name' => $this->model->username(),
-				...$data
-			]
-		);
-	}
-
 	/**
 	 * Promoting someone to admin is covered
 	 * by the `changeRole` rule
@@ -83,5 +72,16 @@ class UserPermissions extends ModelPermissions
 	protected function ensureToReplaceAvatar(): void
 	{
 		$this->ensureSetting('update');
+	}
+
+	protected function error(string $key, array $data = []): never
+	{
+		parent::error(
+			key: 'user.' . $key . '.permission',
+			data: [
+				'name' => $this->model->username(),
+				...$data
+			]
+		);
 	}
 }

@@ -15,6 +15,13 @@ class NullCacheTest extends TestCase
 		$this->assertFalse($cache->enabled());
 	}
 
+	public function testFlush(): void
+	{
+		$cache = new NullCache();
+
+		$this->assertTrue($cache->flush());
+	}
+
 	public function testOperations(): void
 	{
 		$cache = new NullCache();
@@ -23,12 +30,5 @@ class NullCacheTest extends TestCase
 		$this->assertFalse($cache->exists('foo'));
 		$this->assertNull($cache->retrieve('foo'));
 		$this->assertTrue($cache->remove('foo'));
-	}
-
-	public function testFlush(): void
-	{
-		$cache = new NullCache();
-
-		$this->assertTrue($cache->flush());
 	}
 }

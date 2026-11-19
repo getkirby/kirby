@@ -133,6 +133,14 @@ class LayoutField extends BlocksField
 		return $routes;
 	}
 
+	public function attrsForm(): Form
+	{
+		return new Form(
+			fields: $this->settings()?->fields() ?? [],
+			model:  $this->model()
+		);
+	}
+
 	/**
 	 * @return array|null
 	 */
@@ -187,14 +195,6 @@ class LayoutField extends BlocksField
 		$this->value = $layouts;
 
 		return $this;
-	}
-
-	public function attrsForm(): Form
-	{
-		return new Form(
-			fields: $this->settings()?->fields() ?? [],
-			model:  $this->model()
-		);
 	}
 
 	/**

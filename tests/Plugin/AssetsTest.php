@@ -41,6 +41,12 @@ class AssetsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public function testAppCallInvalid(): void
+	{
+		$response = App::instance()->call('media/plugins/test/test/test.invalid');
+		$this->assertNull($response);
+	}
+
 	public function testClean(): void
 	{
 		// create orphans
@@ -242,7 +248,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 
-
 		$media    = static::TMP . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
 		$response = Assets::resolve(
 			'getkirby/a',
@@ -251,11 +256,5 @@ class AssetsTest extends TestCase
 		);
 		$this->assertNull($response);
 		$this->assertFalse(is_link($media));
-	}
-
-	public function testAppCallInvalid(): void
-	{
-		$response = App::instance()->call('media/plugins/test/test/test.invalid');
-		$this->assertNull($response);
 	}
 }
