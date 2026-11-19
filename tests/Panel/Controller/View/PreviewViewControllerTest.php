@@ -4,6 +4,7 @@ namespace Kirby\Panel\Controller\View;
 
 use Kirby\Cms\Page;
 use Kirby\Content\VersionId;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Redirect;
@@ -11,6 +12,7 @@ use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PageWithoutChangesPreview extends Page
 {
@@ -218,6 +220,40 @@ class PreviewViewControllerTest extends TestCase
 		$this->assertSame([], $routes);
 	}
 
+	public static function externalUrlProvider(): array
+	{
+		return [
+			['https://evil.example/notes'],
+			['//evil.example/notes'],
+			['/\\evil.example/notes'],
+			['https://getkirby.com@evil.example/notes'],
+		];
+	}
+
+	#[DataProvider('externalUrlProvider')]
+	public function testRedirectExternalUrl(string $url): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'view' => $url
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'latest');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
+
+		$controller->redirect();
+	}
+
 	public function testRedirectInSubfolder(): void
 	{
 		$model     = $this->app->page('test');
@@ -401,6 +437,30 @@ class PreviewViewControllerTest extends TestCase
 		$src        = $controller->src();
 
 		$this->assertSame('/notes/page:2?_token=' . $token . '&_version=changes&foo=bar&_preview=true', $src['changes']);
+	}
+
+	#[DataProvider('externalUrlProvider')]
+	public function testSrcBrowserExternalUrl(string $url): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'browser' => $url
+				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'changes');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
+
+		$controller->src();
 	}
 
 	public function testSrcBrowserInSubfolder(): void

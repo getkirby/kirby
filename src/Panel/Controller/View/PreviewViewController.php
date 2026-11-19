@@ -5,6 +5,7 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\Find;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Uri;
@@ -98,6 +99,7 @@ class PreviewViewController extends ViewController
 	/**
 	 * Resolves the provided URL to an existing site/page.
 	 * @throws Redirect When no model can be found for the URL
+	 * @throws InvalidArgumentException When the URL does not belong to the site's domain
 	 * @throws NotFoundException When the model is not accessible
 	 */
 	protected function modelFromUri(Uri $url): Site|Page
@@ -118,6 +120,15 @@ class PreviewViewController extends ViewController
 			$model instanceof Site === false &&
 			$model instanceof Page === false
 		) {
+			if (
+				$url->domain() === null ||
+				$this->kirby->panel()->home()->hasValidDomain($url) === false
+			) {
+				throw new InvalidArgumentException(
+					message: 'External URLs are not allowed for Panel redirects'
+				);
+			}
+
 			throw new Redirect(location: $url->toString());
 		}
 
