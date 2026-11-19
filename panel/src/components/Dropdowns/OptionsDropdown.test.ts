@@ -36,6 +36,28 @@ function toggle(wrapper: ReturnType<typeof mount>) {
 describe("k-options-dropdown", () => {
 	// $el
 	describe("element", () => {
+		it.rendersAs(mount, "DIV", "k-options-dropdown");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
+
+		it("adds a custom class once", () => {
+			const wrapper = mount({}, { class: "custom" });
+			// the class list would hide a duplicate
+			expect(wrapper.attributes("class")?.split(" ").sort()).toStrictEqual([
+				"custom",
+				"k-options-dropdown"
+			]);
+		});
+
+		it("renders a single option as its element", () => {
+			const wrapper = mount({ options: [options[0]] }, { class: "custom" });
+			expect(wrapper.element.tagName).toBe("BUTTON");
+			expect(wrapper.classes().sort()).toStrictEqual([
+				"custom",
+				"k-options-dropdown-toggle"
+			]);
+		});
+
 		it("renders a toggle for the options", () => {
 			const wrapper = mount();
 			expect(wrapper.find(".k-options-dropdown").exists()).toBe(true);
@@ -192,6 +214,18 @@ describe("k-options-dropdown", () => {
 			wrapper.vm.onAction(click, options[0], 0);
 			expect(click).toHaveBeenCalledOnce();
 			expect(wrapper.emitted("action")).toBeUndefined();
+		});
+	});
+
+	describe("toggle()", () => {
+		it("opens the options at the element", () => {
+			const wrapper = mount();
+			const toggleOptions = vi.spyOn(
+				wrapper.findComponent(Dropdown).vm,
+				"toggle"
+			);
+			wrapper.vm.toggle();
+			expect(toggleOptions).toHaveBeenCalledWith(wrapper.element);
 		});
 	});
 

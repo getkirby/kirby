@@ -1,5 +1,4 @@
 <template>
-	<!-- Single option = button -->
 	<k-button
 		v-if="hasSingleOption"
 		v-bind="$attrs"
@@ -18,8 +17,6 @@
 			{{ text }}
 		</template>
 	</k-button>
-
-	<!-- Multiple options = dropdown -->
 	<div v-else-if="options.length" v-bind="$attrs" class="k-options-dropdown">
 		<k-button
 			:disabled="disabled"
@@ -48,6 +45,7 @@
  * @license   https://getkirby.com/license
  */
 export default {
+	inheritAttrs: false,
 	props: {
 		/**
 		 * Aligment of the dropdown items
