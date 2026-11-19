@@ -8,8 +8,8 @@
 		:style="$attrs.style"
 		@click="onClick"
 	>
-		<span v-if="icon" class="k-button-icon">
-			<k-icon :type="icon" />
+		<span v-if="icon || isLoading === true" class="k-button-icon">
+			<k-icon :type="isLoading === true ? 'loader' : icon" />
 		</span>
 		<span v-if="text || $slots.default" class="k-button-text">
 			<!--
@@ -91,6 +91,13 @@ export const props = {
 		 */
 		link: String,
 		/**
+		 * Request to send on click: a Panel path, an absolute URL,
+		 * an object with `url` and request options or a function.
+		 * URLs are requested with POST unless `method` is set.
+		 * @since 6.0.0
+		 */
+		request: [String, Object, Function],
+		/**
 		 * A responsive button will hide the button text on smaller screens
 		 * automatically and only keep the icon. An icon must be set in this case.
 		 * If set to `text`, the icon will be hidden instead.
@@ -146,7 +153,12 @@ export const props = {
 export default {
 	mixins: [props],
 	inheritAttrs: false,
-	emits: ["click"],
+	emits: ["click", "success"],
+	data() {
+		return {
+			isLoading: false
+		};
+	},
 	computed: {
 		attrs() {
 			// Shared
@@ -161,12 +173,16 @@ export default {
 				title: this.title
 			};
 
+			if (this.isLoading === true) {
+				attrs["aria-busy"] = true;
+			}
+
 			if (this.current) {
 				attrs["aria-current"] = this.current;
 			}
 
-			if (this.disabled) {
-				attrs["aria-disabled"] = this.disabled;
+			if (this.isDisabled === true) {
+				attrs["aria-disabled"] = true;
 			}
 
 			if (this.selected) {
@@ -182,7 +198,7 @@ export default {
 
 			if (this.component === "k-link") {
 				// For `<a>`/`<k-link>` element:
-				attrs["disabled"] = this.disabled;
+				attrs["disabled"] = this.isDisabled;
 				attrs["download"] = this.download;
 				attrs["to"] = this.link;
 				attrs["rel"] = this.rel;
@@ -212,6 +228,9 @@ export default {
 			}
 
 			return "button";
+		},
+		isDisabled() {
+			return this.disabled === true || this.isLoading === true;
 		}
 	},
 	methods: {
@@ -223,7 +242,7 @@ export default {
 			this.$el.focus?.();
 		},
 		onClick(e) {
-			if (this.disabled) {
+			if (this.isDisabled === true) {
 				e.preventDefault();
 				return false;
 			}
@@ -236,6 +255,10 @@ export default {
 				return this.$panel.drawer.open(this.drawer);
 			}
 
+			if (this.request) {
+				return this.send();
+			}
+
 			this.click?.(e);
 
 			/**
@@ -243,6 +266,58 @@ export default {
 			 * @property {PointerEvent} event the native click event
 			 */
 			this.$emit("click", e);
+		},
+		/**
+		 * Sends the `request` and shows a loader until it is done
+		 */
+		async send() {
+			this.isLoading = true;
+
+			try {
+				let data;
+				let isPanelRoute = false;
+
+				if (typeof this.request === "function") {
+					data = await this.request();
+				} else {
+					const { url, ...options } =
+						typeof this.request === "string"
+							? { url: this.request }
+							: this.request;
+
+					// templated URLs must not climb out of their route
+					if (this.$helper.url.hasDotSegments(url) === true) {
+						throw new Error(`Invalid request URL: ${url}`);
+					}
+
+					isPanelRoute = this.$helper.url.isAbsolute(url) === false;
+
+					const { response } = await this.$panel.request(url, {
+						method: "POST",
+						...options,
+						external: isPanelRoute === false
+					});
+
+					data = response.json ?? response.text;
+				}
+
+				/**
+				 * The request has been sent successfully
+				 * @property {unknown} data the parsed response
+				 */
+				this.$emit("success", data);
+
+				// third parties must not steer the Panel
+				if (isPanelRoute === true) {
+					await this.$panel.act(data);
+				}
+
+				return data;
+			} catch (error) {
+				this.$panel.error(error);
+			} finally {
+				this.isLoading = false;
+			}
 		}
 	}
 };
@@ -419,5 +494,10 @@ export default {
 }
 .k-button:where([aria-disabled="true"]) > * {
 	opacity: var(--opacity-disabled);
+}
+
+/** Busy button **/
+.k-button:where([aria-busy="true"]) {
+	cursor: progress;
 }
 </style>
