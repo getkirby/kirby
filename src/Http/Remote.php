@@ -30,7 +30,8 @@ class Remote
 		'body'      => true,
 		'ca'        => self::CA_INTERNAL,
 		'data'      => [],
-		'encoding'  => 'utf-8',
+		// sets `Accept-Encoding`; '' accepts all encodings curl supports
+		'encoding'  => '',
 		'file'      => null,
 		'headers'   => [],
 		'method'    => 'GET',
