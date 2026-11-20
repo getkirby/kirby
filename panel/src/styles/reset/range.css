@@ -77,12 +77,12 @@
 }
 
 /* Focus state */
-:where(input[type="range"]):focus {
+:where(input[type="range"]):focus-visible {
 	outline: var(--outline);
 }
-:where(input[type="range"]):focus::-webkit-slider-thumb {
+:where(input[type="range"]):focus-visible::-webkit-slider-thumb {
 	outline: var(--range-thumb-focus-outline);
 }
-:where(input[type="range"]):focus::-moz-range-thumb {
+:where(input[type="range"]):focus-visible::-moz-range-thumb {
 	outline: var(--range-thumb-focus-outline);
 }

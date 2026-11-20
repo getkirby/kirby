@@ -72,10 +72,10 @@ export default {
 	--button-rounded: 0;
 	border-left: 1px solid var(--dropdown-color-hr);
 }
-.k-activation-toggle:is(:hover, :focus) {
+.k-activation-toggle:is(:hover, :focus-visible) {
 	--button-color-text: var(--color-white);
 }
-.k-activation-toggle:focus {
+.k-activation-toggle:focus-visible {
 	--button-rounded: var(--rounded);
 }
 </style>

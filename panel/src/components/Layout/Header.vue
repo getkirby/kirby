@@ -129,10 +129,10 @@ export default {
 	opacity: 0;
 }
 
-.k-header-title-button:is(:hover, :focus) .k-header-title-icon {
+.k-header-title-button:is(:hover, :focus-visible) .k-header-title-icon {
 	opacity: 1;
 }
-.k-header-title-button:is(:focus) .k-header-title-icon {
+.k-header-title-button:focus-visible .k-header-title-icon {
 	outline: var(--outline);
 }
 

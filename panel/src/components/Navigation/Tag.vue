@@ -205,7 +205,7 @@ export default {
 button.k-tag:not([aria-disabled="true"]) {
 	cursor: pointer;
 }
-.k-tag:not([aria-disabled="true"]):focus {
+.k-tag:not([aria-disabled="true"]):focus-visible {
 	outline: var(--outline);
 }
 
