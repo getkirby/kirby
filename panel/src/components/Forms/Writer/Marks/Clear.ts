@@ -20,11 +20,16 @@ export default class Clear extends Mark {
 			return;
 		}
 
-		const { from, to } = state.tr.selection;
+		// one transaction for all marks: a transaction built from
+		// the state before an earlier dispatch can no longer be applied
+		const { from, to } = state.selection;
+		const tr = state.tr;
 
 		for (const mark of this.editor.activeMarks) {
-			const schema = state.schema.marks[mark];
-			const tr = state.tr.removeMark(from, to, schema);
+			tr.removeMark(from, to, state.schema.marks[mark]);
+		}
+
+		if (tr.docChanged === true) {
 			view.dispatch(tr);
 		}
 	}
