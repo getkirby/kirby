@@ -48,10 +48,6 @@ class UsersCollector extends ModelsCollector
 			return new Users([]);
 		}
 
-		if ($user->role()->permissions()->for('access', 'users') === false) {
-			return new Users([]);
-		}
-
 		$models = $models->filter('isListable', true);
 
 		if ($this->role !== null) {

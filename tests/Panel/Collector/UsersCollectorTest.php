@@ -112,6 +112,26 @@ class UsersCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(UsersCollector::class);
 	}
 
+	public function testCollectWithoutAccessToUsersArea(): void
+	{
+		$this->setUpUsers();
+
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'access' => ['users' => false]
+					]
+				],
+			]
+		]);
+
+		$this->app->impersonate('b@getkirby.com');
+		$this->assertCollect(UsersCollector::class, ['a', 'b', 'c']);
+	}
+
 	public function testFilterByRole(): void
 	{
 		$this->setUpUsers();
