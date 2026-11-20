@@ -152,9 +152,9 @@ class Validations
 			$field->isEmptyValue($value) === false &&
 			method_exists($field, 'options') === true
 		) {
-			$values = array_column($field->options(), 'value');
+			$values = static::optionValues($field);
 
-			if (in_array($value, $values, true) !== true) {
+			if (in_array((string)$value, $values, true) !== true) {
 				throw new InvalidArgumentException(
 					key: 'validation.option'
 				);
@@ -173,16 +173,29 @@ class Validations
 			$field->isEmptyValue($value) === false &&
 			method_exists($field, 'options') === true
 		) {
-			$values = array_column($field->options(), 'value');
+			$values = static::optionValues($field);
 
 			foreach ($value as $val) {
-				if (in_array($val, $values, true) === false) {
+				if (in_array((string)$val, $values, true) === false) {
 					throw new InvalidArgumentException(
 						key: 'validation.option'
 					);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Returns the option values of the field as strings,
+	 * so that they can be compared with the field value
+	 * (e.g. `options: [1, 2, 3]` in the blueprint)
+	 */
+	protected static function optionValues(ValueField $field): array
+	{
+		return array_map(
+			fn (mixed $value) => (string)$value,
+			array_column($field->options(), 'value')
+		);
 	}
 
 	/**
