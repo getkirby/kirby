@@ -239,8 +239,10 @@ export default {
 			}
 
 			// don't show the button if the query matches an existing option
+			// (the text might be an `HtmlString` object, so cast it first)
 			const matches = this.options.filter(
-				(option) => option.text === this.query || option.value === this.query
+				(option) =>
+					String(option.text) === this.query || option.value === this.query
 			);
 
 			return matches.length === 0;
