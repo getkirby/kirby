@@ -256,6 +256,36 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertSame(20161121, $modified->num());
 	}
 
+	public function testUpdateWithEmptyNumberInSecondaryLanguage(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'number' => ['type' => 'number'],
+						'range'  => ['type' => 'range']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$page = $page->update(['number' => 1, 'range' => 2], 'en');
+		$page = $page->update(['number' => 3, 'range' => 4], 'de');
+		$page = $page->update(['number' => '', 'range' => null], 'de');
+
+		$this->assertSame('', $page->content('de')->number()->value());
+		$this->assertSame('', $page->content('de')->range()->value());
+	}
+
 	public function testUpdateWithNullValue(): void
 	{
 		$page = Page::create([

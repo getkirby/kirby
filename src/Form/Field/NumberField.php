@@ -88,6 +88,11 @@ class NumberField extends InputField
 		};
 	}
 
+	public function toStoredValue(): float|string
+	{
+		return $this->toFormValue() ?? '';
+	}
+
 	protected function validations(): array
 	{
 		return [
