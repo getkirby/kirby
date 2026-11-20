@@ -94,6 +94,11 @@ describe("k-slug-field", () => {
 			expect(button.attributes("icon")).toBe("sparkling");
 		});
 
+		it("renders no wizard button when disabled", () => {
+			const wrapper = field({ disabled: true, wizard });
+			expect(wrapper.find(".options").exists()).toBe(false);
+		});
+
 		it("renders no wizard button without text", () => {
 			const wrapper = field({ wizard: { field: "title" } });
 			expect(wrapper.find(".options").exists()).toBe(false);
@@ -171,6 +176,18 @@ describe("k-slug-field", () => {
 				formData: { title: "Hello World" },
 				value: "hello",
 				wizard: { text: "From title" }
+			});
+			wrapper.vm.onWizard();
+			await wrapper.vm.$nextTick();
+			expect(wrapper.findComponent(Input).props("value")).toBe("hello");
+		});
+
+		it("keeps the value when disabled", async () => {
+			const wrapper = mount({
+				disabled: true,
+				formData: { title: "Hello World" },
+				value: "hello",
+				wizard
 			});
 			wrapper.vm.onWizard();
 			await wrapper.vm.$nextTick();

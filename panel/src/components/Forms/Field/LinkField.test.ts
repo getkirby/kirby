@@ -103,6 +103,11 @@ describe("k-link-field", () => {
 			});
 			expect(wrapper.findComponent(UrlInput).props("disabled")).toBe(true);
 		});
+
+		it("keeps a page from being removed", () => {
+			const wrapper = mount({ disabled: true, value: "page://a" });
+			expect(wrapper.findComponent(Preview).props("removable")).toBe(false);
+		});
 	});
 
 	describe("id prop", () => {
@@ -320,6 +325,12 @@ describe("k-link-field", () => {
 			expect(wrapper.emitted("input")).toStrictEqual([[""]]);
 			expect(wrapper.findComponent(PageTree).exists()).toBe(false);
 		});
+
+		it("does nothing when disabled", () => {
+			const wrapper = mount({ disabled: true, value: "page://a" });
+			wrapper.vm.removeModel();
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
 	});
 
 	describe("selectModel()", () => {
@@ -338,6 +349,12 @@ describe("k-link-field", () => {
 				["https://getkirby.com/b"]
 			]);
 			expect(wrapper.findComponent(UrlInput).exists()).toBe(true);
+		});
+
+		it("does nothing when disabled", () => {
+			const wrapper = mount({ disabled: true, value: "page://a" });
+			wrapper.vm.selectModel({ url: "/b", uuid: "page://b" });
+			expect(wrapper.emitted("input")).toBeUndefined();
 		});
 	});
 
@@ -375,6 +392,13 @@ describe("k-link-field", () => {
 			await wrapper.vm.$nextTick();
 			expect(wrapper.findComponent(FileBrowser).exists()).toBe(false);
 		});
+
+		it("keeps the browser closed when disabled", async () => {
+			const wrapper = mount({ disabled: true, value: "file://a" });
+			wrapper.vm.toggle();
+			await wrapper.vm.$nextTick();
+			expect(wrapper.findComponent(FileBrowser).exists()).toBe(false);
+		});
 	});
 
 	// events
@@ -395,6 +419,12 @@ describe("k-link-field", () => {
 			const wrapper = mount({ value: "page://a" });
 			await wrapper.find(".k-link-input-model").trigger("click");
 			expect(wrapper.findComponent(PageTree).props("current")).toBe("page://a");
+		});
+
+		it("keeps the browser closed for a disabled field", async () => {
+			const wrapper = mount({ disabled: true, value: "page://a" });
+			await wrapper.find(".k-link-input-model").trigger("click");
+			expect(wrapper.findComponent(PageTree).exists()).toBe(false);
 		});
 	});
 

@@ -47,6 +47,11 @@ describe("k-checkboxes-field", () => {
 			expect(wrapper.find("k-button-group").exists()).toBe(false);
 		});
 
+		it("renders no batch buttons when disabled", () => {
+			const wrapper = field({ batch: true, disabled: true });
+			expect(wrapper.find("k-button-group").exists()).toBe(false);
+		});
+
 		it("deselects all options", async () => {
 			const wrapper = field({ batch: true, value: ["a"] });
 			await wrapper.find('k-button[icon="deselect-all"]').trigger("click");

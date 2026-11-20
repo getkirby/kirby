@@ -98,6 +98,10 @@ export default {
 	},
 	methods: {
 		deselectAll() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.selected = [];
 			this.$emit("input", this.selected);
 		},
@@ -119,6 +123,10 @@ export default {
 			this.focus();
 		},
 		selectAll() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.selected = this.choices.map((choice) => choice.value);
 			this.$emit("input", this.selected);
 		}

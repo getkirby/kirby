@@ -190,6 +190,12 @@ describe("k-checkboxes-input", () => {
 			expect(wrapper.emitted("input")).toStrictEqual([[[]]]);
 			expect(checked(wrapper)).toStrictEqual([false, false, false]);
 		});
+
+		it("does nothing when disabled", () => {
+			const wrapper = mount({ disabled: true, value: ["a", "b"] });
+			wrapper.vm.deselectAll();
+			expect(wrapper.emitted("input")).toBeUndefined();
+		});
 	});
 
 	describe("focus()", () => {
@@ -227,6 +233,12 @@ describe("k-checkboxes-input", () => {
 			const wrapper = mount({ value: ["a"] });
 			wrapper.vm.selectAll();
 			expect(wrapper.emitted("input")).toStrictEqual([[["a", "b", "c"]]]);
+		});
+
+		it("does nothing when disabled", () => {
+			const wrapper = mount({ disabled: true, value: ["a"] });
+			wrapper.vm.selectAll();
+			expect(wrapper.emitted("input")).toBeUndefined();
 		});
 	});
 
