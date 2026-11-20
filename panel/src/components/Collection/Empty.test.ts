@@ -69,8 +69,7 @@ describe("k-empty", () => {
 		});
 	});
 
-	// computed
-	describe("attrs computed", () => {
+	describe("attrs", () => {
 		it("always sets theme to empty", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("theme")).toBe("empty");
@@ -78,6 +77,13 @@ describe("k-empty", () => {
 
 		it("sets button to true when onClick is provided", () => {
 			const wrapper = mount({ onClick: () => {} });
+			expect(wrapper.attributes("button")).toBe("true");
+		});
+
+		it("sets button to true when onClick is added later", async () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("button")).toBe("false");
+			await wrapper.setProps({ onClick: () => {} });
 			expect(wrapper.attributes("button")).toBe("true");
 		});
 

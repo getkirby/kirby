@@ -7,7 +7,7 @@
 			@click.stop
 			@submit.prevent="$emit('submit')"
 		>
-			<k-dropzone :disabled="!hasDropzone" @drop="$emit('drop', $event)">
+			<k-dropzone :disabled="!hasDropzone()" @drop="$emit('drop', $event)">
 				<slot name="header">
 					<k-dialog-notification />
 				</slot>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { getCurrentInstance } from "vue";
 import Dialog from "@/mixins/dialog.js";
 
 /**
@@ -52,10 +51,14 @@ import Dialog from "@/mixins/dialog.js";
 export default {
 	mixins: [Dialog],
 	emits: ["cancel", "drop", "submit"],
-	computed: {
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the drop listener
+		 * might be added after the first render.
+		 */
 		hasDropzone() {
-			const instance = getCurrentInstance();
-			return instance?.vnode?.props?.onDrop !== undefined;
+			return this.$.vnode.props?.onDrop !== undefined;
 		}
 	}
 };

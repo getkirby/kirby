@@ -8,7 +8,7 @@
 				v-if="items.length === 0"
 				v-bind="empty"
 				:layout="layout"
-				v-on="listeners"
+				v-on="listeners()"
 			/>
 
 			<k-items
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import { getCurrentInstance } from "vue";
 import { props as ItemsProps } from "./Items.vue";
 
 /**
@@ -120,17 +119,6 @@ export default {
 
 			return true;
 		},
-		listeners() {
-			const instance = getCurrentInstance();
-
-			if (instance?.vnode?.props?.onEmpty !== undefined) {
-				return {
-					click: this.onEmpty
-				};
-			}
-
-			return {};
-		},
 		resolvedIndex() {
 			return (this.paginationOptions.offset ?? this.index - 1) + 1;
 		},
@@ -148,6 +136,21 @@ export default {
 		}
 	},
 	methods: {
+		/**
+		 * Only make the empty state clickable when there is
+		 * an empty listener. This needs to be a method instead
+		 * of a computed property, as vnode props are not reactive
+		 * and the listener might be added after the first render.
+		 */
+		listeners() {
+			if (this.$.vnode.props?.onEmpty !== undefined) {
+				return {
+					click: this.onEmpty
+				};
+			}
+
+			return {};
+		},
 		onEmpty(e) {
 			e.stopPropagation();
 			this.$emit("empty");
