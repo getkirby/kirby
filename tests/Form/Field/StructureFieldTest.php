@@ -639,6 +639,29 @@ class StructureFieldTest extends TestCase
 		$this->assertSame(['a', 'b'], $field->toFormValue()[0]['tags']);
 	}
 
+	public function testToStoredValueToggleFieldInStructure(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'featured' => [
+					'type' => 'toggle'
+				]
+			],
+			'value' => [
+				['featured' => true],
+				['featured' => 'false']
+			]
+		]);
+
+		$expected = [
+			['featured' => 'true'],
+			['featured' => 'false']
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
+		$this->assertTrue($field->toFormValue()[0]['featured']);
+	}
+
 	public function testTranslate(): void
 	{
 		$app = new App([

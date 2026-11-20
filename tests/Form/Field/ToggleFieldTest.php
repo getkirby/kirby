@@ -56,7 +56,7 @@ class ToggleFieldTest extends TestCase
 		$field->reset();
 
 		$this->assertFalse($field->toFormValue());
-		$this->assertFalse($field->toStoredValue());
+		$this->assertSame('false', $field->toStoredValue());
 
 		$field->fill($field->toStoredValue());
 
@@ -201,6 +201,20 @@ class ToggleFieldTest extends TestCase
 
 		$field = $this->field('toggle', $props);
 		$this->assertSame('Ja test', (string)$field->text());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('toggle');
+
+		$field->fill(true);
+		$this->assertSame('true', $field->toStoredValue());
+
+		$field->fill(false);
+		$this->assertSame('false', $field->toStoredValue());
+
+		$field = $this->field('toggle', ['default' => true]);
+		$this->assertSame('true', $field->toStoredValue());
 	}
 
 	public function testWhen(): void
