@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -25,6 +26,22 @@ class TimeFieldTest extends TestCase
 		]);
 
 		$this->assertSame('HH:mm:ss', $field->display());
+	}
+
+	public function testDisplayWithTranslation(): void
+	{
+		$props = [
+			'display' => [
+				'en' => 'hh:mm a',
+				'de' => 'HH:mm'
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('hh:mm a', $this->field('time', $props)->display());
+
+		I18n::$locale = 'de';
+		$this->assertSame('HH:mm', $this->field('time', $props)->display());
 	}
 
 	public function testMax(): void

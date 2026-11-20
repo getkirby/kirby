@@ -20,7 +20,7 @@ class TimeField extends DateTimeField
 	 * used to display the field in the Panel
 	 */
 	#[Prop(computed: true)]
-	protected string|null $display = null;
+	protected array|string|null $display = null;
 
 	#[Prop]
 	protected string|null $format = self::ISO;

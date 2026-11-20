@@ -26,7 +26,7 @@ class DateField extends DateTimeField
 	 * used to display the field in the Panel
 	 */
 	#[Prop]
-	protected string|null $display = 'YYYY-MM-DD';
+	protected array|string|null $display = 'YYYY-MM-DD';
 
 	/**
 	 * Defines a custom format that is used when the field is saved
