@@ -49,6 +49,31 @@ describe("k-overlay", () => {
 			await tick();
 			expect(focus).not.toHaveBeenCalled();
 		});
+
+		it("overrides the focus that showModal() sets on the first button", async () => {
+			// browsers focus the first focusable element in showModal()
+			const showModal = HTMLDialogElement.prototype.showModal;
+			const spy = vi
+				.spyOn(HTMLDialogElement.prototype, "showModal")
+				.mockImplementation(function (this: HTMLDialogElement) {
+					showModal.call(this);
+					this.querySelector("button")?.focus();
+				});
+			onTestFinished(() => spy.mockRestore());
+
+			const wrapper = vueMount(Overlay, {
+				props: { visible: true },
+				slots: {
+					default: `<form><button type="button">Cancel</button><button type="submit">Delete</button></form>`
+				},
+				attachTo: document.body
+			});
+			await tick();
+
+			expect(document.activeElement).toBe(
+				wrapper.find("[type=submit]").element
+			);
+		});
 	});
 
 	describe("nested prop", () => {
