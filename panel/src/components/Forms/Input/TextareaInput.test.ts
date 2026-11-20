@@ -125,6 +125,15 @@ describe("k-textarea-input", () => {
 		});
 	});
 
+	describe("id prop", () => {
+		it("names the toolbar after the field label", () => {
+			const wrapper = mount({ id: "text" });
+			expect(wrapper.findComponent(Toolbar).attributes("aria-labelledby")).toBe(
+				"text-label"
+			);
+		});
+	});
+
 	describe("disabled prop", () => {
 		it("disables the textarea and hides the toolbar", () => {
 			const wrapper = mount({ disabled: true });

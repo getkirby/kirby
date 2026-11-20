@@ -1,18 +1,25 @@
 <template>
-	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
+	<div
+		v-if="buttons.length"
+		class="k-toolbar"
+		:data-theme="theme"
+		role="toolbar"
+	>
 		<template v-for="(button, index) in buttons">
 			<hr v-if="button === '|'" :key="'separator-' + index" />
 
 			<k-button
 				v-else-if="button.when ?? true"
 				:key="index"
+				:ref="'button-' + index"
 				:current="button.current"
 				:disabled="button.disabled"
 				:icon="button.icon"
 				:title="button.label ?? button.title"
 				:class="['k-toolbar-button', button.class]"
-				tabindex="0"
-				@keydown="button.key?.($event)"
+				:tabindex="index === tabStop ? 0 : -1"
+				@focus="focused = index"
+				@keydown="onKeydown($event, button, index)"
 				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()
@@ -27,7 +34,7 @@
 				:theme="theme === 'dark' ? 'light' : 'dark'"
 			/>
 		</template>
-	</nav>
+	</div>
 </template>
 
 <script>
@@ -65,6 +72,24 @@ export const props = {
  */
 export default {
 	mixins: [props],
+	data() {
+		return {
+			focused: null
+		};
+	},
+	computed: {
+		tabStop() {
+			return this.visible.includes(this.focused)
+				? this.focused
+				: this.visible[0];
+		},
+		visible() {
+			return this.buttons
+				.map((button, index) => ({ button, index }))
+				.filter(({ button }) => button !== "|" && (button.when ?? true))
+				.map(({ index }) => index);
+		}
+	},
 	methods: {
 		/**
 		 * Closes all dropdowns etc.
@@ -77,6 +102,23 @@ export default {
 					component.close();
 				}
 			}
+		},
+		onKeydown(event, button, index) {
+			button.key?.(event);
+
+			let step = { ArrowLeft: -1, ArrowRight: 1 }[event.key];
+
+			if (step === undefined || event.defaultPrevented) {
+				return;
+			}
+
+			if (this.$el.closest("[dir]")?.dir === "rtl") {
+				step = -step;
+			}
+
+			const next = this.visible[this.visible.indexOf(index) + step];
+			this.$refs["button-" + next]?.[0]?.focus();
+			event.preventDefault();
 		}
 	}
 };
