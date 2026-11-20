@@ -395,11 +395,18 @@ export default {
 	outline: var(--outline);
 	border-bottom-color: transparent;
 }
-.k-block-container[data-batched="true"]::after {
+.k-block-container:is(
+		[data-batched="true"],
+		[data-selected="true"]:focus-visible
+	)::after {
 	position: absolute;
 	inset: 0;
 	content: "";
 	background: hsl(214 33% 77% / 0.175);
+	border-radius: inherit;
+}
+.k-block-container[data-selected="true"]:focus-visible::after {
+	pointer-events: none;
 }
 
 .k-block-container .k-block-options {
