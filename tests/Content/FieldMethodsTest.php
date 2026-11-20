@@ -62,6 +62,9 @@ class FieldMethodsTest extends FieldTest
 			return $field;
 		});
 		$this->assertSame('foo', $result->toString());
+
+		// the original field stays the same
+		$this->assertSame('Hello world', $field->value());
 	}
 
 	public function testEscape(): void

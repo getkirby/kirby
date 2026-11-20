@@ -97,7 +97,7 @@ trait FieldMethods
 	 */
 	public function callback(Closure $callback): mixed
 	{
-		return $callback($this);
+		return $callback(clone $this);
 	}
 
 	/**
