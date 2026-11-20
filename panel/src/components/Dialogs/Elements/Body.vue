@@ -20,6 +20,6 @@ export default {};
 	padding: var(--dialog-padding);
 }
 .k-dialog:has(.k-dialog-footer) .k-dialog-body {
-	padding-bottom: 0;
+	padding-bottom: var(--spacing-1);
 }
 </style>
