@@ -171,6 +171,9 @@ class PreviewViewControllerTest extends TestCase
 				'query' => [
 					'view' => 'https://getkirby.com/api/pages/test'
 				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
 			]
 		]);
 
@@ -204,6 +207,9 @@ class PreviewViewControllerTest extends TestCase
 				'query' => [
 					'view' => 'https://getkirby.com/admin/pages/test/preview/latest'
 				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
 			]
 		]);
 
@@ -390,6 +396,9 @@ class PreviewViewControllerTest extends TestCase
 				'query' => [
 					'view' => 'https://getkirby.com/panel/pages/test/preview/latest'
 				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
 			]
 		]);
 
@@ -404,6 +413,33 @@ class PreviewViewControllerTest extends TestCase
 
 		// the router must not be called for Panel or API URLs
 		$this->assertSame([], $routes);
+	}
+
+	public function testRedirectWithRelativeIndexUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/some-route'
+				],
+			],
+			'server' => [
+				'HTTP_HOST'   => 'getkirby.com',
+				'SERVER_NAME' => 'getkirby.com'
+			],
+			'urls' => [
+				'index' => '/'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'latest');
+
+		$this->expectException(Redirect::class);
+		$this->expectExceptionMessage('https://getkirby.com/some-route');
+
+		$controller->redirect();
 	}
 
 	public function testSrc(): void
@@ -630,6 +666,9 @@ class PreviewViewControllerTest extends TestCase
 				'query' => [
 					'browser' => 'https://getkirby.com/panel/pages/test/preview/changes'
 				],
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
 			]
 		]);
 
@@ -644,6 +683,33 @@ class PreviewViewControllerTest extends TestCase
 
 		// the router must not be called for Panel or API URLs
 		$this->assertSame([], $routes);
+	}
+
+	public function testSrcBrowserWithRelativeIndexUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/some-route'
+				],
+			],
+			'server' => [
+				'HTTP_HOST'   => 'getkirby.com',
+				'SERVER_NAME' => 'getkirby.com'
+			],
+			'urls' => [
+				'index' => '/'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PreviewViewController($this->app->page('test'), 'changes');
+
+		$this->expectException(Redirect::class);
+		$this->expectExceptionMessage('https://getkirby.com/some-route');
+
+		$controller->src();
 	}
 
 	public function testSrcRedirectParamsQuery(): void

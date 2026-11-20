@@ -120,9 +120,13 @@ class PreviewViewController extends ViewController
 			$model instanceof Site === false &&
 			$model instanceof Page === false
 		) {
+			// only redirect to URLs on the site's domain;
+			// compare with the index URL (like the Panel frontend does)
+			// as it is independent of the current language and
+			// falls back to the current host for relative index URLs
 			if (
 				$url->domain() === null ||
-				$this->kirby->panel()->home()->hasValidDomain($url) === false
+				$url->domain() !== $this->kirby->url('index', true)->domain()
 			) {
 				throw new InvalidArgumentException(
 					message: 'External URLs are not allowed for Panel redirects'
