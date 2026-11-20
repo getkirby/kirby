@@ -114,10 +114,10 @@ export default {
 			return this.$helper.string.unescapeHTML(plain).length;
 		},
 		isCursorAtEnd() {
-			return this.editor.selectionIsAtEnd;
+			return this.editor.active.isCursorAtEnd;
 		},
 		isCursorAtStart() {
-			return this.editor.selectionIsAtStart;
+			return this.editor.active.isCursorAtStart;
 		},
 		toolbarOptions() {
 			return {
