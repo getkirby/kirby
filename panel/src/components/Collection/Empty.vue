@@ -1,5 +1,5 @@
 <template>
-	<k-box v-bind="attrs" class="k-empty" @click="$emit('click', $event)">
+	<k-box v-bind="attrs()" class="k-empty" @click="$emit('click', $event)">
 		<slot>
 			{{ text }}
 		</slot>
@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { getCurrentInstance } from "vue";
 import { layout } from "@/mixins/props.js";
 
 /**
@@ -32,11 +31,15 @@ export default {
 		icon: String
 	},
 	emits: ["click"],
-	computed: {
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the click listener
+		 * might be added after the first render.
+		 */
 		attrs() {
-			const instance = getCurrentInstance();
 			const attrs = {
-				button: instance?.vnode?.props?.onClick !== undefined,
+				button: this.$.vnode.props?.onClick !== undefined,
 				icon: this.icon,
 				theme: "empty"
 			};

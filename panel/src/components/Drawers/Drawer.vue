@@ -8,7 +8,7 @@
 			method="dialog"
 			@submit.prevent="$emit('submit')"
 		>
-			<k-dropzone :disabled="!hasDropzone" @drop="$emit('drop', $event)">
+			<k-dropzone :disabled="!hasDropzone()" @drop="$emit('drop', $event)">
 				<k-drawer-notification />
 				<k-drawer-header
 					:breadcrumb="breadcrumb"
@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import { getCurrentInstance } from "vue";
 import Drawer from "@/mixins/drawer.js";
 
 /**
@@ -63,10 +62,14 @@ import Drawer from "@/mixins/drawer.js";
 export default {
 	mixins: [Drawer],
 	emits: ["cancel", "crumb", "drop", "submit", "tab"],
-	computed: {
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the drop listener
+		 * might be added after the first render.
+		 */
 		hasDropzone() {
-			const instance = getCurrentInstance();
-			return instance?.vnode?.props?.onDrop !== undefined;
+			return this.$.vnode.props?.onDrop !== undefined;
 		}
 	}
 };
