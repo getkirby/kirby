@@ -336,6 +336,8 @@ class FTest extends TestCase
 	public function testMimeToType(): void
 	{
 		$this->assertSame('image', F::mimeToType('image/jpeg'));
+		$this->assertSame('audio', F::mimeToType('audio/ogg'));
+		$this->assertSame('audio', F::mimeToType('audio/webm'));
 		$this->assertFalse(F::mimeToType('image/something'));
 	}
 
@@ -925,6 +927,8 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type('java'));
 		$this->assertSame('document', F::type('mdown'));
 		$this->assertSame('image', F::type('JPG'));
+		$this->assertSame('audio', F::type('oga'));
+		$this->assertSame('audio', F::type('weba'));
 		$this->assertNull(F::type('foo'));
 		$this->assertNull(F::type('tmp'));
 	}
