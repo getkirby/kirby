@@ -50,6 +50,11 @@ trait UserActions
 				// so the opt-in must not carry over to the new one
 				if ($user->secret('email') === true) {
 					$user->writeSecret('email', null);
+
+					// keep the user logged in to the current browser
+					if ($user->isLoggedIn() === true) {
+						$user->loginPasswordless();
+					}
 				}
 
 				return $user;

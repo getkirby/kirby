@@ -2,12 +2,20 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Tests\MockTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
 class UserChangeEmailTest extends ModelTestCase
 {
 	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserChangeEmail';
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+		$this->app->session()->destroy();
+		MockTime::reset();
+	}
 
 	public function testChangeEmail(): void
 	{
@@ -60,6 +68,32 @@ class UserChangeEmailTest extends ModelTestCase
 			'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
 			$this->app->clone()->user($user->id())->secret('totp')
 		);
+	}
+
+	public function testChangeEmailKeepsUserLoggedIn(): void
+	{
+		$user = new User([
+			'id'    => 'editor',
+			'email' => 'editor@domain.com',
+			'role'  => 'admin'
+		]);
+
+		$this->app->users()->add($user);
+
+		$user = $user->changeSecret('email', true);
+		$user->loginPasswordless();
+
+		$session = $this->app->session();
+		$token   = $session->token();
+
+		MockTime::$time += 60;
+
+		// resetting the email challenge opt-in renews the session
+		$user = $user->changeEmail('another@domain.com');
+
+		$this->assertSame('editor', $this->app->user()->id());
+		$this->assertNotSame($token, $session->token());
+		$this->assertSame(MockTime::$time, $session->get('kirby.loginTimestamp'));
 	}
 
 	public function testChangeEmailResetsEmailChallenge(): void
