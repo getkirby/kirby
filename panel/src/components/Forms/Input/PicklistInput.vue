@@ -239,10 +239,9 @@ export default {
 			}
 
 			// don't show the button if the query matches an existing option
-			// (the text might be an `HtmlString` object, so cast it first)
 			const matches = this.options.filter(
 				(option) =>
-					String(option.text) === this.query || option.value === this.query
+					this.plain(option.text) === this.query || option.value === this.query
 			);
 
 			return matches.length === 0;
@@ -303,6 +302,17 @@ export default {
 			 * @property {array} values
 			 */
 			this.$emit("input", values);
+		},
+		plain(text) {
+			// trusted HTML is reduced to the text it displays,
+			// untrusted text is already plain
+			if (text instanceof HtmlString) {
+				return this.$helper.string.unescapeHTML(
+					this.$helper.string.stripHTML(text)
+				);
+			}
+
+			return text;
 		}
 	}
 };
