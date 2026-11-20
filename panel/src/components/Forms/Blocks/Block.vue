@@ -400,12 +400,12 @@ export default {
 	inset: 0;
 	content: "";
 	background: hsl(214 33% 77% / 0.175);
-	mix-blend-mode: multiply;
 }
 
 .k-block-container .k-block-options {
 	position: absolute;
 	top: 0;
+	z-index: var(--z-toolbar);
 	inset-inline-end: var(--spacing-3);
 	margin-top: calc(-1.75rem + 2px);
 }
