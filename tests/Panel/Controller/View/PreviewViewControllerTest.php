@@ -9,6 +9,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Panel\Redirect;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class PageWithoutChangesPreview extends Page
@@ -152,6 +153,69 @@ class PreviewViewControllerTest extends TestCase
 		$this->assertSame('/panel/pages/notes/preview/latest?_query=foo%3Dbar&_params=page%3A2', $redirect);
 	}
 
+	public function testRedirectApiUrl(): void
+	{
+		$routes    = [];
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'route:before' => function (string $path) use (&$routes) {
+					$routes[] = $path;
+				}
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/api/pages/test'
+				],
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+
+		try {
+			$controller->redirect();
+			$this->fail('Expected a redirect');
+		} catch (Redirect $e) {
+			$this->assertSame('https://getkirby.com/api/pages/test', $e->location());
+		}
+
+		// the router must not be called for Panel or API URLs
+		$this->assertSame([], $routes);
+	}
+
+	public function testRedirectCustomPanelSlug(): void
+	{
+		$routes    = [];
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'route:before' => function (string $path) use (&$routes) {
+					$routes[] = $path;
+				}
+			],
+			'options' => [
+				'panel.slug' => 'admin'
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/admin/pages/test/preview/latest'
+				],
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+
+		try {
+			$controller->redirect();
+			$this->fail('Expected a redirect');
+		} catch (Redirect $e) {
+			$this->assertSame('https://getkirby.com/admin/pages/test/preview/latest', $e->location());
+		}
+
+		// the router must not be called for Panel or API URLs
+		$this->assertSame([], $routes);
+	}
+
 	public function testRedirectInSubfolder(): void
 	{
 		$model     = $this->app->page('test');
@@ -227,6 +291,36 @@ class PreviewViewControllerTest extends TestCase
 		$controller->redirect();
 	}
 
+	public function testRedirectPanelUrl(): void
+	{
+		$routes    = [];
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'route:before' => function (string $path) use (&$routes) {
+					$routes[] = $path;
+				}
+			],
+			'request' => [
+				'query' => [
+					'view' => 'https://getkirby.com/panel/pages/test/preview/latest'
+				],
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'latest');
+
+		try {
+			$controller->redirect();
+			$this->fail('Expected a redirect');
+		} catch (Redirect $e) {
+			$this->assertSame('https://getkirby.com/panel/pages/test/preview/latest', $e->location());
+		}
+
+		// the router must not be called for Panel or API URLs
+		$this->assertSame([], $routes);
+	}
+
 	public function testSrc(): void
 	{
 		$model      = $this->app->page('test');
@@ -285,6 +379,65 @@ class PreviewViewControllerTest extends TestCase
 		$this->assertSame('https://getkirby.com/demo/notes?_token=' . $token . '&_version=changes&_preview=true', $src['changes']);
 	}
 
+	public function testSrcBrowserKeepsLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/de/notes'
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->app->site()->createChild([
+			'slug' => 'notes'
+		]);
+
+		$this->app->setCurrentLanguage('en');
+		I18n::$locale = 'fr';
+
+		$controller = new PreviewViewController($this->app->page('test'), 'latest');
+		$src        = $controller->src();
+
+		$this->assertStringStartsWith('/de/notes?', $src['latest']);
+		$this->assertSame('fr', I18n::$locale);
+		$this->assertSame('en', $this->app->language()->code());
+	}
+
+	public function testSrcBrowserKeepsLocale(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/notes'
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+		$this->app->site()->createChild([
+			'slug' => 'notes'
+		]);
+
+		I18n::$locale = 'de';
+
+		$controller = new PreviewViewController($this->app->page('test'), 'latest');
+		$src        = $controller->src();
+
+		$this->assertStringStartsWith('/notes?', $src['latest']);
+		$this->assertSame('de', I18n::$locale);
+	}
+
 	public function testSrcBrowserOutsideSubfolder(): void
 	{
 		$this->app = $this->app->clone([
@@ -309,6 +462,36 @@ class PreviewViewControllerTest extends TestCase
 		$this->expectExceptionMessage('https://getkirby.com/notes');
 
 		$controller->src();
+	}
+
+	public function testSrcBrowserPanelUrl(): void
+	{
+		$routes    = [];
+		$model     = $this->app->page('test');
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'route:before' => function (string $path) use (&$routes) {
+					$routes[] = $path;
+				}
+			],
+			'request' => [
+				'query' => [
+					'browser' => 'https://getkirby.com/panel/pages/test/preview/changes'
+				],
+			]
+		]);
+
+		$controller = new PreviewViewController($model, 'changes');
+
+		try {
+			$controller->src();
+			$this->fail('Expected a redirect');
+		} catch (Redirect $e) {
+			$this->assertSame('https://getkirby.com/panel/pages/test/preview/changes', $e->location());
+		}
+
+		// the router must not be called for Panel or API URLs
+		$this->assertSame([], $routes);
 	}
 
 	public function testSrcRedirectParamsQuery(): void
