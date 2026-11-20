@@ -105,7 +105,7 @@ class WebauthnChallenge extends Challenge
 		$result      = $webauthn->verifyLogin($credentials, $input, $data->secret());
 
 		if ($result['counter'] !== null) {
-			$this->user->changeSecret('webauthn', $result['credentials']);
+			$this->user->updateSecret('webauthn', $result['credentials']);
 		}
 
 		return true;

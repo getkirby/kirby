@@ -579,6 +579,38 @@ trait UserActions
 	}
 
 	/**
+	 * Writes a secret without guards and hooks and keeps the password
+	 * timestamp, for state that must not end the user's sessions
+	 * (e.g. the signature counter of a passkey after a login)
+	 *
+	 * @internal
+	 * @throws LogicException If the key is the password
+	 * @since 6.0.0
+	 */
+	#[BlockCollectionAccess]
+	public function updateSecret(
+		string $key,
+		#[SensitiveParameter]
+		mixed $secret
+	): bool {
+		// a new password must always end the other sessions
+		if ($key === 'password') {
+			throw new LogicException(
+				message: 'The password cannot be updated without ending the sessions'
+			);
+		}
+
+		$timestamp = $this->passwordTimestamp();
+		$result    = $this->writeSecret($key, $secret);
+
+		if ($timestamp !== null) {
+			touch($this->secretsFile(), $timestamp);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Writes the account information to disk
 	 */
 	protected function writeCredentials(array $credentials): bool

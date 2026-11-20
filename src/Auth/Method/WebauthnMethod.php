@@ -57,7 +57,7 @@ class WebauthnMethod extends Method
 				);
 
 				if ($result['counter'] !== null) {
-					$user->changeSecret('webauthn', $result['credentials']);
+					$user->updateSecret('webauthn', $result['credentials']);
 				}
 
 				$user->loginPasswordless([
