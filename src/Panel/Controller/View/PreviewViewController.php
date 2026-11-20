@@ -13,6 +13,7 @@ use Kirby\Panel\Redirect;
 use Kirby\Panel\Ui\Button\ViewButtons;
 use Kirby\Panel\Ui\View;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\I18n;
 
 /**
  * Controls the preview view
@@ -55,6 +56,24 @@ class PreviewViewController extends ViewController
 		return $this->model::CLASS_ALIAS . '.preview';
 	}
 
+	/**
+	 * Checks if the path points to the Panel or the API
+	 */
+	protected function isPanelOrApiPath(string $path): bool
+	{
+		$path = trim($path, '/');
+
+		foreach (['api', 'panel'] as $area) {
+			$slug = trim($this->kirby->option($area . '.slug', $area), '/');
+
+			if ($path === $slug || str_starts_with($path, $slug . '/') === true) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	protected function isSite(): bool
 	{
 		return match (true) {
@@ -84,8 +103,14 @@ class PreviewViewController extends ViewController
 		$path = $this->pathFromUri($url);
 
 		// only route URLs that belong to the site as `App::call()`
-		// would otherwise fall back to routing the current request
-		$model = $path !== null ? $this->kirby->call(path: $path, method: 'GET') : null;
+		// would otherwise fall back to routing the current request;
+		// never route Panel or API URLs as they would recursively
+		// call the Panel (and this controller) again
+		$model = match (true) {
+			$path === null,
+			$this->isPanelOrApiPath($path) => null,
+			default => $this->kirby->call(path: $path, method: 'GET')
+		};
 
 		if (
 			$model instanceof Site === false &&
@@ -186,37 +211,49 @@ class PreviewViewController extends ViewController
 	{
 		$model = $this->model;
 
-		// if view is reloaded with a different browser URL,
-		// find corresponding model for this URL
-		// and use it for the preview URLs
-		if ($browser = $this->request->get('browser')) {
-			$browser = new Uri($browser);
-			$model   = $this->modelFromUri($browser);
-		}
+		// routing the browser URL and generating the preview URLs
+		// can change the current translation and content language;
+		// remember them to restore them afterwards so that
+		// the Panel response itself isn't affected
+		$locale   = I18n::$locale;
+		$language = $this->kirby->language()?->code();
 
-		// add the relevant preview URLs
-		// depending on the preview view mode
-		$src = [];
+		try {
+			// if view is reloaded with a different browser URL,
+			// find corresponding model for this URL
+			// and use it for the preview URLs
+			if ($browser = $this->request->get('browser')) {
+				$browser = new Uri($browser);
+				$model   = $this->modelFromUri($browser);
+			}
 
-		if (
-			$this->mode === 'latest' ||
-			$this->mode === 'compare'
-		) {
-			$src['latest'] = $model->previewUrl('latest');
-		}
+			// add the relevant preview URLs
+			// depending on the preview view mode
+			$src = [];
 
-		if (
-			$this->mode === 'changes' ||
-			$this->mode === 'compare' ||
-			$this->mode === 'form'
-		) {
-			$src['changes'] = $model->previewUrl('changes');
-		}
+			if (
+				$this->mode === 'latest' ||
+				$this->mode === 'compare'
+			) {
+				$src['latest'] = $model->previewUrl('latest');
+			}
 
-		$src = array_filter($src);
+			if (
+				$this->mode === 'changes' ||
+				$this->mode === 'compare' ||
+				$this->mode === 'form'
+			) {
+				$src['changes'] = $model->previewUrl('changes');
+			}
 
-		if ($src === []) {
-			throw new PermissionException('The preview is not available');
+			$src = array_filter($src);
+
+			if ($src === []) {
+				throw new PermissionException('The preview is not available');
+			}
+		} finally {
+			I18n::$locale = $locale;
+			$this->kirby->setCurrentLanguage($language);
 		}
 
 		// merge required params & query into preview URLs
