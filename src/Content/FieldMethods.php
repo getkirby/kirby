@@ -31,6 +31,7 @@ use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 use Kirby\Toolkit\Xml;
 use Kirby\Uuid\Permalink;
+use Kirby\Uuid\Uuid;
 use Throwable;
 
 /**
@@ -401,9 +402,11 @@ trait FieldMethods
 							$url = $element->getAttribute($attribute)
 						) {
 							try {
-								$permalink = Permalink::from($url);
+								$model =
+									Permalink::from($url)?->model() ??
+									Uuid::from($url, ['page', 'file', 'site'])?->model();
 
-								if ($url = $permalink?->model()?->url()) {
+								if ($url = $model?->url()) {
 									$element->setAttribute($attribute, $url);
 								}
 							} catch (InvalidArgumentException) {
