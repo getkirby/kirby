@@ -547,7 +547,7 @@
 	"license.code.help": "Lisans kodunuzu satın alma işleminden sonra e-posta yoluyla aldınız. Lütfen kopyalayıp buraya yapıştırın.",
 	"license.code.label": "Lisans kodu",
 	"license.remove.text": "<p>Lisansın kaldırılması, lisans dosyasını bu siteden geri alınamaz bir şekilde silecektir. Daha sonra bu siteyi farklı bir lisans anahtarıyla etkinleştirebilir veya alan adı aynı kalırsa aynı lisans anahtarını yeniden kaydedebilirsiniz.</p> <p>Lisansla ilişkili alan adını değiştirmek için lütfen Kirby ekibiyle iletişime geçin. <a href='https://getkirby.com/license'>Devamını okuyun &rarr;</a></p>",
-	"license.status": "License status",
+	"license.status": "Lisans durumu",
 	"license.status.active.info": "{date} tarihine kadar yeni ana sürümleri içerir",
 	"license.status.active.label": "Geçerli lisans",
 	"license.status.acknowledged.info": "<a href=\"https://getkirby.com/license/free-licenses\">Ücretsiz lisans şartlarına</a> uyacağınızı onayladınız.",
@@ -810,7 +810,7 @@
 	"theme.dark": "Koyu mod",
 	"theme.automatic": "Sistem varsayılanı",
 
-	"time.select": "Select a time",
+	"time.select": "Bir zaman seçin",
 
 	"title": "Başlık",
 	"today": "Bugün",

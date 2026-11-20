@@ -12,7 +12,7 @@
 
 	"back": "Înapoi",
 
-	"buttons.empty": "No buttons",
+	"buttons.empty": "Niciun buton",
 
 	"cancel": "Anulează",
 	"change": "Modific\u0103",
@@ -20,7 +20,7 @@
 	"changes": "Schimbări",
 	"confirm": "Ok",
 	"collapse": "Pliază",
-	"collapse.all": "Închide toate",
+	"collapse.all": "Pliază toate",
 	"color": "Culoare",
 	"coordinates": "Coordonate",
 	"copy": "Copiază",
@@ -106,7 +106,7 @@
 	"error.content.lock.replace": "Versiunea este blocată și nu poate fi înlocuită",
 	"error.content.lock.update": "Versiunea este blocată și nu poate fi actualizată",
 
-	"error.csrf.invalid": "Invalid CSRF token",
+	"error.csrf.invalid": "Token CSRF nevalid",
 
 	"error.entries.max.plural": "Nu sunt permise mai mult de {max} înregistrări",
 	"error.entries.max.singular": "Nu este permisă mai mult de o înregistrare",
@@ -205,7 +205,7 @@
 	"error.page.changeSlug.homePage": "The slug of the home page cannot be changed",
 	"error.page.changeSlug.permission": "Nu ai voie să schimbi apendicele URL pentru \"{slug}\"",
 	"error.page.changeSlug.reserved": "Calea paginilor de la primul nivel nu poate să înceapă cu \"{path}\"",
-	"error.page.changeStatus.errorPage": "The status of the error page cannot be changed",
+	"error.page.changeStatus.errorPage": "Starea paginii de eroare nu poate fi schimbată",
 	"error.page.changeStatus.incomplete": "Pagina are erori și nu poate fi publicată",
 	"error.page.changeStatus.permission": "Starea acestei pagini nu poate fi schimbată",
 	"error.page.changeStatus.toDraft.errorPage": "The error page cannot be converted to a draft",
@@ -547,7 +547,7 @@
 	"license.code.help": "Ați primit codul de licență după achiziție prin e-mail. Vă rugăm să-l copiați și să-l inserezi aici.",
 	"license.code.label": "License code",
 	"license.remove.text": "<p>Prin înlăturarea licenței se va șterge în mod ireversibil fișierul de licență de pe acest site. Vei putea apoi activa site-ul cu o altă cheie de licență sau să folosești din nou aceeași cheie în caz că domeniul rămâne același.</p><p>Pentru a schimba domeniul asociat licenței, contactează te rog echipa Kirby. <a href='https://getkirby.com/license'>Citește mai multe &rarr;</a></p>",
-	"license.status": "License status",
+	"license.status": "Stare licență",
 	"license.status.active.info": "Include noi versiuni majore până la data de {date}",
 	"license.status.active.label": "Licență validă",
 	"license.status.acknowledged.info": "You confirmed to comply with the <a href=\"https://getkirby.com/license/free-licenses\">free license requirements</a>",
@@ -810,7 +810,7 @@
 	"theme.dark": "Lumina stinsă",
 	"theme.automatic": "Aceeași cu sistemul",
 
-	"time.select": "Select a time",
+	"time.select": "Alege o oră",
 
 	"title": "Titlu",
 	"today": "Astăzi",
