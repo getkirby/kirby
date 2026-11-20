@@ -46,6 +46,47 @@ class FilesCollectorTest extends TestCase
 		$this->assertCollectByQuery(FilesCollector::class, 'site.files.template("hero")', ['image-b.jpg', 'image-c.jpg']);
 	}
 
+	public function testCollectByQueryInvalid(): void
+	{
+		$this->setUpFiles();
+		$this->app->impersonate('kirby');
+		$this->assertCollectByQuery(FilesCollector::class, 'site.title', []);
+	}
+
+	public function testCollectByQueryModel(): void
+	{
+		$this->setUpFiles();
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'page-b.jpg', 'content' => ['sort' => 2]],
+							['filename' => 'page-a.jpg', 'content' => ['sort' => 1]]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'avatar.jpg']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertCollectByQuery(FilesCollector::class, 'site', ['image-a.jpg', 'image-b.jpg', 'image-c.jpg']);
+		$this->assertCollectByQuery(FilesCollector::class, 'kirby.page("a")', ['a/page-a.jpg', 'a/page-b.jpg']);
+		$this->assertCollectByQuery(FilesCollector::class, 'kirby.user("test")', ['test/avatar.jpg']);
+	}
+
 	public function testCollectByQueryOrder(): void
 	{
 		$this->setUpFiles();

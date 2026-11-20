@@ -78,9 +78,17 @@ class FilePickerDialogController extends ModelPickerDialogController
 	 */
 	public function item(ModelWithContent $model): array
 	{
+		$parent = $model->parent();
+
+		// only compare parent and model if they are of the same type
+		// (e.g. `User::is()` only accepts users)
+		$isRelative =
+			$this->model instanceof $parent &&
+			$parent->is($this->model) === true;
+
 		return (new FileItem(
 			file: $model,
-			dragTextIsAbsolute: $model->parent()->is($this->model) === false,
+			dragTextIsAbsolute: $isRelative === false,
 			image: $this->image,
 			info: $this->info,
 			layout: $this->layout,
