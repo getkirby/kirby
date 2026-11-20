@@ -268,7 +268,7 @@ export default {
 .k-tags-input-toggle.k-button:focus {
 	--button-color-text: var(--input-color-text);
 }
-.k-tags-input:focus-within .k-tags-input-toggle {
+.k-tags-input:has(:focus) .k-tags-input-toggle {
 	opacity: 1;
 }
 

@@ -107,7 +107,7 @@ export default {
 .k-field-counter {
 	display: none;
 }
-.k-field:focus-within > .k-field-header > .k-field-counter {
+.k-field:has(:focus) > .k-field-header > .k-field-counter {
 	display: block;
 }
 .k-field-footer {
