@@ -617,8 +617,8 @@ export default {
 
 			value = value.map((row) => {
 				return {
-					_id: row._id ?? this.$helper.uuid(),
-					...row
+					...row,
+					_id: row._id ?? this.$helper.uuid()
 				};
 			});
 
