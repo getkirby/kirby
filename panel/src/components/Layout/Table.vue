@@ -573,7 +573,7 @@ export default {
 .k-table tbody tr td {
 	background: var(--table-color-back);
 }
-.k-table tbody tr:hover td {
+.k-table tbody tr:is(:hover, :has(:focus-visible)) td {
 	background: var(--table-color-hover);
 }
 

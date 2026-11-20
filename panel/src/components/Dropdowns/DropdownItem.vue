@@ -61,7 +61,10 @@ export default {
 	content: "✓";
 	padding-inline-start: var(--spacing-1);
 }
-.k-dropdown-item.k-button:not([aria-disabled="true"]):hover {
+.k-dropdown-item.k-button:not([aria-disabled="true"]):is(
+		:hover,
+		:focus-visible
+	) {
 	--button-color-back: var(--dropdown-color-hr);
 }
 </style>

@@ -119,7 +119,7 @@ export default {
 	--button-rounded: 0;
 	outline-offset: -2px;
 }
-.k-toolbar-button:hover {
+.k-toolbar-button:is(:hover, :focus-visible) {
 	--button-color-back: var(--toolbar-hover);
 }
 .k-toolbar .k-button[aria-current="true"] {
