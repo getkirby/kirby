@@ -86,6 +86,15 @@ class UserSettingsDropdownController extends ModelSettingsDropdownController
 			];
 
 			$options[] = '-';
+		} elseif ($this->kirby->auth()->methods()->has('password') === true) {
+			$options[] = [
+				'dialog'   => $url . '/changePassword',
+				'icon'     => 'key',
+				'text'     => $this->i18n('user.' . ($this->model->hasPassword() === true ? 'changePassword' : 'setPassword')),
+				'disabled' => $this->isDisabledOption('changePassword')
+			];
+
+			$options[] = '-';
 		}
 
 		$options[] = [
