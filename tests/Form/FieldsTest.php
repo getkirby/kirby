@@ -1430,6 +1430,22 @@ class FieldsTest extends TestCase
 		$fields->validate();
 	}
 
+	public function testValidateWithListFieldErrors(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'pages' => [
+					'type' => 'pagelist',
+					'min'  => 1
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertArrayHasKey('pages', $fields->errors());
+		$this->assertNull($fields->validate());
+	}
+
 	public function testValidateWithoutErrors(): void
 	{
 		$fields = new Fields(
