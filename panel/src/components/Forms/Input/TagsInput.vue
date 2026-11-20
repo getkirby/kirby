@@ -39,6 +39,7 @@
 			:multiple="false"
 			:options="replacableOptions"
 			:value="editing?.tag.value ?? ''"
+			@close="editing = null"
 			@create="replace"
 			@input="replace"
 		/>

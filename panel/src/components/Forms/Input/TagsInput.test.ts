@@ -367,6 +367,13 @@ describe("k-tags-input", () => {
 			expect(replace(wrapper).vm.isOpen).toBe(false);
 			expect(wrapper.vm.editing).toBe(null);
 		});
+
+		it("stops editing when the dropdown closes without a choice", async () => {
+			const wrapper = mount({ value: ["a"] });
+			await wrapper.vm.edit(0, { text: "a", value: "a" });
+			replace(wrapper).vm.$emit("close");
+			expect(wrapper.vm.editing).toBe(null);
+		});
 	});
 
 	describe("toggle()", () => {
