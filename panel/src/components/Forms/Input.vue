@@ -153,7 +153,7 @@ export default {
 	font-family: var(--input-font-family);
 	font-size: var(--input-font-size);
 }
-.k-input:not([data-disabled="true"]):focus-within {
+.k-input:not([data-disabled="true"]):has(:focus) {
 	outline: var(--input-outline-focus);
 }
 
