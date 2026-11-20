@@ -365,6 +365,7 @@ export default {
 	color: var(--dropdown-color-text);
 	box-shadow: var(--dropdown-shadow);
 	text-align: start;
+	cursor: auto;
 	transform: translate(var(--dropdown-x), var(--dropdown-y));
 }
 .k-dropdown::backdrop {
