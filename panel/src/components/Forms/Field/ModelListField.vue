@@ -254,14 +254,21 @@ export default {
 	},
 	watch: {
 		"$panel.language.code"() {
-			this.reload();
+			this.refresh();
+		},
+		/**
+		 * Every new view state comes with a new timestamp,
+		 * e.g. after `$panel.view.reload()`
+		 */
+		"$panel.view.timestamp"() {
+			this.refresh();
 		},
 		/**
 		 * The endpoint contains the path of the model,
 		 * which changes e.g. with the slug of its page
 		 */
 		"endpoints.field"() {
-			this.reload();
+			this.refresh();
 		},
 		searchterm() {
 			this.filter();
@@ -269,7 +276,9 @@ export default {
 	},
 	created() {
 		this.filter = debounce(this.filter, 200);
-		this.onRefresh = debounce(this.onRefresh, 0);
+		// collapses multiple triggers (e.g. a new view with
+		// a new language and endpoint) into a single request
+		this.refresh = debounce(this.refresh, 0);
 
 		for (const event of this.refreshEvents()) {
 			this.$events.on(event, this.onRefresh);
@@ -302,19 +311,27 @@ export default {
 			this.reload({ page: pagination.page });
 		},
 		onRefresh(response) {
-			// the view is about to be replaced and might hand the
-			// field a new endpoint (e.g. after the slug changed)
-			if (response?.redirect) {
+			// the view is about to be replaced or reloaded, which
+			// refreshes the field through its new timestamp and
+			// might hand it a new endpoint (e.g. after the slug changed)
+			if (response?.redirect || response?.reload) {
 				return;
 			}
 
-			this.reload();
+			this.refresh();
 		},
 		onSearchToggle() {
 			this.isSearching = !this.isSearching;
 			this.searchterm = null;
 		},
 		onSort() {},
+		/**
+		 * Loads the entries again for the current
+		 * page and search term
+		 */
+		refresh() {
+			this.reload();
+		},
 		/**
 		 * Events after which the list has to load its entries
 		 * again. Every action that changes what the list shows
