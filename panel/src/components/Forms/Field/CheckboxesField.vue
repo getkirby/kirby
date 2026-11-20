@@ -14,7 +14,10 @@
 				class="k-field-counter"
 			/>
 
-			<k-button-group v-if="batch" layout="collapsed">
+			<k-button-group
+				v-if="batch === true && disabled === false"
+				layout="collapsed"
+			>
 				<k-button
 					:disabled="value.length === 0"
 					:responsive="true"
