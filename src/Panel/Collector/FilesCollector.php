@@ -36,7 +36,23 @@ class FilesCollector extends ModelsCollector
 
 	protected function collectByQuery(): Files
 	{
-		return $this->parent()->query($this->query, Files::class) ?? new Files([]);
+		$files = $this->parent()->query($this->query);
+
+		// if the query only returns a site, page or user object
+		// instead of a files collection, use its files
+		if (
+			$files instanceof Site ||
+			$files instanceof Page ||
+			$files instanceof User
+		) {
+			return $files->files()->sorted();
+		}
+
+		if ($files instanceof Files) {
+			return $files;
+		}
+
+		return new Files([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Files
