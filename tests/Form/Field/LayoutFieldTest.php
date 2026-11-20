@@ -5,6 +5,8 @@ namespace Kirby\Form\Field;
 use Kirby\Api\Api;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(LayoutField::class)]
@@ -194,6 +196,58 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('id', $block);
 		$this->assertSame('heading', $block['type']);
 		$this->assertSame('Some title', $block['text']);
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'cover' => [
+						'type' => 'files'
+					]
+				]
+			]
+		]);
+
+		$dialogs = $field->dialogs();
+
+		// keeps the dialogs of the fields in blocks
+		$this->assertSame('fieldsets/(:any)/fields/(:any)/(:all?)', $dialogs[0]['pattern']);
+		$this->assertSame('fields/(:any)/(:all?)', $dialogs[1]['pattern']);
+
+		$result = $dialogs[1]['action']('cover', 'picker');
+
+		$this->assertInstanceOf(FieldDialogController::class, $result);
+		$this->assertInstanceOf(FilePickerField::class, $result->field);
+		$this->assertSame('cover', $result->field->name());
+		$this->assertSame('picker', $result->path);
+	}
+
+	public function testDrawers(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'cover' => [
+						'type' => 'files'
+					]
+				]
+			]
+		]);
+
+		$drawers = $field->drawers();
+
+		// keeps the drawers of the fields in blocks
+		$this->assertSame('fieldsets/(:any)/fields/(:any)/(:all?)', $drawers[0]['pattern']);
+		$this->assertSame('fields/(:any)/(:all?)', $drawers[1]['pattern']);
+
+		$result = $drawers[1]['action']('cover', 'test-path');
+
+		$this->assertInstanceOf(FieldDrawerController::class, $result);
+		$this->assertInstanceOf(FilePickerField::class, $result->field);
+		$this->assertSame('cover', $result->field->name());
+		$this->assertSame('test-path', $result->path);
 	}
 
 	public function testEmpty(): void

@@ -12,6 +12,8 @@ use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
 use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
@@ -168,6 +170,48 @@ class LayoutField extends BlocksField
 		}
 
 		return $default;
+	}
+
+	/**
+	 * Adds the dialogs of the fields in the layout settings
+	 */
+	public function dialogs(): array
+	{
+		return [
+			...parent::dialogs(),
+			[
+				'pattern' => 'fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => fn (
+					string $fieldName,
+					string|null $path = null
+				) => new FieldDialogController(
+					$this->attrsForm()->field($fieldName),
+					$path
+				)
+			]
+		];
+	}
+
+	/**
+	 * Adds the drawers of the fields in the layout settings
+	 */
+	public function drawers(): array
+	{
+		return [
+			...parent::drawers(),
+			[
+				'pattern' => 'fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => fn (
+					string $fieldName,
+					string|null $path = null
+				) => new FieldDrawerController(
+					$this->attrsForm()->field($fieldName),
+					$path
+				)
+			]
+		];
 	}
 
 	#[BlockCollectionAccess]
