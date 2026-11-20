@@ -192,4 +192,21 @@ class ObjectFieldTest extends TestCase
 
 		$this->assertSame([], $field->toStoredValue());
 	}
+
+	public function testToStoredValueWithToggle(): void
+	{
+		$field = $this->field('object', [
+			'fields' => [
+				'flag' => [
+					'type' => 'toggle'
+				]
+			],
+			'value' => [
+				'flag' => true
+			]
+		]);
+
+		$this->assertSame(['flag' => 'true'], $field->toStoredValue());
+		$this->assertTrue($field->toFormValue()['flag']);
+	}
 }
