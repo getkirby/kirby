@@ -94,7 +94,8 @@ export default {
 </script>
 
 <style>
-.k-model-form[data-locked="true"] {
+.k-model-form[data-locked="true"]
+	.k-field[data-disabled="true"]:not(.k-field .k-field) {
 	opacity: 0.2;
 	pointer-events: none;
 }
