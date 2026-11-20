@@ -165,6 +165,26 @@ class HtmlStringTest extends TestCase
 		$this->assertArrayNotHasKey('<text>', $resolved['options'][1]);
 	}
 
+	public function testResolveWalksObjects(): void
+	{
+		$resolved = HtmlString::resolve([
+			'empty'  => (object)[],
+			'values' => (object)[
+				'help'    => new HtmlString('<b>trusted</b>'),
+				'rows'    => [
+					['text' => 'Row', '<text>' => '<b>x</b>']
+				],
+				'<title>' => '<script>alert(1)</script>'
+			]
+		]);
+
+		// objects stay JSON objects, even when empty
+		$this->assertSame(
+			'{"empty":{},"values":{"<help>":"<b>trusted</b>","rows":[{"text":"Row"}]}}',
+			Json::encode($resolved)
+		);
+	}
+
 	public function testToString(): void
 	{
 		$html = new HtmlString('<b>safe</b>');

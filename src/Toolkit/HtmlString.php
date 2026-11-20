@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use JsonSerializable;
+use stdClass;
 use Stringable;
 
 /**
@@ -94,10 +95,10 @@ class HtmlString implements JsonSerializable, Stringable
 	}
 
 	/**
-	 * Walks an array recursively and renames any key whose
-	 * value is an `HtmlString` (or a list of them) from
-	 * `key` to `<key>`, so the JS side can detect and rewrap
-	 * the value.
+	 * Walks an array (and any `stdClass` in it) recursively
+	 * and renames any key whose value is an `HtmlString`
+	 * (or a list of them) from `key` to `<key>`, so the
+	 * JS side can detect and rewrap the value.
 	 */
 	public static function resolve(array $data): array
 	{
@@ -119,6 +120,13 @@ class HtmlString implements JsonSerializable, Stringable
 			// never creates one itself. Passing it on would let the
 			// frontend treat the value as trusted HTML.
 			if (static::isMarked($key) === true) {
+				continue;
+			}
+
+			// the frontend walks every JSON object, so objects
+			// need the same treatment as associative arrays
+			if ($value instanceof stdClass) {
+				$result[$key] = (object)static::resolve((array)$value);
 				continue;
 			}
 
