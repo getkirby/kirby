@@ -7,6 +7,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(SelectField::class)]
 class SelectFieldTest extends TestCase
 {
+	public function testNumericOptions(): void
+	{
+		$field = $this->field('select', [
+			'value'   => '2',
+			'options' => [1, 2, 3]
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('4');
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('option', $field->errors());
+	}
+
 	public function testOptionsQuery(): void
 	{
 		$app = $this->app()->clone([

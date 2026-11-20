@@ -270,6 +270,25 @@ class ValidationsTest extends TestCase
 		Validations::options($field, ['a', 'b']);
 	}
 
+	public function testOptionsWithNumericValues(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			options: [
+				['value' => 36],
+				['value' => 38.5]
+			],
+			model: $page
+		);
+
+		Validations::options($field, ['36', '38.5']);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please select a valid option');
+
+		Validations::options($field, ['36', '40']);
+	}
+
 	public function testOptionValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
@@ -284,6 +303,26 @@ class ValidationsTest extends TestCase
 		$this->expectNotToPerformAssertions();
 
 		Validations::option($field, 'a');
+	}
+
+	public function testOptionWithNumericValues(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			options: [
+				['value' => 1],
+				['value' => 2.5]
+			],
+			model: $page
+		);
+
+		Validations::option($field, '1');
+		Validations::option($field, '2.5');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please select a valid option');
+
+		Validations::option($field, '3');
 	}
 
 	public function testPatternInvalid(): void
