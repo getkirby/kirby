@@ -64,4 +64,13 @@ export default {
 	color: var(--file-preview-color-text);
 	font-size: var(--text-sm);
 }
+.k-file-preview-details dd {
+	padding: 2px;
+	margin: -2px;
+}
+.k-file-preview-details dd a {
+	display: inline-block;
+	max-width: 100%;
+	vertical-align: top;
+}
 </style>
