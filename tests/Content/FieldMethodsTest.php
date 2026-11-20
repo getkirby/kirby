@@ -62,6 +62,9 @@ class FieldMethodsTest extends FieldTest
 			return $field;
 		});
 		$this->assertSame('foo', $result->toString());
+
+		// the original field stays the same
+		$this->assertSame('Hello world', $field->value());
 	}
 
 	public function testEscape(): void
@@ -350,6 +353,39 @@ class FieldMethodsTest extends FieldTest
 		$result = $field->permalinksToUrls();
 
 		$this->assertSame('<p>This is a <a href="/@/page/my-page">test</a></p>.', (string)$result);
+	}
+
+	public function testPermalinksToUrlsWithUuids(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'uuid' => 'my-page'
+						],
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => [
+									'uuid'  => 'my-file',
+								]
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$field  = $this->field('<p><a href="page://my-page">Page</a><img src="file://my-file"><a href="site://">Site</a><a href="page://missing">Missing</a><a href="mailto:mail@getkirby.com">Mail</a></p>');
+		$result = $field->permalinksToUrls();
+		$hash   = $app->file('a/test.jpg')->mediaHash();
+
+		$this->assertSame('<p><a href="/a">Page</a><img src="/media/pages/a/' . $hash . '/test.jpg"><a href="/">Site</a><a href="page://missing">Missing</a><a href="mailto:mail@getkirby.com">Mail</a></p>', (string)$result);
 	}
 
 	public function testQuery(): void
