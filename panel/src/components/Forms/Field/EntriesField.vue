@@ -54,13 +54,11 @@
 				>
 					<k-button
 						v-if="isSortable"
-						:ref="'entry-' + index + '-sort-handle'"
 						:title="$t('sort.drag')"
+						aria-keyshortcuts="ArrowUp ArrowDown"
 						icon="sort"
 						class="k-sort-handle k-entries-field-item-sort-handle"
 						size="sm"
-						@keydown.up="sortUp(index)"
-						@keydown.down="sortDown(index)"
 					/>
 					<component
 						:is="`k-${field.type}-field`"
@@ -300,8 +298,8 @@ export default {
 			await this.$nextTick();
 			this.focus(index + 1);
 		},
-		focus(index, on = "input") {
-			this.$refs["entry-" + index + "-" + on]?.[0]?.focus?.();
+		focus(index) {
+			this.$refs["entry-" + index + "-input"]?.[0]?.focus?.();
 		},
 		onInput(index, value) {
 			this.entries[index].value = value;
@@ -333,32 +331,6 @@ export default {
 		},
 		save() {
 			this.$emit("input", this.values);
-		},
-		async sort(index, direction) {
-			if (this.isSortable === false) {
-				return;
-			}
-
-			const entry = this.entries[index];
-			this.entries.splice(index, 1);
-			this.entries.splice(index + direction, 0, entry);
-			this.save();
-			await this.$nextTick();
-			this.focus(index + direction, "sort-handle");
-		},
-		sortDown(index) {
-			if (index >= this.entries.length - 1) {
-				return;
-			}
-
-			this.sort(index, 1);
-		},
-		sortUp(index) {
-			if (index <= 0) {
-				return;
-			}
-
-			this.sort(index, -1);
 		}
 	}
 };

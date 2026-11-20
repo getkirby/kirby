@@ -734,13 +734,23 @@ export default {
 			if (to < 0) {
 				return;
 			}
+			const fromHandle = document.activeElement?.matches(
+				".k-block-options .k-sort-handle"
+			);
 			let blocks = this.$helper.object.clone(this.blocks);
 			blocks.splice(from, 1);
 			blocks.splice(to, 0, block);
 			this.blocks = blocks;
 			this.save();
 			await this.$nextTick();
-			this.focus(block);
+
+			if (fromHandle) {
+				this.ref(block)
+					?.$el.querySelector(".k-block-options .k-sort-handle")
+					?.focus();
+			} else {
+				this.focus(block);
+			}
 		},
 		async split(block, index, contents) {
 			// prepare old block with reduced content chunk

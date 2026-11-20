@@ -1,5 +1,9 @@
 <template>
-	<component :is="element" :class="{ 'k-draggable': !dragOptions.disabled }">
+	<component
+		:is="element"
+		:class="{ 'k-draggable': !dragOptions.disabled }"
+		@keydown="onKeydown"
+	>
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
@@ -206,6 +210,56 @@ export default {
 					node.classList?.add("k-draggable-footer");
 				}
 			}
+		},
+		async onKeydown(event) {
+			const step = { ArrowUp: -1, ArrowDown: 1 }[event.key];
+			const handle = this.dragOptions.handle;
+
+			if (
+				step === undefined ||
+				event.defaultPrevented ||
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey ||
+				event.shiftKey ||
+				this.dragOptions.disabled ||
+				!this.list ||
+				!handle ||
+				event.target.matches(handle) === false
+			) {
+				return;
+			}
+
+			const { draggable, filter } = this.dragOptions;
+			const items = () =>
+				[...this.$el.children].filter(
+					(element) =>
+						(draggable === ">*" || element.matches(draggable)) &&
+						element.matches(filter) === false
+				);
+			const before = items();
+			const oldIndex = before.findIndex((item) => item.contains(event.target));
+			const newIndex = oldIndex + step;
+
+			if (oldIndex === -1) {
+				return;
+			}
+
+			event.preventDefault();
+
+			if (newIndex < 0 || newIndex >= before.length) {
+				return;
+			}
+
+			const element = this.list[oldIndex];
+			this.list.splice(oldIndex, 1);
+			this.list.splice(newIndex, 0, element);
+			this.$emit("change", { moved: { element, newIndex, oldIndex } });
+			this.$emit("sort", { oldIndex, newIndex });
+			this.$emit("end", { oldIndex, newIndex });
+
+			await this.$nextTick();
+			items()[newIndex]?.querySelector(handle)?.focus();
 		},
 		getInstance(element) {
 			// get the Vue instance from HTMLElement

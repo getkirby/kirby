@@ -12,7 +12,7 @@
 		@dragstart="$emit('drag', $event)"
 	>
 		<!-- Sort handle -->
-		<k-sort-handle v-if="sortable" class="k-item-sort-handle" tabindex="-1" />
+		<k-sort-handle v-if="sortable" class="k-item-sort-handle" />
 
 		<div class="k-item-box">
 			<!-- Image -->

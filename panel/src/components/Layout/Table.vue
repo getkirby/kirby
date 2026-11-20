@@ -82,6 +82,7 @@
 						}"
 						:data-selecting="selecting"
 						:data-selectable="rowIsSelectable(row)"
+						:data-id="row.id"
 						:data-sortable="rowIsSortable(row)"
 						:data-theme="row.theme"
 					>
@@ -622,15 +623,28 @@ export default {
 }
 
 /* Table Index with sort handle */
+.k-table tr[data-sortable="true"] .k-table-index-column {
+	position: relative;
+}
 .k-table tr[data-sortable="true"] .k-table-index-column .k-sort-handle {
-	--button-width: 100%;
-	display: none;
+	--button-width: auto;
+	--button-height: auto;
+	position: absolute;
+	inset: 0;
+	outline-offset: -2px;
+	opacity: 0;
 }
-.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-table-index {
-	display: none;
+.k-table
+	tr[data-sortable="true"]:is(:hover, :has(.k-sort-handle:focus-visible))
+	.k-table-index-column
+	.k-table-index {
+	opacity: 0;
 }
-.k-table tr[data-sortable="true"]:hover .k-table-index-column .k-sort-handle {
-	display: flex;
+.k-table
+	tr[data-sortable="true"]:is(:hover, :has(.k-sort-handle:focus-visible))
+	.k-table-index-column
+	.k-sort-handle {
+	opacity: 1;
 }
 
 /* Selectable rows */

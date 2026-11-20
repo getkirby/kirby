@@ -769,6 +769,22 @@ describe("k-blocks", () => {
 			expect(BlockStub.methods.focus).toHaveBeenCalledOnce();
 		});
 
+		it("keeps the focus on the sort handle it was moved with", async () => {
+			const wrapper = mount();
+			document.body.append(wrapper.element);
+			const block = wrapper.findAllComponents(BlockStub)[0].element;
+			block.insertAdjacentHTML(
+				"beforeend",
+				`<div class="k-block-options"><button class="k-sort-handle"></button></div>`
+			);
+			const handle = block.querySelector("button") as HTMLElement;
+			handle.focus();
+			await wrapper.vm.sort(blocks()[0], 0, 1);
+			expect(document.activeElement).toBe(handle);
+			expect(BlockStub.methods.focus).not.toHaveBeenCalled();
+			wrapper.element.remove();
+		});
+
 		it("keeps the first block at the top", async () => {
 			const wrapper = mount();
 			await wrapper.vm.sort(blocks()[0], 0, -1);
