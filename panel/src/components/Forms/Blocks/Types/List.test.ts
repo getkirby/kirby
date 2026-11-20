@@ -126,6 +126,44 @@ describe("k-block-type-list", () => {
 				[{ text: "<ul><li><p>A</p></li><li><p>B</p></li></ul>" }]
 			]);
 		});
+
+		it("joins ordered lists", () => {
+			const wrapper = mount();
+			wrapper.vm.merge([
+				{ content: { text: `<ol start="3"><li><p>A</p></li></ol>` } },
+				{ content: { text: "<ol><li><p>B</p></li></ol>" } }
+			]);
+			expect(wrapper.emitted("update")).toStrictEqual([
+				[{ text: `<ol start="3"><li><p>A</p></li><li><p>B</p></li></ol>` }]
+			]);
+		});
+
+		it("moves the items into the list of the first block", () => {
+			const wrapper = mount();
+			wrapper.vm.merge([
+				{ content: { text: "<ul><li><p>A</p></li></ul>" } },
+				{ content: { text: "<ol><li><p>B</p></li></ol>" } },
+				{ content: { text: "<ul><li><p>C</p></li></ul>" } }
+			]);
+			expect(wrapper.emitted("update")).toStrictEqual([
+				[
+					{
+						text: "<ul><li><p>A</p></li><li><p>B</p></li><li><p>C</p></li></ul>"
+					}
+				]
+			]);
+		});
+
+		it("keeps an ordered first list", () => {
+			const wrapper = mount();
+			wrapper.vm.merge([
+				{ content: { text: "<ol><li><p>A</p></li></ol>" } },
+				{ content: { text: "<ul><li><p>B</p></li></ul>" } }
+			]);
+			expect(wrapper.emitted("update")).toStrictEqual([
+				[{ text: "<ol><li><p>A</p></li><li><p>B</p></li></ol>" }]
+			]);
+		});
 	});
 
 	describe("split()", () => {
@@ -137,6 +175,23 @@ describe("k-block-type-list", () => {
 					[
 						{ text: "<ul><li><p>A</p></li></ul>" },
 						{ text: "<ul><li><p>B</p></li></ul>" }
+					]
+				]
+			]);
+		});
+
+		it("splits an ordered list and keeps its start", () => {
+			const wrapper = mount();
+			vi.spyOn(writer(wrapper).vm, "getSplitContent").mockReturnValueOnce([
+				`<ol start="2"><li><p>A</p></li><li><p></p></li></ol>`,
+				`<ol start="2"><li><p></p></li><li><p>B</p></li></ol>`
+			] as never);
+			wrapper.vm.split();
+			expect(wrapper.emitted("split")).toStrictEqual([
+				[
+					[
+						{ text: `<ol start="2"><li><p>A</p></li></ol>` },
+						{ text: `<ol start="2"><li><p>B</p></li></ol>` }
 					]
 				]
 			]);
