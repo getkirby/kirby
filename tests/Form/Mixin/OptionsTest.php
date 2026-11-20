@@ -27,14 +27,6 @@ class OptionsField extends InputField
 #[CoversTrait(Options::class)]
 class OptionsTest extends TestCase
 {
-	protected function field(array|string|null $options = null): OptionsField
-	{
-		return new OptionsField(
-			options: $options,
-			model: new Page(['slug' => 'test'])
-		);
-	}
-
 	protected function setUp(): void
 	{
 		new App([
@@ -42,6 +34,14 @@ class OptionsTest extends TestCase
 				'index' => '/dev/null'
 			]
 		]);
+	}
+
+	protected function field(array|string|null $options = null): OptionsField
+	{
+		return new OptionsField(
+			options: $options,
+			model: new Page(['slug' => 'test'])
+		);
 	}
 
 	public function testHasOptionValue(): void
