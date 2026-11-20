@@ -34,6 +34,18 @@ trait Options
 		return FieldOptions::factory($props['options']);
 	}
 
+	public function hasOptionValue(mixed $value): bool
+	{
+		// convert all available values to strings
+		// to be able to compare them easily
+		$values = array_map(
+			fn (mixed $value) => (string)$value,
+			$this->optionValues()
+		);
+
+		return in_array((string)$value, $values, true);
+	}
+
 	/**
 	 * Returns the resolved options; models that the current user
 	 * must not list only show up as placeholders for the field's values
@@ -51,5 +63,10 @@ trait Options
 				...A::wrap($this->default())
 			]
 		);
+	}
+
+	public function optionValues(): array
+	{
+		return array_column($this->options(), 'value');
 	}
 }
