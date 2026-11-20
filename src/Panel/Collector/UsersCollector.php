@@ -39,7 +39,11 @@ class UsersCollector extends ModelsCollector
 
 	protected function collectByQuery(): Users
 	{
-		return $this->model()->query($this->query, Users::class) ?? new Users([]);
+		return $this->model()->query(
+			query:  $this->query,
+			expect: Users::class,
+			data:   $this->queryData()
+		) ?? new Users([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Users

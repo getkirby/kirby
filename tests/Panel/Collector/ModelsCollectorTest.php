@@ -47,6 +47,11 @@ class ModelsCollectorMock extends ModelsCollector
 		return $this->parent();
 	}
 
+	public function queryDataArray(): array
+	{
+		return $this->queryData();
+	}
+
 	public function queryModel(): ModelWithContent
 	{
 		return $this->model();
@@ -128,6 +133,17 @@ class ModelsCollectorTest extends TestCase
 		$collector = new ModelsCollectorMock(parent: new Page(['slug' => 'test']));
 
 		$this->assertInstanceOf(Page::class, $collector->parentModel());
+	}
+
+	public function testQueryData(): void
+	{
+		// no parent, no parent entry
+		$collector = new ModelsCollectorMock();
+		$this->assertSame([], $collector->queryDataArray());
+
+		$parent    = new Page(['slug' => 'test']);
+		$collector = new ModelsCollectorMock(parent: $parent);
+		$this->assertSame(['parent' => $parent], $collector->queryDataArray());
 	}
 
 	public function testSearch(): void

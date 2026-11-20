@@ -147,6 +147,25 @@ class PageTest extends ModelTestCase
 		$this->assertSame('test', $page->query('model.slug'));
 	}
 
+	public function testQueryWithData(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		// additional entries are available in the query
+		$this->assertSame('foo', $page->query(
+			query: 'parent.slug',
+			data:  ['parent' => new Page(['slug' => 'foo'])]
+		));
+
+		// but cannot override the default entries
+		$this->assertSame('test', $page->query(
+			query: 'page.slug',
+			data:  ['page' => new Page(['slug' => 'foo'])]
+		));
+	}
+
 	public function testSite(): void
 	{
 		$site = new Site();

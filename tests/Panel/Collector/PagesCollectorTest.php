@@ -61,6 +61,21 @@ class PagesCollectorTest extends TestCase
 		$this->assertModelsInCollector($collector, ['a', 'c']);
 	}
 
+	public function testCollectByQueryWithParentEntry(): void
+	{
+		$this->setUpPages();
+		$this->app->impersonate('kirby');
+
+		// `parent` in the query refers to the parent
+		$collector = new PagesCollector(
+			model:  $this->app->page('b'),
+			parent: $this->app->page('a'),
+			query:  'parent.siblings(false)'
+		);
+
+		$this->assertModelsInCollector($collector, ['b', 'c']);
+	}
+
 	public function testCollectByStatus(): void
 	{
 		$this->app = $this->app->clone([

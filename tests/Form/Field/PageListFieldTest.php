@@ -445,6 +445,26 @@ class PageListFieldTest extends TestCase
 		$this->assertSame('photography/sky', $data[1]['id']);
 	}
 
+	public function testQueryWithParentEntry(): void
+	{
+		// without a parent option, `parent` is the field's model
+		$field = $this->pagelist([
+			'query' => 'parent.children.listed'
+		]);
+
+		$this->assertCount(2, $field->data());
+
+		// with a parent option, `parent` is the resolved parent
+		$field = $this->pagelist([
+			'parent' => 'site',
+			'query'  => 'parent.children'
+		]);
+
+		$data = $field->data();
+		$this->assertCount(1, $data);
+		$this->assertSame('photography', $data[0]['id']);
+	}
+
 	public function testSortableDefault(): void
 	{
 		$this->assertTrue($this->pagelist()->sortable());

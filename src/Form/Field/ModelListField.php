@@ -105,7 +105,8 @@ abstract class ModelListField extends DisplayField
 	/**
 	 * Filters the entries by a query. Sorting will be disabled.
 	 * The query always runs against the field's own model,
-	 * even when a `parent` is set.
+	 * even when a `parent` is set. Use `parent` in the query
+	 * to start from the parent, e.g. `parent.children.listed`
 	 */
 	#[Prop(export: false)]
 	protected string|null $query = null;

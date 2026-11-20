@@ -48,7 +48,11 @@ class PagesCollector extends ModelsCollector
 
 	protected function collectByQuery(): Pages
 	{
-		return $this->model()->query($this->query, Pages::class) ?? new Pages([]);
+		return $this->model()->query(
+			query:  $this->query,
+			expect: Pages::class,
+			data:   $this->queryData()
+		) ?? new Pages([]);
 	}
 
 	protected function filter(Files|Pages|Users $models): Pages

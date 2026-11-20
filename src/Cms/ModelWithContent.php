@@ -515,10 +515,12 @@ abstract class ModelWithContent extends Model implements Identifiable
 	 * Creates a string query, starting from the model
 	 *
 	 * @param class-string|null $expect Class the result must be an instance of
+	 * @param array<string, mixed> $data Additional query data, which cannot override the default model entries
 	 */
 	public function query(
 		string|null $query = null,
-		string|null $expect = null
+		string|null $expect = null,
+		array $data = []
 	): mixed {
 		if ($query === null) {
 			return null;
@@ -526,6 +528,7 @@ abstract class ModelWithContent extends Model implements Identifiable
 
 		try {
 			$result = Str::query($query, [
+				...$data,
 				'kirby'             => $this->kirby(),
 				'site'              => $this instanceof Site ? $this : $this->site(),
 				'model'             => $this,
