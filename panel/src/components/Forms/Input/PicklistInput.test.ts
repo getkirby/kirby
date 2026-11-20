@@ -179,6 +179,66 @@ describe("k-picklist-input", () => {
 			expect(button().exists()).toBe(false);
 		});
 
+		it("hides the create button for an existing option with HTML text", async () => {
+			const wrapper = mount(
+				{
+					create: true,
+					options: [{ text: html("Design"), value: "design" }]
+				},
+				{},
+				stubs
+			);
+			const button = () => wrapper.find(".k-picklist-input-create");
+
+			await search(wrapper, "Marketing");
+			expect(button().exists()).toBe(true);
+
+			await search(wrapper, "Design");
+			expect(button().exists()).toBe(false);
+		});
+
+		it("compares HTML text by the plain text it displays", async () => {
+			const wrapper = mount(
+				{
+					create: true,
+					options: [
+						{ text: html("Q&amp;A"), value: "qa" },
+						{ text: html("<b>K</b>irby"), value: "kirby" },
+						{ text: html("A&lt;b&gt;ppl&lt;/b&gt;e"), value: "apple" },
+						{ text: "Rock <b>n</b> Roll", value: "rock" }
+					]
+				},
+				{},
+				stubs
+			);
+			const button = () => wrapper.find(".k-picklist-input-create");
+
+			// escaped characters
+			await search(wrapper, "Q&A");
+			expect(button().exists()).toBe(false);
+
+			await search(wrapper, "Q&amp;A");
+			expect(button().exists()).toBe(true);
+
+			// tags
+			await search(wrapper, "Kirby");
+			expect(button().exists()).toBe(false);
+
+			await search(wrapper, "<b>K</b>irby");
+			expect(button().exists()).toBe(true);
+
+			// escaped tags
+			await search(wrapper, "A<b>ppl</b>e");
+			expect(button().exists()).toBe(false);
+
+			// untrusted text is compared as is
+			await search(wrapper, "Rock <b>n</b> Roll");
+			expect(button().exists()).toBe(false);
+
+			await search(wrapper, "Rock n Roll");
+			expect(button().exists()).toBe(true);
+		});
+
 		it("hides the create button for an ignored query", async () => {
 			const wrapper = mount(
 				{ create: true, ignore: ["Marketing"], options },
@@ -232,6 +292,23 @@ describe("k-picklist-input", () => {
 
 		it("does not emit `create` on Enter for an existing option", async () => {
 			const wrapper = mount({ create: true, options }, {}, stubs);
+			await search(wrapper, "Design");
+
+			const input = wrapper.find(".k-picklist-input-search input");
+			await input.trigger("keydown", { key: "Enter" });
+
+			expect(wrapper.emitted("create")).toBeUndefined();
+		});
+
+		it("does not emit `create` on Enter for an existing option with HTML text", async () => {
+			const wrapper = mount(
+				{
+					create: true,
+					options: [{ text: html("Design"), value: "design" }]
+				},
+				{},
+				stubs
+			);
 			await search(wrapper, "Design");
 
 			const input = wrapper.find(".k-picklist-input-search input");
