@@ -4,6 +4,7 @@ namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Files;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Pagination;
@@ -31,6 +32,7 @@ abstract class ModelsCollector
 
 	public function __construct(
 		protected int|null $limit = null,
+		protected ModelWithContent|null $model = null,
 		protected int $page = 1,
 		protected Site|Page|User|null $parent = null,
 		protected string|null $query = null,
@@ -94,6 +96,15 @@ abstract class ModelsCollector
 	}
 
 	/**
+	 * Returns the model that queries are resolved against.
+	 * Falls back to the parent if no model is given.
+	 */
+	protected function model(): ModelWithContent
+	{
+		return $this->model ?? $this->parent();
+	}
+
+	/**
 	 * @return TModels
 	 */
 	public function models(bool $paginated = false): Files|Pages|Users
@@ -139,6 +150,10 @@ abstract class ModelsCollector
 		return $this->models(paginated: true)->pagination();
 	}
 
+	/**
+	 * Returns the parent that holds the entries
+	 * when no query is given
+	 */
 	protected function parent(): Site|Page|User
 	{
 		return $this->parent ?? App::instance()->site();

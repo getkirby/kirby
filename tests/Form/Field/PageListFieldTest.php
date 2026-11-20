@@ -430,6 +430,21 @@ class PageListFieldTest extends TestCase
 		$this->assertSame('title desc', $field->sortBy());
 	}
 
+	public function testQueryWithParent(): void
+	{
+		// the query runs against the field's model,
+		// not against the parent
+		$field = $this->pagelist([
+			'parent' => 'site',
+			'query'  => 'page.children.listed'
+		]);
+
+		$data = $field->data();
+		$this->assertCount(2, $data);
+		$this->assertSame('photography/trees', $data[0]['id']);
+		$this->assertSame('photography/sky', $data[1]['id']);
+	}
+
 	public function testSortableDefault(): void
 	{
 		$this->assertTrue($this->pagelist()->sortable());

@@ -70,8 +70,9 @@ class PagePickerDialogController extends ModelPickerDialogController
 
 		return $this->collector ??= new class (
 			limit:  $this->limit,
+			model:  $this->model,
 			page:   $this->page,
-			parent: $navigate ? $parent : $this->model,
+			parent: $navigate ? $parent : null,
 			query:  $navigate ? null : ($this->query ?? 'site.children'),
 			search: $this->search,
 		) extends PagesCollector {
@@ -85,7 +86,7 @@ class PagePickerDialogController extends ModelPickerDialogController
 			// instead of a pages collection, use its children
 			protected function collectByQuery(): Pages
 			{
-				$pages = $this->parent()->query($this->query);
+				$pages = $this->model()->query($this->query);
 
 				if ($pages instanceof Site || $pages instanceof Page) {
 					return $pages->children();

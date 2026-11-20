@@ -152,6 +152,7 @@ class PageListField extends ModelListField implements ProvidesAcceptedPageBluepr
 			blueprints: $this->blueprints(),
 			flip:       $this->flip(),
 			limit:      $this->limit(),
+			model:      $this->model(),
 			page:       (int)$this->page() ?: 1,
 			parent:     $this->parentModel(),
 			query:      $this->query(),
