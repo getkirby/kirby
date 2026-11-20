@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import type Editor from "../../Writer/Editor";
+import WriterInput from "../../Input/WriterInput.vue";
 import Heading from "./Heading.vue";
 
 const Input = {
@@ -43,6 +45,28 @@ function mount(props = {}, attrs = {}) {
 		attrs,
 		global: {
 			stubs: { "k-input": Input, "k-writer-input": Writer }
+		}
+	});
+}
+
+// mounts the heading with the real writer input and editor
+function mountWithEditor(props = {}) {
+	return vueMount(Heading, {
+		props: { content: { level: "h2", text: "Hello" }, fieldset, ...props },
+		attachTo: document.body,
+		global: {
+			directives: { direction: {} },
+			mocks: {
+				$panel: { events: { off: vi.fn(), on: vi.fn() } }
+			},
+			stubs: {
+				"k-input": Input,
+				"k-writer-input": WriterInput,
+				"k-writer-toolbar": {
+					methods: { close: vi.fn() },
+					template: "<nav />"
+				}
+			}
 		}
 	});
 }
@@ -109,6 +133,28 @@ describe("k-block-type-heading", () => {
 			writer(wrapper).props("keys").Enter();
 			expect(wrapper.emitted("split")).toHaveLength(1);
 			expect(wrapper.emitted("append")).toBeUndefined();
+		});
+
+		it("follows the cursor of the editor on enter", async () => {
+			const wrapper = mountWithEditor();
+			await wrapper.vm.$nextTick();
+			const input = wrapper.findComponent(WriterInput);
+			const editor = input.vm.editor as unknown as Editor;
+			const end = editor.selectionAtEnd.head;
+
+			editor.setSelection(end, end);
+			wrapper.vm.keys.Enter();
+			expect(wrapper.emitted("append")).toStrictEqual([["text"]]);
+			expect(wrapper.emitted("split")).toBeUndefined();
+
+			editor.setSelection(3, 3);
+			wrapper.vm.keys.Enter();
+			expect(wrapper.emitted("append")).toHaveLength(1);
+			expect(wrapper.emitted("split")).toStrictEqual([
+				[[{ text: "Hel" }, { level: "h3", text: "lo" }]]
+			]);
+
+			wrapper.unmount();
 		});
 
 		it("splits the heading on mod+enter", () => {

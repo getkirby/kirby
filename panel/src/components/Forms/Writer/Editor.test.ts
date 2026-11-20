@@ -654,6 +654,25 @@ describe("Editor", () => {
 		});
 	});
 
+	describe("setActiveNodesAndMarks", () => {
+		it("tracks the cursor position in the reactive state", () => {
+			editor.setContent("<p>hello</p>");
+			const end = editor.selectionAtEnd.head;
+
+			editor.setSelection(1, 1);
+			expect(editor.active.isCursorAtStart).toBe(true);
+			expect(editor.active.isCursorAtEnd).toBe(false);
+
+			editor.setSelection(3, 3);
+			expect(editor.active.isCursorAtStart).toBe(false);
+			expect(editor.active.isCursorAtEnd).toBe(false);
+
+			editor.setSelection(end, end);
+			expect(editor.active.isCursorAtStart).toBe(false);
+			expect(editor.active.isCursorAtEnd).toBe(true);
+		});
+	});
+
 	describe("selectionIsAtEnd", () => {
 		it("returns true when the cursor is at the end of the document", () => {
 			editor.setContent("<p>hello</p>");

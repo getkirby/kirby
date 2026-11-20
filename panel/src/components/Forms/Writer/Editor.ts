@@ -51,6 +51,8 @@ export type EditorOptions = {
 };
 
 type EditorActiveState = {
+	isCursorAtEnd: boolean;
+	isCursorAtStart: boolean;
 	marks: string[];
 	nodes: string[];
 	markAttrs: Record<string, Record<string, unknown>>;
@@ -136,8 +138,11 @@ export default class Editor extends Emitter<EditorEvents> {
 		this.element = this.options.element;
 		this.focused = false;
 
-		// Initialize reactive state for active marks and nodes
+		// Initialize reactive state for active marks, nodes
+		// and the cursor position
 		this.active = reactive<EditorActiveState>({
+			isCursorAtEnd: false,
+			isCursorAtStart: false,
 			marks: [],
 			nodes: [],
 			markAttrs: {},
@@ -445,7 +450,7 @@ export default class Editor extends Emitter<EditorEvents> {
 		// apply the new state to the view
 		this.view!.updateState(newState);
 
-		// store active nodes and marks for the toolbar
+		// store active nodes, marks and the cursor position
 		this.setActiveNodesAndMarks();
 
 		// prepare event information for all following events
@@ -600,6 +605,11 @@ export default class Editor extends Emitter<EditorEvents> {
 	}
 
 	setActiveNodesAndMarks(): void {
+		// the selection is not reactive (the editor is marked as raw),
+		// so the cursor position needs to be tracked in the reactive state
+		this.active.isCursorAtEnd = this.selectionIsAtEnd;
+		this.active.isCursorAtStart = this.selectionIsAtStart;
+
 		this.active.marks = Object.values(this.schema.marks)
 			.filter((mark) => utils.markIsActive(this.state!, mark))
 			.map((mark) => mark.name);
