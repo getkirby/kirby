@@ -37,7 +37,6 @@ function mount(props = {}, attrs = {}, $panel = panel()) {
 		// focus and selection only work on connected elements
 		attachTo: document.body,
 		global: {
-			directives: { direction: {} },
 			mocks: { $panel },
 			stubs: { "k-textarea-toolbar": Toolbar }
 		}
@@ -125,6 +124,19 @@ describe("k-textarea-input", () => {
 		});
 	});
 
+	describe("dir prop", () => {
+		it("sets the reading direction of the textarea only", () => {
+			const wrapper = mount({ dir: "rtl" });
+			expect(wrapper.attributes("dir")).toBeUndefined();
+			expect(wrapper.find("textarea").attributes("dir")).toBe("rtl");
+		});
+
+		it("inherits the reading direction without dir", () => {
+			const wrapper = mount();
+			expect(wrapper.find("textarea").attributes("dir")).toBeUndefined();
+		});
+	});
+
 	describe("disabled prop", () => {
 		it("disables the textarea and hides the toolbar", () => {
 			const wrapper = mount({ disabled: true });
@@ -139,6 +151,19 @@ describe("k-textarea-input", () => {
 			expect(wrapper.find("textarea").attributes("data-font")).toBe(
 				"monospace"
 			);
+		});
+	});
+
+	describe("lang prop", () => {
+		it("sets the language of the textarea only", () => {
+			const wrapper = mount({ lang: "de" });
+			expect(wrapper.attributes("lang")).toBeUndefined();
+			expect(wrapper.find("textarea").attributes("lang")).toBe("de");
+		});
+
+		it("inherits the language without lang", () => {
+			const wrapper = mount();
+			expect(wrapper.find("textarea").attributes("lang")).toBeUndefined();
 		});
 	});
 
@@ -263,6 +288,18 @@ describe("k-textarea-input", () => {
 			await $panel.dialog.open.mock.calls[0][0].on.submit("(link: a.de)");
 			expect($panel.dialog.close).toHaveBeenCalledOnce();
 			expect(textarea(wrapper).value).toBe("(link: a.de)");
+		});
+
+		it("passes the language to the toolbar dialog", () => {
+			const wrapper = mount({ dir: "rtl", lang: "ar" });
+			wrapper.vm.dialog("link");
+
+			expect(wrapper.vm.$panel.dialog.open).toHaveBeenCalledWith(
+				expect.objectContaining({
+					component: "k-toolbar-link-dialog",
+					props: expect.objectContaining({ dir: "rtl", lang: "ar" })
+				})
+			);
 		});
 	});
 

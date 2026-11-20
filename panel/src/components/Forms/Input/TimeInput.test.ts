@@ -4,10 +4,7 @@ import TimeInput from "./TimeInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(TimeInput, {
-		props: { step: { size: 1, unit: "minute" }, ...props } as never,
-		global: {
-			directives: { direction: {} }
-		}
+		props: { step: { size: 1, unit: "minute" }, ...props } as never
 	});
 }
 

@@ -7,10 +7,7 @@ function mount(props = {}, attrs = {}) {
 		props,
 		attrs,
 		// focus and selection only work on connected elements
-		attachTo: document.body,
-		global: {
-			directives: { direction: {} }
-		}
+		attachTo: document.body
 	});
 }
 
@@ -53,6 +50,18 @@ describe("k-string-input", () => {
 		});
 	});
 
+	describe("dir prop", () => {
+		it("sets the reading direction of the input", () => {
+			const wrapper = mount({ dir: "rtl" });
+			expect(wrapper.attributes("dir")).toBe("rtl");
+		});
+
+		it("inherits the reading direction without dir", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("dir")).toBeUndefined();
+		});
+	});
+
 	describe("disabled prop", () => {
 		it("disables the input", () => {
 			const wrapper = mount({ disabled: true });
@@ -64,6 +73,18 @@ describe("k-string-input", () => {
 		it("sets data-font", () => {
 			const wrapper = mount({ font: "monospace" });
 			expect(wrapper.attributes("data-font")).toBe("monospace");
+		});
+	});
+
+	describe("lang prop", () => {
+		it("sets the language of the input", () => {
+			const wrapper = mount({ lang: "de" });
+			expect(wrapper.attributes("lang")).toBe("de");
+		});
+
+		it("inherits the language without lang", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("lang")).toBeUndefined();
 		});
 	});
 

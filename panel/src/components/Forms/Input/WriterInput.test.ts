@@ -25,7 +25,6 @@ function mount(props = {}, attrs = {}, $panel = panel()) {
 		// the editor needs a connected element
 		attachTo: document.body,
 		global: {
-			directives: { direction: {} },
 			mocks: { $panel },
 			stubs: { "k-writer-toolbar": Toolbar }
 		}
@@ -74,6 +73,18 @@ describe("k-writer-input", () => {
 	});
 
 	// props
+	describe("dir prop", () => {
+		it("sets the reading direction of the editor and its toolbar", () => {
+			const wrapper = mount({ dir: "rtl" });
+			expect(wrapper.attributes("dir")).toBe("rtl");
+		});
+
+		it("inherits the reading direction without dir", () => {
+			const wrapper = mount();
+			expect(wrapper.attributes("dir")).toBeUndefined();
+		});
+	});
+
 	describe("disabled prop", () => {
 		it("makes the editor read-only and hides the toolbar", () => {
 			const wrapper = mount({ disabled: true });
@@ -105,6 +116,19 @@ describe("k-writer-input", () => {
 				.createNodes()
 				.map((node: { name: string }) => node.name);
 			expect(names).toStrictEqual(["hardBreak"]);
+		});
+	});
+
+	describe("lang prop", () => {
+		it("sets the language of the editable element only", () => {
+			const wrapper = mount({ lang: "de" });
+			expect(wrapper.attributes("lang")).toBeUndefined();
+			expect(wrapper.find(".ProseMirror").attributes("lang")).toBe("de");
+		});
+
+		it("inherits the language without lang", () => {
+			const wrapper = mount();
+			expect(wrapper.find(".ProseMirror").attributes("lang")).toBeUndefined();
 		});
 	});
 
@@ -209,6 +233,17 @@ describe("k-writer-input", () => {
 	});
 
 	// watch
+	describe("lang watcher", () => {
+		it("updates the language of the editable element", async () => {
+			const wrapper = mount({ lang: "de" });
+			await wrapper.setProps({ lang: "fr" } as object);
+			expect(wrapper.find(".ProseMirror").attributes("lang")).toBe("fr");
+
+			await wrapper.setProps({ lang: undefined } as object);
+			expect(wrapper.find(".ProseMirror").attributes("lang")).toBeUndefined();
+		});
+	});
+
 	describe("value watcher", () => {
 		it("shows a new value without emitting it", async () => {
 			const wrapper = mount({ value: "<p>Hello</p>" });
@@ -367,6 +402,19 @@ describe("k-writer-input", () => {
 				href: "mail@getkirby.com"
 			});
 		});
+
+		it("passes the language to the email dialog", () => {
+			const $panel = panel();
+			const wrapper = mount({ dir: "rtl", lang: "ar" }, {}, $panel);
+			editor(wrapper).emit("email", editor(wrapper));
+
+			expect($panel.dialog.open).toHaveBeenCalledWith(
+				expect.objectContaining({
+					component: "k-email-dialog",
+					props: expect.objectContaining({ dir: "rtl", lang: "ar" })
+				})
+			);
+		});
 	});
 
 	describe("input event", () => {
@@ -394,6 +442,19 @@ describe("k-writer-input", () => {
 			dialog.on.submit({ href: "a.de" });
 			expect($panel.dialog.close).toHaveBeenCalledOnce();
 			expect(command).toHaveBeenCalledWith("toggleLink", { href: "a.de" });
+		});
+
+		it("passes the language to the link dialog", () => {
+			const $panel = panel();
+			const wrapper = mount({ dir: "rtl", lang: "ar" }, {}, $panel);
+			editor(wrapper).emit("link", editor(wrapper));
+
+			expect($panel.dialog.open).toHaveBeenCalledWith(
+				expect.objectContaining({
+					component: "k-link-dialog",
+					props: expect.objectContaining({ dir: "rtl", lang: "ar" })
+				})
+			);
 		});
 	});
 });

@@ -28,7 +28,6 @@ function mount(
 				"k-submit-input": SubmitInput,
 				"k-text-input": TextInput
 			},
-			directives: { direction: {} },
 			mixins: [preserveListeners]
 		}
 	});

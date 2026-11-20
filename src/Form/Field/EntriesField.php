@@ -75,7 +75,7 @@ class EntriesField extends InputField implements ProvidesNestedForm
 		$form = $this->form()->reset()->fill(defaults: true);
 
 		return [
-			...$form->fields()->first()->toArray(),
+			...A::first($form->fields()->toProps()),
 			'default' => A::first($form->toFormValues())
 		];
 	}

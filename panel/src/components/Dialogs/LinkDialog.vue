@@ -1,6 +1,6 @@
 <template>
 	<k-form-dialog
-		v-bind="$props"
+		v-bind="dialog"
 		:value="values"
 		@cancel="$emit('cancel')"
 		@input="values = $event"
@@ -11,13 +11,14 @@
 <script>
 import Dialog from "@/mixins/dialog.js";
 import { props as FieldsProps } from "./Elements/Fields.vue";
+import { dir, lang } from "@/mixins/props.js";
 
 /**
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [Dialog, FieldsProps],
+	mixins: [Dialog, FieldsProps, dir, lang],
 	props: {
 		// eslint-disable-next-line vue/require-prop-types
 		fields: {
@@ -59,6 +60,24 @@ export default {
 				target: Boolean(this.value.target ?? false)
 			}
 		};
+	},
+	computed: {
+		/**
+		 * Props for the form dialog, with the language
+		 * of the content on the title field
+		 */
+		dialog() {
+			const { dir, lang, ...props } = this.$props;
+
+			if (props.fields.title) {
+				props.fields = {
+					...props.fields,
+					title: { dir, lang, ...props.fields.title }
+				};
+			}
+
+			return props;
+		}
 	},
 	methods: {
 		submit() {

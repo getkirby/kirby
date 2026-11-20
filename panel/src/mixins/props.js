@@ -2,12 +2,14 @@ import after from "./props/after.js";
 import autocomplete from "./props/autocomplete.js";
 import autofocus from "./props/autofocus.js";
 import before from "./props/before.js";
+import dir from "./props/dir.js";
 import disabled from "./props/disabled.js";
 import font from "./props/font.js";
 import help from "./props/help.js";
 import icon from "./props/icon.js";
 import id from "./props/id.js";
 import label from "./props/label.js";
+import lang from "./props/lang.js";
 import layout from "./props/layout.js";
 import maxlength from "./props/maxlength.js";
 import minlength from "./props/minlength.js";
@@ -24,12 +26,14 @@ export {
 	autocomplete,
 	autofocus,
 	before,
+	dir,
 	disabled,
 	font,
 	help,
 	icon,
 	id,
 	label,
+	lang,
 	layout,
 	maxlength,
 	minlength,

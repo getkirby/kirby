@@ -11,8 +11,7 @@ function mount(props = {}, attrs = {}) {
 		attachTo: document.body,
 		global: {
 			// registered globally in the Panel
-			components: { "k-string-input": StringInput },
-			directives: { direction: {} }
+			components: { "k-string-input": StringInput }
 		}
 	});
 }

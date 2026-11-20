@@ -46,6 +46,7 @@ export type EditorOptions = {
 	emptyDocument: { type: string; content: unknown[] };
 	events: Record<string, (...args: unknown[]) => unknown>;
 	inline: boolean;
+	lang: string | undefined;
 	parseOptions: ParseOptions;
 	topNode: string;
 };
@@ -121,6 +122,7 @@ export default class Editor extends Emitter<EditorEvents> {
 		},
 		events: {},
 		inline: false,
+		lang: undefined,
 		parseOptions: {},
 		topNode: "doc"
 	};
@@ -401,8 +403,14 @@ export default class Editor extends Emitter<EditorEvents> {
 	createView(): EditorView {
 		return new EditorView(this.element, {
 			dispatchTransaction: this.dispatchTransaction.bind(this),
-			attributes: {
-				class: "k-text"
+			attributes: () => {
+				const attributes: Record<string, string> = { class: "k-text" };
+
+				if (this.options.lang) {
+					attributes.lang = this.options.lang;
+				}
+
+				return attributes;
 			},
 			editable: () => this.options.editable,
 			handlePaste: (_view, event) => {
@@ -637,6 +645,17 @@ export default class Editor extends Emitter<EditorEvents> {
 			.setMeta("preventUpdate", !emitUpdate);
 
 		this.view!.dispatch(transaction);
+	}
+
+	/**
+	 * Sets the language of the content, e.g. for spellchecking
+	 * @since 6.0.0
+	 */
+	setLang(lang: string | undefined): void {
+		this.options.lang = lang;
+
+		// let the view render its attributes again
+		this.view?.setProps({});
 	}
 
 	setSelection(from = 0, to = 0): void {
