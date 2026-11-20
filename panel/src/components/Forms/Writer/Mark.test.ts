@@ -86,6 +86,15 @@ describe("Mark", () => {
 			mark.toggle();
 			expect(editor.toggleMark).toHaveBeenCalledWith("bold");
 		});
+
+		it("returns the result of editor.toggleMark", () => {
+			const mark = new TestMark();
+			mark.bindEditor(mockEditor({ toggleMark: vi.fn(() => true) }));
+			expect(mark.toggle()).toBe(true);
+
+			mark.bindEditor(mockEditor({ toggleMark: vi.fn(() => false) }));
+			expect(mark.toggle()).toBe(false);
+		});
 	});
 
 	describe("type", () => {
