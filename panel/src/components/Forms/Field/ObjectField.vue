@@ -42,6 +42,7 @@
 							</th>
 							<k-table-cell
 								:column="field"
+								:disabled="disabled"
 								:field="field"
 								:mobile="true"
 								:value="object[field.name]"
@@ -124,6 +125,10 @@ export default {
 			this.open();
 		},
 		cell(name, value) {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.object[name] = value;
 			this.save();
 		},
