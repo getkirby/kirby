@@ -1,8 +1,26 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import { mockEditor } from "@test/unit/editor";
+import Editor from "../Editor";
+import Bold from "./Bold";
 import Clear from "./Clear";
+import Italic from "./Italic";
 
 const mark = new Clear();
+
+function createEditor(content: string): { editor: Editor; mark: Clear } {
+	const element = document.createElement("div");
+	document.body.appendChild(element);
+
+	const mark = new Clear();
+	const editor = new Editor({
+		content,
+		element,
+		extensions: [new Bold(), new Italic(), mark]
+	});
+	onTestFinished(() => editor.destroy());
+
+	return { editor, mark };
+}
 
 describe("Clear mark", () => {
 	describe("button", () => {
@@ -14,33 +32,37 @@ describe("Clear mark", () => {
 	});
 
 	describe("clear", () => {
-		it("dispatches removeMark for each active mark", () => {
-			const mark = new Clear();
-			const dispatch = vi.fn();
-			const removeMark = vi.fn().mockReturnValue("transaction");
+		it("removes all active marks with a single dispatch", () => {
+			const { editor, mark } = createEditor(
+				"<p><strong><em>hello</em></strong></p>"
+			);
+			editor.setSelection(1, 6);
 
-			const editor = mockEditor({
-				activeMarks: ["bold", "italic"],
-				state: {
-					tr: {
-						selection: { from: 1, to: 5 },
-						removeMark
-					},
-					schema: {
-						marks: { bold: "boldType", italic: "italicType" }
-					}
-				},
-				view: { dispatch }
-			});
-
-			mark.bindEditor(editor);
+			const dispatch = vi.spyOn(editor.view!, "dispatch");
 			mark.clear();
 
-			expect(removeMark).toHaveBeenCalledTimes(2);
-			expect(removeMark).toHaveBeenCalledWith(1, 5, "boldType");
-			expect(removeMark).toHaveBeenCalledWith(1, 5, "italicType");
-			expect(dispatch).toHaveBeenCalledTimes(2);
-			expect(dispatch).toHaveBeenCalledWith("transaction");
+			expect(dispatch).toHaveBeenCalledOnce();
+			expect(editor.getHTML()).toBe("<p>hello</p>");
+		});
+
+		it("removes marks that only cover parts of the selection", () => {
+			const { editor, mark } = createEditor(
+				"<p><strong>hel</strong><em>lo</em></p>"
+			);
+			editor.setSelection(1, 6);
+			mark.clear();
+
+			expect(editor.getHTML()).toBe("<p>hello</p>");
+		});
+
+		it("keeps marks outside of the selection", () => {
+			const { editor, mark } = createEditor(
+				"<p><strong><em>hello</em></strong></p>"
+			);
+			editor.setSelection(1, 3);
+			mark.clear();
+
+			expect(editor.getHTML()).toBe("<p>he<strong><em>llo</em></strong></p>");
 		});
 
 		it("does nothing when state is not available", () => {
@@ -60,19 +82,10 @@ describe("Clear mark", () => {
 		});
 
 		it("does nothing when there are no active marks", () => {
-			const mark = new Clear();
-			const dispatch = vi.fn();
+			const { editor, mark } = createEditor("<p>hello</p>");
+			editor.setSelection(1, 6);
 
-			const editor = mockEditor({
-				activeMarks: [],
-				state: {
-					tr: { selection: { from: 1, to: 5 }, removeMark: vi.fn() },
-					schema: { marks: {} }
-				},
-				view: { dispatch }
-			});
-
-			mark.bindEditor(editor);
+			const dispatch = vi.spyOn(editor.view!, "dispatch");
 			mark.clear();
 
 			expect(dispatch).not.toHaveBeenCalled();
