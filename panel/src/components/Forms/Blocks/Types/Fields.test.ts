@@ -22,6 +22,36 @@ describe("k-block-type-fields", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	describe("toggle button", () => {
+		it("collapses and expands the form", async () => {
+			sessionStorage.clear();
+			const wrapper = mount();
+			const toggle = wrapper.find(".k-block-type-fields-toggle");
+			expect(toggle.attributes("aria-expanded")).toBe("true");
+
+			await toggle.trigger("click");
+			expect(toggle.attributes("aria-expanded")).toBe("false");
+			expect(wrapper.find(".k-block-type-fields-form").exists()).toBe(false);
+
+			await toggle.trigger("click");
+			expect(toggle.attributes("aria-expanded")).toBe("true");
+			expect(wrapper.find(".k-block-type-fields-form").exists()).toBe(true);
+		});
+	});
+
+	describe("isHidden prop", () => {
+		it("reports the form as collapsed while the block is hidden", () => {
+			sessionStorage.clear();
+			const wrapper = vueMount(Fields, {
+				global: { mixins: [preserveListeners] },
+				props: { isHidden: true, tabs: {} }
+			});
+			expect(
+				wrapper.find(".k-block-type-fields-toggle").attributes("aria-expanded")
+			).toBe("false");
+		});
+	});
+
 	// events
 	describe("copy event", () => {
 		it("is not emitted for a native copy event in the form", () => {
