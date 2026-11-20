@@ -266,10 +266,10 @@ export default {
 	--button-color-text: var(--input-color-placeholder);
 	opacity: 0;
 }
-.k-tags-input-toggle.k-button:focus {
+.k-tags-input-toggle.k-button:is(:hover, :focus-visible) {
 	--button-color-text: var(--input-color-text);
 }
-.k-tags-input:focus-within .k-tags-input-toggle {
+.k-tags-input:is(:hover, :focus-within) .k-tags-input-toggle {
 	opacity: 1;
 }
 
