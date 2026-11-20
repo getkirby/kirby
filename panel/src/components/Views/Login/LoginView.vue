@@ -93,7 +93,7 @@ export default {
 				);
 
 				if (response?.redirect) {
-					await this.$panel.open(response.redirect);
+					await this.$panel.open(response.redirect, { globals: ["system"] });
 				}
 			} catch (error) {
 				this.onError(error);
@@ -112,7 +112,7 @@ export default {
 
 				// if login was successful, the user will be redirected…
 				if (response?.redirect) {
-					await this.$panel.open(response.redirect);
+					await this.$panel.open(response.redirect, { globals: ["system"] });
 
 					// …and we show a welcome notification
 					this.$panel.notification.success({
