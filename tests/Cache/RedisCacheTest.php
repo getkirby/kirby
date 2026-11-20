@@ -231,4 +231,18 @@ class RedisCacheTest extends TestCase
 		$this->assertTrue($cache2->exists('foo'));
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
+
+	public function testSetInvalidValue(): void
+	{
+		$cache = new RedisCache();
+
+		// existing entry gets overwritten with an empty entry
+		// when the new value cannot be encoded
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertTrue($cache->exists('foo'));
+
+		$this->assertTrue($cache->set('foo', "\xC3"));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertNull($cache->get('foo'));
+	}
 }

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cache;
 
-use JsonException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use TypeError;
@@ -166,9 +165,7 @@ class ValueTest extends TestCase
 	{
 		// invalid UTF-8 sequence makes json_encode fail
 		$value = new Value("\xb1\x31");
-
-		$this->expectException(JsonException::class);
-		$value->toJson();
+		$this->assertSame('', $value->toJson());
 	}
 
 	public function testValue(): void
