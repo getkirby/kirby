@@ -28,6 +28,10 @@ class PageRenderTest extends ModelTestCase
 			'site' => [
 				'children' => [
 					[
+						'slug'     => 'binary',
+						'template' => 'cache-binary'
+					],
+					[
 						'slug'     => 'default',
 						'template' => 'cache-default'
 					],
@@ -264,6 +268,21 @@ class PageRenderTest extends ModelTestCase
 
 		$html2 = $page->render();
 		$this->assertSame($html1, $html2);
+	}
+
+	public function testRenderCacheBinary(): void
+	{
+		$cache = $this->app->cache('pages');
+		$page  = $this->app->page('binary');
+
+		// output that is not valid UTF-8 cannot be cached
+		// but must still be rendered without errors
+		$html = $page->render();
+		$this->assertSame("\x89PNG\xC3", $html);
+		$this->assertNull($cache->retrieve('binary.latest.html'));
+
+		$this->assertSame($html, $page->render());
+		$this->assertNull($cache->retrieve('binary.latest.html'));
 	}
 
 	public function testRenderCacheCustomExpiry(): void
