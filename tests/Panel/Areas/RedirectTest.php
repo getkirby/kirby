@@ -58,6 +58,15 @@ class RedirectTest extends AreaTestCase
 		$this->assertSame('', $this->app->session()->get('panel.path'));
 	}
 
+	public function testLoginWhenAuthenticated(): void
+	{
+		$this->install();
+		$this->login();
+		$this->assertRedirect('login', 'site');
+		$this->assertRedirect('login/method/password', 'site');
+		$this->assertRedirect('login/challenge/email', 'site');
+	}
+
 	public function testLogoutChallenge(): void
 	{
 		$this->install();

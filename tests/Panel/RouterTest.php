@@ -88,6 +88,13 @@ class RouterTest extends TestCase
 		$this->assertSame(200, $response->code());
 	}
 
+	public function testCallWithLoginRequestWhenAuthenticated(): void
+	{
+		$response = $this->call('login/method/password', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertSame('/panel/site', json_decode($response->body(), true)['redirect']);
+	}
+
 	public function testCallWithoutCsrf(): void
 	{
 		$response = $this->call('test/request');
@@ -224,13 +231,15 @@ class RouterTest extends TestCase
 
 		$this->assertSame('assets/(:any)/icons.svg', $routes[0]['pattern']);
 		$this->assertSame('browser', $routes[1]['pattern']);
-		$this->assertSame(['/', 'installation', 'login'], $routes[2]['pattern']);
-		$this->assertSame('(:all)', $routes[3]['pattern']);
+		$this->assertSame(['/', 'installation', 'login', 'login/(:all)'], $routes[2]['pattern']);
+		$this->assertSame('login/(:all)', $routes[3]['pattern']);
+		$this->assertSame('POST', $routes[3]['method']);
+		$this->assertSame('(:all)', $routes[4]['pattern']);
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Could not find Panel route: foo');
 
-		$routes[3]['action']('foo');
+		$routes[4]['action']('foo');
 	}
 
 	public function testSetLanguage(): void

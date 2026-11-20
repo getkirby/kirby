@@ -216,7 +216,15 @@ class Router
 		// included, which is why we add redirect routes
 		// to main Panel view as fallbacks
 		$routes[] = [
-			'pattern' => ['/', 'installation', 'login'],
+			'pattern' => ['/', 'installation', 'login', 'login/(:all)'],
+			'action'  => fn () => $panel->go($panel->home()->url()),
+			'auth'    => false
+		];
+
+		$routes[] = [
+			'pattern' => 'login/(:all)',
+			'method'  => 'POST',
+			'type'    => 'request',
 			'action'  => fn () => $panel->go($panel->home()->url()),
 			'auth'    => false
 		];
