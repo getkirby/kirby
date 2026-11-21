@@ -75,6 +75,7 @@ class ChangesTest extends TestCase
 
 		$this->assertSame('pages', $changes->cacheKey($page));
 		$this->assertSame('files', $changes->cacheKey($file));
+		$this->assertSame('sites', $changes->cacheKey($this->app->site()));
 		$this->assertSame('users', $changes->cacheKey($user));
 	}
 
@@ -122,11 +123,16 @@ class ChangesTest extends TestCase
 		$user->version('latest')->save(['foo' => 'bar']);
 		$user->version('changes')->save(['foo' => 'bar']);
 
+		$site = $this->app->site();
+		$site->version('latest')->save(['foo' => 'bar']);
+		$site->version('changes')->save(['foo' => 'bar']);
+
 		$this->app->cache('changes')->flush();
 
 		$this->assertFalse($changes->cacheExists());
 		$this->assertSame([], $changes->read('files'));
 		$this->assertSame([], $changes->read('pages'));
+		$this->assertSame([], $changes->read('sites'));
 		$this->assertSame([], $changes->read('users'));
 
 		$changes->generateCache();
@@ -134,6 +140,7 @@ class ChangesTest extends TestCase
 		$this->assertTrue($changes->cacheExists());
 		$this->assertSame(['file://test'], $changes->read('files'));
 		$this->assertSame(['page://test'], $changes->read('pages'));
+		$this->assertSame(['site://'], $changes->read('sites'));
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
@@ -186,6 +193,28 @@ class ChangesTest extends TestCase
 		$this->assertSame(['file://test'], $changes->read('files'));
 		$this->assertSame(['page://test'], $changes->read('pages'));
 		$this->assertSame(['user://test'], $changes->read('users'));
+	}
+
+	public function testSite(): void
+	{
+		$this->app->cache('changes')->set('sites', $cache = [
+			'site://'
+		]);
+
+		$changes = new Changes();
+
+		$this->assertNull($changes->site());
+		$this->assertSame([], $this->app->cache('changes')->get('sites'));
+
+		$this->app->site()->version('latest')->save([]);
+		$this->app->site()->version('changes')->save([]);
+
+		$this->assertSame($cache, $this->app->cache('changes')->get('sites'));
+		$this->assertSame($this->app->site(), $changes->site());
+
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$this->assertNull($changes->site());
 	}
 
 	public function testTrack(): void

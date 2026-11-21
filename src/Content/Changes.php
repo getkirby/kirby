@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Site;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -94,6 +95,7 @@ class Changes
 		$models = [
 			'files' => [],
 			'pages' => [],
+			'sites' => [],
 			'users' => []
 		];
 
@@ -126,6 +128,25 @@ class Changes
 	public function read(string $key): array
 	{
 		return $this->cache()->get($key) ?? [];
+	}
+
+	/**
+	 * Return the site if it has unsaved changes
+	 */
+	public function site(): Site|null
+	{
+		if ($this->read('sites') === []) {
+			return null;
+		}
+
+		$site = $this->kirby->site();
+
+		if ($site->version('changes')->exists('*') === false) {
+			$this->untrack($site);
+			return null;
+		}
+
+		return $site;
 	}
 
 	/**
