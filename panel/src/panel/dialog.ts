@@ -4,6 +4,7 @@ import Modal, {
 	type ModalState
 } from "./modal";
 import { isObject } from "@/helpers/object";
+import { ltrim } from "@/helpers/string";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
@@ -89,7 +90,7 @@ export default function Dialog(panel: Panel) {
 
 			// prefix URLs
 			if (typeof dialog === "string") {
-				dialog = `/dialogs/${dialog}`;
+				dialog = `/dialogs/${ltrim(dialog, "/")}`;
 			}
 
 			const state = await parent.open.call(this, dialog, options);

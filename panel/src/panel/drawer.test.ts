@@ -180,6 +180,21 @@ describe("panel.drawer", () => {
 			load.mockRestore();
 		});
 
+		it("should not add a double slash for paths with a leading slash", async () => {
+			const panel = Panel.create(app);
+			const drawer = Drawer(panel);
+			const load = vi.spyOn(drawer, "load").mockResolvedValue(drawer.state());
+
+			await drawer.open("/users/editor/some");
+
+			expect(load).toHaveBeenCalledWith(
+				"/drawers/users/editor/some",
+				expect.anything()
+			);
+
+			load.mockRestore();
+		});
+
 		it("should handle a drawer object with a url property", async () => {
 			const panel = Panel.create(app);
 			const drawer = Drawer(panel);

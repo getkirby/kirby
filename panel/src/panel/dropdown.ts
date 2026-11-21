@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import Feature, { defaults, type FeatureState } from "./feature";
+import { ltrim } from "@/helpers/string";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
 
@@ -27,7 +28,7 @@ export default function Dropdown(panel: Panel) {
 		): Promise<Prettify<DropdownState>> {
 			// prefix URLs
 			if (typeof dropdown === "string") {
-				dropdown = `/dropdowns/${dropdown}`;
+				dropdown = `/dropdowns/${ltrim(dropdown, "/")}`;
 			}
 
 			return parent.open.call(this, dropdown, options);

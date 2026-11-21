@@ -114,6 +114,21 @@ describe("panel.dialog", () => {
 			load.mockRestore();
 		});
 
+		it("should not add a double slash for paths with a leading slash", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+			const load = vi.spyOn(dialog, "load").mockResolvedValue(dialog.state());
+
+			await dialog.open("/users/editor/some");
+
+			expect(load).toHaveBeenCalledWith(
+				"/dialogs/users/editor/some",
+				expect.anything()
+			);
+
+			load.mockRestore();
+		});
+
 		it("should handle a dialog object with a url property", async () => {
 			const panel = Panel.create(app);
 			const dialog = Dialog(panel);

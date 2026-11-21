@@ -4,6 +4,7 @@ import Modal, {
 	type ModalState
 } from "./modal";
 import { isObject } from "@/helpers/object";
+import { ltrim } from "@/helpers/string";
 import { reactive } from "vue";
 import { type Listener } from "./listeners";
 import type Panel from "./panel";
@@ -108,7 +109,7 @@ export default function Drawer(panel: Panel) {
 
 			// prefix URLs
 			if (typeof drawer === "string") {
-				drawer = `/drawers/${drawer}`;
+				drawer = `/drawers/${ltrim(drawer, "/")}`;
 			}
 
 			await parent.open.call(this, drawer, options);

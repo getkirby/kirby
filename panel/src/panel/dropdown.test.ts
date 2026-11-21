@@ -94,6 +94,21 @@ describe("panel.dropdown", () => {
 
 			expect(String(openedUrl)).toContain("/dropdowns/pages");
 		});
+
+		it("should not add a double slash for paths with a leading slash", async () => {
+			const panel = Panel.create(app);
+			let openedUrl: unknown;
+
+			panel.open = async (url: unknown) => {
+				openedUrl = url;
+			};
+
+			const dropdown = Dropdown(panel);
+			await dropdown.open("/users/editor");
+
+			expect(String(openedUrl)).toContain("/dropdowns/users/editor");
+			expect(String(openedUrl)).not.toContain("/dropdowns//");
+		});
 	});
 
 	describe("options()", () => {
