@@ -72,7 +72,12 @@ class Svg
 	{
 		$value = trim($this->attr($attr));
 
-		if (preg_match('/^([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:e[+-]?[0-9]+)?)(px|in|cm|mm|pt|pc|q)?$/i', $value, $matches) !== 1) {
+		if (preg_match('/^(\S*?)(px|in|cm|mm|pt|pc|q)?$/i', $value, $matches) !== 1) {
+			return null;
+		}
+
+		// `is_numeric()` accepts a trailing dot (`5.`), which is not valid in SVG
+		if (is_numeric($matches[1]) === false || str_ends_with($matches[1], '.') === true) {
 			return null;
 		}
 

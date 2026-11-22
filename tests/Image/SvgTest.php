@@ -82,6 +82,7 @@ class SvgTest extends TestCase
 			'derived side beyond int range'  => ['height="1e10" viewBox="0 0 1e10 1"', null, 1.0e10],
 			'derived side with huge viewBox' => ['height="1e18" viewBox="0 0 1e300 1e300"', 1.0e18, 1.0e18],
 			'underflowing derived side'      => ['width="10" viewBox="0 0 1e300 1e-300"', 10.0, null],
+			'trailing dot'                   => ['width="5." height="5.px" viewBox="0 0 20 10"', 20.0, 10.0],
 			'auto'                           => ['width="auto" height="auto"', null, null],
 			'no size info'                   => ['', null, null],
 		];
