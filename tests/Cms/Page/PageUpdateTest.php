@@ -286,6 +286,34 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertSame('', $page->content('de')->range()->value());
 	}
 
+	public function testUpdateWithListFieldErrors(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'text'  => ['type' => 'text'],
+						'pages' => ['type' => 'pagelist', 'min' => 1],
+						'files' => ['type' => 'filelist', 'min' => 1]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test')->update(['text' => 'Test'], validate: true);
+
+		$this->assertSame('Test', $page->text()->value());
+		$this->assertArrayHasKey('pages', $page->errors());
+		$this->assertArrayHasKey('files', $page->errors());
+	}
+
 	public function testUpdateWithNullValue(): void
 	{
 		$page = Page::create([

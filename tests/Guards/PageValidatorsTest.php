@@ -116,6 +116,27 @@ class PageValidatorsTest extends ModelTestCase
 		}
 	}
 
+	public function testContentWithListFieldErrors(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'pages' => [
+						'type' => 'pagelist',
+						'min'  => 1
+					]
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
+
+		$this->validators($page)->validateContent();
+	}
+
 	public function testDoesNotExist(): void
 	{
 		$validators = $this->validators(new Page(['slug' => 'test']));

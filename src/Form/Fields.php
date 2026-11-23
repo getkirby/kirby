@@ -548,15 +548,17 @@ class Fields extends Collection
 	}
 
 	/**
-	 * Checks for errors in all fields and throws an
-	 * exception if there are any
+	 * Checks for errors in all fields that store a value
+	 * and throws an exception if there are any. Fields without
+	 * a value (e.g. page and file lists) only report their
+	 * errors for the publish gate and don't block saving.
 	 *
 	 * @since 5.0.0
 	 * @throws FormValidationException
 	 */
 	public function validate(): void
 	{
-		$errors = $this->errors();
+		$errors = $this->filter('hasValue', true)->errors();
 
 		if ($errors !== []) {
 			throw new FormValidationException(
