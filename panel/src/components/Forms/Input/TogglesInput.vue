@@ -118,6 +118,7 @@ export default {
 	cursor: pointer;
 	display: flex;
 	font-size: var(--text-sm);
+	gap: var(--spacing-2);
 	justify-content: center;
 	line-height: 1.25;
 	padding: 0 var(--spacing-3);
@@ -140,9 +141,5 @@ export default {
 .k-toggles-input input[disabled]:not(:checked) + label {
 	color: var(--color-text-dimmed);
 	background: var(--panel-color-back);
-}
-
-.k-toggles-input .k-icon + .k-toggles-text {
-	margin-inline-start: var(--spacing-2);
 }
 </style>
