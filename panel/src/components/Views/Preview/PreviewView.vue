@@ -99,6 +99,7 @@
 
 			<k-preview-browser
 				v-else
+				:ref="mode"
 				v-bind="browserProps(mode)"
 				@discard="onDiscard"
 				@navigate="onBrowserNavigate"
@@ -161,10 +162,12 @@ export const Preview = {
 			this.channel?.postMessage({ on: action, ...data });
 		},
 		/**
-		 * Reload the browser to reflect updated content
+		 * Reload all browsers to reflect updated content
 		 */
 		onChanges() {
 			this.$refs.browser?.reload();
+			this.$refs.latest?.reload();
+			this.$refs.changes?.reload();
 		},
 		/**
 		 * Reloads the view or just the browser src
