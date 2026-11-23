@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Nie ma już żadnych niezapisanych zmian",
 	"lock.unsaved.files": "Niezapisane pliki",
 	"lock.unsaved.pages": "Niezapisane strony",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Niezapisane konta",
 	"lock.isLocked": "Niezapisane zmiany autorstwa {email}",
 	"lock.unlock": "Odblokuj",

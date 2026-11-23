@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Il n’y a pas de modifications non enregistrées",
 	"lock.unsaved.files": "Fichiers non enregistrés",
 	"lock.unsaved.pages": "Pages non enregistrées",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Comptes non enregistrés",
 	"lock.isLocked": "Modifications non enregistrées par {email}",
 	"lock.unlock": "Déverrouiller",

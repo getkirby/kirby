@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Незбережених змін немає",
 	"lock.unsaved.files": "Незбережені файли",
 	"lock.unsaved.pages": "Незбережені сторінки",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Незбережені облікові записи",
 	"lock.isLocked": "Незбережені зміни {email}",
 	"lock.unlock": "Розблокувати",

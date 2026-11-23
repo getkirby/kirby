@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "تغییر ذخیره‌نشده‌ای وجود ندارد",
 	"lock.unsaved.files": "فایل‌های ذخیره‌نشده",
 	"lock.unsaved.pages": "صفحات ذخیره‌نشده",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "حساب‌های کاربری ذخیره‌نشده",
 	"lock.isLocked": "تغییرات ذخیره‌نشده توسط {email}",
 	"lock.unlock": "باز کردن قفل",

@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Ne postoje druge izmjene za spremanje",
 	"lock.unsaved.files": "Nespremljene datoteke",
 	"lock.unsaved.pages": "Nespremljene stranice",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Nespremljeni računi",
 	"lock.isLocked": "Izmjene od strane <strong>{email}</strong>",
 	"lock.unlock": "Otključaj",

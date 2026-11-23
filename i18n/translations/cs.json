@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Nezbývají již žádné neuložené změny.",
 	"lock.unsaved.files": "Neuložené soubory",
 	"lock.unsaved.pages": "Neuložené stránky",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Neuložené účty",
 	"lock.isLocked": "Neuložené změny od {email}",
 	"lock.unlock": "Odemknout",

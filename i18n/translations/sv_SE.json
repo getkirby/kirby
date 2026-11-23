@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Det finns inga fler osparade ändringar",
 	"lock.unsaved.files": "Osparade filer",
 	"lock.unsaved.pages": "Osparade sidor",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Osparade konton",
 	"lock.isLocked": "Osparade ändringar av {email}",
 	"lock.unlock": "Lås upp",

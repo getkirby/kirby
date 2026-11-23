@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Nema nesačuvanih promena",
 	"lock.unsaved.files": "Nesačuvane datoteke",
 	"lock.unsaved.pages": "Nesačuvane stranice",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Nesačuvani nalozi",
 	"lock.isLocked": "Nesačuvane promene {email}",
 	"lock.unlock": "Otključati",

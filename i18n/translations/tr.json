@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
 	"lock.unsaved.files": "Kaydedilmemiş dosyalar",
 	"lock.unsaved.pages": "Kaydedilmemiş sayfalar",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Kaydedilmemiş hesaplar",
 	"lock.isLocked": "{email} tarafından yapılan kaydedilmemiş değişiklikler",
 	"lock.unlock": "Kilidi Aç",

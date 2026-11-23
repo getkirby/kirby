@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Er zijn geen niet opgeslagen wijzigingen meer",
 	"lock.unsaved.files": "Niet opgeslagen bestanden",
 	"lock.unsaved.pages": "Niet opgeslagen pagina's",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Niet opgeslagen accounts",
 	"lock.isLocked": "Niet opgeslagen wijzigingen door {email}",
 	"lock.unlock": "Ontgrendelen",
