@@ -99,7 +99,7 @@
 
 			<k-preview-browser
 				v-else
-				ref="browser"
+				:ref="mode"
 				v-bind="browserProps(mode)"
 				@discard="onDiscard"
 				@navigate="onBrowserNavigate"
