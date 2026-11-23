@@ -287,6 +287,21 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
+	public function testDefaultsWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'default' => 'a',
+				'type'    => 'text'
+			],
+			'b' => [
+				'type' => 'info'
+			],
+		], $this->model);
+
+		$this->assertSame(['a' => 'a'], $fields->defaults());
+	}
+
 	public function testErrors(): void
 	{
 		$fields = new Fields([
@@ -1351,6 +1366,23 @@ class FieldsTest extends TestCase
 				'default'    => 'Default A',
 			],
 		], $fields->toProps(defaults: true));
+	}
+
+	public function testToPropsWithDefaultsAndNonValueField(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'info'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertArrayNotHasKey('default', $fields->toProps(defaults: true)['a']);
 	}
 
 	public function testToPropsWithoutUpdatePermission(): void

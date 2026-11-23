@@ -662,6 +662,31 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($field->toFormValue()[0]['featured']);
 	}
 
+	public function testToStoredValueWithNonValueField(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'name' => [
+					'type' => 'text'
+				],
+				'note' => [
+					'type' => 'info'
+				]
+			],
+			'value' => [
+				['name' => 'A'],
+				['name' => 'B']
+			]
+		]);
+
+		$expected = [
+			['name' => 'A'],
+			['name' => 'B']
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+
 	public function testTranslate(): void
 	{
 		$app = new App([
