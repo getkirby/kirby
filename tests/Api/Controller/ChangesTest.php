@@ -108,6 +108,61 @@ class ChangesTest extends TestCase
 		Changes::publish($this->page, []);
 	}
 
+	public function testPublishWithSectionOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'      => 'stats',
+						'template'  => 'stats',
+						'blueprint' => [
+							'sections' => [
+								'views' => [
+									'type' => 'info',
+									'text' => '{{ page.views }}'
+								],
+								'content' => [
+									'type'   => 'fields',
+									'fields' => [
+										'text' => [
+											'type' => 'text'
+										]
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('stats');
+
+		Data::write($page->root() . '/stats.txt', [
+			'title' => 'Test',
+			'views' => '1234',
+			'uuid'  => 'test'
+		]);
+
+		$response = Changes::publish($page, [
+			'text' => 'Test'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		$published = Data::read($page->root() . '/stats.txt');
+
+		$this->assertSame([
+			'title' => 'Test',
+			'text'  => 'Test',
+			'views' => '1234',
+			'uuid'  => 'test'
+		], $published);
+	}
+
 	public function testSave(): void
 	{
 		$this->app->impersonate('kirby');

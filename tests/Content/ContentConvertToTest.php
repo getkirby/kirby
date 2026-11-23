@@ -148,4 +148,41 @@ class ContentConvertToTest extends TestCase
 
 		$this->assertSame('- page://abc', $new['related']);
 	}
+
+	public function testConvertToForPageWithSectionOfSameName(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'content-a',
+						'content'  => [
+							'gallery' => '- a.jpg'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/content-a' => [
+					'fields' => [
+						'gallery' => [
+							'type' => 'files'
+						]
+					]
+				],
+				'pages/content-b' => [
+					'sections' => [
+						'gallery' => [
+							'type' => 'files'
+						]
+					]
+				]
+			],
+		]);
+
+		$new = $app->page('test')->content()->convertTo('content-b');
+
+		$this->assertSame('- a.jpg', $new['gallery'], 'The content must be kept for a section with the same name');
+	}
 }

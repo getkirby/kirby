@@ -536,8 +536,10 @@ class FieldsTest extends TestCase
 			'b' => 'B'
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'B',
+			'a' => 'A',
 		], $fields->toFormValues());
 	}
 
@@ -1022,8 +1024,10 @@ class FieldsTest extends TestCase
 			'b' => 'B updated',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'a' => 'A updated',
+			'b' => 'B updated',
 		], $fields->toFormValues());
 	}
 
@@ -1161,7 +1165,8 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([
 			'a' => 'A updated',
-		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+			'b' => 'B updated',
+		], $fields->toStoredValues(), 'The info field has no value. Content with the same name is kept as passthrough.');
 	}
 
 	public function testSubmitWithPassthrough(): void
@@ -1240,8 +1245,10 @@ class FieldsTest extends TestCase
 			'b' => 'Value b',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'Value b',
+			'a' => 'Value a',
 		], $fields->toFormValues());
 	}
 
@@ -1407,8 +1414,10 @@ class FieldsTest extends TestCase
 			'b' => 'Value b',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'Value b',
+			'a' => 'Value a',
 		], $fields->toStoredValues());
 	}
 

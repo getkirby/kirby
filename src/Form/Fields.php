@@ -360,9 +360,11 @@ class Fields extends Collection
 		foreach ($values as $key => $value) {
 			$key = strtolower($key);
 
-			// check if the field exists and don't passthrough
-			// values for existing fields
-			if ($this->get($key) !== null) {
+			// don't passthrough values for existing fields that
+			// store a value. Fields without a value (e.g. info fields
+			// or converted sections) must not swallow content
+			// that is stored under the same name
+			if ($this->get($key)?->hasValue() === true) {
 				continue;
 			}
 

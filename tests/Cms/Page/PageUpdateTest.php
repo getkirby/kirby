@@ -329,4 +329,91 @@ class PageUpdateTest extends ModelTestCase
 
 		$this->assertNull($updated->test()->value());
 	}
+
+	public function testUpdateWithSectionBeforeFieldOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'    => 'Test',
+					'sections' => [
+						'tags' => [
+							'type' => 'info',
+							'text' => '{{ page.tags }}'
+						],
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'tags' => [
+									'type' => 'tags'
+								],
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['tags' => 'a, b']
+		]);
+
+		$this->assertSame('a, b', $page->tags()->value());
+
+		$modified = $page->update(['text' => 'Test']);
+
+		$this->assertSame('a, b', $modified->tags()->value());
+		$this->assertSame('Test', $modified->text()->value());
+	}
+
+	public function testUpdateWithSectionOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'    => 'Test',
+					'sections' => [
+						'views' => [
+							'type' => 'info',
+							'text' => '{{ page.views }}'
+						],
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['views' => '1234']
+		]);
+
+		$this->assertSame('1234', $page->views()->value());
+
+		// updating another field must keep the value
+		$modified = $page->update(['text' => 'Test']);
+
+		$this->assertSame('1234', $modified->views()->value());
+		$this->assertSame('Test', $modified->text()->value());
+
+		// the value can be updated directly
+		$modified = $modified->update(['views' => '1235']);
+
+		$this->assertSame('1235', $modified->views()->value());
+	}
 }

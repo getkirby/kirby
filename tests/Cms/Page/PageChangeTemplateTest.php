@@ -248,7 +248,7 @@ class PageChangeTemplateTest extends ModelTestCase
 		$modified = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
-		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Caption', $modified->caption()->value(), 'The caption should be kept because the info field has no value');
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 		$this->assertFileExists($modified->root() . '/article.txt');
