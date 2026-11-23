@@ -5,17 +5,19 @@ namespace Kirby\Panel\Controller\Dialog;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Content\Changes;
 use Kirby\Panel\Controller\DialogController;
 use Kirby\Panel\Ui\Dialog;
 use Kirby\Panel\Ui\Item\FileItem;
+use Kirby\Panel\Ui\Item\ModelItem;
 use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\Panel\Ui\Item\UserItem;
 
 /**
  * Controls the Panel dialog for displaying
- * content changes in pages, users and files
+ * content changes in the site, pages, users and files
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -41,11 +43,12 @@ class ChangesDialogController extends DialogController
 	/**
 	 * Helper method to return item props for a single given model
 	 */
-	public function item(File|Page|User $model): array
+	public function item(File|Page|Site|User $model): array
 	{
 		$item = match (true) {
 			$model instanceof File => new FileItem(file: $model),
 			$model instanceof Page => new PageItem(page: $model),
+			$model instanceof Site => new ModelItem(model: $model, image: ['icon' => 'home']),
 			$model instanceof User => new UserItem(user: $model),
 		};
 
@@ -73,6 +76,7 @@ class ChangesDialogController extends DialogController
 			component: 'k-changes-dialog',
 			files: $this->files(),
 			pages: $this->pages(),
+			site: $this->site(),
 			users: $this->users(),
 		);
 	}
@@ -83,6 +87,20 @@ class ChangesDialogController extends DialogController
 	public function pages(): array
 	{
 		return $this->items($this->changes->pages()->filter('isListable', true));
+	}
+
+	/**
+	 * Returns the item props for the site if it has changes
+	 */
+	public function site(): array|null
+	{
+		$site = $this->changes->site();
+
+		if ($site?->isAccessible() !== true) {
+			return null;
+		}
+
+		return $this->item($site);
 	}
 
 	/**

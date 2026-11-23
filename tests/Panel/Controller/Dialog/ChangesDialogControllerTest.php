@@ -201,6 +201,7 @@ class ChangesDialogControllerTest extends TestCase
 		$props = $dialog->props();
 		$this->assertSame([], $props['files']);
 		$this->assertSame([], $props['pages']);
+		$this->assertNull($props['site']);
 		$this->assertSame([], $props['users']);
 	}
 
@@ -280,6 +281,60 @@ class ChangesDialogControllerTest extends TestCase
 	{
 		$controller = new ChangesDialogController();
 		$this->assertSame([], $controller->pages());
+	}
+
+	public function testSite(): void
+	{
+		$this->app->site()->version('latest')->save(['title' => 'Test']);
+		$this->app->site()->version('changes')->save(['title' => 'Test']);
+
+		$controller = new ChangesDialogController();
+		$site       = $controller->site();
+
+		$this->assertSame('Test', (string)$site['text']);
+		$this->assertSame('/site', $site['link']);
+		$this->assertSame('home', $site['image']['icon']);
+	}
+
+	public function testSiteWithoutAccess(): void
+	{
+		$uuid = uuid();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor-' . $uuid => [
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'site' => [
+							'access' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->app->site()->version('latest')->save([]);
+		$this->app->site()->version('changes')->save([]);
+
+		$this->assertNotNull((new ChangesDialogController())->site());
+
+		$this->app->impersonate('editor@getkirby.com');
+		$this->assertNull((new ChangesDialogController())->site());
+	}
+
+	public function testSiteWithoutChanges(): void
+	{
+		$controller = new ChangesDialogController();
+		$this->assertNull($controller->site());
 	}
 
 	public function testUsers(): void
