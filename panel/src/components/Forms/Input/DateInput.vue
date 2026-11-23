@@ -251,6 +251,17 @@ export default {
 			}
 		},
 		/**
+		 * Cuts a boundary down to the precision of the input, e.g.
+		 * a date input compares by day as it cannot produce a time
+		 * @param {string} boundary ISO string
+		 * @returns {string}
+		 */
+		boundary(boundary) {
+			return (
+				this.$library.dayjs.iso(boundary)?.toISO(this.inputType) ?? boundary
+			);
+		},
+		/**
 		 * Updates the in data stored dayjs object
 		 * as well as formatted string representation
 		 * @param {Object} dt dayjs object
@@ -552,18 +563,21 @@ export default {
 				errors.push(this.$t("error.validation.required"));
 			}
 
-			if (this.min && this.dt?.validate(this.min, "min") === false) {
+			const min = this.min ? this.boundary(this.min) : null;
+			const max = this.max ? this.boundary(this.max) : null;
+
+			if (min && this.dt?.validate(min, "min") === false) {
 				errors.push(
 					this.$t(`error.validation.${type}.after`, {
-						[type]: this.min
+						[type]: min
 					})
 				);
 			}
 
-			if (this.max && this.dt?.validate(this.max, "max") === false) {
+			if (max && this.dt?.validate(max, "max") === false) {
 				errors.push(
 					this.$t(`error.validation.${type}.before`, {
-						[type]: this.max
+						[type]: max
 					})
 				);
 			}
