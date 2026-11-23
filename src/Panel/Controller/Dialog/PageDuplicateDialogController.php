@@ -114,10 +114,9 @@ class PageDuplicateDialogController extends PageDialogController
 
 		if (in_array($slug, $siblings, true) === true) {
 			$count = 2;
-			$slug  = $slug . $count;
 
-			while (in_array($slug, $siblings, true) === true) {
-				$slug = $slug . ++$count;
+			while (in_array($slug . $count, $siblings, true) === true) {
+				$count++;
 			}
 		}
 
