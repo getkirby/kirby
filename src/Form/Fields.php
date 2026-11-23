@@ -558,11 +558,7 @@ class Fields extends Collection
 	 */
 	public function validate(): void
 	{
-		$errors = array_filter(
-			$this->errors(),
-			fn (string $name) => $this->data[$name]->hasValue() === true,
-			ARRAY_FILTER_USE_KEY
-		);
+		$errors = $this->filter('hasValue', true)->errors();
 
 		if ($errors !== []) {
 			throw new FormValidationException(
