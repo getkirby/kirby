@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Collector;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -22,7 +23,7 @@ class FilesCollector extends ModelsCollector
 		protected bool $flip = false,
 		protected int|null $limit = null,
 		protected int $page = 1,
-		protected Site|Page|User|null $parent = null,
+		protected Site|Page|User|File|null $parent = null,
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,

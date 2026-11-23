@@ -57,6 +57,15 @@ class FilePickerDialogControllerTest extends TestCase
 		$this->assertInstanceOf(FilesCollector::class, $controller->collector());
 	}
 
+	public function testCollectorWithFileModel(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()->file('test.jpg')
+		);
+
+		$this->assertCount(1, $controller->collector()->models());
+	}
+
 	public function testFind(): void
 	{
 		$controller = new FilePickerDialogController(

@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -32,7 +33,7 @@ abstract class ModelsCollector
 	public function __construct(
 		protected int|null $limit = null,
 		protected int $page = 1,
-		protected Site|Page|User|null $parent = null,
+		protected Site|Page|User|File|null $parent = null,
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
@@ -139,7 +140,7 @@ abstract class ModelsCollector
 		return $this->models(paginated: true)->pagination();
 	}
 
-	protected function parent(): Site|Page|User
+	protected function parent(): Site|Page|User|File
 	{
 		return $this->parent ?? App::instance()->site();
 	}
