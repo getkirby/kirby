@@ -141,6 +141,7 @@ class Fields extends Collection
 
 	/**
 	 * Returns an array with the default value of each field
+	 * that stores a value
 	 *
 	 * @since 5.0.0
 	 *
@@ -148,7 +149,9 @@ class Fields extends Collection
 	 */
 	public function defaults(): array
 	{
-		return $this->toArray(fn ($field) => $field->default());
+		return $this
+			->filter('hasValue', true)
+			->toArray(fn ($field) => $field->default());
 	}
 
 	/**
@@ -360,9 +363,11 @@ class Fields extends Collection
 		foreach ($values as $key => $value) {
 			$key = strtolower($key);
 
-			// check if the field exists and don't passthrough
-			// values for existing fields
-			if ($this->get($key) !== null) {
+			// don't passthrough values for existing fields that
+			// store a value. Fields without a value (e.g. info fields
+			// or converted sections) must not swallow content
+			// that is stored under the same name
+			if ($this->get($key)?->hasValue() === true) {
 				continue;
 			}
 
@@ -503,7 +508,7 @@ class Fields extends Collection
 			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
 
-			if ($defaults === true) {
+			if ($defaults === true && $field->hasValue() === true) {
 				$props[$name]['default'] = $field->default();
 			}
 		}

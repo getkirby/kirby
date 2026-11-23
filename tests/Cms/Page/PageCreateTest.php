@@ -163,6 +163,36 @@ class PageCreateTest extends ModelTestCase
 		);
 	}
 
+	public function testCreateChildWithSectionOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/stats' => [
+					'title'    => 'Stats',
+					'sections' => [
+						'views' => [
+							'type' => 'info',
+							'text' => '{{ page.views }}'
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$mother = Page::create([
+			'slug' => 'mother'
+		]);
+
+		$child = $mother->createChild([
+			'slug'     => 'child',
+			'template' => 'stats',
+			'content'  => ['views' => '1234']
+		]);
+
+		$this->assertSame('1234', $child->views()->value());
+	}
+
 	public function testCreateChildWithTemplateWithDot(): void
 	{
 		Dir::make($this->app->root('content'));
