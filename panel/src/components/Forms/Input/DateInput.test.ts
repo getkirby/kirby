@@ -562,6 +562,18 @@ describe("k-date-input", () => {
 			expect(input.validationMessage).toBe("error.validation.date.before");
 		});
 
+		it("validates again when the boundaries change", async () => {
+			const wrapper = mount({ value: "2021-03-05" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("");
+
+			await wrapper.setProps({ min: "2024-01-01" } as never);
+			expect(input.validationMessage).toBe("error.validation.date.after");
+
+			await wrapper.setProps({ min: undefined, max: "2020-01-01" } as never);
+			expect(input.validationMessage).toBe("error.validation.date.before");
+		});
+
 		it("validates a value set from outside", async () => {
 			const wrapper = mount({ display: "DD.MM.YYYY", min: "2024-01-01" });
 			await wrapper.setProps({ value: "2021-03-05" } as never);

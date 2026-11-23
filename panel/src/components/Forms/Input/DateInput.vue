@@ -161,6 +161,12 @@ export default {
 		}
 	},
 	watch: {
+		max() {
+			this.validate();
+		},
+		min() {
+			this.validate();
+		},
 		value: {
 			handler(newValue, oldValue) {
 				if (newValue !== oldValue) {
