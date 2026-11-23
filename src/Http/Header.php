@@ -309,4 +309,40 @@ class Header
 	{
 		return static::status(503, $send);
 	}
+
+	/**
+	 * Merges multiple (comma-separated) `Vary` header values
+	 * into a single value without duplicates; the comparison
+	 * is case-insensitive and the first spelling wins
+	 * @since 6.0.0
+	 *
+	 * @return string|null `null` if no values were passed
+	 */
+	public static function vary(string|null ...$values): string|null
+	{
+		$merged = [];
+
+		foreach ($values as $value) {
+			foreach (explode(',', $value ?? '') as $entry) {
+				$entry = trim($entry);
+
+				if ($entry === '') {
+					continue;
+				}
+
+				// a wildcard already varies by everything
+				if ($entry === '*') {
+					return '*';
+				}
+
+				$merged[strtolower($entry)] ??= $entry;
+			}
+		}
+
+		if ($merged === []) {
+			return null;
+		}
+
+		return implode(', ', $merged);
+	}
 }

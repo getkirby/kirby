@@ -46,6 +46,46 @@ class Resolver
 	}
 
 	/**
+	 * Checks whether the page has at least one content
+	 * representation that can be selected through content
+	 * negotiation, i.e. a representation template with a
+	 * known non-HTML MIME type
+	 */
+	protected function hasNegotiableRepresentation(Page $page): bool
+	{
+		$template  = $page->template();
+		$name      = $template->name();
+		$extension = $template->extension();
+		$store     = $template->store();
+
+		// representation templates in the templates root
+		// and those registered by plugins (`name.type`)
+		$files = glob($template->root() . '/' . $name . '.*.' . $extension);
+		$names = [
+			...array_map(
+				static fn (string $file) => basename($file, '.' . $extension),
+				$files === false ? [] : $files
+			),
+			...array_keys($this->kirby->extensions($store))
+		];
+
+		foreach ($names as $candidate) {
+			if (str_starts_with($candidate, $name . '.') === false) {
+				continue;
+			}
+
+			$type = substr($candidate, strlen($name) + 1);
+			$mime = Mime::fromExtension($type);
+
+			if ($mime !== null && $mime !== 'text/html') {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks whether a draft can be accessed by the current user
 	 * or through a token-authenticated request.
 	 */
@@ -236,6 +276,15 @@ class Resolver
 	 */
 	protected function resolvePreferredRepresentation(Page $page): Responder|null
 	{
+		// if the page has any representation that can be negotiated,
+		// the response at the clean URL depends on the Accept header,
+		// no matter which representation is picked for this request
+		// (including HTML); let caches/proxies know so they don't mix
+		// up the different variants
+		if ($this->hasNegotiableRepresentation($page) === true) {
+			$this->varyByAccept();
+		}
+
 		// walk the accepted MIME types in quality order (highest first)
 		foreach ($this->kirby->visitor()->acceptedMimeTypes() as $accepted) {
 			$mime = $accepted->type();
@@ -257,10 +306,10 @@ class Resolver
 					continue;
 				}
 
-				// the response depends on the Accept header from now on;
-				// let caches/proxies know so they don't mix up variants
-				$response = $this->kirby->response();
-				$response->header('Vary', 'Accept');
+				// make sure the negotiated response always varies
+				// by Accept, even if the representation could not
+				// be detected upfront (e.g. custom template component)
+				$this->varyByAccept();
 
 				return $this->resolvePageResponse($page, $extension);
 			}
@@ -276,5 +325,18 @@ class Resolver
 	protected function resolveSiteFile(string $path): File
 	{
 		return $this->resolveFile($this->site->file($path));
+	}
+
+	/**
+	 * Lets the response vary by the Accept header;
+	 * the value is marked as volatile as it only applies
+	 * to the clean page URL, not to the same representation
+	 * requested with its explicit extension (shared cache entry)
+	 */
+	protected function varyByAccept(): void
+	{
+		$response = $this->kirby->response();
+		$response->vary('Accept');
+		$response->volatileHeaders()->mark('Vary', ['Accept']);
 	}
 }

@@ -214,7 +214,7 @@ class CorsTest extends TestCase
 		$this->assertSame('https://custom.com', $headers['Access-Control-Allow-Origin']);
 	}
 
-	public function testHeadersWithExistingVaryNotOverridden(): void
+	public function testHeadersWithExistingVaryMerged(): void
 	{
 		$this->kirby([
 			'options' => [
@@ -231,7 +231,8 @@ class CorsTest extends TestCase
 		$responder->header('Vary', 'Accept-Encoding');
 		$headers = $responder->headers();
 
-		$this->assertSame('Accept-Encoding', $headers['Vary']);
+		// the custom Vary value must not drop the Origin value
+		$this->assertSame('Origin, Accept-Encoding', $headers['Vary']);
 		$this->assertSame('https://app1.com', $headers['Access-Control-Allow-Origin']);
 	}
 
