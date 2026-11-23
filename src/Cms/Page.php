@@ -11,6 +11,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Guards\PageGuards;
 use Kirby\Http\Response;
 use Kirby\Panel\Page as Panel;
+use Kirby\Template\Stack;
 use Kirby\Template\Template;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
@@ -999,9 +1000,16 @@ class Page extends ModelWithContent
 				], 'html');
 			});
 
-			// cache the result
+			// cache the result, but not while the page is rendered
+			// inside another render as the HTML might still contain
+			// stack placeholders that only get replaced once the
+			// outermost render has finished
 			$response = $kirby->response();
-			if ($cache !== null && $response->cache() === true) {
+			if (
+				$cache !== null &&
+				$response->cache() === true &&
+				Stack::isRendering() === false
+			) {
 				$cache->set($cacheId, [
 					'html'        => $html,
 					'response'    => $response->toCacheArray(),
