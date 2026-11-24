@@ -159,8 +159,9 @@ class Blueprint
 					$mixin = static::find($extend);
 					$mixin = static::extend($mixin);
 					$props = A::merge($mixin, $props, A::MERGE_REPLACE);
-				} catch (Exception) {
+				} catch (Exception $e) {
 					// keep the props unextended if the snippet wasn't found
+					static::throwUnlessMissing($e);
 				}
 			}
 
@@ -192,7 +193,8 @@ class Blueprint
 			try {
 				$props = static::load($name);
 				$key   = $shared;
-			} catch (Exception) {
+			} catch (Exception $e) {
+				static::throwUnlessMissing($e);
 				$props = $fallback !== null ? static::load($fallback) : null;
 			}
 
@@ -464,6 +466,22 @@ class Blueprint
 			tabs: $this->props['tabs'] ?? [],
 			model: $this->model
 		);
+	}
+
+	/**
+	 * Throws the exception in debug mode, unless
+	 * it only says that a blueprint is missing
+	 *
+	 * @throws Exception If an existing blueprint cannot be loaded
+	 */
+	protected static function throwUnlessMissing(Exception $e): void
+	{
+		if (
+			$e instanceof NotFoundException === false &&
+			App::instance()->option('debug') === true
+		) {
+			throw $e;
+		}
 	}
 
 	/**
