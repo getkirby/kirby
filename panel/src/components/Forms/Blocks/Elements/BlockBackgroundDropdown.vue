@@ -77,7 +77,7 @@ export default {
 	opacity: 0;
 	transition: opacity 0.2s ease-in-out;
 }
-.k-block:hover .k-block-background-dropdown {
+.k-block:is(:hover, :has(:focus-visible)) .k-block-background-dropdown {
 	opacity: 1;
 }
 </style>

@@ -155,7 +155,8 @@ export default {
 	color: var(--color-gray-500);
 	transition: color 0.3s;
 }
-.k-header[data-editable="true"] .k-header-title-placeholder:hover {
+.k-header[data-editable="true"] .k-header-title-placeholder:hover,
+.k-header-title-button:focus-visible .k-header-title-placeholder {
 	color: var(--color-text-dimmed);
 }
 </style>

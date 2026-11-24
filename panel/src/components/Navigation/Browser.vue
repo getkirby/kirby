@@ -99,7 +99,7 @@ export default {
 	white-space: nowrap;
 	cursor: pointer;
 }
-.k-browser-item:hover {
+.k-browser-item:is(:hover, :has(:focus-visible)) {
 	background: var(--browser-item-hover-color-back);
 	color: var(--browser-item-hover-color-text);
 }

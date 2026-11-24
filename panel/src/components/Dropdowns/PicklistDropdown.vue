@@ -128,7 +128,7 @@ export default {
 }
 .k-picklist-dropdown
 	.k-picklist-input-options
-	.k-choice-input:not([aria-disabled="true"]):hover {
+	.k-choice-input:not([aria-disabled="true"]):is(:hover, :has(:focus-visible)) {
 	background-color: var(--dropdown-color-hr);
 
 	--choice-color-border: var(--dropdown-color-bg);
@@ -139,7 +139,8 @@ export default {
 	--choice-color-text: var(--color-blue-500);
 }
 
-.k-picklist-dropdown .k-picklist-input-more.k-button:hover {
+.k-picklist-dropdown
+	.k-picklist-input-more.k-button:is(:hover, :focus-visible) {
 	--button-color-back: var(--dropdown-color-hr);
 }
 

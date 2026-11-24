@@ -103,7 +103,8 @@ export default {
 	--icon-size: 13px;
 	--button-color-icon: var(--color-gray-500);
 }
-.k-lab-example-inspector .k-button:not([data-theme]):hover {
+.k-lab-example-inspector
+	.k-button:not([data-theme]):is(:hover, :focus-visible) {
 	--button-color-icon: var(--color-gray-600);
 }
 .k-lab-example-inspector .k-button:where([data-theme]) {

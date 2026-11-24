@@ -230,7 +230,7 @@ export default {
 	color: var(--color-gray-500);
 	border-radius: var(--rounded);
 }
-.k-layout-toolbar:hover {
+.k-layout-toolbar:is(:hover, :has(:focus-visible)) {
 	color: light-dark(var(--color-black), var(--color-white));
 }
 .k-layout-toolbar-button {
