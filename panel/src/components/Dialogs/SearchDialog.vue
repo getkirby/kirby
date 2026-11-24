@@ -74,4 +74,8 @@ export default {
 .k-overlay[open][data-type="dialog"] > .k-portal > .k-search-dialog {
 	margin-top: 0;
 }
+.k-search-dialog .k-dialog-body {
+	padding: 2px;
+	margin: -2px;
+}
 </style>
