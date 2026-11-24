@@ -218,6 +218,10 @@ export default {
 	border-end-end-radius: 0;
 	border-bottom: 1px solid var(--toolbar-border);
 }
+.k-toolbar.k-textarea-toolbar > .k-button {
+	--button-height: calc(var(--toolbar-size) - 1px);
+	outline-offset: -3px;
+}
 .k-toolbar.k-textarea-toolbar > .k-button:first-child {
 	border-end-start-radius: 0;
 }
