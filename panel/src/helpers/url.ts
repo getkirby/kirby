@@ -91,6 +91,17 @@ export function hasDangerousScheme(url: unknown): boolean {
 }
 
 /**
+ * Checks if the path contains `.` or `..` segments,
+ * also when encoded or obfuscated
+ * @since 6.0.0
+ */
+export function hasDotSegments(url: string): boolean {
+	// masking the dots keeps all segments that resolving would remove
+	const segments = (url: string) => toObject(url).pathname.split("/").length;
+	return segments(url) !== segments(url.replaceAll(/\.|%2e/gi, "_"));
+}
+
+/**
  * Checks if the url string is absolute
  * @since 4.0.0
  */
@@ -177,6 +188,7 @@ export default {
 	buildQuery,
 	buildUrl,
 	hasDangerousScheme,
+	hasDotSegments,
 	isAbsolute,
 	isSameOrigin,
 	isUrl,

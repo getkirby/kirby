@@ -69,4 +69,21 @@ class Responses
 			default        => new Exception('This is a custom backend error'),
 		};
 	}
+
+	/**
+	 * Successful responses that take long enough
+	 * for loading states to become visible
+	 * @since 6.0.0
+	 */
+	public static function requestResponseByType(string|null $type = null): array
+	{
+		usleep(1000000);
+
+		return match ($type) {
+			'data'   => ['status' => 'ok'],
+			'event'  => ['event' => 'lab.request'],
+			'reload' => ['message' => 'The view has been reloaded', 'reload' => true],
+			default  => ['message' => 'The request has been sent'],
+		};
+	}
 }

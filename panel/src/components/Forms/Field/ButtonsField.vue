@@ -10,8 +10,8 @@
 	>
 		<k-button-group v-if="buttons.length > 0">
 			<k-button
-				v-for="button in buttons"
-				:key="button.link ?? button.dialog ?? button.drawer"
+				v-for="(button, index) in buttons"
+				:key="index"
 				v-bind="button"
 				:dropdown="!button.disabled"
 				variant="filled"
