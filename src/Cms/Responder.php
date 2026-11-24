@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
+use Kirby\Http\Header;
 use Kirby\Http\Response as HttpResponse;
 use Kirby\Http\Uri;
 use Kirby\Http\VolatileHeaders;
@@ -66,6 +67,14 @@ class Responder implements Stringable
 	 * @var list<string>
 	 */
 	protected array $usesCookies = [];
+
+	/**
+	 * Additional values for the `Vary` header
+	 * that are merged with all other values
+	 *
+	 * @var list<string>
+	 */
+	protected array $vary = [];
 
 	/**
 	 * Volatile headers manager
@@ -240,20 +249,14 @@ class Responder implements Stringable
 		if ($headers === null) {
 			$injectedHeaders = [];
 			$isPrivate       = static::isPrivate($this->usesAuth(), $this->usesCookies());
+			$vary            = [];
 
 			if ($isPrivate === true) {
 				// never ever cache private responses
 				$injectedHeaders['Cache-Control'] = 'no-store, private';
-			}
-
-			// inject CORS headers if enabled
-			$injectedHeaders = [...$injectedHeaders, ...Cors::headers()];
-
-			if ($isPrivate === false) {
+			} else {
 				// the response is public, but it may
 				// vary based on request headers
-				$vary = [];
-
 				if ($this->usesAuth() === true) {
 					$vary[] = 'Authorization';
 				}
@@ -261,22 +264,30 @@ class Responder implements Stringable
 				if ($this->usesCookies() !== []) {
 					$vary[] = 'Cookie';
 				}
-
-				// merge Vary from CORS if present
-				if (isset($injectedHeaders['Vary']) === true) {
-					// split CORS Vary into individual values
-					// to avoid duplication
-					$cors = explode(',', $injectedHeaders['Vary']);
-					array_push($vary, ...array_map(trim(...), $cors));
-				}
-
-				if ($vary !== []) {
-					$injectedHeaders['Vary'] = implode(', ', $vary);
-				}
 			}
 
-			// lazily inject (never override custom headers)
-			return [...$injectedHeaders, ...$this->headers];
+			// inject CORS headers if enabled
+			$injectedHeaders = [...$injectedHeaders, ...Cors::headers()];
+
+			// merge the injected and custom Vary values
+			// instead of letting one override the other
+			$vary = Header::vary(
+				implode(', ', $vary),
+				$injectedHeaders['Vary'] ?? null,
+				implode(', ', $this->vary),
+				$this->headers['Vary'] ?? null
+			);
+
+			if ($vary === null) {
+				// lazily inject (never override custom headers)
+				return [...$injectedHeaders, ...$this->headers];
+			}
+
+			$injectedHeaders['Vary'] = $vary;
+
+			// lazily inject (never override custom headers,
+			// except for the already merged Vary values)
+			return [...$injectedHeaders, ...$this->headers, 'Vary' => $vary];
 		}
 
 		$this->headers = $headers;
@@ -473,6 +484,26 @@ class Responder implements Stringable
 		}
 
 		$this->usesCookies = $usesCookies;
+		return $this;
+	}
+
+	/**
+	 * Adds one or multiple values to the `Vary` header;
+	 * they are kept separately from the custom headers
+	 * and merged with all other `Vary` values, so they
+	 * cannot be overridden by setting the header directly
+	 * @since 6.0.0
+	 *
+	 * @return $this
+	 */
+	public function vary(string ...$values): static
+	{
+		$vary = Header::vary(...$this->vary, ...$values);
+
+		if ($vary !== null) {
+			$this->vary = explode(', ', $vary);
+		}
+
 		return $this;
 	}
 

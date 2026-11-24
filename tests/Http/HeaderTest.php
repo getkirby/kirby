@@ -150,4 +150,26 @@ class HeaderTest extends TestCase
 			'Newlines inside of reason results in a 500 code'
 		);
 	}
+
+	public function testVary(): void
+	{
+		$this->assertNull(Header::vary());
+		$this->assertNull(Header::vary(null, '', ' , '));
+		$this->assertSame('Accept', Header::vary('Accept'));
+
+		// merges multiple and comma-separated values
+		$this->assertSame(
+			'Cookie, Origin, Accept',
+			Header::vary('Cookie, Origin', null, 'Accept')
+		);
+
+		// removes duplicates case-insensitively (first spelling wins)
+		$this->assertSame(
+			'Accept, origin',
+			Header::vary(' Accept ,origin', 'accept, Origin', 'ACCEPT')
+		);
+
+		// a wildcard already varies by everything
+		$this->assertSame('*', Header::vary('Accept', '*', 'Origin'));
+	}
 }

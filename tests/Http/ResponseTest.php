@@ -436,6 +436,23 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['a' => 'b', 'c' => 'd'], $response->headers());
 	}
 
+	public function testSetHeaderFallbacksMergesVary(): void
+	{
+		$response = new Response([
+			'headers' => ['Vary' => 'Accept-Encoding']
+		]);
+		$response->setHeaderFallbacks(['Vary' => 'Cookie, Origin']);
+		$this->assertSame(
+			['Vary' => 'Cookie, Origin, Accept-Encoding'],
+			$response->headers()
+		);
+
+		// without a custom Vary value
+		$response = new Response();
+		$response->setHeaderFallbacks(['Vary' => 'Cookie']);
+		$this->assertSame(['Vary' => 'Cookie'], $response->headers());
+	}
+
 	public function testToArray(): void
 	{
 		// default setup

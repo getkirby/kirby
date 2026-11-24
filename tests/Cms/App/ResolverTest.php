@@ -531,6 +531,7 @@ class ResolverTest extends TestCase
 
 		// the visitor prefers HTML: render the page as usual,
 		// but the response still varies by the Accept header
+		$app = $app->clone();
 		$app->visitor()->acceptedMimeType('text/html');
 		$result = $this->resolve($app, 'test');
 		$this->assertIsPage($result);
@@ -549,6 +550,127 @@ class ResolverTest extends TestCase
 		// HTML acceptance still renders the page as HTML
 		$app->visitor()->acceptedMimeType('application/json');
 		$this->assertIsPage($this->resolve($app, 'test'));
+	}
+
+	public function testResolvePageContentNegotiationFromCache(): void
+	{
+		F::write(static::TMP . '/test.php', 'html');
+		F::write(static::TMP . '/test.json.php', '{}');
+
+		$props = [
+			'options' => [
+				'cache.pages' => true
+			],
+			'roots' => [
+				'templates' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			]
+		];
+
+		// the explicit representation URL fills the pages cache first
+		$app    = $this->app->clone($props);
+		$result = $this->resolve($app, 'test.json');
+		$this->assertSame('{}', $result->body());
+		$this->assertNull($app->response()->header('Vary'));
+
+		// the negotiated representation is served from the
+		// cache, but must still vary by the Accept header
+		$app = $this->app->clone($props);
+		$app->visitor()->acceptedMimeType('application/json');
+		$result = $this->resolve($app, 'test');
+		$this->assertSame('{}', $result->body());
+		$this->assertSame('Accept', $app->response()->header('Vary'));
+
+		// the Accept value is not persisted in the cache for
+		// the explicit representation URL
+		$app    = $this->app->clone($props);
+		$result = $this->resolve($app, 'test.json');
+		$this->assertSame('{}', $result->body());
+		$this->assertNull($app->response()->header('Vary'));
+
+		// the HTML response at the clean URL varies by Accept
+		// as well, both on the initial render and from the cache
+		for ($i = 0; $i < 2; $i++) {
+			$app = $this->app->clone($props);
+			$app->visitor()->acceptedMimeType('text/html');
+			$result = $this->resolve($app, 'test');
+			$this->assertSame('html', $result->render());
+			$this->assertSame('Accept', $app->response()->header('Vary'));
+		}
+	}
+
+	public function testResolvePageContentNegotiationMergesVary(): void
+	{
+		F::write(static::TMP . '/test.php', 'html');
+		F::write(
+			static::TMP . '/test.json.php',
+			'<?php $kirby->response()->header("Vary", "Accept-Language"); ?>{}'
+		);
+
+		$app = $this->app->clone([
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app.test']
+				]
+			],
+			'roots' => [
+				'templates' => static::TMP
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app.test'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			]
+		]);
+
+		$app->response()->usesCookie('foo');
+		$app->visitor()->acceptedMimeType('application/json');
+
+		$this->resolve($app, 'test');
+
+		// neither the negotiation nor the template drops
+		// the Cookie and Origin values or each other's values
+		$this->assertSame(
+			'Cookie, Origin, Accept, Accept-Language',
+			$app->response()->header('Vary')
+		);
+	}
+
+	public function testResolvePageContentNegotiationWithPluginTemplate(): void
+	{
+		$app = $this->app->clone([
+			'templates' => [
+				'test'     => static::FIXTURES . '/templates/test.php',
+				'test.rss' => static::FIXTURES . '/templates/test.php',
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				]
+			]
+		]);
+
+		// representation templates registered by plugins
+		// are detected as well
+		$app->visitor()->acceptedMimeType('text/html');
+		$this->assertIsPage($this->resolve($app, 'test'));
+		$this->assertSame('Accept', $app->response()->header('Vary'));
 	}
 
 	public function testResolvePageFile(): void

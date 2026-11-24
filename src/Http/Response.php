@@ -367,9 +367,21 @@ class Response implements Stringable
 	 */
 	public function setHeaderFallbacks(array $headers): static
 	{
+		// merge the Vary values instead of letting
+		// the custom header drop the fallback values
+		$vary = Header::vary(
+			$headers['Vary'] ?? null,
+			$this->headers['Vary'] ?? null
+		);
+
 		// the case-insensitive nature of headers will be
 		// handled by PHP's `header()` functions
 		$this->headers = [...$headers, ...$this->headers];
+
+		if ($vary !== null) {
+			$this->headers['Vary'] = $vary;
+		}
+
 		return $this;
 	}
 

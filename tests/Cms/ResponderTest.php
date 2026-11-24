@@ -352,6 +352,30 @@ class ResponderTest extends TestCase
 		$this->assertSame(['Cache-Control' => 'private'], $responder->headers());
 	}
 
+	public function testHeadersMergesCustomVary(): void
+	{
+		$this->kirby([
+			'options' => [
+				'cors' => [
+					'allowOrigin' => ['https://app.test']
+				]
+			],
+			'server' => [
+				'HTTP_ORIGIN' => 'https://app.test'
+			]
+		]);
+
+		$responder = new Responder();
+		$responder->usesAuth(true);
+		$responder->usesCookie('foo');
+		$responder->header('Vary', 'accept-encoding, cookie');
+
+		$this->assertSame(
+			'Authorization, Cookie, Origin, accept-encoding',
+			$responder->headers()['Vary']
+		);
+	}
+
 	public function testIsPrivate(): void
 	{
 		$responder = new Responder();
@@ -515,6 +539,41 @@ class ResponderTest extends TestCase
 
 		$this->assertSame($responder, $responder->usesCookies($cookies = ['bar']));
 		$this->assertSame($cookies, $responder->usesCookies());
+	}
+
+	public function testVary(): void
+	{
+		$responder = new Responder();
+		$this->assertSame($responder, $responder->vary('Accept'));
+		$this->assertSame(['Vary' => 'Accept'], $responder->headers());
+
+		// values are merged without duplicates
+		$responder->vary('accept', 'Accept-Language');
+		$this->assertSame(['Vary' => 'Accept, Accept-Language'], $responder->headers());
+
+		// setting the header directly does not drop the values
+		$responder->header('Vary', 'X-Custom');
+		$this->assertSame(['Vary' => 'Accept, Accept-Language, X-Custom'], $responder->headers());
+
+		$responder->headers(['Vary' => 'X-Other']);
+		$this->assertSame(['Vary' => 'Accept, Accept-Language, X-Other'], $responder->headers());
+
+		// merged with the injected values
+		$responder->usesCookie('foo');
+		$this->assertSame(
+			['Vary' => 'Cookie, Accept, Accept-Language, X-Other'],
+			$responder->headers()
+		);
+	}
+
+	public function testVaryVolatile(): void
+	{
+		$responder = new Responder();
+		$responder->vary('Accept', 'Accept-Language');
+		$responder->volatileHeaders()->mark('Vary', ['Accept']);
+
+		$this->assertSame(['Vary' => 'Accept, Accept-Language'], $responder->toArray()['headers']);
+		$this->assertSame(['Vary' => 'Accept-Language'], $responder->toCacheArray()['headers']);
 	}
 
 	public function testVolatileHeadersResetOnFromArray(): void
