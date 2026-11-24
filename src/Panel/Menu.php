@@ -145,6 +145,7 @@ class Menu
 
 		return new Button(
 			id: $id,
+			badge: $props['badge'] ?? null,
 			current: $this->isCurrent(
 				$id,
 				$props['current'] ?? null
@@ -156,7 +157,9 @@ class Menu
 			link: $props['link'] ?? null,
 			target: $props['target'] ?? null,
 			text: $text = $props['text'] ?? $props['label'] ?? null,
+			theme: $props['theme'] ?? null,
 			title: $props['title'] ?? $text,
+			variant: $props['variant'] ?? null,
 		);
 	}
 

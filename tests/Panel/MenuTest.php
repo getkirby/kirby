@@ -280,6 +280,26 @@ class MenuTest extends TestCase
 		$this->assertNull($item);
 	}
 
+	public function testItemWithMenuProps(): void
+	{
+		$areas = new Areas([
+			'todos' => new Area(
+				id: 'todos',
+				menu: fn () => [
+					'badge'   => ['text' => '3', 'theme' => 'notice'],
+					'theme'   => 'positive',
+					'variant' => 'filled'
+				]
+			)
+		]);
+
+		$menu = new Menu($areas);
+		$item = $menu->item('todos')->props();
+		$this->assertSame(['text' => '3', 'theme' => 'notice'], $item['badge']);
+		$this->assertSame('positive', $item['theme']);
+		$this->assertSame('filled', $item['variant']);
+	}
+
 	public function testItemWithNoPermission(): void
 	{
 		$menu = new Menu(permissions: ['access' => ['users' => false]]);
