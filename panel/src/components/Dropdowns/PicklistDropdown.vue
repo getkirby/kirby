@@ -85,7 +85,7 @@ export default {
 	--button-rounded: 1rem;
 	--button-height: 1.125rem;
 }
-.k-picklist-dropdown .k-picklist-input-create:focus {
+.k-picklist-dropdown .k-picklist-input-create:focus-visible {
 	--button-color-back: var(--color-blue-500);
 	--button-color-text: var(--color-black);
 }
@@ -135,7 +135,7 @@ export default {
 }
 .k-picklist-dropdown
 	.k-picklist-input-options
-	.k-choice-input:not([aria-disabled="true"]):focus-within {
+	.k-choice-input:not([aria-disabled="true"]):has(:focus-visible) {
 	--choice-color-text: var(--color-blue-500);
 }
 

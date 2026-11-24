@@ -46,7 +46,7 @@ input:where([type="checkbox"], [type="radio"])::after {
 }
 
 /** Focus state **/
-input:where([type="checkbox"], [type="radio"]):focus {
+input:where([type="checkbox"], [type="radio"]):focus-visible {
 	outline: var(--outline);
 	outline-offset: -1px;
 	color: var(--color-focus);
@@ -65,7 +65,7 @@ input:where([type="checkbox"]):indeterminate::after {
 }
 
 /** Checked focus state **/
-input:where([type="checkbox"], [type="radio"]):checked:focus {
+input:where([type="checkbox"], [type="radio"]):checked:focus-visible {
 	--choice-color-checked: var(--color-focus);
 }
 

@@ -276,7 +276,4 @@ export default {
 .k-tags-input .k-picklist-dropdown {
 	margin-top: var(--spacing-1);
 }
-.k-tags-input .k-picklist-dropdown .k-choice-input:focus-within {
-	outline: var(--outline);
-}
 </style>

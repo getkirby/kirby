@@ -48,7 +48,7 @@ export default {
 	--button-width: 100%;
 	display: flex;
 }
-.k-dropdown-item.k-button:focus {
+.k-dropdown-item.k-button:focus-visible {
 	z-index: 1;
 	outline: var(--outline);
 }
