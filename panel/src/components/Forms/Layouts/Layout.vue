@@ -3,7 +3,7 @@
 		:data-disabled="disabled"
 		:data-selected="isSelected"
 		class="k-layout"
-		tabindex="0"
+		tabindex="-1"
 		@click="$emit('select')"
 	>
 		<k-grid class="k-layout-columns">

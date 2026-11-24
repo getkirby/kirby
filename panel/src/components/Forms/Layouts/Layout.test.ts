@@ -96,9 +96,9 @@ describe("k-layout", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 
-		it("is focusable", () => {
+		it("is out of the Tab order", () => {
 			const wrapper = mount();
-			expect(wrapper.attributes("tabindex")).toBe("0");
+			expect(wrapper.attributes("tabindex")).toBe("-1");
 		});
 
 		it("renders the columns in a grid", () => {
