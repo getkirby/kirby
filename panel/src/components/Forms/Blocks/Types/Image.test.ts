@@ -28,7 +28,7 @@ const ImageFrame = {
 	template: "<div />"
 };
 
-const file = { id: "a.jpg", url: "/media/a.jpg" };
+const file = "file://a";
 const storage = "kirby.imageBlock.pages/a/fields/blocks.b1";
 
 function mount(props = {}, attrs = {}) {
@@ -106,6 +106,12 @@ describe("k-block-type-image", () => {
 				ratio: "16/9",
 				src: undefined
 			});
+		});
+
+		it("shows a file from Kirby without location field", () => {
+			const wrapper = mount({ content: { image: [file] } });
+			expect(figure(wrapper).props("isEmpty")).toBe(false);
+			expect(frame(wrapper).props()).toMatchObject({ file, src: undefined });
 		});
 
 		it("is empty without src", () => {
