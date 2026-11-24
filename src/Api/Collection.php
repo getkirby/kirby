@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 
@@ -13,9 +14,6 @@ use Kirby\Toolkit\Str;
  * stuff like pagination and proper JSON output
  * for collections in REST calls.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -28,7 +26,7 @@ class Collection
 	/**
 	 * Collection constructor
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function __construct(
 		protected Api $api,
@@ -55,8 +53,10 @@ class Collection
 	}
 
 	/**
+	 * @param $keys Comma-separated string or array of keys,
+	 *             `null` for all keys, `false` to keep the selection
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function select($keys = null): static
 	{
@@ -77,8 +77,9 @@ class Collection
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @return list<array<string, mixed>>
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toArray(): array
 	{
@@ -102,12 +103,15 @@ class Collection
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @return array<string, mixed>
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toResponse(): array
 	{
-		if (is_array($query = $this->api->requestQuery('query')) === true) {
+		$query = $this->api->requestQuery('query');
+
+		if (is_array($query) === true) {
 			$this->data = $this->data->query(array_filter([
 				'limit'    => $query['limit'] ?? null,
 				'offset'   => $query['offset'] ?? null,

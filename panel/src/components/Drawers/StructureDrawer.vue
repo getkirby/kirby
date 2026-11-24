@@ -33,17 +33,15 @@ import { props as FieldsProps } from "./Elements/Fields.vue";
 
 export const props = {
 	props: {
-		next: {
-			type: Object
-		},
-		prev: {
-			type: Object
-		}
+		next: Boolean,
+		prev: Boolean
 	}
 };
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Drawer, FieldsProps, props],

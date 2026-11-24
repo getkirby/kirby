@@ -11,6 +11,7 @@
 			v-else
 			v-bind="$props"
 			ref="input"
+			:options="$helper.field.options(options, value)"
 			type="multiselect"
 			@input="$emit('input', $event)"
 		/>
@@ -22,9 +23,13 @@ import TagsField from "./TagsField.vue";
 
 /**
  * Have a look at `<k-tags-field>`.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: TagsField,
-	inheritAttrs: false
+	inheritAttrs: false,
+	emits: ["input"]
 };
 </script>

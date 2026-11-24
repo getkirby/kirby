@@ -7,18 +7,18 @@
 	>
 		<template v-if="avatar">
 			<k-image-frame :cover="true" :src="avatar" />
-			<k-dropdown-content
+			<k-dropdown
 				ref="dropdown"
 				:options="[
 					{
 						icon: 'upload',
 						text: $t('change'),
-						click: upload
+						click: () => upload()
 					},
 					{
 						icon: 'trash',
 						text: $t('delete'),
-						click: remove
+						click: () => remove()
 					}
 				]"
 			/>
@@ -29,7 +29,9 @@
 
 <script>
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  * @unstable
  */
 export default {
@@ -50,7 +52,7 @@ export default {
 		async remove() {
 			await this.$api.users.deleteAvatar(this.id);
 			this.$panel.notification.success();
-			this.$reload();
+			this.$panel.reload();
 		},
 		upload() {
 			this.$panel.upload.pick({

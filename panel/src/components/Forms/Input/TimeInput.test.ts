@@ -1,0 +1,236 @@
+import { afterAll, beforeAll, describe, expect, it, vi } from "@test/unit";
+import { mount as vueMount } from "@vue/test-utils";
+import TimeInput from "./TimeInput.vue";
+
+function mount(props: Record<string, unknown> = {}) {
+	return vueMount(TimeInput, {
+		props: { step: { size: 1, unit: "minute" }, ...props } as never,
+		global: {
+			directives: { direction: {} }
+		}
+	});
+}
+
+/**
+ * Types into the input and blurs it, like a user would
+ */
+async function type(wrapper: ReturnType<typeof mount>, value: string) {
+	const input = wrapper.find("input");
+	await input.setValue(value);
+	await input.trigger("blur");
+	return input.element as HTMLInputElement;
+}
+
+/**
+ * Last value the input emitted
+ */
+function emitted(wrapper: ReturnType<typeof mount>) {
+	const events = wrapper.emitted("input");
+	return events?.[events.length - 1]?.[0];
+}
+
+/**
+ * Text currently selected in the input
+ */
+function selected(wrapper: ReturnType<typeof mount>) {
+	const input = wrapper.find("input").element as HTMLInputElement;
+	return input.value.slice(input.selectionStart!, input.selectionEnd!);
+}
+
+describe("k-time-input", () => {
+	beforeAll(() => {
+		vi.useFakeTimers();
+		vi.setSystemTime(new Date(2022, 0, 15));
+	});
+
+	afterAll(() => {
+		vi.useRealTimers();
+	});
+
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "INPUT", "k-time-input");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
+	});
+
+	// props
+	describe("step prop", () => {
+		it("rounds to 5 minutes by default", async () => {
+			// an undefined prop falls back to its default
+			const wrapper = mount({ display: "HH:mm", step: undefined });
+
+			await type(wrapper, "05:12");
+			expect(emitted(wrapper)).toBe("05:10:00");
+
+			await type(wrapper, "05:13");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
+
+		it("merges a partial step with the default", async () => {
+			const wrapper = mount({ display: "HH:mm", step: { size: 15 } });
+
+			await type(wrapper, "05:07");
+			expect(emitted(wrapper)).toBe("05:00:00");
+
+			await type(wrapper, "05:08");
+			expect(emitted(wrapper)).toBe("05:15:00");
+		});
+	});
+
+	// computed
+	describe("placeholder computed", () => {
+		it("shows an example time", () => {
+			const wrapper = mount({ display: "h:mm a" });
+			const input = wrapper.find("input");
+			expect(input.attributes("placeholder")).toBe("12:00 am");
+		});
+
+		it("follows the display pattern", () => {
+			const wrapper = mount({ display: "HH:mm" });
+			expect(wrapper.find("input").attributes("placeholder")).toBe("00:00");
+		});
+
+		it("uses `min` when now is before it", () => {
+			const wrapper = mount({ display: "h:mm a", min: "13:00:00" });
+			const input = wrapper.find("input");
+			expect(input.attributes("placeholder")).toBe("1:00 pm");
+		});
+	});
+
+	// methods
+	describe("alter()", () => {
+		beforeAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15, 14, 32));
+		});
+
+		afterAll(() => {
+			vi.setSystemTime(new Date(2022, 0, 15));
+		});
+
+		it("fills in now rounded to the step for an empty field", async () => {
+			const wrapper = mount({
+				display: "HH:mm",
+				step: { size: 15, unit: "minute" }
+			});
+			const input = wrapper.find("input");
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+
+			expect((input.element as HTMLInputElement).value).toBe("14:30");
+			expect(emitted(wrapper)).toBe("14:30:00");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow up", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "05:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
+
+			await input.trigger("keydown", { key: "ArrowUp" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+		});
+
+		it("toggles a selected meridiem by 12 hours on arrow down", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "17:10:00" });
+			const input = wrapper.find("input");
+
+			// select the meridiem
+			(input.element as HTMLInputElement).setSelectionRange(5, 7);
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("05:10:00");
+			expect(selected(wrapper)).toBe("am");
+
+			await input.trigger("keydown", { key: "ArrowDown" });
+			await wrapper.vm.$nextTick();
+			expect(emitted(wrapper)).toBe("17:10:00");
+			expect(selected(wrapper)).toBe("pm");
+		});
+	});
+
+	describe("onBlur()", () => {
+		it("does not re-parse an untouched rendering of the value", async () => {
+			const wrapper = mount({ display: "h:mm a", value: "17:12:00" });
+			const input = wrapper.find("input");
+			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
+
+			await input.trigger("blur");
+
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect((input.element as HTMLInputElement).value).toBe("5:12 pm");
+		});
+
+		it("keeps unparseable text and flags the input as invalid", async () => {
+			const wrapper = mount({ display: "HH:mm" });
+			const input = await type(wrapper, "25:61");
+
+			expect(input.value).toBe("25:61");
+			expect(wrapper.emitted("input")).toBeUndefined();
+			expect(input.validationMessage).toBe("error.validation.time");
+		});
+
+		it("commits an empty string for empty input", async () => {
+			const wrapper = mount({ display: "HH:mm", value: "17:12:00" });
+			await type(wrapper, "");
+			expect(emitted(wrapper)).toBe("");
+		});
+	});
+
+	describe("parse()", () => {
+		it("reads input in the display pattern", async () => {
+			const wrapper = mount({ display: "HH:mm" });
+			await type(wrapper, "5:12");
+			expect(emitted(wrapper)).toBe("05:12:00");
+		});
+
+		it("handles the meridiem of a 12-hour pattern", async () => {
+			const wrapper = mount({ display: "h:mm a" });
+			await type(wrapper, "5:12 pm");
+			expect(emitted(wrapper)).toBe("17:12:00");
+
+			await type(wrapper, "12:00 am");
+			expect(emitted(wrapper)).toBe("00:00:00");
+		});
+
+		it("still falls back to interpret() for partial input", async () => {
+			const wrapper = mount({ display: "HH:mm" });
+			await type(wrapper, "9");
+			expect(emitted(wrapper)).toBe("09:00:00");
+		});
+
+		it("reads a display pattern that escapes a literal", async () => {
+			const wrapper = mount({ display: "HH[h]mm" });
+			const input = await type(wrapper, "5h12");
+
+			expect(emitted(wrapper)).toBe("05:12:00");
+			expect(input.value).toBe("05h12");
+		});
+
+		it("reads input as a time even without a usable pattern", async () => {
+			const wrapper = mount({ display: "foo" });
+			await type(wrapper, "9");
+			expect(emitted(wrapper)).toBe("09:00:00");
+		});
+
+		it("rounds to the nearest step", async () => {
+			const wrapper = mount({
+				display: "HH:mm",
+				step: { size: 15, unit: "minute" }
+			});
+			await type(wrapper, "05:07");
+			expect(emitted(wrapper)).toBe("05:00:00");
+		});
+	});
+});

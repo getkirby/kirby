@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageStatesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageStates';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageStates';
 
 	public function family(): Site
 	{
@@ -128,5 +128,4 @@ class PageStatesTest extends ModelTestCase
 		$this->assertTrue($mother->isOpen());
 		$this->assertTrue($child->isOpen());
 	}
-
 }

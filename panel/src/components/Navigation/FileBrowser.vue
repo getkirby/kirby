@@ -6,7 +6,7 @@
 					:current="page?.value ?? opened"
 					:scrollable="true"
 					@select="selectPage"
-					@toggleBranch="togglePage"
+					@toggle-branch="togglePage"
 				/>
 			</aside>
 			<div ref="items" class="k-file-browser-items">
@@ -36,7 +36,9 @@
 
 <script>
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	props: {

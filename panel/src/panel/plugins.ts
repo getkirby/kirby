@@ -1,8 +1,14 @@
-import Vue, {
-	PluginFunction,
-	PluginObject,
-	type ComponentOptions,
-	type VueConstructor
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
+import type {
+	App,
+	ComponentOptions,
+	ComponentPublicInstance,
+	ConcreteComponent,
+	Plugin
 } from "vue";
 import isComponent from "@/helpers/isComponent";
 import { isObject } from "@/helpers/object";
@@ -12,21 +18,17 @@ import { isObject } from "@/helpers/object";
  * Allows string references for `mixins` and `extends`, which are resolved
  * at install time by resolveComponentMixins and resolveComponentExtension.
  */
-export type Component = Omit<
-	ComponentOptions<Vue>,
-	"mixins" | "extends" | "render"
-> & {
-	mixins?: (string | ComponentOptions<Vue> | VueConstructor)[];
-	extends?: string | ComponentOptions<Vue> | VueConstructor;
+type Component = Omit<ComponentOptions, "extends" | "mixins" | "render"> & {
+	mixins?: (string | ComponentOptions | ConcreteComponent)[];
+	extends?: string | ComponentOptions | ConcreteComponent;
 	// `null` explicitly clears an inherited render method so the component's
 	// own template is used instead (see resolveComponentRender)
-	render?: ComponentOptions<Vue>["render"] | null;
+	render?: ComponentOptions["render"] | null;
 };
 
 // mixins
 import dialog from "@/mixins/dialog.js";
 import drawer from "@/mixins/drawer.js";
-import section from "@/mixins/section.js";
 import Mark from "@/components/Forms/Writer/Mark";
 import Node from "@/components/Forms/Writer/Node";
 
@@ -34,89 +36,68 @@ import Node from "@/components/Forms/Writer/Node";
  * Installs a plugin component
  * @since 4.0.0
  */
-export function installComponent(
-	app: typeof Vue,
-	name: string,
-	component: Component
-): Component {
+function install(app: App, name: string, component: Component): Component {
 	// make sure component has something to show
-	if (!component.template && !component.render && !component.extends) {
+	if (
+		!component.template &&
+		!component.render &&
+		!component.setup &&
+		!component.extends
+	) {
 		throw new Error(
-			`Plugin component "${name}" is not providing any template or render method, neither is it extending a component. The component has not been registered.`
+			`Plugin component "${name}" is not providing any template, render or setup method, neither is it extending a component. The component has not been registered.`
 		);
 	}
 
 	// extend the component if it defines extensions
 	component = resolveComponentExtension(app, name, component);
 
-	// remove a render method if there’s a template
+	// remove a render method if there's a template
 	component = resolveComponentRender(component);
 
 	// add mixins
 	component = resolveComponentMixins(component);
 
 	// check if the component is replacing a core component
-	if (isComponent(name) === true) {
+	if (isComponent(name, app) === true) {
 		window.console.warn(`Plugin is replacing "${name}"`);
 	}
 
 	// register the component (strings in mixins/extends are resolved at this point)
-	app.component(name, component as ComponentOptions<Vue>);
+	app.component(name, component as ComponentOptions);
 
 	// return component options
 	return component;
 }
 
 /**
- * Installs all components in the given object
- * @since 4.0.0
+ * Loads each plugin script as its own module, in order;
+ * a plugin that fails to load doesn't stop the others
+ * @since 6.0.0
  */
-export function installComponents(
-	app: typeof Vue,
-	components?: Record<string, Component>
-): Record<string, Component> {
-	if (isObject(components) === false) {
-		return {};
+export async function load(scripts?: string[]): Promise<void> {
+	if (Array.isArray(scripts) === false) {
+		return;
 	}
 
-	const installed: Record<string, Component> = {};
-
-	for (const [name, component] of Object.entries(components)) {
+	for (const script of scripts) {
 		try {
-			installed[name] = installComponent(app, name, component);
+			// resolve against the page, not the Panel's
+			// own script, which comes from Vite in dev mode
+			const url = new URL(script, document.baseURI).href;
+			await import(/* @vite-ignore */ url);
 		} catch (error) {
-			window.console.warn((error as Error).message);
+			window.console.error(`Plugin could not be loaded: ${script}`, error);
 		}
 	}
-
-	return installed;
-}
-
-/**
- * Installs plugins
- * @since 4.0.0
- */
-export function installPlugins(
-	app: typeof Vue,
-	plugins?: (PluginObject<unknown> | PluginFunction<unknown>)[]
-): (PluginObject<unknown> | PluginFunction<unknown>)[] {
-	if (Array.isArray(plugins) === false) {
-		return [];
-	}
-
-	for (const plugin of plugins) {
-		app.use(plugin);
-	}
-
-	return plugins;
 }
 
 /**
  * Resolves a component extension if defined as component name
  * @since 4.0.0
  */
-export function resolveComponentExtension(
-	app: typeof Vue,
+function resolveComponentExtension(
+	app: App,
 	name: string,
 	component: Component
 ): Component {
@@ -125,7 +106,7 @@ export function resolveComponentExtension(
 	}
 
 	// only extend if referenced component exists
-	if (isComponent(component.extends) === false) {
+	if (isComponent(component.extends, app) === false) {
 		window.console.warn(
 			`Problem with plugin trying to register component "${name}": cannot extend non-existent component "${component.extends}"`
 		);
@@ -136,21 +117,7 @@ export function resolveComponentExtension(
 		return component;
 	}
 
-	// app.options is a Vue 2 runtime property,
-	// but it is not reflected in VueConstructor types
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const components = (app as any).options.components as Record<
-		string,
-		VueConstructor
-	>;
-
-	component.extends = components[component.extends].extend({
-		options: component,
-		components: {
-			...components,
-			...(component.components ?? {})
-		}
-	} as ComponentOptions<Vue>);
+	component.extends = app.component(component.extends) as ComponentOptions;
 
 	return component;
 }
@@ -159,39 +126,44 @@ export function resolveComponentExtension(
  * Resolve available mixins if they are defined
  * @since 4.0.0
  */
-export function resolveComponentMixins(component: Component): Component {
+function resolveComponentMixins(component: Component): Component {
 	if (Array.isArray(component.mixins) === false) {
 		return component;
 	}
 
-	const mixins: Record<string, ComponentOptions<Vue>> = {
+	const mixins: Record<string, ComponentOptions> = {
 		dialog,
-		drawer,
-		section
+		drawer
 	};
 
 	component.mixins = component.mixins
 		.map((mixin) => {
-			// mixin got referenced by name
-			if (typeof mixin === "string" && mixins[mixin] !== undefined) {
-				// component inherits from a parent component:
-				// make sure to only include the mixin if the parent component
-				// hasn't already included it (to avoid duplicate mixins)
-				if (component.extends) {
-					const extended = Vue.extend(
-						component.extends as ComponentOptions<Vue>
-					);
-					const inherited = new extended().$options.mixins ?? [];
-
-					if (inherited.includes(mixins[mixin]) === true) {
-						return;
-					}
-				}
-
-				return mixins[mixin];
+			// mixin is already an object
+			if (typeof mixin !== "string") {
+				return mixin;
 			}
 
-			return mixin;
+			// referenced mixin doesn't exist
+			if (mixins[mixin] === undefined) {
+				window.console.warn(
+					`Plugin trying to register component "${component.name}": cannot extend non-existent mixin "${mixin}"`
+				);
+				return;
+			}
+
+			const extending = component.extends as ComponentOptions | undefined;
+
+			// component inherits from a parent component:
+			// make sure to only include the mixin if the parent component
+			// hasn't already included it (to avoid duplicate mixins)
+			if (extending) {
+				const inherited = extending.mixins ?? [];
+				if (inherited.includes(mixins[mixin]) === true) {
+					return;
+				}
+			}
+
+			return mixins[mixin];
 		})
 		.filter((mixin) => mixin !== undefined);
 
@@ -202,7 +174,7 @@ export function resolveComponentMixins(component: Component): Component {
  * Resolve a component's competing template/render options
  * @since 5.0.0
  */
-export function resolveComponentRender(component: Component): Component {
+function resolveComponentRender(component: Component): Component {
 	if (component.template) {
 		// set to `null` instead of deleting, so an inherited render method
 		// is overridden and Vue compiles the component's own template
@@ -217,19 +189,39 @@ export function resolveComponentRender(component: Component): Component {
  * and makes them accessible at window.panel.plugins
  * @since 4.0.0
  */
-export default function Plugins(
-	app: typeof Vue,
-	plugins: Partial<{
-		components: Record<string, ComponentOptions<Vue>>;
-		created: ((app: typeof Vue) => void)[];
-		icons: Record<string, string>;
-		login: ComponentOptions<Vue>;
-		textareaButtons: Record<string, unknown>;
-		writerMarks: Record<string, typeof Mark>;
-		writerNodes: Record<string, typeof Node>;
-		use: (PluginObject<unknown> | PluginFunction<unknown>)[];
-	}> = {}
-) {
+export type PanelPlugins = Partial<{
+	components: Record<string, Component>;
+	created: ((instance: ComponentPublicInstance) => void)[];
+	icons: Record<string, string>;
+	login: ComponentOptions;
+	textareaButtons: Record<string, unknown>;
+	writerMarks: Record<string, typeof Mark>;
+	writerNodes: Record<string, typeof Node>;
+	use: Plugin[];
+}>;
+
+export default function Plugins(app: App, plugins: PanelPlugins = {}) {
+	const components: Record<string, Component> = {};
+	const use = Array.isArray(plugins.use) === true ? plugins.use : [];
+
+	if (isObject(plugins.components) === true) {
+		for (const [name, component] of Object.entries(plugins.components)) {
+			try {
+				components[name] = install(app, name, component);
+			} catch (error) {
+				window.console.warn((error as Error).message);
+			}
+		}
+	}
+
+	for (const plugin of use) {
+		try {
+			app.use(plugin);
+		} catch (error) {
+			window.console.error("Plugin could not be installed", error);
+		}
+	}
+
 	return {
 		// expose helper functions for kirbyup
 		resolveComponentExtension,
@@ -238,14 +230,13 @@ export default function Plugins(
 		// defaults
 		created: [],
 		icons: {},
-		login: undefined,
 		textareaButtons: {},
 		thirdParty: {},
 		writerMarks: {},
 		writerNodes: {},
 		// registered
 		...plugins,
-		components: installComponents(app, plugins.components),
-		use: installPlugins(app, plugins.use)
+		components,
+		use
 	};
 }

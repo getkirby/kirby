@@ -10,15 +10,15 @@
 		:data-translation="$panel.translation.code"
 		:data-user="$panel.user.id"
 		:dir="$panel.direction"
-		class="k-panel"
+		:class="['k-panel', $attrs.class]"
 	>
 		<slot />
 
-		<!-- Fiber dialogs -->
-		<k-fiber-dialog v-if="$panel.dialog.isOpen && !$panel.dialog.legacy" />
+		<!-- State dialogs -->
+		<k-state-dialog v-if="$panel.dialog.isOpen && !$panel.dialog.legacy" />
 
-		<!-- Fiber drawers -->
-		<k-fiber-drawer v-if="$panel.drawer.isOpen && !$panel.drawer.legacy" />
+		<!-- State drawers -->
+		<k-state-drawer v-if="$panel.drawer.isOpen && !$panel.drawer.legacy" />
 
 		<!-- Fatal iframe -->
 		<k-fatal
@@ -38,7 +38,7 @@
 			type="drawer"
 			@close="$panel.drawer.close()"
 		>
-			<portal-target class="k-drawer-portal k-portal" name="drawer" multiple />
+			<div class="k-drawer-portal k-portal" multiple />
 		</k-overlay>
 
 		<k-overlay
@@ -47,24 +47,25 @@
 			type="dialog"
 			@close="$panel.dialog.close()"
 		>
-			<portal-target class="k-dialog-portal k-portal" name="dialog" multiple />
+			<div class="k-dialog-portal k-portal" multiple />
 		</k-overlay>
-
-		<portal-target class="k-overlay-portal k-portal" name="overlay" multiple />
 	</div>
 </template>
 
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
-export default {};
+export default {
+	inheritAttrs: false
+};
 </script>
 
 <style>
 :root {
 	--panel-color-back: light-dark(var(--color-gray-200), var(--color-gray-900));
-	--scroll-top: 0rem;
 }
 
 html {

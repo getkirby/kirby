@@ -9,9 +9,6 @@ use Stringable;
  * parse and inspect URL queries
  * as part of the Request object
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -41,6 +38,14 @@ class Query implements Stringable
 			parse_str($data, $parsed);
 			$this->data = $parsed;
 		}
+	}
+
+	/**
+	 * Magic string converter
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 
 	/**
@@ -74,13 +79,5 @@ class Query implements Stringable
 	public function toString(): string
 	{
 		return http_build_query($this->data());
-	}
-
-	/**
-	 * Magic string converter
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

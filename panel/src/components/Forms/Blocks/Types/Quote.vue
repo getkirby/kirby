@@ -30,6 +30,9 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeQuote
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,

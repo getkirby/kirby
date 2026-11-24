@@ -13,46 +13,24 @@ use Kirby\Toolkit\Str;
  * The query builder is used by the Database class
  * to build SQL queries with a fluent API
  *
- * @package   Kirby Database
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Query
 {
-	public const ERROR_INVALID_QUERY_METHOD = 0;
-
-	/**
-	 * The object which should be fetched for each row
-	 * or function to call for each row
-	 */
-	protected string|Closure $fetch = Obj::class;
-
-	/**
-	 * The iterator class, which should be used for result sets
-	 */
-	protected string $iterator = Collection::class;
+	public const int ERROR_INVALID_QUERY_METHOD = 0;
 
 	/**
 	 * An array of bindings for the final query
+	 *
+	 * @var array<string|int, mixed>
 	 */
 	protected array $bindings = [];
 
 	/**
-	 * The name of the primary key column
+	 * Boolean to enable query debugging
 	 */
-	protected string $primaryKeyName = 'id';
-
-	/**
-	 * An array with additional join parameters
-	 */
-	protected array|null $join = null;
-
-	/**
-	 * A list of columns, which should be selected
-	 */
-	protected array|string|null $select = null;
+	protected bool $debug = false;
 
 	/**
 	 * Boolean for distinct select clauses
@@ -65,14 +43,10 @@ class Query
 	protected bool $fail = false;
 
 	/**
-	 * A list of values for update and insert clauses
+	 * The object which should be fetched for each row
+	 * or function to call for each row
 	 */
-	protected array|null $values = null;
-
-	/**
-	 * WHERE clause
-	 */
-	protected string|null $where = null;
+	protected string|Closure $fetch = Obj::class;
 
 	/**
 	 * GROUP BY clause
@@ -85,14 +59,16 @@ class Query
 	protected string|null $having = null;
 
 	/**
-	 * ORDER BY clause
+	 * The iterator class, which should be used for result sets
 	 */
-	protected string|null $order = null;
+	protected string $iterator = Collection::class;
 
 	/**
-	 * The offset, which should be applied to the select query
+	 * An array with additional join parameters
+	 *
+	 * @var list<array{table: string, on: string, type: string}>|null
 	 */
-	protected int $offset = 0;
+	protected array|null $join = null;
 
 	/**
 	 * The limit, which should be applied to the select query
@@ -100,12 +76,37 @@ class Query
 	protected int|null $limit = null;
 
 	/**
-	 * Boolean to enable query debugging
+	 * The offset, which should be applied to the select query
 	 */
-	protected bool $debug = false;
+	protected int $offset = 0;
 
 	/**
-	 * @param string $table name of the table, which should be queried
+	 * ORDER BY clause
+	 */
+	protected string|null $order = null;
+
+	/**
+	 * The name of the primary key column
+	 */
+	protected string $primaryKeyName = 'id';
+
+	/**
+	 * A list of columns, which should be selected
+	 */
+	protected array|string|null $select = null;
+
+	/**
+	 * A list of values for update and insert clauses
+	 */
+	protected array|null $values = null;
+
+	/**
+	 * WHERE clause
+	 */
+	protected string|null $where = null;
+
+	/**
+	 * @param $table Name of the table, which should be queried
 	 */
 	public function __construct(
 		protected Database $database,
@@ -115,252 +116,64 @@ class Query
 	}
 
 	/**
-	 * Reset the query class after each db hit
+	 * Enables magic queries like findByUsername or findByEmail
 	 */
-	protected function reset(): void
+	public function __call(string $method, array $arguments = [])
 	{
-		$this->bindings = [];
-		$this->join     = null;
-		$this->select   = null;
-		$this->distinct = null;
-		$this->fail     = false;
-		$this->values   = null;
-		$this->where    = null;
-		$this->group    = null;
-		$this->having   = null;
-		$this->order    = null;
-		$this->offset   = 0;
-		$this->limit    = null;
-		$this->debug    = false;
-	}
-
-	/**
-	 * Enables query debugging.
-	 * If enabled, the query will return an array with all important info about
-	 * the query instead of actually executing the query and returning results
-	 *
-	 * @return $this
-	 */
-	public function debug(bool $debug = true): static
-	{
-		$this->debug = $debug;
-		return $this;
-	}
-
-	/**
-	 * Enables distinct select clauses.
-	 *
-	 * @return $this
-	 */
-	public function distinct(bool $distinct = true): static
-	{
-		$this->distinct = $distinct;
-		return $this;
-	}
-
-	/**
-	 * Enables failing queries.
-	 * If enabled queries will no longer fail silently but throw an exception
-	 *
-	 * @return $this
-	 */
-	public function fail(bool $fail = true): static
-	{
-		$this->fail = $fail;
-		return $this;
-	}
-
-	/**
-	 * Sets the object class, which should be fetched;
-	 * set this to `'array'` to get a simple array instead of an object;
-	 * pass a function that receives the `$data` and the `$key` to generate arbitrary data structures
-	 *
-	 * @return $this
-	 */
-	public function fetch(string|callable|Closure $fetch): static
-	{
-		if (is_callable($fetch) === true) {
-			$fetch = Closure::fromCallable($fetch);
+		if (preg_match('!^findBy([a-z]+)!i', $method, $match) === 1) {
+			$column = Str::lower($match[1]);
+			return $this->findBy($column, $arguments[0]);
 		}
 
-		$this->fetch = $fetch;
-		return $this;
+		throw new InvalidArgumentException(
+			message: 'Invalid query method: ' . $method,
+			code: static::ERROR_INVALID_QUERY_METHOD
+		);
 	}
 
 	/**
-	 * Sets the iterator class, which should be used for multiple results
-	 * Set this to array to get a simple array instead of an iterator object
+	 * Builds an aggregation query.
+	 * This is used by all the aggregation methods above
 	 *
-	 * @return $this
+	 * @param $default An optional default value, which should be returned if the query fails
 	 */
-	public function iterator(string $iterator): static
-	{
-		$this->iterator = $iterator;
-		return $this;
-	}
+	public function aggregate(
+		string $method,
+		string $column = '*',
+		int $default = 0
+	) {
+		// reset the sorting to avoid counting issues
+		$this->order = null;
 
-	/**
-	 * Sets the name of the table, which should be queried
-	 *
-	 * @return $this
-	 * @throws \Kirby\Exception\InvalidArgumentException if the table does not exist
-	 */
-	public function table(string $table): static
-	{
-		if ($this->database->validateTable($table) === false) {
-			throw new InvalidArgumentException(
-				message: 'Invalid table: ' . $table
-			);
+		// validate column
+		if ($column !== '*') {
+			$sql    = $this->database->sql();
+			$column = $sql->columnName($this->table, $column);
 		}
 
-		$this->table = $table;
-		return $this;
-	}
+		$fetch = $this->fetch;
+		$row   = $this->select($method . '(' . $column . ') as aggregation')->fetch(Obj::class)->first();
 
-	/**
-	 * Sets the name of the primary key column
-	 *
-	 * @return $this
-	 */
-	public function primaryKeyName(string $primaryKeyName): static
-	{
-		$this->primaryKeyName = $primaryKeyName;
-		return $this;
-	}
-
-	/**
-	 * Sets the columns, which should be selected from the table
-	 * By default all columns will be selected
-	 *
-	 * @param array|string|null $select Pass either a string of columns or an array
-	 * @return $this
-	 */
-	public function select(array|string|null $select): static
-	{
-		$this->select = $select;
-		return $this;
-	}
-
-	/**
-	 * Adds a new join clause to the query
-	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
-	 * @param string $type The join type. Uses an inner join by default
-	 * @return $this
-	 */
-	public function join(
-		string $table,
-		string $on,
-		string $type = 'JOIN'
-	): static {
-		$join = [
-			'table' => $table,
-			'on'    => $on,
-			'type'  => $type
-		];
-
-		$this->join[] = $join;
-		return $this;
-	}
-
-	/**
-	 * Shortcut for creating a left join clause
-	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
-	 * @return $this
-	 */
-	public function leftJoin(string $table, string $on): static
-	{
-		return $this->join($table, $on, 'left join');
-	}
-
-	/**
-	 * Shortcut for creating a right join clause
-	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
-	 * @return $this
-	 */
-	public function rightJoin(string $table, string $on): static
-	{
-		return $this->join($table, $on, 'right join');
-	}
-
-	/**
-	 * Shortcut for creating an inner join clause
-	 *
-	 * @param string $table Name of the table, which should be joined
-	 * @param string $on The on clause for this join
-	 * @return $this
-	 */
-	public function innerJoin($table, $on): static
-	{
-		return $this->join($table, $on, 'inner join');
-	}
-
-	/**
-	 * Sets the values which should be used for the update or insert clause
-	 *
-	 * @param mixed $values Can either be a string or an array of values
-	 * @return $this
-	 */
-	public function values($values = []): static
-	{
-		if ($values !== null) {
-			$this->values = $values;
-		}
-		return $this;
-	}
-
-	/**
-	 * Attaches additional bindings to the query.
-	 * Also can be used as getter for all attached bindings
-	 * by not passing an argument.
-	 *
-	 * @return array|$this
-	 * @psalm-return ($bindings is array ? $this : array)
-	 */
-	public function bindings(array|null $bindings = null): array|static
-	{
-		if (is_array($bindings) === true) {
-			$this->bindings = [...$this->bindings, ...$bindings];
-			return $this;
+		if ($this->debug === true) {
+			return $row;
 		}
 
-		return $this->bindings;
+		$result = $row?->get('aggregation') ?? $default;
+
+		$this->fetch($fetch);
+
+		return $result;
 	}
 
 	/**
-	 * Attaches an additional where clause
-	 *
-	 * All available ways to add where clauses
-	 *
-	 * ->where('username like "myuser"');                        (args: 1)
-	 * ->where(['username' => 'myuser']);                   (args: 1)
-	 * ->where(function($where) { $where->where('id', '=', 1) }) (args: 1)
-	 * ->where('username like ?', 'myuser')                      (args: 2)
-	 * ->where('username', 'like', 'myuser');                    (args: 3)
-	 *
-	 * @return $this
+	 * Returns all matching rows from a table
 	 */
-	public function where(...$args): static
+	public function all()
 	{
-		$this->where = $this->filterQuery($args, $this->where);
-		return $this;
-	}
-
-	/**
-	 * Shortcut to attach a where clause with an OR operator.
-	 * Check out the where() method docs for additional info.
-	 *
-	 * @return $this
-	 */
-	public function orWhere(...$args): static
-	{
-		$this->where = $this->filterQuery($args, $this->where, 'OR');
-		return $this;
+		return $this->query($this->build('select'), [
+			'fetch'    => $this->fetch,
+			'iterator' => $this->iterator,
+		]);
 	}
 
 	/**
@@ -376,74 +189,38 @@ class Query
 	}
 
 	/**
-	 * Attaches a group by clause
-	 *
-	 * @return $this
+	 * Builds an average query
 	 */
-	public function group(string|null $group = null): static
+	public function avg(string $column): float
 	{
-		$this->group = $group;
-		return $this;
+		return (float)$this->aggregate('AVG', $column);
 	}
 
 	/**
-	 * Attaches an additional having clause
+	 * Attaches additional bindings to the query.
+	 * Also can be used as getter for all attached bindings
+	 * by not passing an argument.
 	 *
-	 * All available ways to add having clauses
-	 *
-	 * ->having('username like "myuser"');                           (args: 1)
-	 * ->having(['username' => 'myuser']);                      (args: 1)
-	 * ->having(function($having) { $having->having('id', '=', 1) }) (args: 1)
-	 * ->having('username like ?', 'myuser')                         (args: 2)
-	 * ->having('username', 'like', 'myuser');                       (args: 3)
-	 *
-	 * @return $this
+	 * @return array|$this
+	 * @psalm-return ($bindings is array ? static : array)
 	 */
-	public function having(...$args): static
+	public function bindings(array|null $bindings = null): array|static
 	{
-		$this->having = $this->filterQuery($args, $this->having);
-		return $this;
-	}
+		if (is_array($bindings) === true) {
+			$this->bindings = [...$this->bindings, ...$bindings];
+			return $this;
+		}
 
-	/**
-	 * Attaches an order clause
-	 *
-	 * @return $this
-	 */
-	public function order(string|null $order = null)
-	{
-		$this->order = $order;
-		return $this;
-	}
-
-	/**
-	 * Sets the offset for select clauses
-	 *
-	 * @return $this
-	 */
-	public function offset(int $offset): static
-	{
-		$this->offset = $offset;
-		return $this;
-	}
-
-	/**
-	 * Sets the limit for select clauses
-	 *
-	 * @return $this
-	 */
-	public function limit(int|null $limit = null): static
-	{
-		$this->limit = $limit;
-		return $this;
+		return $this->bindings;
 	}
 
 	/**
 	 * Builds the different types of SQL queries
 	 * This uses the SQL class to build stuff.
 	 *
-	 * @param string $type (select, update, insert)
-	 * @return array The final query
+	 * @param $type `select`, `update`, `insert` or `delete`
+	 * @return array{query: string, bindings: array}
+	 * @throws InvalidArgumentException If the query type is invalid
 	 */
 	public function build(string $type): array
 	{
@@ -479,8 +256,44 @@ class Query
 				'where'    => $this->where,
 				'bindings' => $this->bindings
 			]),
-			default => null
+			default => throw new InvalidArgumentException(
+				'Invalid query type: ' . $type
+			)
 		};
+	}
+
+	/**
+	 * Returns only values from a single column
+	 */
+	public function column(string $column)
+	{
+		// if there isn't already an explicit order, order by the primary key
+		// instead of the column that was requested (which would be implied otherwise)
+		if ($this->order === null) {
+			$sql = $this->database->sql();
+			$key = $sql->combineIdentifier($this->table, $this->primaryKeyName);
+
+			$this->order($key . ' ASC');
+		}
+
+		$results = $this->query($this->select([$column])->build('select'), [
+			'iterator' => 'array',
+			'fetch'    => 'array',
+		]);
+
+		if ($this->debug === true) {
+			return $results;
+		}
+
+		$results = array_column($results, $column);
+
+		if ($this->iterator === 'array') {
+			return $results;
+		}
+
+		$iterator = $this->iterator;
+
+		return new $iterator($results);
 	}
 
 	/**
@@ -523,104 +336,39 @@ class Query
 	}
 
 	/**
-	 * Builds a max query
-	 */
-	public function max(string $column): float
-	{
-		return (float)$this->aggregate('MAX', $column);
-	}
-
-	/**
-	 * Builds a min query
-	 */
-	public function min(string $column): float
-	{
-		return (float)$this->aggregate('MIN', $column);
-	}
-
-	/**
-	 * Builds a sum query
-	 */
-	public function sum(string $column): float
-	{
-		return (float)$this->aggregate('SUM', $column);
-	}
-
-	/**
-	 * Builds an average query
-	 */
-	public function avg(string $column): float
-	{
-		return (float)$this->aggregate('AVG', $column);
-	}
-
-	/**
-	 * Builds an aggregation query.
-	 * This is used by all the aggregation methods above
+	 * Enables query debugging.
+	 * If enabled, the query will return an array with all important info about
+	 * the query instead of actually executing the query and returning results
 	 *
-	 * @param int $default An optional default value, which should be returned if the query fails
+	 * @return $this
 	 */
-	public function aggregate(
-		string $method,
-		string $column = '*',
-		int $default = 0
-	) {
-		// reset the sorting to avoid counting issues
-		$this->order = null;
-
-		// validate column
-		if ($column !== '*') {
-			$sql    = $this->database->sql();
-			$column = $sql->columnName($this->table, $column);
-		}
-
-		$fetch  = $this->fetch;
-		$row    = $this->select($method . '(' . $column . ') as aggregation')->fetch(Obj::class)->first();
-
-		if ($this->debug === true) {
-			return $row;
-		}
-
-		$result = $row?->get('aggregation') ?? $default;
-
-		$this->fetch($fetch);
-
-		return $result;
+	public function debug(bool $debug = true): static
+	{
+		$this->debug = $debug;
+		return $this;
 	}
 
 	/**
-	 * Used as an internal shortcut for firing a db query
+	 * Fires a delete query
+	 *
+	 * @param $where You can pass a where clause here or set it with ->where() before
 	 */
-	protected function query(string|array $sql, array $params = [])
+	public function delete($where = null): bool
 	{
-		if (is_string($sql) === true) {
-			$sql = [
-				'query'    => $sql,
-				'bindings' => $this->bindings()
-			];
-		}
-
-		if ($this->debug) {
-			return [
-				'query'    => $sql['query'],
-				'bindings' => $this->bindings(),
-				'options'  => $params
-			];
-		}
-
-		if ($this->fail) {
-			$this->database->fail();
-		}
-
-		$result = $this->database->query(
-			$sql['query'],
-			$sql['bindings'],
-			$params
+		return $this->execute(
+			$this->where($where)->build('delete')
 		);
+	}
 
-		$this->reset();
-
-		return $result;
+	/**
+	 * Enables distinct select clauses.
+	 *
+	 * @return $this
+	 */
+	public function distinct(bool $distinct = true): static
+	{
+		$this->distinct = $distinct;
+		return $this;
 	}
 
 	/**
@@ -643,223 +391,61 @@ class Query
 			];
 		}
 
-		if ($this->fail) {
-			$this->database->fail();
-		}
-
+		$fail   = $this->fail;
 		$result = $this->database->execute($sql['query'], $sql['bindings']);
 
 		$this->reset();
+
+		// throw for this query only, the database keeps its own mode
+		$error = $this->database->lastError();
+
+		if ($fail === true && $error !== null) {
+			throw $error;
+		}
 
 		return $result;
 	}
 
 	/**
-	 * Selects only one row from a table
-	 */
-	public function first(): mixed
-	{
-		return $this->query($this->offset(0)->limit(1)->build('select'), [
-			'fetch'    => $this->fetch,
-			'iterator' => 'array',
-			'method'   => 'fetch',
-		]);
-	}
-
-	/**
-	 * Selects only one row from a table
-	 */
-	public function row(): mixed
-	{
-		return $this->first();
-	}
-
-	/**
-	 * Selects only one row from a table
-	 */
-	public function one(): mixed
-	{
-		return $this->first();
-	}
-
-	/**
-	 * Automatically adds pagination to a query
+	 * Enables failing queries.
+	 * If enabled queries will no longer fail silently but throw an exception
 	 *
-	 * @param int $limit The number of rows, which should be returned for each page
-	 * @return object Collection iterator with attached pagination object
+	 * @return $this
 	 */
-	public function page(int $page, int $limit): object
+	public function fail(bool $fail = true): static
 	{
-		// clone this to create a counter query
-		$counter = clone $this;
-
-		// count the total number of rows for this query
-		$count = $counter->debug(false)->count();
-
-		// pagination
-		$pagination = new Pagination([
-			'limit' => $limit,
-			'page'  => $page,
-			'total' => $count,
-		]);
-
-		// apply it to the dataset and retrieve all rows. make sure to use Collection as the iterator to be able to attach the pagination object
-		$iterator   = $this->iterator;
-		$collection = $this
-			->offset($pagination->offset())
-			->limit($pagination->limit())
-			->iterator(Collection::class)
-			->all();
-
-		$this->iterator($iterator);
-
-		// return debug information if debug mode is active
-		if ($this->debug) {
-			$collection['totalcount'] = $count;
-			return $collection;
-		}
-
-		// store all pagination vars in a separate object
-		if ($collection) {
-			$collection->paginate($pagination);
-		}
-
-		// return the limited collection
-		return $collection;
+		$this->fail = $fail;
+		return $this;
 	}
 
 	/**
-	 * Returns all matching rows from a table
-	 */
-	public function all()
-	{
-		return $this->query($this->build('select'), [
-			'fetch'    => $this->fetch,
-			'iterator' => $this->iterator,
-		]);
-	}
-
-	/**
-	 * Returns only values from a single column
-	 */
-	public function column(string $column)
-	{
-		// if there isn't already an explicit order, order by the primary key
-		// instead of the column that was requested (which would be implied otherwise)
-		if ($this->order === null) {
-			$sql = $this->database->sql();
-			$key = $sql->combineIdentifier($this->table, $this->primaryKeyName);
-
-			$this->order($key . ' ASC');
-		}
-
-		$results = $this->query($this->select([$column])->build('select'), [
-			'iterator' => 'array',
-			'fetch'    => 'array',
-		]);
-
-		if ($this->debug === true) {
-			return $results;
-		}
-
-		$results = array_column($results, $column);
-
-		if ($this->iterator === 'array') {
-			return $results;
-		}
-
-		$iterator = $this->iterator;
-
-		return new $iterator($results);
-	}
-
-	/**
-	 * Find a single row by column and value
-	 */
-	public function findBy(string $column, $value)
-	{
-		return $this->where([$column => $value])->first();
-	}
-
-	/**
-	 * Find a single row by its primary key
-	 */
-	public function find($id)
-	{
-		return $this->findBy($this->primaryKeyName, $id);
-	}
-
-	/**
-	 * Fires an insert query
+	 * Sets the object class, which should be fetched;
+	 * set this to `'array'` to get a simple array instead of an object;
+	 * pass a function that receives the `$data` and the `$key` to generate arbitrary data structures
 	 *
-	 * @param mixed $values You can pass values here or set them with ->values() before
-	 * @return mixed Returns the last inserted id on success or false.
+	 * @return $this
 	 */
-	public function insert($values = null)
+	public function fetch(string|callable|Closure $fetch): static
 	{
-		$query = $this->execute(
-			$this->values($values)->build('insert')
-		);
-
-		if ($this->debug === true) {
-			return $query;
+		if (is_callable($fetch) === true) {
+			$fetch = Closure::fromCallable($fetch);
 		}
 
-		return $query ? $this->database->lastId() : false;
-	}
-
-	/**
-	 * Fires an update query
-	 *
-	 * @param mixed $values You can pass values here or set them with ->values() before
-	 * @param mixed $where You can pass a where clause here or set it with ->where() before
-	 */
-	public function update($values = null, $where = null): bool
-	{
-		return $this->execute(
-			$this->values($values)->where($where)->build('update')
-		);
-	}
-
-	/**
-	 * Fires a delete query
-	 *
-	 * @param mixed $where You can pass a where clause here or set it with ->where() before
-	 */
-	public function delete($where = null): bool
-	{
-		return $this->execute(
-			$this->where($where)->build('delete')
-		);
-	}
-
-	/**
-	 * Enables magic queries like findByUsername or findByEmail
-	 */
-	public function __call(string $method, array $arguments = [])
-	{
-		if (preg_match('!^findBy([a-z]+)!i', $method, $match)) {
-			$column = Str::lower($match[1]);
-			return $this->findBy($column, $arguments[0]);
-		}
-
-		throw new InvalidArgumentException(
-			message: 'Invalid query method: ' . $method,
-			code: static::ERROR_INVALID_QUERY_METHOD
-		);
+		$this->fetch = $fetch;
+		return $this;
 	}
 
 	/**
 	 * Builder for where and having clauses
 	 *
-	 * @param array $args Arguments, see where() description
-	 * @param mixed $current Current value (like $this->where)
+	 * @param $args Arguments, see where() description
+	 * @param $current Current value (like $this->where)
 	 */
 	protected function filterQuery(
 		array $args,
-		$current,
+		string|null $current,
 		string $mode = 'AND'
-	) {
+	): string|null {
 		$result = '';
 
 		switch (count($args)) {
@@ -1019,5 +605,431 @@ class Query
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Find a single row by its primary key
+	 */
+	public function find($id)
+	{
+		return $this->findBy($this->primaryKeyName, $id);
+	}
+
+	/**
+	 * Find a single row by column and value
+	 */
+	public function findBy(string $column, $value)
+	{
+		return $this->where([$column => $value])->first();
+	}
+
+	/**
+	 * Selects only one row from a table
+	 */
+	public function first(): mixed
+	{
+		return $this->query($this->offset(0)->limit(1)->build('select'), [
+			'fetch'    => $this->fetch,
+			'iterator' => 'array',
+			'method'   => 'fetch',
+		]);
+	}
+
+	/**
+	 * Attaches a group by clause
+	 *
+	 * @return $this
+	 */
+	public function group(string|null $group = null): static
+	{
+		$this->group = $group;
+		return $this;
+	}
+
+	/**
+	 * Attaches an additional having clause
+	 *
+	 * All available ways to add having clauses
+	 *
+	 * ->having('username like "myuser"');                           (args: 1)
+	 * ->having(['username' => 'myuser']);                      (args: 1)
+	 * ->having(function($having) { $having->having('id', '=', 1) }) (args: 1)
+	 * ->having('username like ?', 'myuser')                         (args: 2)
+	 * ->having('username', 'like', 'myuser');                       (args: 3)
+	 *
+	 * @return $this
+	 */
+	public function having(...$args): static
+	{
+		$this->having = $this->filterQuery($args, $this->having);
+		return $this;
+	}
+
+	/**
+	 * Shortcut for creating an inner join clause
+	 *
+	 * @param string $table Name of the table, which should be joined
+	 * @param string $on The on clause for this join
+	 * @return $this
+	 */
+	public function innerJoin($table, $on): static
+	{
+		return $this->join($table, $on, 'inner join');
+	}
+
+	/**
+	 * Fires an insert query
+	 *
+	 * @param $values You can pass values here or set them with ->values() before
+	 * @return mixed Returns the last inserted id on success or false.
+	 */
+	public function insert($values = null)
+	{
+		$query = $this->execute(
+			$this->values($values)->build('insert')
+		);
+
+		if ($this->debug === true) {
+			return $query;
+		}
+
+		return $query ? $this->database->lastId() : false;
+	}
+
+	/**
+	 * Sets the iterator class, which should be used for multiple results
+	 * Set this to array to get a simple array instead of an iterator object
+	 *
+	 * @return $this
+	 */
+	public function iterator(string $iterator): static
+	{
+		$this->iterator = $iterator;
+		return $this;
+	}
+
+	/**
+	 * Adds a new join clause to the query
+	 *
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
+	 * @param $type The join type. Uses an inner join by default
+	 * @return $this
+	 */
+	public function join(
+		string $table,
+		string $on,
+		string $type = 'JOIN'
+	): static {
+		$this->join[] = [
+			'table' => $table,
+			'on'    => $on,
+			'type'  => $type
+		];
+
+		return $this;
+	}
+
+	/**
+	 * Shortcut for creating a left join clause
+	 *
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
+	 * @return $this
+	 */
+	public function leftJoin(string $table, string $on): static
+	{
+		return $this->join($table, $on, 'left join');
+	}
+
+	/**
+	 * Sets the limit for select clauses
+	 *
+	 * @return $this
+	 */
+	public function limit(int|null $limit = null): static
+	{
+		$this->limit = $limit;
+		return $this;
+	}
+
+	/**
+	 * Builds a max query
+	 */
+	public function max(string $column): float
+	{
+		return (float)$this->aggregate('MAX', $column);
+	}
+
+	/**
+	 * Builds a min query
+	 */
+	public function min(string $column): float
+	{
+		return (float)$this->aggregate('MIN', $column);
+	}
+
+	/**
+	 * Sets the offset for select clauses
+	 *
+	 * @return $this
+	 */
+	public function offset(int $offset): static
+	{
+		$this->offset = $offset;
+		return $this;
+	}
+
+	/**
+	 * Selects only one row from a table
+	 */
+	public function one(): mixed
+	{
+		return $this->first();
+	}
+
+	/**
+	 * Attaches an order clause
+	 *
+	 * @return $this
+	 */
+	public function order(string|null $order = null): static
+	{
+		$this->order = $order;
+		return $this;
+	}
+
+	/**
+	 * Shortcut to attach a where clause with an OR operator.
+	 * Check out the where() method docs for additional info.
+	 *
+	 * @return $this
+	 */
+	public function orWhere(...$args): static
+	{
+		$this->where = $this->filterQuery($args, $this->where, 'OR');
+		return $this;
+	}
+
+	/**
+	 * Automatically adds pagination to a query
+	 *
+	 * @param $limit The number of rows, which should be returned for each page
+	 * @return object Collection iterator with attached pagination object
+	 */
+	public function page(int $page, int $limit): object
+	{
+		// clone this to create a counter query
+		$counter = clone $this;
+
+		// count the total number of rows for this query
+		$count = $counter->debug(false)->count();
+
+		// pagination
+		$pagination = new Pagination([
+			'limit' => $limit,
+			'page'  => $page,
+			'total' => $count,
+		]);
+
+		// apply it to the dataset and retrieve all rows. make sure to use Collection as the iterator to be able to attach the pagination object
+		$iterator   = $this->iterator;
+		$collection = $this
+			->offset($pagination->offset())
+			->limit($pagination->limit())
+			->iterator(Collection::class)
+			->all();
+
+		$this->iterator($iterator);
+
+		// return debug information if debug mode is active
+		if ($this->debug === true) {
+			$collection['totalcount'] = $count;
+			return $collection;
+		}
+
+		// store all pagination vars in a separate object
+		if ($collection) {
+			$collection->paginate($pagination);
+		}
+
+		// return the limited collection
+		return $collection;
+	}
+
+	/**
+	 * Sets the name of the primary key column
+	 *
+	 * @return $this
+	 */
+	public function primaryKeyName(string $primaryKeyName): static
+	{
+		$this->primaryKeyName = $primaryKeyName;
+		return $this;
+	}
+
+	/**
+	 * Used as an internal shortcut for firing a db query
+	 */
+	protected function query(string|array $sql, array $params = [])
+	{
+		if (is_string($sql) === true) {
+			$sql = [
+				'query'    => $sql,
+				'bindings' => $this->bindings()
+			];
+		}
+
+		if ($this->debug === true) {
+			return [
+				'query'    => $sql['query'],
+				'bindings' => $this->bindings(),
+				'options'  => $params
+			];
+		}
+
+		$fail   = $this->fail;
+		$result = $this->database->query(
+			$sql['query'],
+			$sql['bindings'],
+			$params
+		);
+
+		$this->reset();
+
+		// throw for this query only, the database keeps its own mode
+		$error = $this->database->lastError();
+
+		if ($fail === true && $error !== null) {
+			throw $error;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Reset the query class after each db hit
+	 */
+	protected function reset(): void
+	{
+		$this->bindings = [];
+		$this->join     = null;
+		$this->select   = null;
+		$this->distinct = null;
+		$this->fail     = false;
+		$this->values   = null;
+		$this->where    = null;
+		$this->group    = null;
+		$this->having   = null;
+		$this->order    = null;
+		$this->offset   = 0;
+		$this->limit    = null;
+		$this->debug    = false;
+	}
+
+	/**
+	 * Shortcut for creating a right join clause
+	 *
+	 * @param $table Name of the table, which should be joined
+	 * @param $on The on clause for this join
+	 * @return $this
+	 */
+	public function rightJoin(string $table, string $on): static
+	{
+		return $this->join($table, $on, 'right join');
+	}
+
+	/**
+	 * Selects only one row from a table
+	 */
+	public function row(): mixed
+	{
+		return $this->first();
+	}
+
+	/**
+	 * Sets the columns, which should be selected from the table
+	 * By default all columns will be selected
+	 *
+	 * @param $select Pass either a string of columns or an array
+	 * @return $this
+	 */
+	public function select(array|string|null $select): static
+	{
+		$this->select = $select;
+		return $this;
+	}
+
+	/**
+	 * Builds a sum query
+	 */
+	public function sum(string $column): float
+	{
+		return (float)$this->aggregate('SUM', $column);
+	}
+
+	/**
+	 * Sets the name of the table, which should be queried
+	 *
+	 * @return $this
+	 * @throws InvalidArgumentException if the table does not exist
+	 */
+	public function table(string $table): static
+	{
+		if ($this->database->validateTable($table) === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid table: ' . $table
+			);
+		}
+
+		$this->table = $table;
+		return $this;
+	}
+
+	/**
+	 * Fires an update query
+	 *
+	 * @param $values You can pass values here or set them with ->values() before
+	 * @param $where You can pass a where clause here or set it with ->where() before
+	 */
+	public function update($values = null, $where = null): bool
+	{
+		return $this->execute(
+			$this->values($values)->where($where)->build('update')
+		);
+	}
+
+	/**
+	 * Sets the values which should be used for the update or insert clause
+	 *
+	 * @param $values Can either be a string or an array of values
+	 * @return $this
+	 */
+	public function values($values = []): static
+	{
+		if ($values !== null) {
+			$this->values = $values;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Attaches an additional where clause
+	 *
+	 * All available ways to add where clauses
+	 *
+	 * ->where('username like "myuser"');                        (args: 1)
+	 * ->where(['username' => 'myuser']);                   (args: 1)
+	 * ->where(function($where) { $where->where('id', '=', 1) }) (args: 1)
+	 * ->where('username like ?', 'myuser')                      (args: 2)
+	 * ->where('username', 'like', 'myuser');                    (args: 3)
+	 *
+	 * @return $this
+	 */
+	public function where(...$args): static
+	{
+		$this->where = $this->filterQuery($args, $this->where);
+		return $this;
 	}
 }

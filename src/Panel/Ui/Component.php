@@ -3,23 +3,24 @@
 namespace Kirby\Panel\Ui;
 
 use Kirby\Exception\LogicException;
+use Kirby\Toolkit\HasI18n;
 use Kirby\Toolkit\Str;
 
 /**
  * Component that can be passed as component-props array
  * to the Vue Panel frontend
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-abstract class Component
+class Component
 {
-	protected string $key;
+	use HasI18n;
+
 	public array $attrs = [];
+
+	protected string|null $key = null;
 
 	public function __construct(
 		public string $component,

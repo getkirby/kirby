@@ -7,9 +7,6 @@ use Stringable;
 /**
  * Small class which hold info about the camera
  *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -22,6 +19,23 @@ class Camera implements Stringable
 	{
 		$this->make  = $exif['Make'] ?? null;
 		$this->model = $exif['Model'] ?? null;
+	}
+
+	/**
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
+	}
+
+	/**
+	 * Returns the full make + model name
+	 */
+	public function __toString(): string
+	{
+		return trim($this->make . ' ' . $this->model);
 	}
 
 	/**
@@ -49,22 +63,5 @@ class Camera implements Stringable
 			'make'  => $this->make,
 			'model' => $this->model
 		];
-	}
-
-	/**
-	 * Returns the full make + model name
-	 */
-	public function __toString(): string
-	{
-		return trim($this->make . ' ' . $this->model);
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
 	}
 }

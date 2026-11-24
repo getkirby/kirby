@@ -23,14 +23,11 @@ use Kirby\Exception\LogicException;
  *    `initialize` method that defines which keys
  *    are available.
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
  * @template TValue
- * @extends \Kirby\Cms\Collection<TValue>
+ * @extends Collection<TValue>
  */
 abstract class LazyCollection extends Collection
 {
@@ -49,21 +46,6 @@ abstract class LazyCollection extends Collection
 	protected bool $initialized = true;
 
 	/**
-	 * Temporary auto-hydration whenever a collection
-	 * method is called; some methods may not need raw
-	 * access to all collection data, so performance
-	 * will be improved if methods call initialization
-	 * or hydration themselves only if they need it
-	 * @deprecated
-	 * @todo Remove this in v6
-	 */
-	public function __call(string $key, $arguments)
-	{
-		$this->hydrate();
-		return parent::__call($key, $arguments);
-	}
-
-	/**
 	 * Low-level getter for elements
 	 *
 	 * @return TValue|null
@@ -76,7 +58,7 @@ abstract class LazyCollection extends Collection
 		// or "element found but not hydrated"
 		if (
 			$element === null &&
-			(array_key_exists($key, $this->data) || $this->initialized === false)
+			(array_key_exists($key, $this->data) === true || $this->initialized === false)
 		) {
 			return $this->hydrateElement($key);
 		}
@@ -93,14 +75,14 @@ abstract class LazyCollection extends Collection
 		// might bring back the element that was unset
 		$this->initialize();
 
-		return parent::__unset($key);
+		parent::__unset($key);
 	}
 
 	/**
 	 * Creates chunks of the same size.
 	 * The last chunk may be smaller
 	 *
-	 * @param int $size Number of elements per chunk
+	 * @param $size Number of elements per chunk
 	 * @return static A new collection with an element for each chunk and
 	 *                a sub collection in each chunk
 	 */
@@ -123,23 +105,18 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Returns the current element
-	 * @deprecated
-	 * @todo Remove in v6
+	 * Getter and setter for the data
 	 *
-	 * @return TValue
+	 * @return array|$this
 	 */
-	public function current(): mixed
+	public function data(array|null $data = null): array|static
 	{
-		$current = parent::current();
-
-		// `$current === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($current === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
+		// to return the data, we need all values present
+		if ($data === null) {
+			$this->hydrate();
 		}
 
-		return $current;
+		return parent::data($data);
 	}
 
 	/**
@@ -159,9 +136,22 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Filters elements by one of the
+	 * predefined filter methods, by a
+	 * custom filter function or an array of filters
+	 */
+	public function filter(string|array|Closure $field, ...$args): static
+	{
+		// to filter through values, we need all values present
+		$this->hydrate();
+
+		return parent::filter($field, ...$args);
+	}
+
+	/**
 	 * Find one or multiple elements by id
 	 *
-	 * @param string ...$keys
+	 * @param string|list<string> ...$keys
 	 * @return TValue|static
 	 */
 	public function find(...$keys)
@@ -178,30 +168,6 @@ abstract class LazyCollection extends Collection
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Returns the elements in reverse order
-	 */
-	public function flip(): static
-	{
-		// flipping at least requires the collection structure
-		$this->initialize();
-
-		return parent::flip();
-	}
-
-	/**
-	 * Filters elements by one of the
-	 * predefined filter methods, by a
-	 * custom filter function or an array of filters
-	 */
-	public function filter(string|array|Closure $field, ...$args): static
-	{
-		// to filter through values, we need all values present
-		$this->hydrate();
-
-		return parent::filter($field, ...$args);
 	}
 
 	/**
@@ -226,8 +192,19 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
+	 * Returns the elements in reverse order
+	 */
+	public function flip(): static
+	{
+		// flipping at least requires the collection structure
+		$this->initialize();
+
+		return parent::flip();
+	}
+
+	/**
 	 * Returns an iterator for the elements
-	 * @return \Iterator<TKey, TValue>
+	 * @return Iterator<string, TValue>
 	 */
 	public function getIterator(): Iterator
 	{
@@ -239,13 +216,17 @@ abstract class LazyCollection extends Collection
 				$value = $this->hydrateElement($key);
 			}
 
+			if ($value === null) {
+				continue;
+			}
+
 			yield $key => $value;
 		}
 	}
 
 	/**
 	 * Checks by key if an element is included
-	 * @param TKey $key
+	 * @param string|TValue $key
 	 */
 	public function has(mixed $key): bool
 	{
@@ -283,6 +264,8 @@ abstract class LazyCollection extends Collection
 	 * and returns the hydrated object value (or `null` if the
 	 * element does not exist in the collection); to be
 	 * implemented in each specific collection
+	 *
+	 * @return TValue|null
 	 */
 	abstract protected function hydrateElement(string $key): object|null;
 
@@ -300,17 +283,6 @@ abstract class LazyCollection extends Collection
 		}
 
 		throw new LogicException(static::class . ' class does not implement `initialize()` method that is required for lazy initialization'); // @codeCoverageIgnore
-	}
-
-	/**
-	 * Returns an array of all keys
-	 */
-	public function keys(): array
-	{
-		// ensure we are returning all possible keys
-		$this->initialize();
-
-		return parent::keys();
 	}
 
 	/**
@@ -332,6 +304,17 @@ abstract class LazyCollection extends Collection
 
 		$this->hydrate();
 		return parent::keyOf($needle);
+	}
+
+	/**
+	 * Returns an array of all keys
+	 */
+	public function keys(): array
+	{
+		// ensure we are returning all possible keys
+		$this->initialize();
+
+		return parent::keys();
 	}
 
 	/**
@@ -366,29 +349,6 @@ abstract class LazyCollection extends Collection
 		$this->hydrate();
 
 		return parent::map($callback);
-	}
-
-	/**
-	 * Moves the cursor to the next element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function next(): mixed
-	{
-		$this->initialize();
-
-		$next = parent::next();
-
-		// `$next === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($next === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
-		}
-
-		return $next;
 	}
 
 	/**
@@ -437,29 +397,6 @@ abstract class LazyCollection extends Collection
 	}
 
 	/**
-	 * Moves the cursor to the previous element
-	 * and returns it
-	 * @deprecated
-	 * @todo Remove in v6
-	 *
-	 * @return TValue
-	 */
-	public function prev(): mixed
-	{
-		$this->initialize();
-
-		$prev = parent::prev();
-
-		// `$prev === null` could mean "empty collection"
-		// or "element found but not hydrated"
-		if ($prev === null && $key = $this->key()) {
-			return $this->hydrateElement($key);
-		}
-
-		return $prev;
-	}
-
-	/**
 	 * Returns a new collection consisting of random elements,
 	 * from the original collection, shuffled or ordered
 	 */
@@ -485,10 +422,9 @@ abstract class LazyCollection extends Collection
 	/**
 	 * Returns a slice of the object
 	 *
-	 * @param int $offset The optional index to start the slice from
-	 * @param int|null $limit The optional number of elements to return
+	 * @param $offset The optional index to start the slice from
+	 * @param $limit The optional number of elements to return
 	 * @return $this|static
-	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
 	public function slice(
 		int $offset = 0,

@@ -3,12 +3,16 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Content\Lock;
 use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\NotFoundException;
+use Kirby\Guards\ModelGuards;
+use Kirby\Guards\PageGuards;
 use Kirby\Panel\Page as PanelPage;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Uuid\PageUuid;
 use Kirby\Uuid\SiteUuid;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -16,6 +20,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class ExtendedModelWithContent extends ModelWithContent
 {
+	public function apiUrl(bool $relative = false): string
+	{
+		return 'test';
+	}
+
 	public function blueprint(): Blueprint
 	{
 		return new Blueprint([]);
@@ -27,6 +36,14 @@ class ExtendedModelWithContent extends ModelWithContent
 		Closure $callback
 	): mixed {
 		// nothing to commit in the test
+	}
+
+	public function guards(): ModelGuards
+	{
+		return new PageGuards(
+			model: new Page(['slug' => 'test']),
+			user: User::ensure()
+		);
 	}
 
 	public function panel(): PanelPage
@@ -68,21 +85,21 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 			'title'  => 'Model',
 			'columns' => [
 				[
-					'sections' => [
+					'fields' => [
 						'pages' => [
 							'name' => 'pages',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'foo',
 								'bar',
 							]
 						],
 						'menu' => [
 							'name' => 'menu',
-							'type' => 'pages',
+							'type' => 'pagelist',
 							'parent' => 'site',
-							'templates' => [
+							'blueprints' => [
 								'home',
 								'default',
 							]
@@ -102,7 +119,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
 #[CoversClass(ModelWithContent::class)]
 class ModelWithContentTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.ModelWithContent';
 
 	public static function modelsProvider(): array
 	{
@@ -134,6 +151,78 @@ class ModelWithContentTest extends TestCase
 			[$app->site()->files()->first()],
 			[$app->user('test@getkirby.com')]
 		];
+	}
+
+	#[DataProvider('modelsProvider')]
+	public function testBlueprints(ModelWithContent $model): void
+	{
+		$model = new BlueprintsModelWithContent($model);
+
+		$expected = [
+			[
+				'name' => 'foo',
+				'title' => 'Foo'
+			],
+			[
+				'name' => 'bar',
+				'title' => 'Bar'
+			],
+			[
+				'name' => 'home',
+				'title' => 'Home'
+			],
+			[
+				'name' => 'default',
+				'title' => 'Page'
+			]
+		];
+
+		$this->assertSame($expected, $model->blueprints());
+
+		$this->assertSame([
+			[
+				'name' => 'home',
+				'title' => 'Home'
+			],
+			[
+				'name' => 'default',
+				'title' => 'Page'
+			]
+		], $model->blueprints('menu'));
+
+		// non-existing field
+		$this->assertSame([], $model->blueprints('foo'));
+	}
+
+	public function testBlueprintsWithInvalidBlueprint(): void
+	{
+		new App([
+			'blueprints' => [
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$site = new Site([
+			'blueprint' => [
+				'fields' => [
+					'pages' => [
+						'type'       => 'pagelist',
+						'blueprints' => ['broken']
+					]
+				]
+			]
+		]);
+
+		// a blueprint that cannot be created still
+		// needs an entry, based on its name
+		$this->assertSame([
+			['name' => 'broken', 'title' => 'Broken']
+		], $site->blueprints());
 	}
 
 	public function testContentForInvalidTranslation(): void
@@ -422,47 +511,6 @@ class ModelWithContentTest extends TestCase
 		], $translations);
 	}
 
-	#[DataProvider('modelsProvider')]
-	public function testBlueprints(ModelWithContent $model): void
-	{
-		$model = new BlueprintsModelWithContent($model);
-
-		$expected = [
-			[
-				'name' => 'foo',
-				'title' => 'Foo'
-			],
-			[
-				'name' => 'bar',
-				'title' => 'Bar'
-			],
-			[
-				'name' => 'home',
-				'title' => 'Home'
-			],
-			[
-				'name' => 'default',
-				'title' => 'Page'
-			]
-		];
-
-		$this->assertSame($expected, $model->blueprints());
-
-		$this->assertSame([
-			[
-				'name' => 'home',
-				'title' => 'Home'
-			],
-			[
-				'name' => 'default',
-				'title' => 'Page'
-			]
-		], $model->blueprints('menu'));
-
-		// non-existing section
-		$this->assertSame([], $model->blueprints('foo'));
-	}
-
 	public function testIncrement(): void
 	{
 		$app = new App([
@@ -578,6 +626,16 @@ class ModelWithContentTest extends TestCase
 			'site' => $site
 		]);
 		$this->assertIsSite($site, $model->site());
+	}
+
+	public function testToSafeHtmlString(): void
+	{
+		$model  = new Page(['slug' => 'foo', 'content' => ['title' => 'value &']]);
+		$result = $model->toSafeHtmlString('Hello {{ model.title }} {{ model.slug }}');
+
+		// same escaping as toSafeString, but marked as trusted HTML
+		$this->assertInstanceOf(HtmlString::class, $result);
+		$this->assertSame('Hello value &amp; foo', (string)$result);
 	}
 
 	public function testToSafeString(): void

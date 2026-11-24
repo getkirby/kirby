@@ -2,7 +2,7 @@
 
 namespace Kirby\Content;
 
-use Kirby\Cms\Blueprint;
+use Kirby\Blueprint\Blueprint;
 use Kirby\Cms\File;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Form\Form;
@@ -11,9 +11,6 @@ use Kirby\Form\Form;
  * The Content class handles all fields
  * for content from pages, the site and users
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -41,17 +38,9 @@ class Content
 	protected ModelWithContent|null $parent;
 
 	/**
-	 * Magic getter for content fields
-	 */
-	public function __call(string $name, array $arguments = []): Field
-	{
-		return $this->get($name);
-	}
-
-	/**
 	 * Creates a new Content object
 	 *
-	 * @param bool $normalize Set to `false` if the input field keys are already lowercase
+	 * @param $normalize Set to `false` if the input field keys are already lowercase
 	 */
 	public function __construct(
 		array $data = [],
@@ -64,6 +53,14 @@ class Content
 
 		$this->data   = $data;
 		$this->parent = $parent;
+	}
+
+	/**
+	 * Magic getter for content fields
+	 */
+	public function __call(string $name, array $arguments = []): Field
+	{
+		return $this->get($name);
 	}
 
 	/**
@@ -91,9 +88,9 @@ class Content
 		$old       = $this->parent->blueprint();
 		$subfolder = dirname($old->name());
 		$new       = Blueprint::factory(
+			$this->parent,
 			$subfolder . '/' . $to,
-			$subfolder . '/default',
-			$this->parent
+			$subfolder . '/default'
 		);
 
 		// forms
@@ -113,6 +110,12 @@ class Content
 
 		// go through all fields of new template
 		foreach ($newFields as $newField) {
+			// fields without a value (e.g. info fields or
+			// converted sections) don't own any content
+			if ($newField->hasValue() === false) {
+				continue;
+			}
+
 			$name     = $newField->name();
 			$oldField = $oldFields->get($name);
 
@@ -156,6 +159,8 @@ class Content
 	/**
 	 * Returns either a single field object
 	 * or all registered fields
+	 *
+	 * @return ($key is null ? array<string, Field> : Field)
 	 */
 	public function get(string|null $key = null): Field|array
 	{

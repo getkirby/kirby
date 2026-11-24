@@ -3,8 +3,9 @@ import Feature, {
 	defaults as featureDefaults,
 	type FeatureState
 } from "./feature";
+import type Panel from "./panel";
 
-type ViewState = FeatureState & {
+export type ViewState = FeatureState & {
 	breadcrumb: {
 		link: string;
 		label: string;
@@ -32,9 +33,11 @@ export function defaults(): ViewState {
 }
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
-export default function View(panel: TODO) {
+export default function View(panel: Panel) {
 	const parent = Feature(panel, "view", defaults());
 
 	return reactive({

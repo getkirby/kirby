@@ -5,20 +5,14 @@ namespace Kirby\Option;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Field\TestCase;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 
 class MyPage extends Page
 {
 	public function myArray(): array
 	{
 		return [['name' => 'foo'], ['name' => 'bar']];
-	}
-
-	public function mySimpleArray(): array
-	{
-		return ['tag1', 'tag2', 'tag3'];
 	}
 
 	public function myAssocArray(): array
@@ -38,6 +32,11 @@ class MyPage extends Page
 	{
 		return Options::factory(['foo', 'bar']);
 	}
+
+	public function mySimpleArray(): array
+	{
+		return ['tag1', 'tag2', 'tag3'];
+	}
 }
 
 #[CoversClass(OptionsQuery::class)]
@@ -51,7 +50,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
-	#[CoversNothing]
 	public function testDefaults(): void
 	{
 		$options = new OptionsQuery($query = 'site.children');
@@ -101,7 +99,7 @@ class OptionsQueryTest extends TestCase
 		// since we didn't define a text query template,
 		// the default `{{ arrayItem.value }}` is used
 		// but our array doesn't have a a value key
-		$this->assertSame('', $options[0]['text']);
+		$this->assertSame('', (string)$options[0]['text']);
 
 		// with shorter alias
 		$options = (new OptionsQuery(
@@ -122,7 +120,7 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('tag1', $options[0]['value']);
 		$this->assertSame('tag2', $options[1]['value']);
 		$this->assertSame('tag3', $options[2]['value']);
-		$this->assertSame('tag3', $options[2]['text']);
+		$this->assertSame('tag3', (string)$options[2]['text']);
 
 		// associative array uses the array key as value by default
 		$options = (new OptionsQuery(
@@ -130,9 +128,219 @@ class OptionsQueryTest extends TestCase
 		))->render($model);
 
 		$this->assertSame('myValue', $options[0]['value']);
-		$this->assertSame('My text', $options[0]['text']);
+		$this->assertSame('My text', (string)$options[0]['text']);
 		$this->assertSame('otherValue', $options[1]['value']);
-		$this->assertSame('Other text', $options[1]['text']);
+		$this->assertSame('Other text', (string)$options[1]['text']);
+	}
+
+	public function testResolveForBlock(): void
+	{
+		$model = new Page([
+			'slug' => 'a',
+			'content' => [
+				'foo' => '[
+					{ "type":"image", "content": { "headline": "foo" } },
+					{ "type":"test", "content": { "headline": "bar" } }
+				]'
+			]
+		]);
+
+		$options = (new OptionsQuery(
+			query: 'page.foo.toBlocks',
+			text: '{{ block.type }}',
+			value: '{{ block.headline }}',
+		))->render($model);
+
+		$this->assertSame('image', (string)$options[0]['text']);
+		$this->assertSame('foo', $options[0]['value']);
+		$this->assertSame('test', (string)$options[1]['text']);
+		$this->assertSame('bar', $options[1]['value']);
+	}
+
+	public function testResolveForFile(): void
+	{
+		$app = new App([
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg'],
+					['filename' => 'b.pdf']
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$options = new OptionsQuery(
+			query: 'site.files',
+		);
+		$options = $options->render($app->site());
+
+		$this->assertSame('a.jpg', (string)$options[0]['text']);
+		$this->assertSame('b.pdf', (string)$options[1]['text']);
+	}
+
+	public function testResolveForOptions(): void
+	{
+		$model   = new MyPage(['slug' => 'a']);
+		$options = new OptionsQuery('page.myOptions');
+		$options = $options->render($model);
+
+		$this->assertSame('foo', (string)$options[0]['text']);
+		$this->assertSame('foo', $options[0]['value']);
+		$this->assertSame('bar', (string)$options[1]['text']);
+		$this->assertSame('bar', $options[1]['value']);
+	}
+
+	public function testResolveForPages(): void
+	{
+		$app = new App([
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b'],
+					['slug' => 'c'],
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$options = new OptionsQuery(
+			query: 'site.children',
+			text: '{{ page.slug }}'
+		);
+		$options = $options->render($app->site());
+
+		$this->assertSame('a', (string)$options[0]['text']);
+		$this->assertSame('a', $options[0]['value']);
+		$this->assertSame('b', (string)$options[1]['text']);
+		$this->assertSame('c', (string)$options[2]['text']);
+	}
+
+	public function testResolveForProtectedFiles(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'files' => [
+					['filename' => 'a.jpg'],
+					[
+						'filename' => 'b.jpg',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$options = (new OptionsQuery('site.files'))->resolve($app->site());
+
+		$this->assertSame(['a.jpg', 'b.jpg'], $options->keys());
+		$this->assertNotInstanceOf(ProtectedOption::class, $options->get('a.jpg'));
+		$this->assertInstanceOf(ProtectedOption::class, $options->get('b.jpg'));
+	}
+
+	public function testResolveForProtectedPages(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					[
+						'slug'     => 'b',
+						'template' => 'secret-' . $uuid
+					],
+					[
+						'slug'     => 'c',
+						'template' => 'secret-' . $uuid
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$options = (new OptionsQuery('site.children'))->render($app->site());
+
+		// pages that must not be listed only keep their value
+		$this->assertSame(['a', 'b', 'c'], array_column($options, 'value'));
+		$this->assertSame('a', (string)$options[0]['text']);
+		$this->assertSame([
+			'disabled' => false,
+			'icon'     => null,
+			'info'     => null,
+			'text'     => '[unknown]',
+			'value'    => 'b'
+		], $options[1]);
+	}
+
+	public function testResolveForProtectedUsers(): void
+	{
+		// the permission cache is keyed by role,
+		// so it needs to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$options = (new OptionsQuery('kirby.users'))->resolve($app->site());
+
+		// the editor may list themselves
+		$this->assertNotInstanceOf(ProtectedOption::class, $options->get('editor@getkirby.com'));
+		$this->assertInstanceOf(ProtectedOption::class, $options->get('admin@getkirby.com'));
 	}
 
 	public function testResolveForStructure(): void
@@ -144,8 +352,7 @@ class OptionsQueryTest extends TestCase
 -
   name: foo
 -
-  name: bar
-				'
+  name: bar'
 			]
 		]);
 
@@ -167,76 +374,6 @@ class OptionsQueryTest extends TestCase
 		$this->assertSame('bar', $options[1]['value']);
 	}
 
-	public function testResolveForBlock(): void
-	{
-		$model = new Page([
-			'slug' => 'a',
-			'content' => [
-				'foo' => '[
-					{ "type":"image", "content": { "headline": "foo" } },
-					{ "type":"test", "content": { "headline": "bar" } }
-				]'
-			]
-		]);
-
-		$options = (new OptionsQuery(
-			query: 'page.foo.toBlocks',
-			text: '{{ block.type }}',
-			value: '{{ block.headline }}',
-		))->render($model);
-
-		$this->assertSame('image', $options[0]['text']);
-		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('test', $options[1]['text']);
-		$this->assertSame('bar', $options[1]['value']);
-	}
-
-	public function testResolveForPages(): void
-	{
-		$app = new App([
-			'site' => [
-				'children' => [
-					['slug' => 'a'],
-					['slug' => 'b'],
-					['slug' => 'c'],
-				]
-			]
-		]);
-
-		$options = new OptionsQuery(
-			query: 'site.children',
-			text: '{{ page.slug }}'
-		);
-		$options = $options->render($app->site());
-
-
-		$this->assertSame('a', $options[0]['text']);
-		$this->assertSame('a', $options[0]['value']);
-		$this->assertSame('b', $options[1]['text']);
-		$this->assertSame('c', $options[2]['text']);
-	}
-
-	public function testResolveForFile(): void
-	{
-		$app = new App([
-			'site' => [
-				'files' => [
-					['filename' => 'a.jpg'],
-					['filename' => 'b.pdf']
-				]
-			]
-		]);
-
-		$options = new OptionsQuery(
-			query: 'site.files',
-		);
-		$options = $options->render($app->site());
-
-
-		$this->assertSame('a.jpg', $options[0]['text']);
-		$this->assertSame('b.pdf', $options[1]['text']);
-	}
-
 	public function testResolveForUser(): void
 	{
 		$app = new App([
@@ -245,26 +382,70 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$options = new OptionsQuery(
 			query: 'kirby.users',
 		);
 		$options = $options->render($app->site());
 
-
 		$this->assertSame('homer@simpson.com', $options[0]['value']);
-		$this->assertSame('homer', $options[0]['text']);
+		$this->assertSame('homer', (string)$options[0]['text']);
 	}
 
-	public function testResolveForOptions(): void
+	public function testResolveHtmlEscape(): void
 	{
 		$model   = new MyPage(['slug' => 'a']);
-		$options = new OptionsQuery('page.myOptions');
-		$options = $options->render($model);
 
-		$this->assertSame('foo', $options[0]['text']);
-		$this->assertSame('foo', $options[0]['value']);
-		$this->assertSame('bar', $options[1]['text']);
-		$this->assertSame('bar', $options[1]['value']);
+		// text escaped by default
+		$options = (new OptionsQuery(
+			query: 'page.myHtmlArray',
+			text: '{{ item.slogan }}',
+			value: '{{ item.slogan }}',
+		))->render($model);
+
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$options[0]['text']);
+		$this->assertSame('We are <b>great</b>', $options[0]['value']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$options[1]['text']);
+		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+
+		// text unescaped via {< >}
+		$options = (new OptionsQuery(
+			query: 'page.myHtmlArray',
+			text: '{< item.slogan >}',
+			value: '{{ item.slogan }}'
+		))->render($model);
+		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
+		$this->assertSame('We are <b>great</b>', $options[0]['value']);
+		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
+		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+
+		// test unescaped with disabled safe mode
+		$options = (new OptionsQuery(
+			query: 'page.myHtmlArray',
+			text: '{{ item.slogan }}',
+			value: '{{ item.slogan }}'
+		))->resolve($model, false)->render($model);
+		$this->assertSame('We are <b>great</b>', (string)$options[0]['text']);
+		$this->assertSame('We are <b>great</b>', $options[0]['value']);
+		$this->assertSame('We are <b>better</b>', (string)$options[1]['text']);
+		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+	}
+
+	public function testResolveInvalid(): void
+	{
+		$app = new App([
+			'site' => [
+				'content' => [
+					'foo' => 'a'
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
+
+		$options = (new OptionsQuery('site.foo'))->render($app->site());
 	}
 
 	public function testResolveNoDoubleResolution(): void
@@ -285,63 +466,10 @@ class OptionsQueryTest extends TestCase
 			]
 		]);
 
+		$app->impersonate('kirby');
+
 		$options = (new OptionsQuery('site.children'))->render($app->site());
 
-		$this->assertSame('{{ page.slug }}', $options[0]['text']);
-	}
-
-	public function testResolveInvalid(): void
-	{
-		$app = new App([
-			'site' => [
-				'content' => [
-					'foo' => 'a'
-				]
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid query result data: Kirby\Content\Field');
-
-		$options = (new OptionsQuery('site.foo'))->render($app->site());
-	}
-
-	public function testResolveHtmlEscape(): void
-	{
-		$model   = new MyPage(['slug' => 'a']);
-
-		// text escaped by default
-		$options = (new OptionsQuery(
-			query: 'page.myHtmlArray',
-			text: '{{ item.slogan }}',
-			value: '{{ item.slogan }}',
-		))->render($model);
-
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $options[0]['text']);
-		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $options[1]['text']);
-		$this->assertSame('We are <b>better</b>', $options[1]['value']);
-
-		// text unescaped via {< >}
-		$options = (new OptionsQuery(
-			query: 'page.myHtmlArray',
-			text: '{< item.slogan >}',
-			value: '{{ item.slogan }}'
-		))->render($model);
-		$this->assertSame('We are <b>great</b>', $options[0]['text']);
-		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are <b>better</b>', $options[1]['text']);
-		$this->assertSame('We are <b>better</b>', $options[1]['value']);
-
-		// test unescaped with disabled safe mode
-		$options = (new OptionsQuery(
-			query: 'page.myHtmlArray',
-			text: '{{ item.slogan }}',
-			value: '{{ item.slogan }}'
-		))->resolve($model, false)->render($model);
-		$this->assertSame('We are <b>great</b>', $options[0]['text']);
-		$this->assertSame('We are <b>great</b>', $options[0]['value']);
-		$this->assertSame('We are <b>better</b>', $options[1]['text']);
-		$this->assertSame('We are <b>better</b>', $options[1]['value']);
+		$this->assertSame('{{ page.slug }}', (string)$options[0]['text']);
 	}
 }

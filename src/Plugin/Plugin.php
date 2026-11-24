@@ -20,48 +20,47 @@ use Throwable;
  * the composer.json. It also creates the prefix
  * and media url for the plugin.
  *
- * @package   Kirby Plugin
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Plugin
 {
-	protected Assets $assets;
+	protected Assets|null $assets = null;
 	protected License|Closure|array|string $license;
+	protected string $root;
 	protected UpdateStatus|null $updateStatus = null;
 
 	/**
-	 * @param string $name Plugin name within Kirby (`vendor/plugin`)
-	 * @param array $extends Associative array of plugin extensions
+	 * @param $name Plugin name within Kirby (`vendor/plugin`)
+	 * @param array<string, mixed> $extends Plugin extensions by type
+	 * @param array<string, mixed> $info Plugin info, overrides the composer.json data
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the plugin name has an invalid format
+	 * @throws InvalidArgumentException If the plugin name has an invalid format
 	 */
 	public function __construct(
 		protected string $name,
 		protected array $extends = [],
 		protected array $info = [],
 		Closure|string|array|null $license = null,
-		protected string|null $root = null,
+		string|null $root = null,
 		protected string|null $version = null,
 	) {
 		static::validateName($name);
 
 		// TODO: Remove in v7
-		if ($root = $extends['root'] ?? null) {
+		if ($extendsRoot = $extends['root'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing the `root` inside the `extends` array has been deprecated. Pass it directly as named argument `root`.', 'plugin-extends-root');
-			$this->root ??= $root;
+			$root ??= $extendsRoot;
 			unset($this->extends['root']);
 		}
 
-		$this->root ??= dirname(debug_backtrace()[0]['file']);
+		$this->root = $root ?? dirname(debug_backtrace()[0]['file']);
 
 		// TODO: Remove in v7
 		if ($info = $extends['info'] ?? null) {
 			Helpers::deprecated('Plugin "' . $name . '": Passing an `info` array inside the `extends` array has been deprecated. Pass the individual entries directly as named `info` argument.', 'plugin-extends-root');
 
-			if (is_array($info) === true && $info !== []) {
+			if (is_array($info) === true) {
 				$this->info = [...$info, ...$this->info];
 			}
 
@@ -69,8 +68,8 @@ class Plugin
 		}
 
 		// read composer.json and use as info fallback
-		$info          = Data::read($this->manifest(), fail: false);
-		$this->info    = [...$info, ...$this->info];
+		$composer      = Data::read($this->manifest(), fail: false);
+		$this->info    = [...$composer, ...$this->info];
 		$this->license = $license ?? $this->info['license'] ?? '-';
 	}
 
@@ -101,6 +100,8 @@ class Plugin
 	/**
 	 * Returns the array with author information
 	 * from the composer.json file
+	 *
+	 * @return array<array<string, string>>
 	 */
 	public function authors(): array
 	{
@@ -123,6 +124,8 @@ class Plugin
 
 	/**
 	 * Returns the associative array of extensions the plugin bundles
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function extends(): array
 	{
@@ -140,6 +143,8 @@ class Plugin
 
 	/**
 	 * Returns the info data (from composer.json)
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function info(): array
 	{
@@ -152,6 +157,18 @@ class Plugin
 	public function kirby(): App
 	{
 		return App::instance();
+	}
+
+	/**
+	 * Returns the license object
+	 */
+	public function license(): License
+	{
+		// resolve license info from Closure, array or string
+		return License::from(
+			plugin: $this,
+			license: $this->license
+		);
 	}
 
 	/**
@@ -172,19 +189,7 @@ class Plugin
 		$link ??= $info['support']['docs'] ?? null;
 		$link ??= $info['support']['source'] ?? null;
 
-		return V::url($link) ? $link : null;
-	}
-
-	/**
-	 * Returns the license object
-	 */
-	public function license(): License
-	{
-		// resolve license info from Closure, array or string
-		return License::from(
-			plugin: $this,
-			license: $this->license
-		);
+		return V::url($link) === true ? $link : null;
 	}
 
 	/**
@@ -248,6 +253,8 @@ class Plugin
 
 	/**
 	 * Returns all available plugin metadata
+	 *
+	 * @return array<string, mixed>
 	 */
 	#[BlockCollectionAccess]
 	public function toArray(): array
@@ -268,7 +275,7 @@ class Plugin
 	 * update check has been disabled for the plugin
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{
@@ -288,7 +295,7 @@ class Plugin
 			);
 
 			// sort the matches by key length (with longest key first)
-			$keys = array_map('strlen', array_keys($option));
+			$keys = array_map(strlen(...), array_keys($option));
 			array_multisort($keys, SORT_DESC, $option);
 
 			if ($option !== []) {
@@ -313,7 +320,7 @@ class Plugin
 	 * Checks if the name follows the required pattern
 	 * and throws an exception if not
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function validateName(string $name): void
 	{

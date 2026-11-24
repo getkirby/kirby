@@ -1,8 +1,9 @@
 <template>
 	<fieldset
 		v-if="choices.length"
+		:class="['k-coloroptions-input', $attrs.class]"
 		:disabled="disabled"
-		class="k-coloroptions-input"
+		:style="$attrs.style"
 	>
 		<legend class="sr-only">{{ $t("options") }}</legend>
 		<ul>
@@ -17,7 +18,7 @@
 						:value="choice.value"
 						class="input-hidden"
 						type="radio"
-						@click="toggle(choice.value)"
+						@click="onClick(choice.value)"
 						@input="$emit('input', choice.value)"
 					/>
 					<k-color-frame :color="choice.value" />
@@ -48,11 +49,16 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
+ * @example
+ * <k-coloroptions-input :options="options" :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [RadioInput, props],
+	emits: ["input"],
 	computed: {
 		choices() {
 			return this.options.map((color) => ({
@@ -68,6 +74,11 @@ export default {
 				return this.$library.colors.toString(value, this.format);
 			} catch {
 				return value;
+			}
+		},
+		onClick(value) {
+			if (value === this.value && !this.required) {
+				this.$emit("input", "");
 			}
 		}
 	}

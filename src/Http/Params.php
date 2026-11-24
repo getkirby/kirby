@@ -11,9 +11,6 @@ use Stringable;
  * that converts it into a Kirby Obj for easier
  * access of each param.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -31,6 +28,11 @@ class Params extends Obj implements Stringable
 		}
 
 		parent::__construct($params ?? []);
+	}
+
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 
 	/**
@@ -163,10 +165,5 @@ class Params extends Obj implements Stringable
 		$trailingSlash = $trailingSlash === true ? '/' : null;
 
 		return $leadingSlash . $params . $trailingSlash;
-	}
-
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

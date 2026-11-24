@@ -27,6 +27,10 @@
 <script>
 import Dialog from "@/mixins/dialog.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Dialog],
 	props: {

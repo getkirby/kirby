@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Database\Sql\Mysql;
 use Kirby\Database\Sql\Sqlite;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Obj;
@@ -17,14 +18,25 @@ use Throwable;
 /**
  * A simple database class
  *
- * @package   Kirby Database
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Database
 {
+	/**
+	 * A global array of started connections
+	 *
+	 * @var array<string, Database>
+	 */
+	public static array $connections = [];
+
+	/**
+	 * Available database types with their Sql class and DSN builder
+	 *
+	 * @var array<string, array{sql: class-string<Sql>, dsn: Closure(array): string}>
+	 */
+	public static array $types = [];
+
 	/**
 	 * The number of affected rows for the last query
 	 */
@@ -32,6 +44,8 @@ class Database
 
 	/**
 	 * Whitelist for column names
+	 *
+	 * @var array<string, list<string>>
 	 */
 	protected array $columnWhitelist = [];
 
@@ -41,15 +55,9 @@ class Database
 	protected PDO|null $connection = null;
 
 	/**
-	 * A global array of started connections
-	 */
-	public static array $connections = [];
-
-	/**
 	 * Database name
 	 */
 	protected string $database;
-
 	protected string $dsn;
 
 	/**
@@ -94,11 +102,15 @@ class Database
 
 	/**
 	 * List of existing tables in the database
+	 *
+	 * @var array<int, string>|null
 	 */
 	protected array|null $tables = null;
 
 	/**
 	 * An array with all queries which are being made
+	 *
+	 * @var list<array>
 	 */
 	protected array $trace = [];
 
@@ -106,8 +118,6 @@ class Database
 	 * The database type (mysql, sqlite)
 	 */
 	protected string $type;
-
-	public static array $types = [];
 
 	/**
 	 * Creates a new Database instance
@@ -118,29 +128,27 @@ class Database
 	}
 
 	/**
-	 * Returns one of the started instances
+	 * Magic way to start queries for tables by
+	 * using a method named like the table.
+	 * I.e. $db->users()->all()
 	 */
-	public static function instance(string|null $id = null): static|null
+	public function __call(string $method, mixed $arguments = null): Query
 	{
-		if ($id === null) {
-			return A::last(static::$connections);
-		}
-
-		return static::$connections[$id] ?? null;
+		return $this->table($method);
 	}
 
 	/**
-	 * Returns all started instances
+	 * Returns the number of affected rows for the last query
 	 */
-	public static function instances(): array
+	public function affected(): int|null
 	{
-		return static::$connections;
+		return $this->affected;
 	}
 
 	/**
 	 * Connects to a database
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function connect(array $params = []): PDO|null
 	{
@@ -174,7 +182,7 @@ class Database
 		// try to connect; `PDO::connect()` returns the driver's
 		// subclass, e.g. `Pdo\Sqlite` with `createFunction()`
 		// TODO: only use `PDO::connect()` once PHP 8.4 is required
-		$connection = PHP_VERSION_ID >= 80400
+		$connection = method_exists(PDO::class, 'connect')
 			? PDO::connect($dsn, $options['user'], $options['password'])
 			: new PDO($dsn, $options['user'], $options['password']);
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -194,10 +202,8 @@ class Database
 		$this->dsn        = $dsn;
 		$this->connection = $connection;
 
-		// store the connection
 		static::$connections[$this->id] = $this;
 
-		// return the connection
 		return $this->connection;
 	}
 
@@ -207,6 +213,69 @@ class Database
 	public function connection(): PDO|null
 	{
 		return $this->connection;
+	}
+
+	/**
+	 * Creates a new table
+	 */
+	public function createTable(string $table, array $columns = []): bool
+	{
+		$sql     = $this->sql()->createTable($table, $columns);
+		$queries = Str::split($sql['query'], ';');
+
+		foreach ($queries as $query) {
+			$query = trim($query);
+
+			if ($this->execute($query, $sql['bindings']) === false) {
+				return false;
+			}
+		}
+
+		// update cache
+		if (in_array($table, $this->tables ?? [], true) !== true) {
+			$this->tables[] = $table;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Drops a table
+	 */
+	public function dropTable(string $table): bool
+	{
+		$sql = $this->sql()->dropTable($table);
+
+		if ($this->execute($sql['query'], $sql['bindings']) !== true) {
+			return false;
+		}
+
+		// update cache
+		$key = array_search($table, $this->tables ?? []);
+
+		if ($key !== false) {
+			unset($this->tables[$key]);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Escapes a value to be used for a safe query
+	 * NOTE: Prepared statements using bound parameters are more secure and solid
+	 */
+	public function escape(string $value): string
+	{
+		return substr($this->connection()->quote($value), 1, -1);
+	}
+
+	/**
+	 * Executes a sql query, which is expected
+	 * to not return a set of results
+	 */
+	public function execute(string $query, array $bindings = []): bool
+	{
+		return $this->lastResult = $this->hit($query, $bindings);
 	}
 
 	/**
@@ -221,53 +290,110 @@ class Database
 	}
 
 	/**
-	 * Returns the used database type
+	 * Private method to execute database queries.
+	 * This is used by the query() and execute() methods
 	 */
-	public function type(): string
+	protected function hit(string $query, array $bindings = []): bool
 	{
-		return $this->type;
-	}
+		// try to prepare and execute the sql
+		try {
+			$this->statement = $this->connection->prepare($query);
 
-	/**
-	 * Returns the used table name prefix
-	 */
-	public function prefix(): string|null
-	{
-		return $this->prefix;
-	}
+			// bind parameters to statement
+			foreach ($bindings as $parameter => $value) {
+				// positional parameters start at 1
+				if (is_int($parameter) === true) {
+					$parameter++;
+				}
 
-	/**
-	 * Escapes a value to be used for a safe query
-	 * NOTE: Prepared statements using bound parameters are more secure and solid
-	 */
-	public function escape(string $value): string
-	{
-		return substr($this->connection()->quote($value), 1, -1);
-	}
+				$type = match (gettype($value)) {
+					'integer' => PDO::PARAM_INT,
+					'boolean' => PDO::PARAM_BOOL,
+					'NULL'    => PDO::PARAM_NULL,
+					default   => PDO::PARAM_STR
+				};
 
-	/**
-	 * Adds a value to the db trace and also
-	 * returns the entire trace if nothing is specified
-	 */
-	public function trace(array|null $data = null): array
-	{
-		// return the full trace
-		if ($data === null) {
-			return $this->trace;
+				$this->statement->bindValue($parameter, $value, $type);
+			}
+
+			$this->statement->execute();
+
+			$this->affected  = $this->statement->rowCount();
+			$this->lastError = null;
+
+			if (Str::startsWith($query, 'insert ', true) === true) {
+				$lastId = $this->connection->lastInsertId();
+
+				if ($lastId === false) {
+					$this->lastId = null;
+				} elseif (is_numeric($lastId) === true) {
+					$this->lastId = (int)$lastId;
+				} else {
+					// @codeCoverageIgnoreStart
+					throw new LogicException(
+						message: 'Database::lastId() only supports integer primary keys, got "' . $lastId . '"'
+					);
+					// @codeCoverageIgnoreEnd
+				}
+			} else {
+				$this->lastId = null;
+			}
+
+			// store the final sql to add it to the trace later
+			$this->lastQuery = $this->statement->queryString;
+
+		} catch (Throwable $e) {
+			// store the error
+			$this->affected  = 0;
+			$this->lastError = $e;
+			$this->lastId    = null;
+			$this->lastQuery = $query;
+
+			// only throw the extension if failing is allowed
+			if ($this->fail === true) {
+				throw $e;
+			}
 		}
 
-		// add a new entry to the trace
-		$this->trace[] = $data;
+		// add a new entry to the singleton trace array
+		$this->trace([
+			'query'    => $this->lastQuery,
+			'bindings' => $bindings,
+			'error'    => $this->lastError
+		]);
 
-		return $this->trace;
+		// return true or false on success or failure
+		return $this->lastError === null;
 	}
 
 	/**
-	 * Returns the number of affected rows for the last query
+	 * Returns one of the started instances
 	 */
-	public function affected(): int|null
+	public static function instance(string|null $id = null): static|null
 	{
-		return $this->affected;
+		if ($id === null) {
+			return A::last(static::$connections);
+		}
+
+		return static::$connections[$id] ?? null;
+	}
+
+	/**
+	 * Returns all started instances
+	 *
+	 * @return array<string, Database>
+	 */
+	public static function instances(): array
+	{
+		return static::$connections;
+	}
+
+	/**
+	 * Returns the last db error
+	 */
+	public function lastError(): Throwable|null
+	{
+		return $this->lastError;
 	}
 
 	/**
@@ -295,14 +421,6 @@ class Database
 	}
 
 	/**
-	 * Returns the last db error
-	 */
-	public function lastError(): Throwable|null
-	{
-		return $this->lastError;
-	}
-
-	/**
 	 * Returns the name of the database
 	 */
 	public function name(): string|null
@@ -311,61 +429,11 @@ class Database
 	}
 
 	/**
-	 * Private method to execute database queries.
-	 * This is used by the query() and execute() methods
+	 * Returns the used table name prefix
 	 */
-	protected function hit(string $query, array $bindings = []): bool
+	public function prefix(): string|null
 	{
-		// try to prepare and execute the sql
-		try {
-			$this->statement = $this->connection->prepare($query);
-
-			// bind parameters to statement
-			foreach ($bindings as $parameter => $value) {
-				// positional parameters start at 1
-				if (is_int($parameter)) {
-					$parameter++;
-				}
-
-				$type = match (gettype($value)) {
-					'integer' => PDO::PARAM_INT,
-					'boolean' => PDO::PARAM_BOOL,
-					'NULL'    => PDO::PARAM_NULL,
-					default   => PDO::PARAM_STR
-				};
-
-				$this->statement->bindValue($parameter, $value, $type);
-			}
-			$this->statement->execute();
-
-			$this->affected  = $this->statement->rowCount();
-			$this->lastId    = Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null;
-			$this->lastError = null;
-
-			// store the final sql to add it to the trace later
-			$this->lastQuery = $this->statement->queryString;
-		} catch (Throwable $e) {
-			// store the error
-			$this->affected  = 0;
-			$this->lastError = $e;
-			$this->lastId    = null;
-			$this->lastQuery = $query;
-
-			// only throw the extension if failing is allowed
-			if ($this->fail === true) {
-				throw $e;
-			}
-		}
-
-		// add a new entry to the singleton trace array
-		$this->trace([
-			'query'    => $this->lastQuery,
-			'bindings' => $bindings,
-			'error'    => $this->lastError
-		]);
-
-		// return true or false on success or failure
-		return $this->lastError === null;
+		return $this->prefix;
 	}
 
 	/**
@@ -437,15 +505,6 @@ class Database
 	}
 
 	/**
-	 * Executes a sql query, which is expected
-	 * to not return a set of results
-	 */
-	public function execute(string $query, array $bindings = []): bool
-	{
-		return $this->lastResult = $this->hit($query, $bindings);
-	}
-
-	/**
 	 * Returns the correct Sql generator instance
 	 * for the type of database
 	 */
@@ -466,27 +525,36 @@ class Database
 	}
 
 	/**
-	 * Checks if a table exists in the current database
+	 * Adds a value to the db trace and also
+	 * returns the entire trace if nothing is specified
+	 *
+	 * @return list<array>
 	 */
-	public function validateTable(string $table): bool
+	public function trace(array|null $data = null): array
 	{
-		if ($this->tables === null) {
-			// Get the list of tables from the database
-			$sql     = $this->sql()->tables();
-			$results = $this->query($sql['query'], $sql['bindings']);
-
-			if ($results) {
-				$this->tables = $results->pluck('name');
-			} else {
-				return false;
-			}
+		// return the full trace
+		if ($data === null) {
+			return $this->trace;
 		}
 
-		return in_array($table, $this->tables, true) === true;
+		// add a new entry to the trace
+		$this->trace[] = $data;
+
+		return $this->trace;
+	}
+
+	/**
+	 * Returns the used database type
+	 */
+	public function type(): string
+	{
+		return $this->type;
 	}
 
 	/**
 	 * Checks if a column exists in a specified table
+	 *
+	 * @throws \PDOException if the tables or columns cannot be listed
 	 */
 	public function validateColumn(string $table, string $column): bool
 	{
@@ -500,67 +568,38 @@ class Database
 			$sql     = $this->sql()->columns($table);
 			$results = $this->query($sql['query'], $sql['bindings']);
 
-			if ($results) {
-				$this->columnWhitelist[$table] = $results->pluck('name');
-			} else {
-				return false;
+			// a failed lookup doesn't mean the column is missing
+			if ($this->lastError !== null) {
+				throw $this->lastError;
 			}
+
+			$this->columnWhitelist[$table] = $results->pluck('name');
 		}
 
 		return in_array($column, $this->columnWhitelist[$table], true) === true;
 	}
 
 	/**
-	 * Creates a new table
+	 * Checks if a table exists in the current database
+	 *
+	 * @throws \PDOException if the tables cannot be listed
 	 */
-	public function createTable(string $table, array $columns = []): bool
+	public function validateTable(string $table): bool
 	{
-		$sql     = $this->sql()->createTable($table, $columns);
-		$queries = Str::split($sql['query'], ';');
+		if ($this->tables === null) {
+			// Get the list of tables from the database
+			$sql     = $this->sql()->tables();
+			$results = $this->query($sql['query'], $sql['bindings']);
 
-		foreach ($queries as $query) {
-			$query = trim($query);
-
-			if ($this->execute($query, $sql['bindings']) === false) {
-				return false;
+			// a failed lookup doesn't mean the table is missing
+			if ($this->lastError !== null) {
+				throw $this->lastError;
 			}
+
+			$this->tables = $results->pluck('name');
 		}
 
-		// update cache
-		if (in_array($table, $this->tables ?? [], true) !== true) {
-			$this->tables[] = $table;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Drops a table
-	 */
-	public function dropTable(string $table): bool
-	{
-		$sql = $this->sql()->dropTable($table);
-		if ($this->execute($sql['query'], $sql['bindings']) !== true) {
-			return false;
-		}
-
-		// update cache
-		$key = array_search($table, $this->tables ?? []);
-		if ($key !== false) {
-			unset($this->tables[$key]);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Magic way to start queries for tables by
-	 * using a method named like the table.
-	 * I.e. $db->users()->all()
-	 */
-	public function __call(string $method, mixed $arguments = null): Query
-	{
-		return $this->table($method);
+		return in_array($table, $this->tables, true) === true;
 	}
 }
 

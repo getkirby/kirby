@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class UserTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.User';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.User';
 
 	public function testAvatar(): void
 	{
@@ -29,6 +29,52 @@ class UserTest extends ModelTestCase
 		$this->assertSame($credentials, $user->credentials());
 	}
 
+	public function testEnsure(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$this->assertSame($this->app->user(), User::ensure());
+	}
+
+	public function testEnsureWithKirbyUser(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$user = User::ensure();
+
+		$this->assertTrue($user->isKirby());
+		$this->assertSame('kirby', $user->id());
+	}
+
+	public function testEnsureWithoutAuthenticatedUser(): void
+	{
+		$this->app->impersonate(null);
+
+		$this->assertNull($this->app->user());
+
+		$user = User::ensure();
+
+		$this->assertTrue($user->isNobody());
+		$this->assertSame('nobody', $user->id());
+		$this->assertSame('nobody', $user->role()->id());
+		$this->assertSame('nobody@getkirby.com', $user->email());
+	}
+
+	public function testEnsureWithoutAuthenticatedUserReturnsNewInstance(): void
+	{
+		$this->app->impersonate(null);
+
+		// the virtual nobody user is not stored anywhere,
+		// so every call has to create it from scratch
+		$this->assertNotSame(User::ensure(), User::ensure());
+	}
+
 	public function testId(): void
 	{
 		$user = new User([
@@ -36,6 +82,21 @@ class UserTest extends ModelTestCase
 			'email' => 'user@domain.com'
 		]);
 		$this->assertSame('test', $user->id());
+	}
+
+	public function testQuery(): void
+	{
+		$user = new User([
+			'email' => 'test@getkirby.com',
+			'name'  => 'Test User'
+		]);
+
+		$this->assertSame('Test User', $user->query('user.name')->value());
+		$this->assertSame('test@getkirby.com', $user->query('user.email'));
+
+		// also test with `model` key
+		$this->assertSame('Test User', $user->query('model.name')->value());
+		$this->assertSame('test@getkirby.com', $user->query('model.email'));
 	}
 
 	public function testSiblings(): void
@@ -64,20 +125,5 @@ class UserTest extends ModelTestCase
 			'Email: test@getkirby.com',
 			$user->toString('Email: {{ user.email }}')
 		);
-	}
-
-	public function testQuery(): void
-	{
-		$user = new User([
-			'email' => 'test@getkirby.com',
-			'name'  => 'Test User'
-		]);
-
-		$this->assertSame('Test User', $user->query('user.name')->value());
-		$this->assertSame('test@getkirby.com', $user->query('user.email'));
-
-		// also test with `model` key
-		$this->assertSame('Test User', $user->query('model.name')->value());
-		$this->assertSame('test@getkirby.com', $user->query('model.email'));
 	}
 }

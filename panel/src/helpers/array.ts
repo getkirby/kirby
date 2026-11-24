@@ -1,3 +1,7 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 import sort from "./sort";
 import "./regex";
 
@@ -32,7 +36,7 @@ export function search<T extends Record<string, unknown>>(
 	}
 
 	// Filter options by query to retrieve items (no more than this.limit)
-	const regex = new RegExp(RegExp.escape(query as string), "ig");
+	const regex = new RegExp(RegExp.escape(query as string), "i");
 	const field = options.field ?? "text";
 
 	const items = array.filter((item) => {
@@ -42,7 +46,7 @@ export function search<T extends Record<string, unknown>>(
 		}
 
 		// match the search with the text
-		return (item[field] as string).match(regex) !== null;
+		return regex.test(item[field] as string);
 	});
 
 	if (options.limit) {

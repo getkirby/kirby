@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -12,21 +13,27 @@ use Kirby\Cms\User;
 use Kirby\Cms\Users;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @template TModels of Files|Pages|Users
  */
 abstract class ModelsCollector
 {
-	protected Files|Pages|Users $models;
-	protected Files|Pages|Users $paginated;
+	/**
+	 * @var TModels
+	 */
+	protected Files|Pages|Users|null $models = null;
+
+	/**
+	 * @var TModels
+	 */
+	protected Files|Pages|Users|null $paginated = null;
 
 	public function __construct(
 		protected int|null $limit = null,
 		protected int $page = 1,
-		protected Site|Page|User|null $parent = null,
+		protected Site|Page|User|File|null $parent = null,
 		protected string|null $query = null,
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
@@ -34,10 +41,26 @@ abstract class ModelsCollector
 	) {
 	}
 
+	/**
+	 * @return TModels
+	 */
 	abstract protected function collect(): Files|Pages|Users;
+
+	/**
+	 * @return TModels
+	 */
 	abstract protected function collectByQuery(): Files|Pages|Users;
+
+	/**
+	 * @param TModels $models
+	 * @return TModels
+	 */
 	abstract protected function filter(Files|Pages|Users $models): Files|Pages|Users;
 
+	/**
+	 * @param TModels $models
+	 * @return TModels
+	 */
 	protected function flip(Files|Pages|Users $models): Files|Pages|Users
 	{
 		return $models->flip();
@@ -71,6 +94,9 @@ abstract class ModelsCollector
 		return $this->sortBy !== null;
 	}
 
+	/**
+	 * @return TModels
+	 */
 	public function models(bool $paginated = false): Files|Pages|Users
 	{
 		if ($paginated === true) {
@@ -105,24 +131,33 @@ abstract class ModelsCollector
 			$models = $this->flip($models);
 		}
 
-		return $this->models ??= $models;
+		return $this->models = $models;
 	}
 
 	public function pagination(): Pagination
 	{
+		/** @var Pagination */
 		return $this->models(paginated: true)->pagination();
 	}
 
-	protected function parent(): Site|Page|User
+	protected function parent(): Site|Page|User|File
 	{
 		return $this->parent ?? App::instance()->site();
 	}
 
+	/**
+	 * @param TModels $models
+	 * @return TModels
+	 */
 	protected function search(Files|Pages|Users $models): Files|Pages|Users
 	{
 		return $models->search($this->search);
 	}
 
+	/**
+	 * @param TModels $models
+	 * @return TModels
+	 */
 	protected function sort(Files|Pages|Users $models): Files|Pages|Users
 	{
 		return $models->sort(...$models::sortArgs($this->sortBy));

@@ -8,11 +8,50 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageChangeStatusTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeStatus';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeStatus';
+
+	public function testChangeStatusFromDraftToDraft(): void
+	{
+		$parent = new Page([
+			'slug'     => 'test',
+			'children' => [
+				[
+					'slug' => 'child-a',
+					'num'  => 1
+				],
+				[
+					'slug' => 'child-b',
+					'num'  => null
+				]
+			],
+			'drafts' => [
+				[
+					'slug'  => 'child-c',
+					'draft' => true
+				]
+			]
+		]);
+
+		$page = $parent->draft('child-c');
+
+		$this->assertTrue($page->isDraft());
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+
+		$draft    = $page->changeStatus('draft');
+		$children = $parent->childrenAndDrafts();
+
+		$this->assertSame($draft, $page);
+		$this->assertTrue($parent->drafts()->has($page));
+		$this->assertFalse($parent->children()->listed()->has($page));
+		$this->assertSame('child-a', $children->nth(0)->slug());
+		$this->assertSame('child-b', $children->nth(1)->slug());
+		$this->assertSame('child-c', $children->nth(2)->slug());
+	}
 
 	public function testChangeStatusFromDraftToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -55,48 +94,9 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertSame('child-b', $children->nth(2)->slug());
 	}
 
-	public function testChangeStatusFromDraftToDraft(): void
-	{
-		$parent = Page::create([
-			'slug'     => 'test',
-			'children' => [
-				[
-					'slug' => 'child-a',
-					'num'  => 1
-				],
-				[
-					'slug' => 'child-b',
-					'num'  => null
-				]
-			],
-			'drafts' => [
-				[
-					'slug'  => 'child-c',
-					'draft' => true
-				]
-			]
-		]);
-
-		$page = $parent->draft('child-c');
-
-		$this->assertTrue($page->isDraft());
-		$this->assertTrue($parent->drafts()->has($page));
-		$this->assertFalse($parent->children()->listed()->has($page));
-
-		$draft    = $page->changeStatus('draft');
-		$children = $parent->childrenAndDrafts();
-
-		$this->assertSame($draft, $page);
-		$this->assertTrue($parent->drafts()->has($page));
-		$this->assertFalse($parent->children()->listed()->has($page));
-		$this->assertSame('child-a', $children->nth(0)->slug());
-		$this->assertSame('child-b', $children->nth(1)->slug());
-		$this->assertSame('child-c', $children->nth(2)->slug());
-	}
-
 	public function testChangeStatusFromDraftToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -136,7 +136,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToDraft(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -183,7 +183,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -218,7 +218,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromListedToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -261,7 +261,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromUnlistedToListed(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -306,7 +306,7 @@ class PageChangeStatusTest extends ModelTestCase
 
 	public function testChangeStatusFromUnlistedToUnlisted(): void
 	{
-		$parent = Page::create([
+		$parent = new Page([
 			'slug'     => 'test',
 			'children' => [
 				[
@@ -486,5 +486,4 @@ class PageChangeStatusTest extends ModelTestCase
 		$this->assertNull($drafts->find('test'));
 		$this->assertSame($newPage, $childrenAndDrafts->find('test'));
 	}
-
 }

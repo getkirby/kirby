@@ -10,10 +10,6 @@ use Kirby\Toolkit\V;
 /**
  * Wrapper for email libraries
  *
- * @package   Kirby Email
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -28,26 +24,39 @@ class Email
 	/**
 	 * Store for sent emails when `Email::$debug`
 	 * is set to `true`
+	 *
+	 * @var list<Email>
 	 */
 	public static array $emails = [];
 
-	protected bool $isSent = false;
-
 	protected array $attachments;
-	protected Body $body;
+
+	/**
+	 * @var array<string, string|null>
+	 */
 	protected array $bcc;
 	protected Closure|null $beforeSend;
+	protected Body $body;
+
+	/**
+	 * @var array<string, string|null>
+	 */
 	protected array $cc;
 	protected string $from;
 	protected string|null $fromName;
+	protected bool $isSent = false;
 	protected string $replyTo;
 	protected string|null $replyToName;
 	protected string $subject;
+
+	/**
+	 * @var array<string, string|null>
+	 */
 	protected array $to;
 	protected array|null $transport;
 
 	/**
-	 * Email constructor
+	 * @throws InvalidArgumentException If a required property is missing
 	 */
 	public function __construct(array $props = [], bool $debug = false)
 	{
@@ -94,15 +103,9 @@ class Email
 	}
 
 	/**
-	 * Returns the email body
-	 */
-	public function body(): Body|null
-	{
-		return $this->body;
-	}
-
-	/**
 	 * Returns "bcc" recipients
+	 *
+	 * @return array<string, string|null>
 	 */
 	public function bcc(): array
 	{
@@ -119,7 +122,17 @@ class Email
 	}
 
 	/**
+	 * Returns the email body
+	 */
+	public function body(): Body|null
+	{
+		return $this->body;
+	}
+
+	/**
 	 * Returns "cc" recipients
+	 *
+	 * @return array<string, string|null>
 	 */
 	public function cc(): array
 	{
@@ -127,30 +140,9 @@ class Email
 	}
 
 	/**
-	 * Creates a new instance while
-	 * merging initial and new properties
-	 * @deprecated 4.0.0
-	 */
-	public function clone(array $props = []): static
-	{
-		return new static(array_merge_recursive([
-			'attachments'   => $this->attachments,
-			'bcc'			=> $this->bcc,
-			'beforeSend'    => $this->beforeSend,
-			'body'			=> $this->body->toArray(),
-			'cc'   			=> $this->cc,
-			'from'			=> $this->from,
-			'fromName'   	=> $this->fromName,
-			'replyTo' 		=> $this->replyTo,
-			'replyToName'	=> $this->replyToName,
-			'subject'   	=> $this->subject,
-			'to'   			=> $this->to,
-			'transport' 	=> $this->transport
-		], $props));
-	}
-
-	/**
 	 * Returns default transport settings
+	 *
+	 * @return array{type: 'mail'}
 	 */
 	protected function defaultTransport(): array
 	{
@@ -180,7 +172,7 @@ class Email
 	 */
 	public function isHtml(): bool
 	{
-		return empty($this->body()->html()) === false;
+		return $this->body()->html() !== '';
 	}
 
 	/**
@@ -210,7 +202,8 @@ class Email
 	/**
 	 * Converts single or multiple email addresses to a sanitized format
 	 *
-	 * @throws \Exception
+	 * @return ($multiple is true ? array<string, string|null> : string)
+	 * @throws Exception
 	 */
 	protected function resolveEmail(
 		string|array|null $email = null,
@@ -225,6 +218,7 @@ class Email
 		}
 
 		$result = [];
+
 		foreach ($email as $address => $name) {
 			// convert simple email arrays to associative arrays
 			if (is_int($address) === true) {
@@ -262,18 +256,12 @@ class Email
 
 	/**
 	 * Returns the email recipients
+	 *
+	 * @return array<string, string|null>
 	 */
 	public function to(): array
 	{
 		return $this->to;
-	}
-
-	/**
-	 * Returns the email transports settings
-	 */
-	public function transport(): array
-	{
-		return $this->transport ?? $this->defaultTransport();
 	}
 
 	/**
@@ -282,17 +270,27 @@ class Email
 	public function toArray(): array
 	{
 		return [
-			'attachments'   => $this->attachments(),
-			'bcc'			=> $this->bcc(),
-			'body'			=> $this->body()->toArray(),
-			'cc'   			=> $this->cc(),
-			'from'			=> $this->from(),
-			'fromName'   	=> $this->fromName(),
-			'replyTo' 		=> $this->replyTo(),
-			'replyToName'	=> $this->replyToName(),
-			'subject'   	=> $this->subject(),
-			'to'   			=> $this->to(),
-			'transport' 	=> $this->transport()
+			'attachments' => $this->attachments(),
+			'bcc'         => $this->bcc(),
+			'body'        => $this->body()->toArray(),
+			'cc'          => $this->cc(),
+			'from'        => $this->from(),
+			'fromName'    => $this->fromName(),
+			'replyTo'     => $this->replyTo(),
+			'replyToName' => $this->replyToName(),
+			'subject'     => $this->subject(),
+			'to'          => $this->to(),
+			'transport'   => $this->transport()
 		];
+	}
+
+	/**
+	 * Returns the email transports settings
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function transport(): array
+	{
+		return $this->transport ?? $this->defaultTransport();
 	}
 }

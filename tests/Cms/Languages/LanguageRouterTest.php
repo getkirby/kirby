@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class LanguageRouterTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.LanguageRouter';
 
 	protected function setUp(): void
 	{
@@ -31,6 +31,27 @@ class LanguageRouterTest extends TestCase
 	{
 		Dir::remove(static::TMP);
 		App::destroy();
+	}
+
+	public function testRouteForMultipleLanguages(): void
+	{
+		$app = $this->app->clone([
+			'routes' => [
+				[
+					'pattern'  => '(:any)',
+					'language' => 'en|de',
+					'action'   => fn (Language $language, $slug) => $slug
+				]
+			]
+		]);
+
+		$language = $app->language('en');
+		$router   = $language->router();
+		$routes   = $router->routes();
+
+		$this->assertSame('(:any)', $routes[0]['pattern']);
+		$this->assertSame('en|de', $routes[0]['language']);
+		$this->assertSame('slug', $router->call('slug'));
 	}
 
 	public function testRouteForSingleLanguage(): void
@@ -59,43 +80,6 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('en', $router->call('anything'));
 	}
 
-	public function testRouteWithoutLanguageScope(): void
-	{
-		$app = $this->app->clone([
-			'routes' => [
-				[
-					'pattern'  => '(:any)',
-					'action'   => fn ($slug) => $slug
-				]
-			]
-		]);
-
-		$language = $app->language('en');
-
-		$this->assertCount(1, $language->router()->routes());
-	}
-
-	public function testRouteForMultipleLanguages(): void
-	{
-		$app = $this->app->clone([
-			'routes' => [
-				[
-					'pattern'  => '(:any)',
-					'language' => 'en|de',
-					'action'   => fn (Language $language, $slug) => $slug
-				]
-			]
-		]);
-
-		$language = $app->language('en');
-		$router   = $language->router();
-		$routes   = $router->routes();
-
-		$this->assertSame('(:any)', $routes[0]['pattern']);
-		$this->assertSame('en|de', $routes[0]['language']);
-		$this->assertSame('slug', $router->call('slug'));
-	}
-
 	public function testRouteWildcard(): void
 	{
 		$app = $this->app->clone([
@@ -115,6 +99,22 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('(:any)', $routes[0]['pattern']);
 		$this->assertSame('*', $routes[0]['language']);
 		$this->assertSame('slug', $router->call('slug'));
+	}
+
+	public function testRouteWithoutLanguageScope(): void
+	{
+		$app = $this->app->clone([
+			'routes' => [
+				[
+					'pattern'  => '(:any)',
+					'action'   => fn ($slug) => $slug
+				]
+			]
+		]);
+
+		$language = $app->language('en');
+
+		$this->assertCount(1, $language->router()->routes());
 	}
 
 	public function testRouteWithPageScope(): void
@@ -139,6 +139,31 @@ class LanguageRouterTest extends TestCase
 		$router   = $language->router();
 
 		$this->assertSame('slug', $router->call('notes/slug'));
+	}
+
+	public function testRouteWithPageScopeAndInvalidPage(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'notes']
+				]
+			],
+			'routes' => [
+				[
+					'pattern'  => '(:any)',
+					'language' => '*',
+					'page'     => 'does-not-exist',
+					'action'   => fn (Language $language, Page $page, $slug) => $slug
+				]
+			]
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The page "does-not-exist" does not exist');
+
+		$language = $app->language('en');
+		$router   = $language->router()->call('notes/a/slug');
 	}
 
 	public function testRouteWithPageScopeAndMultiplePatterns(): void
@@ -169,31 +194,6 @@ class LanguageRouterTest extends TestCase
 		$this->assertSame('slug', $router->call('notes/b/slug'));
 	}
 
-	public function testRouteWithPageScopeAndInvalidPage(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'notes']
-				]
-			],
-			'routes' => [
-				[
-					'pattern'  => '(:any)',
-					'language' => '*',
-					'page'     => 'does-not-exist',
-					'action'   => fn (Language $language, Page $page, $slug) => $slug
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The page "does-not-exist" does not exist');
-
-		$language = $app->language('en');
-		$router   = $language->router()->call('notes/a/slug');
-	}
-
 	public function testUUIDRoute(): void
 	{
 		$app = $this->app->clone([
@@ -222,5 +222,45 @@ class LanguageRouterTest extends TestCase
 		$uuid = $app->page('albums')->uuid();
 		$response = $language->router()->call('@/page/' . $uuid->id());
 		$this->assertFalse($response);
+	}
+
+	public function testUUIDRouteWithQueryAndParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/en/@/page/notes/tag:foo?bar=baz'],
+			'site'    => [
+				'children' => [
+					[
+						'slug'    => 'notes',
+						'content' => ['uuid' => 'notes'],
+						'files'   => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['uuid' => 'test']
+							]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
+
+		$page = $app->page('notes');
+		$page->uuid()->populate();
+
+		$language = $app->language('en');
+		$response = $language->router()->call('@/page/notes');
+
+		$this->assertSame(
+			'https://getkirby.com/en/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// files point to the media folder and don't inherit
+		$file = $page->file('test.jpg');
+		$file->uuid()->populate();
+
+		$response = $language->router()->call('@/file/test');
+		$this->assertSame($file->url(), $response->header('Location'));
 	}
 }

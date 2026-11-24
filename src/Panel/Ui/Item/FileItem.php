@@ -3,29 +3,16 @@
 namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\File;
-use Kirby\Cms\ModelWithContent;
-use Kirby\Panel\Model;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
+ *
+ * @extends ModelItem<File, \Kirby\Panel\File>
  */
 class FileItem extends ModelItem
 {
-	/**
-	 * @var \Kirby\Cms\File
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\File
-	 */
-	protected Model $panel;
-
 	public function __construct(
 		File $file,
 		protected bool $dragTextIsAbsolute = false,
@@ -50,11 +37,11 @@ class FileItem extends ModelItem
 
 	protected function permissions(): array
 	{
-		$permissions = $this->model->permissions();
+		$guards = $this->model->guards();
 
 		return [
-			'delete' => $permissions->can('delete'),
-			'sort'   => $permissions->can('sort'),
+			'delete' => $guards->isAvailable('delete'),
+			'sort'   => $guards->isAvailable('sort'),
 		];
 	}
 

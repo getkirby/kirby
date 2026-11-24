@@ -1,19 +1,22 @@
 <template>
-	<div>
-		<hr />
-	</div>
+	<hr />
 </template>
 
 <script>
 /**
  * @displayName BlockTypeLine
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
-export default {};
+export default {
+	inheritAttrs: false
+};
 </script>
 
 <style>
 .k-block-type-line hr {
-	margin-block: 0.75rem;
+	margin-block: var(--spacing-3);
 	border: 0;
 	border-top: 1px solid var(--color-border);
 }

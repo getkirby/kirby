@@ -1,11 +1,11 @@
 <template>
-	<div class="k-view-button">
+	<div :class="['k-view-button', $attrs.class]" :style="$attrs.style">
 		<k-button
 			v-bind="$props"
 			:dropdown="dropdown || hasDropdown"
 			@click="onClick"
 		/>
-		<k-dropdown-content
+		<k-dropdown
 			v-if="hasDropdown"
 			ref="dropdown"
 			:options="Array.isArray(options) ? options : $dropdown(options)"
@@ -20,7 +20,10 @@ import Button from "@/components/Navigation/Button.vue";
 
 /**
  * @displayName ViewButton
- * @since 5.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default {
 	extends: Button,

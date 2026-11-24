@@ -1,41 +1,18 @@
-import { describe, expect, it, vi } from "vitest";
-import type { PanelResponse } from "@/panel/request";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
+import { failed } from "@test/unit/request";
 import AuthError from "@/errors/AuthError";
+import ExternalRequestError from "@/errors/ExternalRequestError";
 import JsonRequestError from "@/errors/JsonRequestError";
 import RedirectError from "@/errors/RedirectError";
 import RequestError from "@/errors/RequestError";
 import Notification from "./notification";
-import Panel from "./panel.js";
-import Vue from "vue";
-
-function makeRequestOptions(
-	json: Record<string, unknown> = {},
-	text = ""
-): {
-	request: Request;
-	response: PanelResponse;
-} {
-	return {
-		request: new Request("https://example.com/api"),
-		response: {
-			headers: new Headers(),
-			json,
-			ok: false,
-			status: 500,
-			statusText: "Internal Server Error",
-			text,
-			url: "https://example.com/api"
-		}
-	};
-}
+import Panel from "./panel";
 
 describe("panel.notification", () => {
-	// @ts-expect-error Vue 2 test setup
-	window.Vue = Vue;
-
 	describe("state", () => {
 		it("should have a default state", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 
 			const state = {
 				context: null,
@@ -55,7 +32,7 @@ describe("panel.notification", () => {
 
 	describe("close()", () => {
 		it("should reset the state", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.success("Test");
@@ -67,7 +44,7 @@ describe("panel.notification", () => {
 		});
 
 		it("should reset the timer", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.success("Test");
@@ -80,7 +57,7 @@ describe("panel.notification", () => {
 
 	describe("context", () => {
 		it("should return the view context", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.open("test");
@@ -89,10 +66,9 @@ describe("panel.notification", () => {
 		});
 
 		it("should return the drawer context", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			// @ts-expect-error panel.js is not typed
 			await panel.drawer.open({
 				component: "k-drawer"
 			});
@@ -103,10 +79,9 @@ describe("panel.notification", () => {
 		});
 
 		it("should return the dialog context", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			// @ts-expect-error panel.js is not typed
 			await panel.dialog.open({
 				component: "k-dialog"
 			});
@@ -119,7 +94,8 @@ describe("panel.notification", () => {
 
 	describe("deprecated()", () => {
 		it("should log deprecation warnings", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 			const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 
 			notification.deprecated("OldMethod");
@@ -130,28 +106,8 @@ describe("panel.notification", () => {
 	});
 
 	describe("error()", () => {
-		it("should return the right icon and theme", async () => {
-			const panel = Panel.create();
-			const notification = Notification(panel);
-
-			notification.error("Test");
-
-			expect(notification.icon).toStrictEqual("alert");
-			expect(notification.theme).toStrictEqual("negative");
-		});
-
-		it("should convert Error objects", async () => {
-			const panel = Panel.create();
-			const notification = Notification(panel);
-
-			notification.error(new Error("test"));
-
-			expect(notification.type).toStrictEqual("error");
-			expect(notification.message).toStrictEqual("test");
-		});
-
 		it("should convert error strings", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.error("Something specific went wrong");
@@ -162,74 +118,100 @@ describe("panel.notification", () => {
 			);
 		});
 
-		it("should fall back to a generic error message", async () => {
-			const panel = Panel.create();
+		it("should convert error objects", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
+
+			notification.error(new Error("test"));
+
+			expect(notification.type).toStrictEqual("error");
+			expect(notification.message).toStrictEqual("test");
+		});
+
+		it("should convert plain objects with a message", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.error({ message: "Something specific went wrong" });
+
+			expect(notification.type).toStrictEqual("error");
+			expect(notification.message).toStrictEqual(
+				"Something specific went wrong"
+			);
+		});
+
+		it("should fall back to a generic message for errors without a message", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
 
 			notification.error(new Error());
 
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "Something went wrong", details: {} }
+			});
 			expect(notification.message).toStrictEqual("Something went wrong");
 		});
 
+		it("should fall back to a generic message for plain objects without a message", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.error({});
+
+			expect(notification.type).toStrictEqual("error");
+			expect(notification.message).toStrictEqual("Something went wrong");
+		});
+
+		it("should treat AuthError as a normal error when user is not authenticated", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.error(new AuthError("Unauthorized", failed()));
+
+			expect(notification.type).toStrictEqual("error");
+			expect(notification.theme).toStrictEqual("negative");
+		});
+
 		it("should redirect to the logout view when the session expired", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			panel.set({ user: { id: "test" } });
 
 			const notification = Notification(panel);
 
 			expect(() =>
-				notification.error(
-					new AuthError("Unauthenticated", makeRequestOptions())
-				)
+				notification.error(new AuthError("Unauthenticated", failed()))
 			).toThrowError(RedirectError);
 
 			expect(notification.isOpen).toStrictEqual(false);
 		});
 
 		it("should escalate JsonRequestError to fatal", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
-			notification.error(new JsonRequestError("error", makeRequestOptions()));
+			notification.error(new JsonRequestError("error", failed()));
 
 			expect(notification.type).toStrictEqual("fatal");
 		});
 
-		it("should extract nested error message from RequestError", async () => {
-			const panel = Panel.create();
+		it("should open a request error dialog for RequestError in view context", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
 
-			notification.error(
-				new RequestError(
-					"error",
-					makeRequestOptions({ $dialog: { error: "Field is required" } })
-				)
+			notification.error(new RequestError("Something failed", failed()));
+
+			expect(open).toHaveBeenCalledWith(
+				expect.objectContaining({ component: "k-request-error-dialog" })
 			);
-
-			expect(notification.message).toStrictEqual("Field is required");
+			expect(notification.type).toStrictEqual("error");
 		});
 
-		it("should skip null values in the RequestError response", async () => {
-			const panel = Panel.create();
+		it("should open a validation error dialog for form errors in view context", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
-
-			notification.error(
-				new RequestError(
-					"error",
-					makeRequestOptions({
-						$dialog: null,
-						$view: { error: "Page not found" }
-					})
-				)
-			);
-
-			expect(notification.message).toStrictEqual("Page not found");
-		});
-
-		it("should pass details of flat API errors to the error dialog", async () => {
-			const panel = Panel.create();
-			const notification = Notification(panel);
-			// @ts-expect-error panel.js is not typed
 			const open = vi.spyOn(panel.dialog, "open");
 			const details = {
 				title: {
@@ -241,23 +223,99 @@ describe("panel.notification", () => {
 			notification.error(
 				new RequestError(
 					"error",
-					makeRequestOptions({
-						status: "error",
-						message: "Please fix all form errors…",
-						key: "error.form.incomplete",
-						details
+					failed({
+						json: {
+							status: "error",
+							message: "Please fix all form errors…",
+							key: "error.form.incomplete",
+							details
+						}
 					})
 				)
 			);
 
 			expect(open).toHaveBeenCalledWith({
-				component: "k-error-dialog",
-				props: { message: "Please fix all form errors…", details }
+				component: "k-validation-error-dialog",
+				props: { message: "Please fix all form errors…", fields: details }
 			});
 		});
 
+		it("should open a generic error dialog for ExternalRequestError in view context", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+			const { request, response } = failed({
+				json: {
+					message: "Please log in again",
+					key: "error.form.incomplete",
+					details: { password: { label: "Password", message: ["Required"] } }
+				}
+			});
+
+			notification.error(
+				new ExternalRequestError("The request failed", { request, response })
+			);
+
+			expect(open).toHaveBeenCalledWith({
+				component: "k-error-dialog",
+				props: { message: "The request failed", details: {} }
+			});
+			expect(notification.message).toStrictEqual("The request failed");
+		});
+
+		it("should open a generic error dialog for plain errors in view context", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).toHaveBeenCalledWith(
+				expect.objectContaining({ component: "k-error-dialog" })
+			);
+			expect(notification.type).toStrictEqual("error");
+		});
+
+		it("should not open an error dialog in dialogs", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			await panel.dialog.open({ component: "k-text-dialog" });
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).not.toHaveBeenCalled();
+			expect(notification.context).toStrictEqual("dialog");
+			expect(notification.message).toStrictEqual("Something failed");
+		});
+
+		it("should not open an error dialog in drawers", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			await panel.drawer.open({ component: "k-page-drawer" });
+			const open = vi.spyOn(panel.dialog, "open");
+
+			notification.error(new Error("Something failed"));
+
+			expect(open).not.toHaveBeenCalled();
+			expect(notification.context).toStrictEqual("drawer");
+			expect(notification.message).toStrictEqual("Something failed");
+		});
+
+		it("should set error icon and theme", async () => {
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.error("Test");
+
+			expect(notification.icon).toStrictEqual("alert");
+			expect(notification.theme).toStrictEqual("negative");
+		});
+
 		it("should not set a timer", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.error("Test");
@@ -266,8 +324,8 @@ describe("panel.notification", () => {
 	});
 
 	describe("fatal()", () => {
-		it("should open fatal notifications", async () => {
-			const panel = Panel.create();
+		it("should convert error strings", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.fatal("Something broke");
@@ -276,8 +334,8 @@ describe("panel.notification", () => {
 			expect(notification.message).toStrictEqual("Something broke");
 		});
 
-		it("should convert Error objects", async () => {
-			const panel = Panel.create();
+		it("should convert error objects", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.fatal(new Error("Fatal error"));
@@ -287,13 +345,13 @@ describe("panel.notification", () => {
 		});
 
 		it("should use response text for JsonRequestError", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.fatal(
 				new JsonRequestError(
 					"error",
-					makeRequestOptions({}, "<html>PHP error</html>")
+					failed({ text: "<html>PHP error</html>" })
 				)
 			);
 
@@ -301,8 +359,8 @@ describe("panel.notification", () => {
 			expect(notification.message).toStrictEqual("<html>PHP error</html>");
 		});
 
-		it("should fall back to a generic message for Error without message", async () => {
-			const panel = Panel.create();
+		it("should fall back to a generic message for errors without a message", async () => {
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.fatal(new Error());
@@ -312,7 +370,7 @@ describe("panel.notification", () => {
 		});
 
 		it("should not set a timer", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.fatal("test");
@@ -323,7 +381,7 @@ describe("panel.notification", () => {
 
 	describe("info()", () => {
 		it("should return the right icon and theme", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.info("test");
@@ -334,7 +392,7 @@ describe("panel.notification", () => {
 		});
 
 		it("should allow overriding defaults", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.info({ message: "test", icon: "live" });
@@ -345,7 +403,7 @@ describe("panel.notification", () => {
 
 	describe("isFatal", () => {
 		it("should detect fatal notifications", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			expect(notification.isFatal).toStrictEqual(false);
@@ -358,7 +416,8 @@ describe("panel.notification", () => {
 
 	describe("open()", () => {
 		it("should open & close", async () => {
-			const notification = Notification({});
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
 
 			notification.open({
 				message: "Hello world"
@@ -372,8 +431,25 @@ describe("panel.notification", () => {
 			expect(notification.isOpen).toStrictEqual(false);
 		});
 
+		it("should close after the timeout", async () => {
+			vi.useFakeTimers();
+			onTestFinished(() => {
+				vi.useRealTimers();
+			});
+
+			const panel = Panel.create(app);
+			const notification = Notification(panel);
+
+			notification.open({ message: "Saved", timeout: 1000 });
+			vi.advanceTimersByTime(999);
+			expect(notification.isOpen).toStrictEqual(true);
+
+			vi.advanceTimersByTime(1);
+			expect(notification.isOpen).toStrictEqual(false);
+		});
+
 		it("should open a string notification as success", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.open("test");
@@ -386,7 +462,7 @@ describe("panel.notification", () => {
 
 	describe("success()", () => {
 		it("should return the right icon and theme", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.success("Test");
@@ -396,7 +472,7 @@ describe("panel.notification", () => {
 		});
 
 		it("should allow overriding defaults", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.success({ message: "Test", icon: "live" });
@@ -405,7 +481,7 @@ describe("panel.notification", () => {
 		});
 
 		it("should set a timer", async () => {
-			const panel = Panel.create();
+			const panel = Panel.create(app);
 			const notification = Notification(panel);
 
 			notification.success("Test");

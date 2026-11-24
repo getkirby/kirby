@@ -1,9 +1,10 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-search-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		autocomplete="off"
-		class="k-search-input"
 		type="search"
 		@input="$emit('input', $event)"
 	/>
@@ -28,10 +29,15 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-search-input :value="value" @input="value = $event" />
+ * @example
+ * <k-search-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

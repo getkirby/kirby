@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Site::class)]
 class SitePreviewUrlTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePreviewUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SitePreviewUrl';
 
 	public static function previewUrlProvider(): array
 	{
@@ -71,6 +71,40 @@ class SitePreviewUrlTest extends ModelTestCase
 		]);
 
 		$this->assertSame($expected, $site->previewUrl());
+	}
+
+	public function testPreviewUrlDisabledByBlueprintOptions(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'   => 'editor',
+					'name' => 'editor',
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		// disabling the whole options block also disables preview
+		$site = new Site([
+			'blueprint' => [
+				'name'    => 'site',
+				'options' => false
+			],
+			'children' => [
+				['slug' => 'home']
+			]
+		]);
+
+		$this->assertNull($site->previewUrl());
 	}
 
 	public function testPreviewUrlMissingHomePage(): void
@@ -150,40 +184,6 @@ class SitePreviewUrlTest extends ModelTestCase
 		$this->assertNull($site->previewUrl());
 		$this->assertNull($site->previewUrl('latest'));
 		$this->assertNull($site->previewUrl('changes'));
-	}
-
-	public function testPreviewUrlDisabledByBlueprintOptions(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			],
-			'roles' => [
-				[
-					'id'   => 'editor',
-					'name' => 'editor',
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-
-		// disabling the whole options block also disables preview
-		$site = new Site([
-			'blueprint' => [
-				'name'    => 'site',
-				'options' => false
-			],
-			'children' => [
-				['slug' => 'home']
-			]
-		]);
-
-		$this->assertNull($site->previewUrl());
 	}
 
 	public function testPreviewUrlUnauthenticated(): void

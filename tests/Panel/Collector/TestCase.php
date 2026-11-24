@@ -6,9 +6,9 @@ use Kirby\Cms\App;
 use Kirby\Cms\Pagination;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.ModelsCollector';
 
 	protected function setUp(): void
 	{

@@ -45,6 +45,17 @@ class UploadTest extends TestCase
 		$this->assertSame(['sort' => null, 'template' => null], $upload->props()['attributes']);
 	}
 
+	public function testAttributesWithBlueprint(): void
+	{
+		$upload = new Upload(
+			api: '/test',
+			blueprint: 'image'
+		);
+
+		// the upload API expects the blueprint as `template`
+		$this->assertSame('image', $upload->props()['attributes']['template']);
+	}
+
 	public function testAttributesWithCustomAttributes(): void
 	{
 		$upload = new Upload(
@@ -59,6 +70,16 @@ class UploadTest extends TestCase
 		], $upload->props()['attributes']);
 	}
 
+	public function testAttributesWithDefaultBlueprint(): void
+	{
+		$upload = new Upload(
+			api: '/test',
+			blueprint: 'default'
+		);
+
+		$this->assertNull($upload->props()['attributes']['template']);
+	}
+
 	public function testAttributesWithSort(): void
 	{
 		$upload = new Upload(
@@ -69,24 +90,15 @@ class UploadTest extends TestCase
 		$this->assertSame(5, $upload->props()['attributes']['sort']);
 	}
 
-	public function testAttributesWithTemplate(): void
+	public function testMaxWithMultipleFalse(): void
 	{
 		$upload = new Upload(
 			api: '/test',
-			template: 'image'
+			max: 10,
+			multiple: false
 		);
 
-		$this->assertSame('image', $upload->props()['attributes']['template']);
-	}
-
-	public function testAttributesWithDefaultTemplate(): void
-	{
-		$upload = new Upload(
-			api: '/test',
-			template: 'default'
-		);
-
-		$this->assertNull($upload->props()['attributes']['template']);
+		$this->assertSame(1, $upload->props()['max']);
 	}
 
 	public function testMaxWithoutValue(): void
@@ -108,15 +120,15 @@ class UploadTest extends TestCase
 		$this->assertSame(10, $upload->props()['max']);
 	}
 
-	public function testMaxWithMultipleFalse(): void
+	public function testMultipleWithMaxOne(): void
 	{
 		$upload = new Upload(
 			api: '/test',
-			max: 10,
-			multiple: false
+			multiple: true,
+			max: 1
 		);
 
-		$this->assertSame(1, $upload->props()['max']);
+		$this->assertFalse($upload->props()['multiple']);
 	}
 
 	public function testMultipleWithoutValue(): void
@@ -138,30 +150,19 @@ class UploadTest extends TestCase
 		$this->assertFalse($upload->props()['multiple']);
 	}
 
-	public function testMultipleWithMaxOne(): void
-	{
-		$upload = new Upload(
-			api: '/test',
-			multiple: true,
-			max: 1
-		);
-
-		$this->assertFalse($upload->props()['multiple']);
-	}
-
 	public function testProps(): void
 	{
 		$upload = new Upload(
 			api: '/test',
 			accept: 'image/*',
 			attributes: ['foo' => 'bar'],
+			blueprint: 'image',
 			max: 10,
 			multiple: true,
 			preview: [
 				'icon' => 'image'
 			],
-			sort: 5,
-			template: 'image'
+			sort: 5
 		);
 
 		$this->assertSame([

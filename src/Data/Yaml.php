@@ -8,25 +8,11 @@ use Kirby\Exception\InvalidArgumentException;
 /**
  * Simple Wrapper around the Symfony or Spyc YAML class
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Yaml extends Handler
 {
-	/**
-	 * Converts an array to an encoded YAML string
-	 */
-	public static function encode($data): string
-	{
-		return match (static::handler()) {
-			'symfony' => YamlSymfony::encode($data),
-			default   => YamlSpyc::encode($data),
-		};
-	}
-
 	/**
 	 * Parses an encoded YAML string and returns a multi-dimensional array
 	 */
@@ -47,17 +33,27 @@ class Yaml extends Handler
 		}
 
 		return match (static::handler()) {
-			'symfony' => YamlSymfony::decode($string),
-			default   => YamlSpyc::decode($string)
+			'spyc'  => YamlSpyc::decode($string),
+			default => YamlSymfony::decode($string),
 		};
 	}
 
 	/**
-	 * Returns which YAML parser (`spyc` or `symfony`)
-	 * is configured to be used
+	 * Converts an array to an encoded YAML string
 	 */
-	public static function handler(): string
+	public static function encode($data): string
 	{
-		return App::instance(null, true)?->option('yaml.handler') ?? 'spyc';
+		return match (static::handler()) {
+			'spyc'  => YamlSpyc::encode($data),
+			default => YamlSymfony::encode($data),
+		};
+	}
+
+	/**
+	 * Returns YAML parser configured to be used
+	 */
+	public static function handler(): string|null
+	{
+		return App::instance(lazy: true)?->option('yaml.handler');
 	}
 }

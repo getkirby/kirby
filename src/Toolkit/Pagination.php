@@ -8,14 +8,22 @@ use Kirby\Exception\Exception;
 /**
  * Basic pagination handling
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Pagination
 {
+	/**
+	 * Whether validation of the pagination page
+	 * is enabled; will throw Exceptions if true
+	 */
+	public static bool $validate = true;
+
+	/**
+	 * The number of items per page
+	 */
+	protected int $limit = 20;
+
 	/**
 	 * The current page
 	 */
@@ -27,17 +35,6 @@ class Pagination
 	protected int $total = 0;
 
 	/**
-	 * The number of items per page
-	 */
-	protected int $limit = 20;
-
-	/**
-	 * Whether validation of the pagination page
-	 * is enabled; will throw Exceptions if true
-	 */
-	public static bool $validate = true;
-
-	/**
 	 * Creates a new pagination object
 	 * with the given parameters
 	 */
@@ -47,14 +44,11 @@ class Pagination
 		$this->setPage($props['page'] ?? null);
 		$this->setTotal($props['total'] ?? 0);
 
-		// ensure that page is set to something, otherwise
-		// generate "default page" based on other params
-		$this->page ??= $this->firstPage();
-
 		// allow a page value of 1 even if there are no pages;
 		// otherwise the exception will get thrown for this pretty common case
 		$min = $this->firstPage();
 		$max = $this->pages();
+
 		if ($this->page === 1 && $max === 0) {
 			$this->page = 0;
 		}
@@ -83,6 +77,27 @@ class Pagination
 			'limit' => $this->limit,
 			'total' => $this->total
 		], $props));
+	}
+
+	/**
+	 * Returns the index of the last item on the page
+	 *
+	 * @return non-negative-int
+	 */
+	public function end(): int
+	{
+		$value = min($this->total(), ($this->start() - 1) + $this->limit());
+		return $value;
+	}
+
+	/**
+	 * Returns the first page
+	 *
+	 * @return 0|1
+	 */
+	public function firstPage(): int
+	{
+		return $this->total() === 0 ? 0 : 1;
 	}
 
 	/**
@@ -121,92 +136,20 @@ class Pagination
 			$params['limit'] = $a;
 		}
 
-		// add the total count from the collection
 		$params['total'] = $collection->count();
 
 		// remove null values to make later merges work properly
 		$params = array_filter($params);
 
-		// create the pagination instance
 		return new static($params);
 	}
 
 	/**
-	 * Getter for the current page
+	 * Checks if there's a next page
 	 */
-	public function page(): int
+	public function hasNextPage(): bool
 	{
-		return $this->page;
-	}
-
-	/**
-	 * Getter for the total number of items
-	 */
-	public function total(): int
-	{
-		return $this->total;
-	}
-
-	/**
-	 * Getter for the number of items per page
-	 */
-	public function limit(): int
-	{
-		return $this->limit;
-	}
-
-	/**
-	 * Returns the index of the first item on the page
-	 */
-	public function start(): int
-	{
-		$index = max(0, $this->page() - 1);
-		return $index * $this->limit() + 1;
-	}
-
-	/**
-	 * Returns the index of the last item on the page
-	 */
-	public function end(): int
-	{
-		$value = min($this->total(), ($this->start() - 1) + $this->limit());
-		return $value;
-	}
-
-	/**
-	 * Returns the total number of pages
-	 */
-	public function pages(): int
-	{
-		if ($this->total() === 0) {
-			return 0;
-		}
-
-		return (int)ceil($this->total() / $this->limit());
-	}
-
-	/**
-	 * Returns the first page
-	 */
-	public function firstPage(): int
-	{
-		return $this->total() === 0 ? 0 : 1;
-	}
-
-	/**
-	 * Returns the last page
-	 */
-	public function lastPage(): int
-	{
-		return $this->pages();
-	}
-
-	/**
-	 * Returns the offset (i.e. for db queries)
-	 */
-	public function offset(): int
-	{
-		return $this->start() - 1;
+		return $this->end() < $this->total();
 	}
 
 	/**
@@ -242,30 +185,6 @@ class Pagination
 	}
 
 	/**
-	 * Returns the previous page
-	 */
-	public function prevPage(): int|null
-	{
-		return $this->hasPrevPage() ? $this->page() - 1 : null;
-	}
-
-	/**
-	 * Checks if there's a next page
-	 */
-	public function hasNextPage(): bool
-	{
-		return $this->end() < $this->total();
-	}
-
-	/**
-	 * Returns the next page
-	 */
-	public function nextPage(): int|null
-	{
-		return $this->hasNextPage() ? $this->page() + 1 : null;
-	}
-
-	/**
 	 * Checks if the current page is the first page
 	 */
 	public function isFirstPage(): bool
@@ -282,7 +201,80 @@ class Pagination
 	}
 
 	/**
+	 * Returns the last page
+	 *
+	 * @return non-negative-int
+	 */
+	public function lastPage(): int
+	{
+		return $this->pages();
+	}
+
+	/**
+	 * Getter for the number of items per page
+	 *
+	 * @return positive-int
+	 */
+	public function limit(): int
+	{
+		return $this->limit;
+	}
+
+	/**
+	 * Returns the next page
+	 *
+	 * @return positive-int|null
+	 */
+	public function nextPage(): int|null
+	{
+		return $this->hasNextPage() ? $this->page() + 1 : null;
+	}
+
+	/**
+	 * Returns the offset (i.e. for db queries)
+	 *
+	 * @return non-negative-int
+	 */
+	public function offset(): int
+	{
+		return $this->start() - 1;
+	}
+
+	/**
+	 * Getter for the current page
+	 *
+	 * @return non-negative-int
+	 */
+	public function page(): int
+	{
+		return $this->page;
+	}
+
+	/**
+	 * Returns the total number of pages
+	 *
+	 * @return non-negative-int
+	 */
+	public function pages(): int
+	{
+		if ($this->total() === 0) {
+			return 0;
+		}
+
+		return (int)ceil($this->total() / $this->limit());
+	}
+
+	/**
+	 * Returns the previous page
+	 */
+	public function prevPage(): int|null
+	{
+		return $this->hasPrevPage() ? $this->page() - 1 : null;
+	}
+
+	/**
 	 * Creates a range of page numbers for Google-like pagination
+	 * @return non-empty-list<int>
 	 */
 	public function range(int $range = 5): array
 	{
@@ -292,11 +284,12 @@ class Pagination
 		$end   = $pages;
 
 		if ($pages <= $range) {
+			/** @var non-empty-list<int> */
 			return range($start, $end);
 		}
 
 		$middle = (int)floor($range / 2);
-		$start  = $page - $middle + ($range % 2 === 0);
+		$start  = $page - $middle + ($range % 2 === 0 ? 1 : 0);
 		$end    = $start + $range - 1;
 
 		if ($start <= 0) {
@@ -309,24 +302,29 @@ class Pagination
 			$end   = $pages;
 		}
 
+		/** @var non-empty-list<int> */
 		return range($start, $end);
 	}
 
 	/**
-	 * Returns the first page of the created range
-	 */
-	public function rangeStart(int $range = 5): int
-	{
-		return $this->range($range)[0];
-	}
-
-	/**
 	 * Returns the last page of the created range
+	 *
+	 * @return non-negative-int
 	 */
 	public function rangeEnd(int $range = 5): int
 	{
 		$range = $this->range($range);
 		return array_pop($range);
+	}
+
+	/**
+	 * Returns the first page of the created range
+	 *
+	 * @return non-negative-int
+	 */
+	public function rangeStart(int $range = 5): int
+	{
+		return $this->range($range)[0];
 	}
 
 	/**
@@ -343,6 +341,28 @@ class Pagination
 		}
 
 		$this->limit = $limit;
+		return $this;
+	}
+
+	/**
+	 * Sets the current page
+	 *
+	 * @param $page Int or int in string form;
+	 *             automatically determined if null
+	 * @return $this
+	 */
+	protected function setPage(int|string|null $page = null): static
+	{
+		if ($page !== null) {
+			if (is_numeric($page) !== true || $page < 0) {
+				throw new Exception(
+					message: 'Invalid page number: ' . $page
+				);
+			}
+
+			$this->page = (int)$page;
+		}
+
 		return $this;
 	}
 
@@ -364,26 +384,14 @@ class Pagination
 	}
 
 	/**
-	 * Sets the current page
+	 * Returns the index of the first item on the page
 	 *
-	 * @param int|string|null $page Int or int in string form;
-	 *                              automatically determined if null
-	 * @return $this
+	 * @return positive-int
 	 */
-	protected function setPage(int|string|null $page = null): static
+	public function start(): int
 	{
-		// if $page is null, it is set to a default in the setProperties() method
-		if ($page !== null) {
-			if (is_numeric($page) !== true || $page < 0) {
-				throw new Exception(
-					message: 'Invalid page number: ' . $page
-				);
-			}
-
-			$this->page = (int)$page;
-		}
-
-		return $this;
+		$index = max(0, $this->page() - 1);
+		return $index * $this->limit() + 1;
 	}
 
 	/**
@@ -402,5 +410,15 @@ class Pagination
 			'start'     => $this->start(),
 			'end'       => $this->end(),
 		];
+	}
+
+	/**
+	 * Getter for the total number of items
+	 *
+	 * @return non-negative-int
+	 */
+	public function total(): int
+	{
+		return $this->total;
 	}
 }

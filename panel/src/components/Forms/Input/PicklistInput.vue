@@ -16,8 +16,8 @@
 					:placeholder="placeholder"
 					:value="query"
 					@input="query = $event"
-					@keydown.escape.native.prevent="escape"
-					@keydown.enter.native.prevent="add"
+					@keydown.escape.prevent="escape"
+					@keydown.enter.prevent="add"
 				/>
 				<k-button
 					v-if="showCreate"
@@ -43,7 +43,7 @@
 						:value="value"
 						class="k-picklist-input-options"
 						@input="input"
-						@keydown.native.enter.prevent="enter"
+						@keydown.enter.prevent="enter"
 					/>
 				</k-input-validator>
 				<k-button
@@ -70,6 +70,7 @@
 <script>
 import Input, { props as InputProps } from "@/mixins/input.js";
 import { autofocus, disabled, options, required } from "@/mixins/props.js";
+import html, { HtmlString } from "@/panel/html";
 
 export const picklist = {
 	mixins: [autofocus, disabled, options, required],
@@ -122,23 +123,27 @@ export const props = {
 			type: [Array, String],
 			default: () => []
 		}
-	},
-	emits: ["create", "escape", "input"]
+	}
 };
 
 /**
  * A filterable list of checkbox/radio options
  * with an optional create button
- * @since 4.0.0
  *
- * @example <k-picklist-input
+ * @example
+ * <k-picklist-input
  * 		:create="create"
  * 		:options="options"
  * 		:value="value"
  *	/>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
+	emits: ["create", "escape", "input"],
 	data() {
 		return {
 			display: this.search.display ?? true,
@@ -235,7 +240,8 @@ export default {
 
 			// don't show the button if the query matches an existing option
 			const matches = this.options.filter(
-				(option) => option.text === this.query || option.value === this.query
+				(option) =>
+					this.plain(option.text) === this.query || option.value === this.query
 			);
 
 			return matches.length === 0;
@@ -274,17 +280,21 @@ export default {
 				this.$refs.options?.focus();
 			}
 		},
-		highlight(string) {
-			// make sure that no HTML exists before in the string
-			// to avoid XSS when displaying via `v-html`
-			string = this.$helper.string.stripHTML(string);
+		highlight(text) {
+			// trusted HTML gets its tags dropped, so that a match can
+			// never land inside one; untrusted text has to be escaped,
+			// as the result is rendered as HTML either way
+			const string =
+				text instanceof HtmlString
+					? this.$helper.string.stripHTML(text)
+					: this.$helper.string.escapeHTML(text);
 
 			if (this.query.length > 0) {
 				const regex = new RegExp(`(${RegExp.escape(this.query)})`, "ig");
-				return string.replace(regex, "<b>$1</b>");
+				return html(string.replace(regex, "<b>$1</b>"));
 			}
 
-			return string;
+			return html(string);
 		},
 		input(values) {
 			/**
@@ -292,6 +302,17 @@ export default {
 			 * @property {array} values
 			 */
 			this.$emit("input", values);
+		},
+		plain(text) {
+			// trusted HTML is reduced to the text it displays,
+			// untrusted text is already plain
+			if (text instanceof HtmlString) {
+				return this.$helper.string.unescapeHTML(
+					this.$helper.string.stripHTML(text)
+				);
+			}
+
+			return text;
 		}
 	}
 };

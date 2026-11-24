@@ -2,23 +2,261 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Api\Api;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\Layouts;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(LayoutField::class)]
 class LayoutFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testAcceptedFileBlueprints(): void
 	{
-		$field = $this->field('layout', []);
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			],
+			'settings' => [
+				'fields' => [
+					'background' => [
+						'type'    => 'filepicker',
+						'uploads' => 'background'
+					]
+				]
+			]
+		]);
 
-		$this->assertSame('layout', $field->type());
-		$this->assertSame('layout', $field->name());
-		$this->assertNull($field->max());
-		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
-		$this->assertSame([], $field->value());
-		$this->assertSame([['1/1']], $field->layouts());
-		$this->assertNull($field->settings());
-		$this->assertTrue($field->save());
+		$this->assertSame(['cover', 'background'], $field->acceptedFileBlueprints());
+	}
+
+	public function testAcceptedFileBlueprintsWithoutSettings(): void
+	{
+		$field = $this->field('layout', [
+			'fieldsets' => [
+				'cover' => [
+					'fields' => [
+						'image' => [
+							'type'    => 'filepicker',
+							'uploads' => 'cover'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->assertSame(['cover'], $field->acceptedFileBlueprints());
+	}
+
+	public function testApi(): void
+	{
+		$field = $this->field('layout');
+		$api   = $field->api();
+
+		$this->assertIsArray($api);
+		$this->assertCount(7, $api);
+	}
+
+	public function testApiRouteCreate(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'body' => [
+					'columns' => ['1/2', '1/2'],
+					'attrs' => [
+						'class' => 'test'
+					]
+				]
+			]
+		]);
+
+		// we need to impersonate Kirby to get the correct form
+		// without disabled fields for permission reasons
+		$this->app->impersonate('kirby');
+
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'class' => [
+						'type' => 'text',
+					]
+				]
+			]
+		]);
+
+		$api      = $field->api()[4];
+		$response = $api['action']();
+
+		$this->assertSame('test', $response['attrs']['class']);
+		$this->assertSame('1/2', $response['columns'][0]['width']);
+		$this->assertSame('1/2', $response['columns'][1]['width']);
+		$this->assertSame([], $response['columns'][0]['blocks']);
+		$this->assertSame([], $response['columns'][1]['blocks']);
+	}
+
+	public function testApiRouteFields(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'list' => [
+						'type' => 'pagelist'
+					]
+				]
+			]
+		]);
+
+		$api = new Api(['routes' => $field->api()]);
+
+		// nested field routes may return other values than arrays
+		$this->assertTrue($api->call(
+			'fields/list/delete',
+			'DELETE',
+			['body' => ['ids' => []]]
+		));
+	}
+
+	public function testApiRoutePaste(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'json' => json_encode($value)
+				]
+			]
+		]);
+
+		$field    = $this->field('layout');
+		$api      = $field->api()[5];
+		$response = $api['action']();
+
+		$this->assertCount(1, $response);
+		$this->assertArrayHasKey('id', $response[0]);
+		$this->assertArrayHasKey('columns', $response[0]);
+		$this->assertIsArray($response[0]['columns']);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('blocks', $response[0]['columns'][0]);
+		$this->assertArrayHasKey('id', $response[0]['columns'][0]['blocks'][0]);
+	}
+
+	public function testDefault(): void
+	{
+		$field = $this->field('layout', [
+			'default' => [
+				[
+					'columns' => [
+						[
+							'width' => '1/2',
+							'blocks' => [
+								[
+									'type' => 'heading',
+									'text' => 'Some title'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$default = $field->default();
+
+		$layout = $default[0];
+		$column = $layout['columns'][0];
+		$block = $column['blocks'][0];
+
+		$this->assertCount(1, $default);
+		$this->assertArrayHasKey('id', $layout);
+		$this->assertArrayHasKey('id', $column);
+		$this->assertArrayHasKey('id', $block);
+		$this->assertSame('heading', $block['type']);
+		$this->assertSame('Some title', $block['text']);
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'cover' => [
+						'type' => 'files'
+					]
+				]
+			]
+		]);
+
+		$dialogs = $field->dialogs();
+
+		// keeps the dialogs of the fields in blocks
+		$this->assertSame('fieldsets/(:any)/fields/(:any)/(:all?)', $dialogs[0]['pattern']);
+		$this->assertSame('fields/(:any)/(:all?)', $dialogs[1]['pattern']);
+
+		$result = $dialogs[1]['action']('cover', 'picker');
+
+		$this->assertInstanceOf(FieldDialogController::class, $result);
+		$this->assertInstanceOf(FilePickerField::class, $result->field);
+		$this->assertSame('cover', $result->field->name());
+		$this->assertSame('picker', $result->path);
+	}
+
+	public function testDrawers(): void
+	{
+		$field = $this->field('layout', [
+			'settings' => [
+				'fields' => [
+					'cover' => [
+						'type' => 'files'
+					]
+				]
+			]
+		]);
+
+		$drawers = $field->drawers();
+
+		// keeps the drawers of the fields in blocks
+		$this->assertSame('fieldsets/(:any)/fields/(:any)/(:all?)', $drawers[0]['pattern']);
+		$this->assertSame('fields/(:any)/(:all?)', $drawers[1]['pattern']);
+
+		$result = $drawers[1]['action']('cover', 'test-path');
+
+		$this->assertInstanceOf(FieldDrawerController::class, $result);
+		$this->assertInstanceOf(FilePickerField::class, $result->field);
+		$this->assertSame('cover', $result->field->name());
+		$this->assertSame('test-path', $result->path);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('layout', [
+			'empty' => $value = 'Custom empty text'
+		]);
+
+		$this->assertSame($value, $field->empty());
 	}
 
 	public function testExtends(): void
@@ -43,7 +281,6 @@ class LayoutFieldTest extends TestCase
 
 		// no settings
 		$field = $this->field('layout');
-
 		$this->assertNull($field->settings());
 
 		// extend with simple string
@@ -71,8 +308,49 @@ class LayoutFieldTest extends TestCase
 		$this->assertArrayHasKey('background-color', $fields);
 	}
 
+	public function testFieldsets(): void
+	{
+		$field = $this->field('layout', []);
+		$this->assertInstanceOf(Fieldsets::class, $field->fieldsets());
+	}
+
+	public function testFillWithLayouts(): void
+	{
+		$layouts = Layouts::factory([
+			[
+				'id'      => 'layout',
+				'columns' => [
+					[
+						'id'     => 'column',
+						'width'  => '1/1',
+						'blocks' => [
+							[
+								'id'      => 'block',
+								'type'    => 'heading',
+								'content' => ['text' => 'Heading']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$field = $this->field('layout');
+		$field->fill($layouts);
+
+		$value = $field->toFormValue();
+
+		$this->assertCount(1, $value);
+		$this->assertSame('layout', $value[0]['id']);
+		$this->assertSame('column', $value[0]['columns'][0]['id']);
+		$this->assertSame('block', $value[0]['columns'][0]['blocks'][0]['id']);
+	}
+
 	public function testLayouts(): void
 	{
+		$field = $this->field('layout', []);
+		$this->assertSame([['1/1']], $field->layouts());
+
 		$field = $this->field('layout', [
 			'layouts' => $layouts = [
 				['1/1'],
@@ -84,6 +362,144 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame($layouts, $field->layouts());
 	}
 
+	public function testLayoutsToValues(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout', [
+			'value' => $value
+		]);
+
+		$form = $field->layoutsToValues($value);
+
+		$this->assertArrayHasKey('id', $form[0]);
+		$this->assertArrayHasKey('columns', $form[0]);
+		$this->assertIsArray($form[0]['columns']);
+		$this->assertArrayHasKey('id', $form[0]['columns'][0]);
+		$this->assertArrayHasKey('blocks', $form[0]['columns'][0]);
+		$this->assertArrayHasKey('id', $form[0]['columns'][0]['blocks'][0]);
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('layout', []);
+		$this->assertNull($field->max());
+
+		$field = $this->field('layout', [
+			'max' => 5
+		]);
+		$this->assertSame(5, $field->max());
+	}
+
+	public function testPasteLayouts(): void
+	{
+		$value = [
+			[
+				'columns' => [
+					[
+						'blocks' => [
+							[
+								'type'    => 'heading',
+								'content' => [
+									'text' => 'A nice block',
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		$field = $this->field('layout', [
+			'value' => $value
+		]);
+
+		$original = $field->value();
+		$layouts  = Layouts::factory($value);
+		$pasted   = $field->pasteLayouts($layouts->toArray());
+
+		// layout id
+		$this->assertNotEmpty($pasted[0]['id']);
+		$this->assertNotSame($original[0]['id'], $pasted[0]['id']);
+
+		// layout column id
+		$this->assertNotEmpty($pasted[0]['columns'][0]);
+		$this->assertNotSame($original[0]['columns'][0]['id'], $pasted[0]['columns'][0]['id']);
+
+		// block id
+		$this->assertNotEmpty($pasted[0]['columns'][0]);
+		$this->assertNotSame($original[0]['columns'][0]['blocks'][0]['id'], $pasted[0]['columns'][0]['blocks'][0]['id']);
+
+		// block content
+		$this->assertNotEmpty($pasted[0]['id']);
+		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
+	}
+
+	public function testPasteLayoutsWithUnavailableBlock(): void
+	{
+		$field = $this->field('layout');
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					[
+						'width'  => '1/1',
+						'blocks' => [
+							['type' => 'not-exists', 'content' => []],
+							['type' => 'heading', 'content' => ['text' => 'A']]
+						]
+					]
+				]
+			]
+		]);
+
+		$blocks = $pasted[0]['columns'][0]['blocks'];
+
+		$this->assertCount(1, $blocks);
+		$this->assertSame('heading', $blocks[0]['type']);
+	}
+
+	public function testPasteLayoutsWithUnavailableLayout(): void
+	{
+		$field = $this->field('layout', [
+			'layouts' => [
+				['1/1']
+			]
+		]);
+
+		$pasted = $field->pasteLayouts([
+			[
+				'columns' => [
+					['width' => '1/2', 'blocks' => []],
+					['width' => '1/2', 'blocks' => []]
+				]
+			],
+			[
+				'columns' => [
+					['width' => '1/1', 'blocks' => []]
+				]
+			]
+		]);
+
+		$this->assertCount(1, $pasted);
+		$this->assertSame('1/1', $pasted[0]['columns'][0]['width']);
+	}
+
 	public function testProps(): void
 	{
 		$field = $this->field('layout');
@@ -91,32 +507,45 @@ class LayoutFieldTest extends TestCase
 		$props     = $field->props();
 		$fieldsets = $props['fieldsets'];
 
-		$this->assertIsArray($props);
-		$this->assertNull($props['empty']);
+		unset($props['fieldsets']);
+		ksort($props);
+
+		$expected = [
+			'autofocus'      => false,
+			'disabled'       => false,
+			'empty'          => null,
+			'fieldsetGroups' => null,
+			'group'          => 'blocks',
+			'help'           => null,
+			'hidden'         => false,
+			'label'          => 'Layout',
+			'layouts'        => [['1/1']],
+			'max'            => null,
+			'min'            => null,
+			'name'           => 'layout',
+			'required'       => false,
+			'saveable'       => true,
+			'selector'       => null,
+			'settings'       => null,
+			'translate'      => true,
+			'type'           => 'layout',
+			'when'           => null,
+			'width'          => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 		$this->assertSame([
-			'code', 'gallery', 'heading', 'image', 'line', 'list', 'markdown', 'quote', 'text', 'video'
+			'code',
+			'gallery',
+			'heading',
+			'image',
+			'line',
+			'list',
+			'markdown',
+			'quote',
+			'text',
+			'video'
 		], array_keys($fieldsets));
-		$this->assertNull($props['fieldsetGroups']);
-		$this->assertSame('blocks', $props['group']);
-		$this->assertNull($props['max']);
-		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
-		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
-		$this->assertNull($props['default']);
-		$this->assertFalse($props['disabled']);
-		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
-		$this->assertSame('Layout', $props['label']);
-		$this->assertSame('layout', $props['name']);
-		$this->assertNull($props['placeholder']);
-		$this->assertFalse($props['required']);
-		$this->assertTrue($props['saveable']);
-		$this->assertTrue($props['translate']);
-		$this->assertSame('layout', $props['type']);
-		$this->assertSame('1/1', $props['width']);
-		$this->assertNull($props['settings']);
-		$this->assertSame([['1/1']], $props['layouts']);
 	}
 
 	public function testReset(): void
@@ -136,24 +565,11 @@ class LayoutFieldTest extends TestCase
 		];
 
 		$field = $this->field('layout');
-
 		$field->fill($value);
-
 		$this->assertCount(1, $field->toFormValue());
 
 		$field->reset();
-
 		$this->assertSame([], $field->toFormValue());
-	}
-
-	public function testRoutes(): void
-	{
-		$field = $this->field('layout');
-
-		$routes = $field->routes();
-
-		$this->assertIsArray($routes);
-		$this->assertCount(7, $routes);
 	}
 
 	public function testToStoredValue(): void
@@ -212,6 +628,33 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame('', $field->toStoredValue());
 	}
 
+	public function testToStoredValueWithProtectedOptions(): void
+	{
+		$app   = $this->appWithProtectedPages();
+		$field = $this->field('layout', [
+			'model'    => $app->site(),
+			'settings' => [
+				'fields' => [
+					'page' => [
+						'type'    => 'select',
+						'options' => 'site.children'
+					]
+				]
+			],
+			'value' => [
+				[
+					'attrs'   => ['page' => 'b'],
+					'columns' => []
+				]
+			]
+		]);
+
+		// the stored value of a page the user must not list is kept
+		$result = json_decode($field->toStoredValue(), true);
+		$this->assertSame(['page' => 'b'], $result[0]['attrs']);
+		$this->assertTrue($field->isValid());
+	}
+
 	public function testValidations(): void
 	{
 		$field = $this->field('layout', [
@@ -261,18 +704,34 @@ class LayoutFieldTest extends TestCase
 		], $field->errors());
 	}
 
-	public function testValidationsWithInvalidBlockType(): void
+	public function testValidationsInvalidAfterOtherBlockType(): void
 	{
 		$field = $this->field('layout', [
 			'value' => [
 				[
-					'type' => 'does-not-exist',
+					'type'    => 'video',
+					'content' => [
+						'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+					]
 				],
-			],
+				[
+					'type'    => 'heading',
+					'content' => [
+						'text' => 'A nice heading',
+					]
+				],
+				[
+					'type'    => 'video',
+					'content' => [
+						'url' => 'Invalid URL',
+					]
+				]
+			]
 		]);
 
-		$this->assertTrue($field->isValid());
-		$this->assertSame([], $field->errors());
+		$this->assertSame([
+			'layout' => 'There\'s an error on the "Video-URL" field in block 3 using the "Video" block type in layout 1'
+		], $field->errors());
 	}
 
 	public function testValidationsSettings(): void
@@ -301,202 +760,17 @@ class LayoutFieldTest extends TestCase
 		$this->assertSame(['layout' => 'There\'s an error in layout 1 settings'], $field->errors());
 	}
 
-	public function testEmpty(): void
+	public function testValidationsWithInvalidBlockType(): void
 	{
 		$field = $this->field('layout', [
-			'empty' => $value = 'Custom empty text'
-		]);
-
-		$this->assertSame($value, $field->empty());
-	}
-
-	public function testDefault(): void
-	{
-		$field = $this->field('layout', [
-			'default' => [
+			'value' => [
 				[
-					'columns' => [
-						[
-							'width' => '1/2',
-							'blocks' => [
-								[
-									'type' => 'heading',
-									'text' => 'Some title'
-								]
-							]
-						]
-					]
-				]
-			]
+					'type' => 'does-not-exist',
+				],
+			],
 		]);
 
-		$default = $field->default();
-
-		$layout = $default[0];
-		$column = $layout['columns'][0];
-		$block = $column['blocks'][0];
-
-		$this->assertCount(1, $default);
-		$this->assertArrayHasKey('id', $layout);
-		$this->assertArrayHasKey('id', $column);
-		$this->assertArrayHasKey('id', $block);
-		$this->assertSame('heading', $block['type']);
-		$this->assertSame('Some title', $block['text']);
-	}
-
-	public function testToValues(): void
-	{
-		$value = [
-			[
-				'columns' => [
-					[
-						'blocks' => [
-							[
-								'type'    => 'heading',
-								'content' => [
-									'text' => 'A nice block',
-								]
-							]
-						]
-					]
-				]
-			]
-		];
-
-		$field = $this->field('layout', [
-			'value' => $value
-		]);
-
-		$form = $field->layoutsToValues($value);
-
-		$this->assertArrayHasKey('id', $form[0]);
-		$this->assertArrayHasKey('columns', $form[0]);
-		$this->assertIsArray($form[0]['columns']);
-		$this->assertArrayHasKey('id', $form[0]['columns'][0]);
-		$this->assertArrayHasKey('blocks', $form[0]['columns'][0]);
-		$this->assertArrayHasKey('id', $form[0]['columns'][0]['blocks'][0]);
-	}
-
-	public function testPaste(): void
-	{
-		$value = [
-			[
-				'columns' => [
-					[
-						'blocks' => [
-							[
-								'type'    => 'heading',
-								'content' => [
-									'text' => 'A nice block',
-								]
-							]
-						]
-					]
-				]
-			]
-		];
-
-		$field = $this->field('layout', [
-			'value' => $value
-		]);
-
-		$original = $field->value();
-		$layouts  = Layouts::factory($value);
-		$pasted   = $field->pasteLayouts($layouts->toArray());
-
-		// layout id
-		$this->assertNotEmpty($pasted[0]['id']);
-		$this->assertNotSame($original[0]['id'], $pasted[0]['id']);
-
-		// layout column id
-		$this->assertNotEmpty($pasted[0]['columns'][0]);
-		$this->assertNotSame($original[0]['columns'][0]['id'], $pasted[0]['columns'][0]['id']);
-
-		// block id
-		$this->assertNotEmpty($pasted[0]['columns'][0]);
-		$this->assertNotSame($original[0]['columns'][0]['blocks'][0]['id'], $pasted[0]['columns'][0]['blocks'][0]['id']);
-
-		// block content
-		$this->assertNotEmpty($pasted[0]['id']);
-		$this->assertSame($original[0]['columns'][0]['blocks'][0]['content'], $pasted[0]['columns'][0]['blocks'][0]['content']);
-	}
-
-	public function testRouteCreate(): void
-	{
-		$this->app = $this->app->clone([
-			'request' => [
-				'body' => [
-					'columns' => ['1/2', '1/2'],
-					'attrs' => [
-						'class' => 'test'
-					]
-				]
-			]
-		]);
-
-		// we need to impersonate Kirby to get the correct form
-		// without disabled fields for permission reasons
-		$this->app->impersonate('kirby');
-
-		$field = $this->field('layout', [
-			'settings' => [
-				'fields' => [
-					'class' => [
-						'type' => 'text',
-					]
-				]
-			]
-		]);
-
-		$route = $field->routes()[4];
-
-		$response = $route['action']();
-
-		$this->assertSame('test', $response['attrs']['class']);
-		$this->assertSame('1/2', $response['columns'][0]['width']);
-		$this->assertSame('1/2', $response['columns'][1]['width']);
-		$this->assertSame([], $response['columns'][0]['blocks']);
-		$this->assertSame([], $response['columns'][1]['blocks']);
-	}
-
-	public function testRoutePaste(): void
-	{
-		$value = [
-			[
-				'columns' => [
-					[
-						'blocks' => [
-							[
-								'type'    => 'heading',
-								'content' => [
-									'text' => 'A nice block',
-								]
-							]
-						]
-					]
-				]
-			]
-		];
-
-		$this->app = $this->app->clone([
-			'request' => [
-				'query' => [
-					'json' => json_encode($value)
-				]
-			]
-		]);
-
-		$field = $this->field('layout');
-		$route = $field->routes()[5];
-
-		$response = $route['action']();
-
-		$this->assertCount(1, $response);
-		$this->assertArrayHasKey('id', $response[0]);
-		$this->assertArrayHasKey('columns', $response[0]);
-		$this->assertIsArray($response[0]['columns']);
-		$this->assertArrayHasKey('id', $response[0]['columns'][0]);
-		$this->assertArrayHasKey('blocks', $response[0]['columns'][0]);
-		$this->assertArrayHasKey('id', $response[0]['columns'][0]['blocks'][0]);
+		$this->assertTrue($field->isValid());
+		$this->assertSame([], $field->errors());
 	}
 }

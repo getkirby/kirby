@@ -7,9 +7,16 @@
 </template>
 
 <script>
+/* v8 ignore file */
 import Dialog from "@/mixins/dialog.js";
 import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `k-file-picker-dialog` instead
+ */
 export default {
 	mixins: [Dialog, ModelsDialogProps],
 	props: {
@@ -20,6 +27,7 @@ export default {
 				text: window.panel.t("dialog.files.empty")
 			})
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

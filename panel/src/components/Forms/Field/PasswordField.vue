@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 		<k-input
@@ -26,6 +26,9 @@ import counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-password-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, PasswordInput, counter],
@@ -40,6 +43,7 @@ export default {
 			default: "key"
 		}
 	},
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

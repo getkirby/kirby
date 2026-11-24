@@ -14,9 +14,6 @@ use Kirby\Toolkit\Str;
  * well as loading the dedicated
  * environment options.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     3.7.0
@@ -50,6 +47,8 @@ class Environment
 
 	/**
 	 * Sanitized `$_SERVER` data
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $info;
 
@@ -99,9 +98,7 @@ class Environment
 	protected string $scriptPath;
 
 	/**
-	 * Class constructor
-	 *
-	 * @param array|null $info Optional override for `$_SERVER`
+	 * @param $info Optional override for `$_SERVER`
 	 */
 	public function __construct(
 		array|null $options = null,
@@ -150,7 +147,7 @@ class Environment
 	 * the stored information and re-detect the
 	 * environment if necessary.
 	 *
-	 * @param array|null $info Optional override for `$_SERVER`
+	 * @param $info Optional override for `$_SERVER`
 	 */
 	public function detect(
 		array|null $options = null,
@@ -258,7 +255,7 @@ class Environment
 	/**
 	 * Sets the host name, port and protocol without configuration
 	 *
-	 * @param bool $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
+	 * @param $insecure Include the `Host`, `Forwarded` and `X-Forwarded-*` headers in the search
 	 */
 	protected function detectAuto(bool $insecure = false): void
 	{
@@ -302,7 +299,7 @@ class Environment
 			'host'   => $this->host,
 			'path'   => $this->path,
 			'port'   => $this->port,
-			'scheme' => $this->https ? 'https' : 'http',
+			'scheme' => $this->https === true ? 'https' : 'http',
 		]);
 
 		$this->baseUrl = $this->baseUri->toString();
@@ -313,7 +310,7 @@ class Environment
 	/**
 	 * Detects if the request is served by the CLI
 	 *
-	 * @param bool|null $override Set to a boolean to override detection (for testing)
+	 * @param $override Set to a boolean to override detection (for testing)
 	 */
 	protected function detectCli(bool|null $override = null): bool
 	{
@@ -327,6 +324,7 @@ class Environment
 
 		// @codeCoverageIgnoreStart
 		$sapi = php_sapi_name();
+
 		if ($sapi === 'cli') {
 			return true;
 		}
@@ -348,6 +346,8 @@ class Environment
 	/**
 	 * Detects the host, protocol, port and client IP
 	 * from the `Forwarded` and `X-Forwarded-*` headers
+	 *
+	 * @return array{for: string|null, host: string|null, https: bool, port: int|null}
 	 */
 	protected function detectForwarded(): array
 	{
@@ -450,7 +450,7 @@ class Environment
 	 * Detects the port of the reverse proxy from the
 	 * `X-Forwarded-Host` or `X-Forwarded-Port` header
 	 *
-	 * @param bool $https Whether HTTPS was detected
+	 * @param $https Whether HTTPS was detected
 	 */
 	protected function detectForwardedPort(bool $https): int|null
 	{
@@ -477,7 +477,7 @@ class Environment
 	/**
 	 * Detects the host name from various headers
 	 *
-	 * @param bool $insecure Include the `Host` header in the search
+	 * @param $insecure Include the `Host` header in the search
 	 */
 	protected function detectHost(bool $insecure = false): string|null
 	{
@@ -585,6 +585,8 @@ class Environment
 
 	/**
 	 * Splits a hostname:port string into its components
+	 *
+	 * @return array{host: string|null, port: int|null}
 	 */
 	protected function detectPortInHost(string|null $host = null): array
 	{
@@ -648,10 +650,10 @@ class Environment
 	 * $server->get();
 	 * ```
 	 *
-	 * @param string|false|null $key The key to look for. Pass `false` or `null`
-	 *                               to return the entire server array.
-	 * @param mixed $default Optional default value, which should be
-	 *                       returned if no element has been found
+	 * @param $key The key to look for. Pass `false` or `null`
+	 *            to return the entire server array.
+	 * @param $default Optional default value, which should be
+	 *                returned if no element has been found
 	 */
 	public function get(string|false|null $key = null, $default = null)
 	{
@@ -671,17 +673,17 @@ class Environment
 	 * of the current app instance; falls back to `$_SERVER` if
 	 * no app instance is running
 	 *
-	 * @param string|false|null $key The key to look for. Pass `false` or `null`
-	 *                               to return the entire server array.
-	 * @param mixed $default Optional default value, which should be
-	 *                       returned if no element has been found
+	 * @param $key The key to look for. Pass `false` or `null`
+	 *            to return the entire server array.
+	 * @param $default Optional default value, which should be
+	 *                returned if no element has been found
 	 */
 	public static function getGlobally(
 		string|false|null $key = null,
 		$default = null
 	) {
 		// first try the global `Environment` object if the CMS is running
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			return $app->environment()->get($key, $default);
 		}
 
@@ -714,6 +716,8 @@ class Environment
 
 	/**
 	 * Returns the sanitized `$_SERVER` array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function info(): array
 	{
@@ -797,7 +801,7 @@ class Environment
 	 * Loads and returns options from environment-specific
 	 * PHP files (by host name and server IP address or CLI)
 	 *
-	 * @param string $root Root directory to load configs from
+	 * @param $root Root directory to load configs from
 	 */
 	public function options(string $root): array
 	{
@@ -975,13 +979,11 @@ class Environment
 			return $scriptPath;
 		}
 
-		// replace Windows backslashes
+		// replace Windows backslashes before and after
+		// removing the script, as `dirname()` adds new ones
 		$scriptPath = str_replace('\\', '/', $scriptPath);
-		// remove the script
 		$scriptPath = dirname($scriptPath);
-		// replace those fucking backslashes again
 		$scriptPath = str_replace('\\', '/', $scriptPath);
-		// remove the leading and trailing slashes
 		$scriptPath = trim($scriptPath, '/');
 
 		// top-level scripts don't have a path
@@ -1010,6 +1012,8 @@ class Environment
 
 	/**
 	 * Returns all environment data as array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{

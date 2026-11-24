@@ -9,11 +9,9 @@ use Kirby\Query\Visitors\Visitor;
  * with a value for when the condition is true
  * and another value for when the condition is false
  *
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 class TernaryNode extends Node
@@ -29,8 +27,8 @@ class TernaryNode extends Node
 	{
 		return $visitor->ternary(
 			condition: $this->condition->resolve($visitor),
-			true:      $this->true?->resolve($visitor),
-			false:     $this->false->resolve($visitor)
+			true:      $this->true !== null ? fn () => $this->true->resolve($visitor) : null,
+			false:     fn () => $this->false->resolve($visitor)
 		);
 	}
 }

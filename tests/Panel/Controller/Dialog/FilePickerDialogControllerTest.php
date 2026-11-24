@@ -1,0 +1,434 @@
+<?php
+
+namespace Kirby\Panel\Controller\Dialog;
+
+use Kirby\Cms\File;
+use Kirby\Panel\Collector\FilesCollector;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Dialog;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(ModelPickerDialogController::class)]
+#[CoversClass(FilePickerDialogController::class)]
+class FilePickerDialogControllerTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.Dialog.FilePickerDialogController';
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'test.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+	}
+
+	public function test__Construct(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'page'   => 5,
+					'search' => 'test',
+				],
+			],
+		]);
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertSame(5, $controller->page);
+		$this->assertSame('test', $controller->search);
+	}
+
+	public function testCollector(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertInstanceOf(FilesCollector::class, $controller->collector());
+	}
+
+	public function testCollectorWithFileModel(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()->file('test.jpg')
+		);
+
+		$this->assertCount(1, $controller->collector()->models());
+	}
+
+	public function testFind(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertInstanceOf(File::class, $controller->find('test.jpg'));
+	}
+
+	public function testItem(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$item = $controller->item($this->app->file('test.jpg'));
+		$this->assertArrayHasKey('image', $item);
+		$this->assertSame('', (string)$item['info']);
+		$this->assertSame('list', $item['layout']);
+		$this->assertSame('test.jpg', $item['id']);
+		$this->assertSame('/site/files/test.jpg', $item['link']);
+		$this->assertArrayHasKey('permissions', $item);
+	}
+
+	public function testItemDragText(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => ['uuid' => false]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'b.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'test.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		// own files are referenced by filename,
+		// files of other models by their absolute URL
+		$own   = $this->app->file('test.jpg');
+		$other = $this->app->file('a/b.jpg');
+
+		$this->assertSame('(image: test.jpg)', $controller->item($own)['dragText']);
+		$this->assertSame('(image: ' . $other->url() . ')', $controller->item($other)['dragText']);
+	}
+
+	public function testItemDragTextForUserFiles(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content' => ['uuid' => false]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'avatar.jpg']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$user = $this->app->user('test');
+		$file = $user->file('avatar.jpg');
+
+		// own files of the user are referenced by filename
+		$controller = new FilePickerDialogController(model: $user);
+		$this->assertSame('(image: avatar.jpg)', $controller->item($file)['dragText']);
+
+		// user files picked for other models use their absolute URL
+		$controller = new FilePickerDialogController(model: $this->app->site());
+		$this->assertSame('(image: ' . $file->url() . ')', $controller->item($file)['dragText']);
+	}
+
+	public function testItems(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$items = $controller->items();
+		$this->assertCount(1, $items);
+		$this->assertSame('test.jpg', $items[0]['filename']);
+	}
+
+	public function testItemsSorted(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['sort' => 3]],
+							['filename' => 'b.jpg', 'content' => ['sort' => 1]],
+							['filename' => 'c.jpg', 'content' => ['sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home')
+		);
+
+		$this->assertSame(
+			['b.jpg', 'c.jpg', 'a.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testItemsWhileSearching(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => ['search' => 'tree']
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'a.jpg', 'content' => ['alt' => 'Old tree', 'sort' => 1]],
+							['filename' => 'b.jpg', 'content' => ['alt' => 'Tree', 'sort' => 2]]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home')
+		);
+
+		// search results keep their ranking
+		$this->assertSame(
+			['b.jpg', 'a.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testItemsWithQueryInvalid(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site(),
+			query: 'site.title'
+		);
+
+		$this->assertSame([], $controller->items());
+	}
+
+	public function testItemsWithQueryOrder(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'home',
+						'files' => [
+							['filename' => 'b-page.jpg'],
+							['filename' => 'd-page.jpg']
+						]
+					]
+				],
+				'files' => [
+					['filename' => 'a-site.jpg'],
+					['filename' => 'c-site.jpg']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home'),
+			query: 'page.files.add(site.files)'
+		);
+
+		$this->assertSame(
+			['b-page.jpg', 'd-page.jpg', 'a-site.jpg', 'c-site.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testItemsWithQueryPage(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'photography',
+						'files'    => [
+							['filename' => 'b.jpg', 'content' => ['sort' => 2]],
+							['filename' => 'a.jpg', 'content' => ['sort' => 1]]
+						],
+						'children' => [
+							['slug' => 'trees']
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('photography/trees'),
+			query: 'page.parent'
+		);
+
+		$this->assertSame(
+			['a.jpg', 'b.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site(),
+			query: 'kirby.page("photography")'
+		);
+
+		$this->assertSame(
+			['a.jpg', 'b.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testItemsWithQuerySite(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->page('home'),
+			query: 'site'
+		);
+
+		$this->assertSame(
+			['test.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testItemsWithQueryUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'avatar.jpg']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site(),
+			query: 'kirby.user("test")'
+		);
+
+		$this->assertSame(
+			['avatar.jpg'],
+			array_column($controller->items(), 'filename')
+		);
+	}
+
+	public function testLoad(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$dialog = $controller->load();
+		$this->assertInstanceOf(Dialog::class, $dialog);
+		$this->assertSame('k-model-picker-dialog', $dialog->component);
+	}
+
+	public function testProps(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$props = $controller->props();
+		$this->assertSame('k-model-picker-dialog', $props['component']);
+		$this->assertTrue($props['hasSearch']);
+		$this->assertCount(1, $props['items']);
+		$this->assertSame('list', $props['layout']);
+		$this->assertNull($props['max']);
+		$this->assertTrue($props['multiple']);
+		$this->assertNull($props['size']);
+		$this->assertSame([], $props['value']);
+	}
+
+	public function testPropsWithValue(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'value' => 'test.jpg',
+				],
+			],
+		]);
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$props = $controller->props();
+		$this->assertSame(['test.jpg'], $props['value']);
+	}
+
+	public function testQuery(): void
+	{
+		$controller = new FilePickerDialogController(
+			model: $this->app->site()
+		);
+
+		$this->assertSame('site.files.sorted', $controller->query());
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->file('test.jpg')
+		);
+
+		$this->assertSame('file.siblings.sorted', $controller->query());
+
+		$controller = new FilePickerDialogController(
+			model: $this->app->file('test.jpg'),
+			query: 'site.files.type("image")'
+		);
+
+		$this->assertSame('site.files.type("image")', $controller->query());
+	}
+}

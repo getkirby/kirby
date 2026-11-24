@@ -1,0 +1,62 @@
+<?php
+
+namespace Kirby\Form\Mixin;
+
+use Closure;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\Str;
+
+/**
+ * Provides the `converter` prop to transform the field value before saving
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+trait Converter
+{
+	/**
+	 * The field value will be converted with the selected converter before the value gets saved. Available converters: `label`, `lower`, `slug`, `ucfirst`, `upper`
+	 */
+	#[Prop]
+	protected string|null $converter = null;
+
+	public function convert(string|null $value): string|null
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		if ($converter = $this->converter()) {
+			return $this->converters()[$converter]->call($this, $value);
+		}
+
+		return $value;
+	}
+
+	public function converter(): string|null
+	{
+		if ($this->converter !== null && array_key_exists($this->converter, $this->converters()) === false) {
+			throw new InvalidArgumentException(
+				key: 'field.converter.invalid',
+				data: ['converter' => $this->converter]
+			);
+		}
+
+		return $this->converter;
+	}
+
+	/**
+	 * @return array<string, Closure>
+	 */
+	public function converters(): array
+	{
+		return [
+			'label'   => fn ($value) => Str::label($value),
+			'lower'   => fn ($value) => Str::lower($value),
+			'slug'    => fn ($value) => Str::slug($value),
+			'ucfirst' => fn ($value) => Str::ucfirst($value),
+			'upper'   => fn ($value) => Str::upper($value),
+		];
+	}
+}

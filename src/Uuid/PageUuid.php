@@ -9,18 +9,15 @@ use Kirby\Cms\Page;
 /**
  * UUID for $page
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @extends \Kirby\Uuid\ModelUuid<\Kirby\Cms\Page>
+ * @extends ModelUuid<Page>
  */
 class PageUuid extends ModelUuid
 {
-	protected const TYPE = 'page';
+	protected const string TYPE = 'page';
 
 	/**
 	 * Removes the current UUID from cache,
@@ -28,10 +25,6 @@ class PageUuid extends ModelUuid
 	 */
 	public function clear(bool $recursive = false): bool
 	{
-		/**
-		 * If $recursive, also clear UUIDs from cache for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->clear(true);
@@ -47,16 +40,19 @@ class PageUuid extends ModelUuid
 	 */
 	protected function findByCache(): Page|null
 	{
-		if ($key = $this->key()) {
-			if ($value = Uuids::cache()->get($key)) {
-				$page = App::instance()->page($value);
+		$key   = $this->key();
+		$value = $key !== null ? Uuids::cache()->get($key) : null;
 
-				// the cached path can be stale,
-				// e.g. when the page has been moved or copied
-				if ($this->isFor($page) === true) {
-					return $page;
-				}
-			}
+		if ($value === null) {
+			return null;
+		}
+
+		$page = App::instance()->page($value);
+
+		// the cached path can be stale,
+		// e.g. when the page has been moved or copied
+		if ($this->isFor($page) === true) {
+			return $page;
 		}
 
 		return null;
@@ -65,16 +61,24 @@ class PageUuid extends ModelUuid
 	/**
 	 * Generator for all pages and drafts in the site
 	 *
-	 * @return \Generator|\Kirby\Cms\Page[]
+	 * @return Generator<string, Page>
 	 */
 	public static function index(Page|null $entry = null): Generator
 	{
 		$entry ??= App::instance()->site();
 
 		foreach ($entry->childrenAndDrafts() as $page) {
-			yield $page;
+			yield $page->id() => $page;
 			yield from static::index($page);
 		}
+	}
+
+	/**
+	 * Returns the page object
+	 */
+	public function model(bool $lazy = false): Page|null
+	{
+		return parent::model($lazy);
 	}
 
 	/**
@@ -85,10 +89,6 @@ class PageUuid extends ModelUuid
 		bool $force = false,
 		bool $recursive = false
 	): bool {
-		/**
-		 * If $recursive, also populate UUIDs for all children
-		 * @var \Kirby\Cms\Page $model
-		 */
 		if ($recursive === true && $model = $this->model()) {
 			foreach ($model->childrenAndDrafts() as $child) {
 				$child->uuid()->populate($force, true);
@@ -103,27 +103,6 @@ class PageUuid extends ModelUuid
 	 */
 	public function toPermalink(): string
 	{
-		// make sure UUID is cached because the permalink
-		// route only looks up UUIDs from cache
-		if ($this->isCached() === false) {
-			$this->populate();
-		}
-
-		$kirby = App::instance();
-		$url   = $kirby->url();
-
-		if ($language = $kirby->language('current')) {
-			$url = $language->url();
-		}
-
-		return $url . '/@/' . static::TYPE . '/' . $this->id();
-	}
-
-	/**
-	 * @deprecated 5.1.0 Use `::toPermalink()` instead
-	 */
-	public function url(): string
-	{
-		return $this->toPermalink();
+		return (new Permalink($this))->url();
 	}
 }

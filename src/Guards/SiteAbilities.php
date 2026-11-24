@@ -1,0 +1,29 @@
+<?php
+
+namespace Kirby\Guards;
+
+use Kirby\Cms\Site;
+
+/**
+ * Abilities for the `$site` object
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @extends ModelAbilities<Site>
+ */
+class SiteAbilities extends ModelAbilities
+{
+	protected function error(
+		string $key,
+		array $data = [],
+		array $details = []
+	): never {
+		parent::error(
+			key: 'site.' . $key,
+			data: $data,
+			details: $details
+		);
+	}
+}

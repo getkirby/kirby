@@ -1,13 +1,13 @@
 <template>
-	<div class="k-field k-info-field">
+	<div :class="['k-field k-info-field', $attrs.class]" :style="$attrs.style">
 		<k-headline v-if="label">{{ label }}</k-headline>
 
 		<k-box :icon="icon" :theme="theme">
-			<k-text :html="text" />
+			<k-text :text="text" />
 		</k-box>
 
 		<footer v-if="help" class="k-field-footer">
-			<k-text class="k-help k-field-help" :html="help" />
+			<k-text class="k-help k-field-help" :text="help" />
 		</footer>
 	</div>
 </template>
@@ -16,10 +16,15 @@
 import { help, label } from "@/mixins/props.js";
 
 /**
- * @example <k-info-field label="Info" text="This is a nice info text" />
+ * @example
+ * <k-info-field label="Info" text="This is a nice info text" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [help, label],
+	inheritAttrs: false,
 	props: {
 		/**
 		 * Sets an icon for the info box.

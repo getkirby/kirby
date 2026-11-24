@@ -3,7 +3,7 @@
 		:buttons="buttons"
 		data-inline="true"
 		class="k-block-options"
-		@mousedown.native.prevent
+		@mousedown.prevent
 	/>
 </template>
 
@@ -34,7 +34,11 @@ export const props = {
  * Floating options menu for a block that
  * appears when the block is focused/selected.
  *
- * @example <k-block-options :is-editable="true" />
+ * @example
+ * <k-block-options :is-editable="true" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
@@ -210,7 +214,7 @@ export default {
 .k-block-options > .k-button:not(:last-of-type) {
 	border-inline-end: 1px solid var(--toolbar-border);
 }
-.k-block-options .k-dropdown-content {
+.k-block-options .k-dropdown {
 	margin-top: 0.5rem;
 }
 </style>

@@ -1,0 +1,48 @@
+<?php
+
+namespace Kirby\Panel\Ui\Dialog;
+
+use Kirby\Panel\Ui\Dialog;
+use Kirby\Toolkit\HtmlString;
+
+/**
+ * Dialog that contains a set of fields
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @unstable
+ */
+class FormDialog extends TextDialog
+{
+	public function __construct(
+		string|null $component = 'k-form-dialog',
+		string|array|bool|null $cancelButton = null,
+		public array $fields = [],
+		string|null $size = 'medium',
+		string|array|bool|null $submitButton = null,
+		string|HtmlString|null $text = null,
+		public array $value = [],
+		...$attrs
+	) {
+		parent::__construct(...[
+			...$attrs,
+			'component'    => $component,
+			'cancelButton' => $cancelButton,
+			'size'         => $size,
+			'submitButton' => $submitButton,
+			'text'         => $text
+		]);
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'fields' => $this->fields,
+			// object, so an empty value isn't sent as a JSON array
+			'value'  => (object)$this->value
+		];
+	}
+}

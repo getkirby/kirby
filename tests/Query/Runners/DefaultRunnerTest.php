@@ -5,7 +5,6 @@ namespace Kirby\Query\Runners;
 use ArrayAccess;
 use Kirby\Query\Query;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(DefaultRunner::class)]
@@ -20,7 +19,6 @@ class DefaultRunnerTest extends TestCase
 	}
 
 	#[DataProvider('interceptProvider')]
-	#[CoversNothing]
 	public function testIntercept(
 		string $query,
 		array $context,
@@ -43,28 +41,23 @@ class DefaultRunnerTest extends TestCase
 	 * Runners should keep a cache of parsed queries
 	 * to avoid parsing the same query multiple times
 	 */
-	public function testResolverMemoryCache(): void
+	public function testParseMemoryCache(): void
 	{
-		$cache = [];
-
-		$cacheSpy = $this->createMock(ArrayAccess::class);
-
+		$cache    = [];
+		$cacheSpy = $this->createStub(ArrayAccess::class);
 		$cacheSpy
-			->expects($this->exactly(3))
 			->method('offsetExists')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return isset($cache[$key]);
 			});
 
 		$cacheSpy
-			->expects($this->exactly(2))
 			->method('offsetGet')
 			->willReturnCallback(function ($key) use (&$cache) {
 				return $cache[$key] ?? null;
 			});
 
 		$cacheSpy
-			->expects($this->exactly(1))
 			->method('offsetSet')
 			->willReturnCallback(function ($key, $val) use (&$cache) {
 				$cache[$key] = $val;
@@ -119,5 +112,50 @@ class DefaultRunnerTest extends TestCase
 		$runner = new DefaultRunner(global: ['null' => fn () => null]);
 		$result = $runner->run('null');
 		$this->assertNull($result);
+	}
+
+	/**
+	 * A cached query must use the globals of the runner
+	 * that runs it, not those of the runner that parsed it
+	 */
+	public function testRunWithCachedQueryAndOtherGlobals(): void
+	{
+		$cache = [];
+
+		$runner = new DefaultRunner(global: ['foo' => fn () => 'one'], cache: $cache);
+		$this->assertSame('one', $runner->run('foo()'));
+
+		$runner = new DefaultRunner(global: ['foo' => fn () => 'two'], cache: $cache);
+		$this->assertSame('two', $runner->run('foo()'));
+	}
+
+	/**
+	 * A cached query must use the interceptor of the runner
+	 * that runs it, not that of the runner that parsed it
+	 */
+	public function testRunWithCachedQueryAndOtherInterceptor(): void
+	{
+		$cache = [];
+		$log   = [];
+
+		$runner = new DefaultRunner(
+			interceptor: function ($value) use (&$log) {
+				$log[] = 'one';
+				return $value;
+			},
+			cache: $cache
+		);
+		$runner->run('foo.bar', ['foo' => ['bar' => 42]]);
+
+		$runner = new DefaultRunner(
+			interceptor: function ($value) use (&$log) {
+				$log[] = 'two';
+				return $value;
+			},
+			cache: $cache
+		);
+		$runner->run('foo.bar', ['foo' => ['bar' => 42]]);
+
+		$this->assertSame(['one', 'two'], $log);
 	}
 }

@@ -2,55 +2,13 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(ObjectField::class)]
 class ObjectFieldTest extends TestCase
 {
-	public function testData(): void
-	{
-		$field = $this->field('object', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			],
-			'value' => $value = [
-				'text' => 'test'
-			]
-		]);
-
-		$this->assertSame($value, $field->data());
-	}
-
-	public function testDataWhenEmpty(): void
-	{
-		$field = $this->field('object', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
-
-		$this->assertSame('', $field->data());
-	}
-
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('object', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
-
-		$this->assertSame('object', $field->type());
-		$this->assertSame('object', $field->name());
-		$this->assertIsArray($field->fields());
-		$this->assertSame('', $field->value());
-		$this->assertTrue($field->save());
-	}
-
-	public function testDefaultValue(): void
+	public function testDefault(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -80,24 +38,29 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('', $field->emptyValue());
+		$this->assertSame([], $field->emptyValue());
 
-		// an untouched field and a field filled with its own stored
-		// value must produce the same form value
-		$field->fillWithEmptyValue();
+		// an untouched field, a reset field and a field filled with its
+		// own stored value must all produce the same form value
+		$this->assertSame([], $field->toFormValue());
 
-		$this->assertSame('', $field->toFormValue());
-		$this->assertSame('', $field->toStoredValue());
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+		$this->assertSame([], $field->toStoredValue());
 
 		$field->fill($field->toStoredValue());
 
-		$this->assertSame('', $field->toFormValue());
+		$this->assertSame([], $field->toFormValue());
 	}
 
 	public function testErrors(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
 				'url' => [
 					'type' => 'url',
 					'minlength' => 20
@@ -110,12 +73,25 @@ class ObjectFieldTest extends TestCase
 
 		$expected = [
 			'object' =>
-				'There’s an error in the "url" field:' . "\n" .
+			'There’s an error in the "Url" field:' . "\n" .
 				'Please enter a longer value. (min. 20 characters)' . "\n" .
 				'Please enter a valid URL'
 		];
 
 		$this->assertSame($expected, $field->errors());
+	}
+
+	public function testErrorsInSubclass(): void
+	{
+		$field = new class (
+			model: new Page(['slug' => 'test']),
+			fields: [
+				'text' => ['type' => 'text']
+			],
+			value: ['text' => 'foo']
+		) extends ObjectField {};
+
+		$this->assertSame([], $field->errors());
 	}
 
 	public function testErrorsWhenEmpty(): void
@@ -131,13 +107,41 @@ class ObjectFieldTest extends TestCase
 		$this->assertSame([], $field->errors());
 	}
 
-	public function testFieldsMissing(): void
+	public function testFields(): void
 	{
 		$field = $this->field('object', []);
 		$this->assertSame([], $field->fields());
 	}
 
-	public function testTagsField(): void
+	public function testProps(): void
+	{
+		$field = $this->field('object');
+		$props = $field->props();
+
+		// makes it easier to compare the arrays
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'disabled'  => false,
+			'empty'     => null,
+			'fields'    => [],
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Object',
+			'name'      => 'object',
+			'required'  => false,
+			'saveable'  => true,
+			'translate' => true,
+			'type'      => 'object',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testToFormValueTagsField(): void
 	{
 		$field = $this->field('object', [
 			'fields' => [
@@ -151,12 +155,58 @@ class ObjectFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame(['a', 'b'], $field->value()['tags']);
+		$this->assertSame(['a', 'b'], $field->toFormValue()['tags']);
 
 		$expected = [
 			'tags' => 'a, b'
 		];
 
-		$this->assertSame($expected, $field->data());
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('object', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			],
+			'value' => $value = [
+				'text' => 'test'
+			]
+		]);
+
+		$this->assertSame($value, $field->toStoredValue());
+	}
+
+	public function testToStoredValueWhenEmpty(): void
+	{
+		$field = $this->field('object', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$this->assertSame([], $field->toStoredValue());
+	}
+
+	public function testToStoredValueWithToggle(): void
+	{
+		$field = $this->field('object', [
+			'fields' => [
+				'flag' => [
+					'type' => 'toggle'
+				]
+			],
+			'value' => [
+				'flag' => true
+			]
+		]);
+
+		$this->assertSame(['flag' => 'true'], $field->toStoredValue());
+		$this->assertTrue($field->toFormValue()['flag']);
 	}
 }

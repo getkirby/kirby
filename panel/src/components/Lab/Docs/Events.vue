@@ -22,7 +22,7 @@
 						</td>
 						<td>
 							<k-lab-docs-warning title="Deprecated" :text="event.deprecated" />
-							<k-text :html="event.description" />
+							<k-text :text="event.description" />
 						</td>
 						<td v-if="hasProperties">
 							<k-lab-docs-params :params="event.properties" />
@@ -49,6 +49,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props]
 };

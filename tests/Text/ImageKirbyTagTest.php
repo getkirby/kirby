@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class ImageKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.ImageKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.ImageKirbyTag';
 
 	protected function setUp(): void
 	{
@@ -26,130 +26,12 @@ class ImageKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testWithoutFigure(): void
-	{
-		$kirby = $this->app->clone([
-			'options' => [
-				'kirbytext' => [
-					'image' => [
-						'figure' => false
-					]
-				]
-			]
-		]);
-
-		$expected = '<img alt="" src="https://test.com/something.jpg">';
-
-		$this->assertSame($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
-	}
-
 	public function testWithCaption(): void
 	{
 		$kirby    = $this->app->clone();
 		$expected = '<figure><img alt="" src="/myimage.jpg"><figcaption>This is an <em>awesome</em> image and this a <a href="">link</a></figcaption></figure>';
 
 		$this->assertSame($expected, $kirby->kirbytext('(image: myimage.jpg caption: This is an *awesome* image and this a <a href="">link</a>)'));
-	}
-
-	public function testWithSrcset(): void
-	{
-		$kirby = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'text' => '(image: image.jpg srcset: 200, 300)'
-						],
-						'files' => [
-							[
-								'filename' => 'image.jpg',
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $kirby->page('a');
-		$image = $page->file('image.jpg');
-
-		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
-
-		$this->assertSame($expected, $page->text()->kt()->value());
-	}
-
-	public function testWithSrcsetFromThumbsOption(): void
-	{
-		$kirby = $this->app->clone([
-			'options' => [
-				'thumbs' => [
-					'srcsets' => [
-						'album' => [
-							'800w'  => ['width' => 800],
-							'1024w' => ['width' => 1024]
-						]
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'text' => '(image: image.jpg srcset: album)'
-						],
-						'files' => [
-							[
-								'filename' => 'image.jpg',
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $kirby->page('a');
-		$image = $page->file('image.jpg');
-
-		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset('album') . '"></figure>';
-
-		$this->assertSame($expected, $page->text()->kt()->value());
-	}
-
-	public function testWithSrcsetFromDefaults(): void
-	{
-		$kirby = $this->app->clone([
-			'options' => [
-				'kirbytext' => [
-					'image' => [
-						'srcset' => [200, 300]
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'text' => '(image: image.jpg)'
-						],
-						'files' => [
-							[
-								'filename' => 'image.jpg',
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $kirby->page('a');
-		$image = $page->file('image.jpg');
-
-		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
-
-		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testWithFileLink(): void
@@ -214,6 +96,23 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
+	public function testWithoutFigure(): void
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'kirbytext' => [
+					'image' => [
+						'figure' => false
+					]
+				]
+			]
+		]);
+
+		$expected = '<img alt="" src="https://test.com/something.jpg">';
+
+		$this->assertSame($expected, $kirby->kirbytext('(image: https://test.com/something.jpg)'));
+	}
+
 	public function testWithParent(): void
 	{
 		$app = new App([
@@ -247,6 +146,107 @@ class ImageKirbyTagTest extends TestCase
 		$this->assertSame($expected, $app->kirbytag('image', 'b.jpg', [], [
 			'parent' => $page,
 		]));
+	}
+
+	public function testWithSrcset(): void
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg srcset: 200, 300)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testWithSrcsetFromDefaults(): void
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'kirbytext' => [
+					'image' => [
+						'srcset' => [200, 300]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset([200, 300]) . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testWithSrcsetFromThumbsOption(): void
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'srcsets' => [
+						'album' => [
+							'800w'  => ['width' => 800],
+							'1024w' => ['width' => 1024]
+						]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(image: image.jpg srcset: album)'
+						],
+						'files' => [
+							[
+								'filename' => 'image.jpg',
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('a');
+		$image = $page->file('image.jpg');
+
+		$expected = '<figure><img alt="" src="' . $image->url() . '" srcset="' . $image->srcset('album') . '"></figure>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
 	public function testWithWidthHeightAuto(): void

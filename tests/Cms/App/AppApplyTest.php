@@ -111,6 +111,24 @@ class AppApplyTest extends TestCase
 		$this->assertSame(10, $this->app->apply('test', ['value' => 10]));
 	}
 
+	public function testApplyWithoutHandler(): void
+	{
+		$this->assertSame(10, $this->app->apply('does-not-exist', ['value' => 10]));
+	}
+
+	public function testApplyWithoutReturnValue(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'test' => function (int $value) {
+					// don't return anything
+				}
+			]
+		]);
+
+		$this->assertSame(10, $this->app->apply('test', ['value' => 10]));
+	}
+
 	public function testApplyWithSingleParameter(): void
 	{
 		$self = $this;
@@ -166,23 +184,5 @@ class AppApplyTest extends TestCase
 
 		$this->assertSame(11, $this->app->apply('test.event:after', ['value' => 1]));
 		$this->assertSame(4, $calls);
-	}
-
-	public function testApplyWithoutHandler(): void
-	{
-		$this->assertSame(10, $this->app->apply('does-not-exist', ['value' => 10]));
-	}
-
-	public function testApplyWithoutReturnValue(): void
-	{
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'test' => function (int $value) {
-					// don't return anything
-				}
-			]
-		]);
-
-		$this->assertSame(10, $this->app->apply('test', ['value' => 10]));
 	}
 }

@@ -28,6 +28,10 @@
 <script>
 import FormDialog from "./FormDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FormDialog],
 	props: {
@@ -46,6 +50,7 @@ export default {
 			type: String
 		}
 	},
+	emits: ["cancel", "input", "submit"],
 	computed: {
 		templates() {
 			return this.blueprints.map((blueprint) => {

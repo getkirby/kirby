@@ -17,10 +17,11 @@ class ButtonTest extends TestCase
 
 		$this->assertSame([
 			'foo'        => 'bar',
-			'responsive' => true,
+			'disabled'   => false,
+			'responsive' => false,
 			'text'       => 'Attrs',
 			'type'       => 'button',
-		], array_filter($button->props()));
+		], array_filter($button->props(), fn ($prop) => $prop !== null));
 	}
 
 	public function testProps(): void
@@ -44,7 +45,7 @@ class ButtonTest extends TestCase
 			'dropdown'   => null,
 			'icon'       => 'smile',
 			'link'       => null,
-			'responsive' => true,
+			'responsive' => false,
 			'size'       => 'xs',
 			'target'     => null,
 			'text'       => 'Congrats',
@@ -66,5 +67,38 @@ class ButtonTest extends TestCase
 
 		$props = $component->props();
 		$this->assertSame('Congrats', $props['text']);
+	}
+
+	public function testText(): void
+	{
+		$button = new Button(
+			text: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->text());
+
+		$button = new Button(
+			text: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
+		$this->assertSame('Congrats', $button->text());
+	}
+
+	public function testTitle(): void
+	{
+		$button = new Button(
+			title: 'Congrats',
+		);
+
+		$this->assertSame('Congrats', $button->title());
+
+		$button = new Button(
+			title: [
+				'en' => 'Congrats',
+				'de' => 'Glückwunsch'
+			],
+		);
 	}
 }

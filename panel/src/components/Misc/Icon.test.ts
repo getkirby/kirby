@@ -1,0 +1,111 @@
+import { describe, it, expect } from "@test/unit";
+import { mount as vueMount } from "@vue/test-utils";
+import Icon from "./Icon.vue";
+
+const sprite = "/panel/assets/1234/icons.svg";
+
+/**
+ * Custom mount which injects a $panel stub
+ */
+function mount(props = {}, attrs = {}, panel: Record<string, unknown> = {}) {
+	return vueMount(Icon, {
+		props,
+		attrs,
+		global: {
+			mocks: {
+				$panel: {
+					plugins: { icons: {} },
+					urls: { icons: sprite },
+					...panel
+				}
+			}
+		}
+	});
+}
+
+describe("k-icon", () => {
+	// $el
+	describe("element", () => {
+		const component = (attrs?: Record<string, unknown>) =>
+			mount({ type: "edit" }, attrs);
+
+		it.rendersAs(component, "svg", "k-icon");
+		it.acceptsClass(component);
+		it.acceptsStyle(component);
+	});
+
+	// props
+	describe("alt prop", () => {
+		it("sets aria-label when alt is provided", () => {
+			const wrapper = mount({ type: "edit", alt: "Edit item" });
+			expect(wrapper.attributes("aria-label")).toBe("Edit item");
+		});
+
+		it("sets role to img when alt is provided", () => {
+			const wrapper = mount({ type: "edit", alt: "Edit item" });
+			expect(wrapper.attributes("role")).toBe("img");
+		});
+
+		it("sets aria-hidden to true when alt is not provided", () => {
+			const wrapper = mount({ type: "edit" });
+			expect(wrapper.attributes("aria-hidden")).toBe("true");
+		});
+
+		it("sets aria-hidden to false when alt is provided", () => {
+			const wrapper = mount({ type: "edit", alt: "Edit item" });
+			expect(wrapper.attributes("aria-hidden")).toBe("false");
+		});
+	});
+
+	describe("color prop", () => {
+		it("applies color as inline style", () => {
+			const wrapper = mount({ type: "edit", color: "red" });
+			expect(wrapper.element.style.color).toBe("red");
+		});
+
+		it("applies no color style when not provided", () => {
+			const wrapper = mount({ type: "edit" });
+			expect(wrapper.element.style.color).toBe("");
+		});
+	});
+
+	describe("type prop", () => {
+		it("reflects an icon as data-type attribute", () => {
+			const wrapper = mount({ type: "edit" });
+			expect(wrapper.attributes("data-type")).toBe("edit");
+		});
+
+		it("references an icon in the sprite file", () => {
+			const wrapper = mount({ type: "edit" });
+			expect(wrapper.find("use").attributes("href")).toBe(
+				sprite + "#icon-edit"
+			);
+		});
+
+		it("references plugin icons in the document", () => {
+			const wrapper = mount(
+				{ type: "plugin" },
+				{},
+				{
+					plugins: { icons: { plugin: "<path />" } }
+				}
+			);
+			expect(wrapper.find("use").attributes("href")).toBe("#icon-plugin");
+		});
+
+		it("renders an emoji as <span> instead of <svg>", () => {
+			const wrapper = mount({ type: "🎉" });
+			expect(wrapper.element.tagName).toBe("SPAN");
+		});
+
+		it("sets data-type to emoji for an emoji", () => {
+			const wrapper = mount({ type: "🎉" });
+			expect(wrapper.attributes("data-type")).toBe("emoji");
+		});
+
+		it("renders an emoji as text content", () => {
+			const wrapper = mount({ type: "🎉" });
+			expect(wrapper.text()).toBe("🎉");
+		});
+	});
+});

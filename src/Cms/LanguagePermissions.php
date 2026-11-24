@@ -5,18 +5,12 @@ namespace Kirby\Cms;
 /**
  * LanguagePermissions
  *
- * @package   Kirby Cms
- * @author    Ahmet Bora <ahmet@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends ModelPermissions<Language>
+ * @deprecated 6.0.0 Use `$language->guards()` instead
  */
 class LanguagePermissions extends ModelPermissions
 {
-	protected const CATEGORY = 'languages';
-
-	protected function canDelete(): bool
-	{
-		return $this->model->isDeletable() === true;
-	}
 }

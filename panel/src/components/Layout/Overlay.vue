@@ -5,7 +5,6 @@
 		class="k-overlay"
 		@cancel="onCancel"
 		@mousedown="onClick"
-		@touchdown="onClick"
 		@close="onClose"
 	>
 		<slot />
@@ -42,6 +41,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	inheritAttrs: true,
@@ -112,6 +115,12 @@ export default {
 			// it makes it run once
 			if (this.$refs.overlay.open !== true) {
 				this.$refs.overlay.showModal();
+
+				// showModal() focuses the first focusable element itself;
+				// drop it, so that the autofocus below picks the right one
+				if (this.autofocus === true) {
+					document.activeElement?.blur();
+				}
 			}
 
 			// wait for the next rendering round
@@ -180,11 +189,8 @@ export default {
 	justify-content: flex-end;
 }
 
-/* Scroll lock */
-html[data-overlay="true"] {
+html:has(.k-overlay[open]) {
 	overflow: hidden;
-}
-html[data-overlay="true"] body {
-	overflow: scroll;
+	scrollbar-gutter: stable;
 }
 </style>

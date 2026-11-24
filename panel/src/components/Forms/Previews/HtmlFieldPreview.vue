@@ -4,7 +4,7 @@
 		:style="$attrs.style"
 	>
 		{{ column.before }}
-		<k-text :html="html" />
+		<k-text :text="html" />
 		{{ column.after }}
 	</div>
 </template>
@@ -12,6 +12,10 @@
 <script>
 import FieldPreview from "@/mixins/forms/fieldPreview.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldPreview],
 	props: {

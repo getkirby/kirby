@@ -1,0 +1,38 @@
+<?php
+
+namespace Kirby\Panel\Ui\Item;
+
+use Kirby\Cms\Language;
+use Kirby\Panel\Ui\Item;
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class LanguageItem extends Item
+{
+	public function __construct(
+		protected Language $language
+	) {
+		parent::__construct(
+			info: $language->code(),
+			text: $language->name(),
+			image: [
+				'back'  => 'black',
+				'color' => 'gray',
+				'icon'  => 'translate',
+			]
+		);
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'default'   => $this->language->isDefault(),
+			'deletable' => $this->language->isDeletable(),
+			'id'        => $this->language->code(),
+		];
+	}
+}

@@ -9,14 +9,10 @@ use Kirby\Toolkit\Str;
 
 /**
  * Sane handler for XML files
- * @since 3.5.4
  *
- * @package   Kirby Sane
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.4
  */
 class Xml extends DomHandler
 {
@@ -24,7 +20,7 @@ class Xml extends DomHandler
 	 * Custom callback for additional element sanitization
 	 * @internal
 	 *
-	 * @return array Array with exception objects for each modification
+	 * @return list<InvalidArgumentException> Exceptions for each modification
 	 */
 	public static function sanitizeElement(
 		DOMElement $element,
@@ -44,8 +40,8 @@ class Xml extends DomHandler
 				) {
 					$element->removeAttributeNS($value, $namespace);
 					$errors[] = new InvalidArgumentException(
-						'The namespace "' . $value . '" is not allowed' .
-						' (around line ' . $element->getLineNo() . ')'
+						message: 'The namespace "' . $value . '" is not allowed' .
+							' (around line ' . $element->getLineNo() . ')'
 					);
 				}
 			}

@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageErrorsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageErrors';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageErrors';
 
 	public function testErrors(): void
 	{
@@ -15,22 +15,74 @@ class PageErrorsTest extends ModelTestCase
 		$this->assertSame([], $page->errors());
 	}
 
-	public function testErrorsWithInfoSection(): void
+	public function testErrorsWithInfoField(): void
 	{
 		$page = new Page([
 			'slug' => 'test',
 			'blueprint' => [
-				'name' => 'test',
-				'sections' => [
+				'name'   => 'test',
+				'fields' => [
 					'info' => [
-						'type'     => 'info',
-						'headline' => 'Info',
-						'text'     => 'info'
+						'type' => 'info',
+						'text' => 'info'
 					]
 				]
 			]
 		]);
 
+		// fields without a value don't have errors
+		$this->assertSame([], $page->errors());
+	}
+
+	public function testErrorsWithPageListField(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name' => 'test',
+				'fields' => [
+					'drafts' => [
+						'type'   => 'pagelist',
+						'status' => 'drafts',
+						'min'    => 1
+					]
+				]
+			]
+		]);
+
+		$this->assertSame([
+			'drafts' => [
+				'label'   => 'Drafts',
+				'message' => [
+					'min' => 'The "Drafts" field requires at least one page'
+				]
+			]
+		], $page->errors());
+	}
+
+	public function testErrorsWithPageListFieldWhenInactive(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'blueprint' => [
+				'name' => 'test',
+				'fields' => [
+					'toggle' => [
+						'type'    => 'toggle',
+						'default' => false
+					],
+					'drafts' => [
+						'type'   => 'pagelist',
+						'status' => 'drafts',
+						'min'    => 1,
+						'when'   => ['toggle' => true]
+					]
+				]
+			]
+		]);
+
+		// the field is hidden by the `when` condition
+		// and must not block changing the page status
 		$this->assertSame([], $page->errors());
 	}
 

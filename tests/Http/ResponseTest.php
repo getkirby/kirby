@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use JsonException;
 use Kirby\Cms\App;
 use Kirby\Exception\LogicException;
 use Kirby\TestCase;
@@ -13,12 +14,13 @@ use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 #[CoversClass(Response::class)]
 class ResponseTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	protected function tearDown(): void
 	{
 		App::destroy();
 		HeadersSent::$value = false;
+		Uri::$current = null;
 	}
 
 	public function testBody(): void
@@ -126,95 +128,6 @@ class ResponseTest extends TestCase
 		Response::download('does/not/exist.txt');
 	}
 
-	public function testGuardAgainstOutput(): void
-	{
-		$result = Response::guardAgainstOutput(
-			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
-			'12',
-			'34'
-		);
-
-		$this->assertSame('12-34', $result);
-	}
-
-	public function testGuardAgainstOutputWithSubsequentOutput(): void
-	{
-		HeadersSent::$value = true;
-
-		$result = Response::guardAgainstOutput(
-			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
-			'12',
-			'34'
-		);
-
-		$this->assertSame('12-34', $result);
-	}
-
-	public function testGuardAgainstOutputWithFirstOutput(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
-
-		Response::guardAgainstOutput(function () {
-			HeadersSent::$value = true;
-		});
-	}
-
-	public function testHeaders(): void
-	{
-		$response = new Response();
-		$this->assertSame([], $response->headers());
-
-		$response = new Response([
-			'headers' => [
-				'test' => 'test'
-			]
-		]);
-
-		$this->assertSame(['test' => 'test'], $response->headers());
-	}
-
-	public function testHeader(): void
-	{
-		$response = new Response();
-		$this->assertNull($response->header('test'));
-
-		$response = new Response([
-			'headers' => [
-				'test' => 'test'
-			]
-		]);
-
-		$this->assertSame('test', $response->header('test'));
-	}
-
-	public function testJson(): void
-	{
-		$response = Response::json();
-
-		$this->assertSame('application/json', $response->type());
-		$this->assertSame(200, $response->code());
-		$this->assertSame('', $response->body());
-	}
-
-	public function testJsonWithArray(): void
-	{
-		$data     = ['foo' => 'bar'];
-		$expected = json_encode($data);
-		$response = Response::json($data);
-
-		$this->assertSame($expected, $response->body());
-	}
-
-	public function testJsonWithPrettyArray(): void
-	{
-		$data     = ['foo' => 'bar'];
-		$expected = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-		$response = Response::json($data, 200, true);
-
-		$this->assertSame($expected, $response->body());
-	}
-
 	public function testFile(): void
 	{
 		$file = static::FIXTURES . '/download.json';
@@ -239,32 +152,6 @@ class ResponseTest extends TestCase
 			'Accept-Ranges' => 'bytes',
 			'Pragma' => 'no-cache'
 		], $response->headers());
-	}
-
-	public function testFileWithAcceptRangesHeader(): void
-	{
-		$file = static::FIXTURES . '/download.json';
-		$response = Response::file($file);
-
-		$this->assertSame('bytes', $response->header('Accept-Ranges'));
-	}
-
-	public function testFileWithRangeRequestHeader(): void
-	{
-		$file = static::FIXTURES . '/download.json';
-		$size = filesize($file);
-
-		new App([
-			'server' => [
-				'HTTP_RANGE' => 'bytes=0-'
-			]
-		]);
-
-		$response = Response::file($file);
-
-		$this->assertSame(206, $response->code());
-		$this->assertSame('bytes 0-' . ($size - 1) . '/' . $size, $response->header('Content-Range'));
-		$this->assertSame(file_get_contents($file), $response->body());
 	}
 
 	public function testFileInvalid(): void
@@ -298,6 +185,150 @@ class ResponseTest extends TestCase
 		], $response->headers());
 	}
 
+	public function testFileWithAcceptRangesHeader(): void
+	{
+		$file = static::FIXTURES . '/download.json';
+		$response = Response::file($file);
+
+		$this->assertSame('bytes', $response->header('Accept-Ranges'));
+	}
+
+	public function testFileWithRangeRequestHeader(): void
+	{
+		$file = static::FIXTURES . '/download.json';
+		$size = filesize($file);
+
+		new App([
+			'server' => [
+				'HTTP_RANGE' => 'bytes=0-'
+			]
+		]);
+
+		$response = Response::file($file);
+
+		$this->assertSame(206, $response->code());
+		$this->assertSame('bytes 0-' . ($size - 1) . '/' . $size, $response->header('Content-Range'));
+		$this->assertSame(file_get_contents($file), $response->body());
+	}
+
+	public function testGuardAgainstOutput(): void
+	{
+		$result = Response::guardAgainstOutput(
+			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
+			'12',
+			'34'
+		);
+
+		$this->assertSame('12-34', $result);
+	}
+
+	public function testGuardAgainstOutputWithBufferedOutput(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectOutputString(' ');
+
+		Response::guardAgainstOutput(function () {
+			echo ' ';
+		});
+	}
+
+	public function testGuardAgainstOutputWithBufferFromCallback(): void
+	{
+		$level = ob_get_level();
+
+		Response::guardAgainstOutput(fn () => ob_start());
+
+		// the buffer started by the callback stays open
+		$this->assertSame($level + 1, ob_get_level());
+
+		ob_end_clean();
+	}
+
+	public function testGuardAgainstOutputWithFirstOutput(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
+
+		Response::guardAgainstOutput(function () {
+			HeadersSent::$value = true;
+		});
+	}
+
+	public function testGuardAgainstOutputWithSubsequentOutput(): void
+	{
+		HeadersSent::$value = true;
+
+		$result = Response::guardAgainstOutput(
+			fn ($arg1, $arg2) => $arg1 . '-' . $arg2,
+			'12',
+			'34'
+		);
+
+		$this->assertSame('12-34', $result);
+	}
+
+	public function testHeader(): void
+	{
+		$response = new Response();
+		$this->assertNull($response->header('test'));
+
+		$response = new Response([
+			'headers' => [
+				'test' => 'test'
+			]
+		]);
+
+		$this->assertSame('test', $response->header('test'));
+	}
+
+	public function testHeaders(): void
+	{
+		$response = new Response();
+		$this->assertSame([], $response->headers());
+
+		$response = new Response([
+			'headers' => [
+				'test' => 'test'
+			]
+		]);
+
+		$this->assertSame(['test' => 'test'], $response->headers());
+	}
+
+	public function testJson(): void
+	{
+		$response = Response::json();
+
+		$this->assertSame('application/json', $response->type());
+		$this->assertSame(200, $response->code());
+		$this->assertSame('', $response->body());
+	}
+
+	public function testJsonWithArray(): void
+	{
+		$data     = ['foo' => 'bar'];
+		$expected = json_encode($data);
+		$response = Response::json($data);
+
+		$this->assertSame($expected, $response->body());
+	}
+
+	public function testJsonWithInvalidUtf8(): void
+	{
+		$this->expectException(JsonException::class);
+		Response::json(['bad' => "\xC3\x28"]);
+	}
+
+	public function testJsonWithPrettyArray(): void
+	{
+		$data     = ['foo' => 'bar'];
+		$expected = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+		$response = Response::json($data, 200, true);
+
+		$this->assertSame($expected, $response->body());
+	}
+
 	public function testRedirect(): void
 	{
 		$response = Response::redirect();
@@ -306,12 +337,22 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Location' => '/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
-	public function testRedirectWithLocation(): void
+	public function testRedirectWithInherit(): void
 	{
-		$response = Response::redirect('https://getkirby.com');
-		$this->assertSame('', $response->body());
-		$this->assertSame(302, $response->code());
-		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers()); // cannot use strict assertion (Uri object)
+		Uri::$current = new Uri('https://getkirby.com/notes/tag:foo?bar=baz');
+
+		$response = Response::redirect('https://getkirby.com/de', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:foo?bar=baz'], $response->headers()); // cannot use strict assertion (Uri object)
+
+		// the target's own query and params win
+		$response = Response::redirect('https://getkirby.com/de/tag:own?bar=own', inherit: true);
+		$this->assertEquals(['Location' => 'https://getkirby.com/de/tag:own?bar=own'], $response->headers()); // cannot use strict assertion (Uri object)
+
+		// params must not turn into a host on a relative root
+		Uri::$current = new Uri('https://getkirby.com/evil.com:443');
+
+		$response = Response::redirect('/', inherit: true);
+		$this->assertEquals(['Location' => '/evil.com:443/'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRedirectWithInternationalLocation(): void
@@ -320,6 +361,14 @@ class ResponseTest extends TestCase
 		$this->assertSame('', $response->body());
 		$this->assertSame(302, $response->code());
 		$this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers()); // cannot use strict assertion (Uri object)
+	}
+
+	public function testRedirectWithLocation(): void
+	{
+		$response = Response::redirect('https://getkirby.com');
+		$this->assertSame('', $response->body());
+		$this->assertSame(302, $response->code());
+		$this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers()); // cannot use strict assertion (Uri object)
 	}
 
 	public function testRedirectWithResponseCode(): void
@@ -354,15 +403,6 @@ class ResponseTest extends TestCase
 		$this->assertEquals(['Refresh' => '5; url=https://getkirby.com'], $response->headers());
 	}
 
-	public function testSetHeaderFallbacks(): void
-	{
-		$response = new Response([
-			'headers' => ['a' => 'b']
-		]);
-		$response->setHeaderFallbacks(['a' => 'z', 'c' => 'd']);
-		$this->assertEquals(['a' => 'b', 'c' => 'd'], $response->headers());
-	}
-
 	#[RunInSeparateProcess]
 	#[PreserveGlobalState(false)]
 	public function testSend(): void
@@ -385,6 +425,15 @@ class ResponseTest extends TestCase
 
 		$this->assertSame($body, 'test');
 		$this->assertSame($code, 200);
+	}
+
+	public function testSetHeaderFallbacks(): void
+	{
+		$response = new Response([
+			'headers' => ['a' => 'b']
+		]);
+		$response->setHeaderFallbacks(['a' => 'z', 'c' => 'd']);
+		$this->assertEquals(['a' => 'b', 'c' => 'd'], $response->headers());
 	}
 
 	public function testToArray(): void

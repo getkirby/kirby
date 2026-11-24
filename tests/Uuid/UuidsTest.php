@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Uuids::class)]
 class UuidsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.Uuids';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.Uuids';
 
 	public function testCache(): void
 	{

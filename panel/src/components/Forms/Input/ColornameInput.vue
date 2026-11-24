@@ -1,15 +1,17 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-colorname-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		autocomplete="off"
-		class="k-colorname-input"
 		type="text"
-		@blur.native="onBlur"
+		@blur="onBlur"
 		@input="$emit('input', $event)"
-		@paste.native="onPaste"
-		@keydown.native.meta.s.stop.prevent="onSave"
-		@keydown.native.enter="onSave"
+		@paste="onPaste"
+		@keydown.meta.s.stop.prevent="onSave"
+		@keydown.ctrl.s.stop.prevent="onSave"
+		@keydown.enter="onSave"
 	/>
 </template>
 
@@ -46,11 +48,16 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-colorname-input :value="value" @input="value = $event" />
+ * @example
+ * <k-colorname-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [StringInput, props],
+	emits: ["input"],
 	watch: {
 		value() {
 			this.validate();

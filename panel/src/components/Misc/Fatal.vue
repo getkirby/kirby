@@ -5,18 +5,23 @@
 				<p>The JSON response could not be parsed</p>
 				<k-button icon="cancel" @click.stop="$panel.notification.close()" />
 			</div>
-			<iframe ref="iframe" class="k-fatal-iframe" />
+			<iframe ref="iframe" :title="$t('error')" class="k-fatal-iframe" />
 		</div>
 	</k-overlay>
 </template>
 
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {
 	props: {
-		html: String
+		html: {
+			default: "",
+			type: String
+		}
 	},
 	mounted() {
 		try {

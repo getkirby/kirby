@@ -26,8 +26,10 @@ class MockClipboardEvent extends Event {
 	}
 }
 
-vi.stubGlobal("DataTransfer", MockDataTransfer);
-vi.stubGlobal("ClipboardEvent", MockClipboardEvent);
+beforeEach(() => {
+	vi.stubGlobal("DataTransfer", MockDataTransfer);
+	vi.stubGlobal("ClipboardEvent", MockClipboardEvent);
+});
 
 describe("clipboard.read()", () => {
 	it("should return null for undefined", () => {
@@ -91,7 +93,6 @@ describe("clipboard.write()", () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks();
-		document.body.innerHTML = "";
 	});
 
 	it("should use clipboardData.setData when a ClipboardEvent is provided", () => {
@@ -120,27 +121,27 @@ describe("clipboard.write()", () => {
 	});
 
 	it("should copy the value via execCommand fallback", () => {
-		let copiedValue: string | null = null;
+		let value: string | null = null;
 		document.execCommand = vi.fn().mockImplementation(() => {
-			copiedValue = document.querySelector("textarea")?.value ?? null;
+			value = document.querySelector("textarea")?.value ?? null;
 			return true;
 		});
 
 		write("hello");
 
-		expect(copiedValue).toBe("hello");
+		expect(value).toBe("hello");
 	});
 
 	it("should serialize objects to JSON when using execCommand fallback", () => {
-		let copiedValue: string | null = null;
+		let value: string | null = null;
 		document.execCommand = vi.fn().mockImplementation(() => {
-			copiedValue = document.querySelector("textarea")?.value ?? null;
+			value = document.querySelector("textarea")?.value ?? null;
 			return true;
 		});
 
 		write({ foo: "bar" });
 
-		expect(copiedValue).toBe('{\n  "foo": "bar"\n}');
+		expect(value).toBe('{\n  "foo": "bar"\n}');
 	});
 	it("should add the textarea to an open dialog", () => {
 		const dialog = document.createElement("dialog");

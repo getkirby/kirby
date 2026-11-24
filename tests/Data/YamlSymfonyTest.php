@@ -5,6 +5,7 @@ namespace Kirby\Data;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use Kirby\Toolkit\Locale;
 use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
@@ -20,6 +21,22 @@ class YamlSymfonyTest extends TestCase
 	protected function tearDown(): void
 	{
 		new App([]);
+	}
+
+	public function testDecodeInvalid1(): void
+	{
+		// pass invalid object
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
+		Yaml::decode(new stdClass());
+	}
+
+	public function testDecodeInvalid2(): void
+	{
+		// pass invalid int
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
+		Yaml::decode(1);
 	}
 
 	public function testEncodeDecode(): void
@@ -45,22 +62,6 @@ class YamlSymfonyTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
 	}
 
-	public function testDecodeInvalid1(): void
-	{
-		// pass invalid object
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
-		Yaml::decode(new stdClass());
-	}
-
-	public function testDecodeInvalid2(): void
-	{
-		// pass invalid int
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid YAML data; please pass a string');
-		Yaml::decode(1);
-	}
-
 	public function testEncodeFloat(): void
 	{
 		$data = Yaml::encode([
@@ -72,7 +73,7 @@ class YamlSymfonyTest extends TestCase
 
 	public function testEncodeFloatWithNonUSLocale(): void
 	{
-		$locale = setlocale(LC_ALL, 0);
+		$locale = Locale::get();
 
 		setlocale(LC_ALL, 'de_DE');
 
@@ -82,7 +83,7 @@ class YamlSymfonyTest extends TestCase
 
 		$this->assertSame('number: 3.2' . PHP_EOL, $data);
 
-		setlocale(LC_ALL, $locale);
+		Locale::set($locale);
 	}
 
 	public function testEncodeNodeTypes(): void

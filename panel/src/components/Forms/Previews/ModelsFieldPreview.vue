@@ -1,0 +1,146 @@
+<template>
+	<k-tags-field-preview
+		:class="['k-models-field-preview', $options.class, $attrs.class]"
+		:removable="removable"
+		:style="$attrs.style"
+		:value="tags"
+		@remove="$emit('remove', $event)"
+	/>
+</template>
+
+<script>
+import FieldPreview from "@/mixins/forms/fieldPreview.js";
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+export default {
+	mixins: [FieldPreview],
+	props: {
+		/**
+		 * @deprecated 6.0.0 Model items already carry trusted HTML
+		 */
+		html: {
+			type: Boolean
+		},
+		removable: Boolean,
+		value: {
+			default: () => [],
+			type: [Array, String]
+		}
+	},
+	emits: ["remove"],
+	data() {
+		return {
+			tags: []
+		};
+	},
+	watch: {
+		"$panel.language.code"() {
+			this.tags = [];
+			this.collect();
+		},
+		value: {
+			immediate: true,
+			handler() {
+				this.collect();
+			}
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-models-field-preview`: the `html` prop has been deprecated. Model items already carry trusted HTML."
+			);
+		}
+	},
+	methods: {
+		async collect() {
+			let tags = this.$helper.clone(this.tags);
+			const missing = [];
+
+			// loop through all values…
+			for (let index = 0; index < this.value.length; index++) {
+				const value = this.value[index];
+
+				// item object can be added as tag directly
+				if (typeof value !== "string") {
+					tags.splice(index, 1, this.tag(value));
+					continue;
+				}
+
+				// no need to reload items that we already have
+				const existing = this.tags.find((tag) => tag.id === value);
+				if (existing) {
+					tags.splice(index, 1, existing);
+					continue;
+				}
+
+				// item needs to be fetched from API (add skeleton)
+				missing.push(value);
+				tags.splice(index, 1, this.skeleton(value));
+			}
+
+			// replace new temporary tags at once to reduce flickering
+			this.tags = tags.slice(0, this.value.length);
+
+			// get all missing items from API
+			// and replace in tags array
+			if (missing.length > 0) {
+				const language = this.$panel.language.code;
+				const loaded = await this.load(missing);
+
+				// a newer request loads the items in the new language
+				if (this.$panel.language.code !== language) {
+					return;
+				}
+
+				for (const [index, id] of missing.entries()) {
+					const key = this.tags.findIndex((tag) => tag.id === id);
+
+					// the value might have changed while the request was in flight
+					if (key !== -1) {
+						// a model that does not exist (anymore) or
+						// must not be listed shows its stored ID
+						this.tags[key] = loaded[index]
+							? { ...loaded[index], id }
+							: this.unknown(id);
+					}
+				}
+			}
+		},
+		load(ids) {
+			const endpoint = this.field.endpoints?.field;
+
+			// the field's own route applies its blueprint
+			// options, e.g. `image`, `text` and `info`
+			if (endpoint) {
+				return this.$helper.items(
+					this.$panel.urls.api + "/" + endpoint + "/items",
+					ids
+				);
+			}
+
+			return this.$helper.items(this.$options.endpoint, ids);
+		},
+		skeleton(id) {
+			return {
+				id,
+				image: { icon: "loader", color: "var(--tag-color-disabled-text)" }
+			};
+		},
+		tag(item) {
+			return item;
+		},
+		unknown(id) {
+			return {
+				id,
+				text: id,
+				image: { icon: "alert" },
+				theme: "negative"
+			};
+		}
+	}
+};
+</script>

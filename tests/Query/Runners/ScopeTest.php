@@ -49,6 +49,12 @@ class ScopeTest extends TestCase
 		$this->assertSame($array['callable'], Scope::access($array, 'callable', false, 'a'));
 	}
 
+	public function testAccessWithNullSafe(): void
+	{
+		$result = Scope::access(null, 'bar', true);
+		$this->assertNull($result);
+	}
+
 	public function testAccessWithObject(): void
 	{
 		$obj = new class () {
@@ -73,17 +79,18 @@ class ScopeTest extends TestCase
 		$this->assertNull($result);
 	}
 
-	public function testAccessWithNullSafe(): void
-	{
-		$result = Scope::access(null, 'bar', true);
-		$this->assertNull($result);
-	}
-
 	public function testAccessWithoutNullSafe(): void
 	{
 		$this->expectException(Exception::class);
 		$this->expectExceptionMessage('Cannot access "bar" on NULL');
 		Scope::access(null, 'bar', false);
+	}
+
+	public function testAccessWithScalar(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Cannot access "bar" on string');
+		Scope::access('foo', 'bar');
 	}
 
 	public function testGet(): void

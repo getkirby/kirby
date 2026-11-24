@@ -1,6 +1,11 @@
 <template>
-	<a :href="url" class="k-upload-item-preview" target="_blank">
-		<k-image
+	<a
+		:aria-label="$t('open.newWindow')"
+		:href="url"
+		class="k-upload-item-preview"
+		target="_blank"
+	>
+		<k-image-frame
 			v-if="isPreviewable"
 			:cover="cover"
 			:src="url"
@@ -47,9 +52,11 @@ export const props = {
 };
 
 /**
- * Preview an upload with its image or
- * a representative icon
- * @since 4.3.0
+ * Preview an upload with its image or a representative icon
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.3.0
  */
 export default {
 	mixins: [props],

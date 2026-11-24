@@ -4,15 +4,11 @@ namespace Kirby\Parsley\Schema;
 
 use Kirby\Parsley\Element;
 use Kirby\Parsley\Schema;
-use Kirby\Toolkit\Str;
 
 /**
  * The plain schema definition converts
  * the entire document into simple text blocks
  *
- * @package   Kirby Parsley
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.5.0
@@ -27,14 +23,12 @@ class Plain extends Schema
 	{
 		if ($element instanceof Element) {
 			$text = $element->innerText();
-		} elseif (is_string($element) === true) {
+		} else {
 			$text = trim($element);
 
-			if (Str::length($text) === 0) {
+			if ($text === '') {
 				return null;
 			}
-		} else {
-			return null;
 		}
 
 		return [

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileMediaTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileMedia';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileMedia';
 
 	protected function setUp(): void
 	{

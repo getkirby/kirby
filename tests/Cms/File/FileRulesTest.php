@@ -2,20 +2,84 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AbilityException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(FileRules::class)]
 class FileRulesTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileRules';
+
+	/**
+	 * Creates a file that really exists in the page root,
+	 * so that the extension, filename and MIME type can be detected
+	 */
+	protected function fileOnDisk(string $filename): File
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		F::copy(static::FIXTURES . '/' . $filename, $page->root() . '/' . $filename);
+
+		return new File([
+			'filename' => $filename,
+			'parent'   => $page
+		]);
+	}
+
+	/**
+	 * Creates a file with more than one available template
+	 */
+	protected function fileWithMultipleTemplates(): File
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/foo' => [
+					'fields' => [
+						'files' => [
+							'type'      => 'filelist',
+							'blueprint' => 'b'
+						]
+					]
+				],
+				'files/a' => ['title' => 'a'],
+				'files/b' => ['title' => 'b'],
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'foo',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => 'a']
+							]
+						]
+					]
+				]
+			],
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return $this->app->page('test')->file('test.jpg');
+	}
 
 	public function testChangeName(): void
 	{
@@ -33,77 +97,36 @@ class FileRulesTest extends ModelTestCase
 		FileRules::changeName($file, 'c');
 	}
 
-	public function testChangeNameWithEmptyInput(): void
+	public function testChangeNameRejectsForbiddenExtension(): void
 	{
-		$parent = new Page(['slug' => 'test']);
-		$file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$page = new Page([
+			'slug'  => 'test',
+			'files' => [
+				['filename' => 'a.jpg']
+			]
+		]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The name must not be empty');
+		$this->expectExceptionMessage('You are not allowed to upload PHP files');
 
-		FileRules::changeName($file, '');
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'shell', 'php');
 	}
 
-	public function testChangeNameWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('changeName')->willReturn(false);
-
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('filename')->willReturn('test.jpg');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the name of "test.jpg"');
-
-		FileRules::changeName($file, 'test');
-	}
-
-	public function testChangeSort(): void
+	public function testChangeNameRejectsForbiddenFilename(): void
 	{
 		$page = new Page([
-			'slug' => 'test',
+			'slug'  => 'test',
 			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.jpg']
+				['filename' => 'a.jpg']
 			]
 		]);
 
-		$this->expectNotToPerformAssertions();
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload invisible files');
 
 		$file = $page->file('a.jpg');
-		FileRules::changeSort($file, 1);
-	}
-
-	public function testChangeSortWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('sort')->willReturn(false);
-
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('filename')->willReturn('test.jpg');
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the sorting of "test.jpg"');
-
-		FileRules::changeSort($file, 1);
-	}
-
-	public function testChangeToSameNameWithDifferentException(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'files' => [
-				['filename' => 'a.jpg'],
-				['filename' => 'b.png']
-			]
-		]);
-
-		$this->expectNotToPerformAssertions();
-
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'b');
+		FileRules::changeName($file, '.hidden');
 	}
 
 	public function testChangeNameToExistingFile(): void
@@ -140,138 +163,165 @@ class FileRulesTest extends ModelTestCase
 		FileRules::changeName($file, 'b', 'png');
 	}
 
-	public function testChangeNameRejectsForbiddenExtension(): void
+	public function testChangeNameWithEmptyInput(): void
 	{
-		$page = new Page([
-			'slug'  => 'test',
-			'files' => [
-				['filename' => 'a.jpg']
-			]
-		]);
+		$parent = new Page(['slug' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload PHP files');
+		$this->expectExceptionMessage('The name must not be empty');
 
-		$file = $page->file('a.jpg');
-		FileRules::changeName($file, 'shell', 'php');
+		FileRules::changeName($file, '');
 	}
 
-	public function testChangeNameRejectsForbiddenFilename(): void
+	public function testChangeNameWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the name of "test.jpg"');
+
+		FileRules::changeName($file, 'test');
+	}
+
+	public function testChangeSort(): void
 	{
 		$page = new Page([
-			'slug'  => 'test',
+			'slug' => 'test',
 			'files' => [
-				['filename' => 'a.jpg']
+				['filename' => 'a.jpg'],
+				['filename' => 'b.jpg']
 			]
 		]);
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+		$this->expectNotToPerformAssertions();
 
 		$file = $page->file('a.jpg');
-		FileRules::changeName($file, '.hidden');
+		FileRules::changeSort($file, 1);
+	}
+
+	public function testChangeSortWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the sorting of "test.jpg"');
+
+		FileRules::changeSort($file, 1);
 	}
 
 	public function testChangeTemplate(): void
 	{
-		$app = $this->app->clone([
-			'blueprints' => [
-				'pages/foo' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'b'
-						]
-					]
-				],
-				'files/a' => ['title' => 'a'],
-				'files/b' => ['title' => 'b'],
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'foo',
-						'files' => [
-							[
-								'filename' => 'test.jpg',
-								'content'  => ['template' => 'a']
-							]
-						]
-					]
-				]
-			],
-		]);
-
-		$app->impersonate('kirby');
+		$file = $this->fileWithMultipleTemplates();
 
 		$this->expectNotToPerformAssertions();
 
-		$file = $app->page('test')->file('test.jpg');
 		FileRules::changeTemplate($file, 'b');
-	}
-
-	public function testChangeTemplateWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(false);
-
-		$file = $this->createMock(File::class);
-		$file->method('id')->willReturn('test');
-		$file->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for the file "test"');
-
-		FileRules::changeTemplate($file, 'test');
 	}
 
 	public function testChangeTemplateTooFewTemplates(): void
 	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
-		$file = $this->createMock(File::class);
-		$file->method('blueprints')->willReturn([[]]);
-		$file->method('id')->willReturn('test');
-		$file->method('permissions')->willReturn($permissions);
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionMessage('The template for the file "test/test.jpg" cannot be changed');
 
 		FileRules::changeTemplate($file, 'c');
 	}
 
 	public function testChangeTemplateWithInvalidTemplateName(): void
 	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$file = $this->fileWithMultipleTemplates();
 
-		$file = $this->createMock(File::class);
-		$file->method('blueprints')->willReturn([
-			['name' => 'a'], ['name' => 'b']
-		]);
-		$file->method('id')->willReturn('test');
-		$file->method('permissions')->willReturn($permissions);
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The template for the file "test" cannot be changed');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.file.changeTemplate.invalid');
 
 		FileRules::changeTemplate($file, 'c');
 	}
 
-	public function testCreateExistingFile(): void
+	public function testChangeTemplateWithoutPermissions(): void
 	{
-		$file = $this->createMock(File::class);
-		$file->method('filename')->willReturn('test.jpg');
-		$file->method('exists')->willReturn(true);
-		$page = $this->createMock(Page::class);
-		$file->method('parent')->willReturn($page);
+		$file = $this->fileWithMultipleTemplates();
+
+		$this->app->impersonate('nobody');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for the file "test/test.jpg"');
+
+		FileRules::changeTemplate($file, 'b');
+	}
+
+	public function testChangeToSameNameWithDifferentException(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'files' => [
+				['filename' => 'a.jpg'],
+				['filename' => 'b.png']
+			]
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		$file = $page->file('a.jpg');
+		FileRules::changeName($file, 'b');
+	}
+
+	public function testCreateDifferentFileWithSameFilename(): void
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							['filename' => 'test.jpg', 'content' => ['template' => 'test']],
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		// create real file with content and move into page root
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: test');
+
+		$newFile = new File([
+			'filename' => 'test.jpg',
+			'parent' => $page,
+			'content' => [
+				'template' => 'test'
+			]
+		]);
 
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
 
-		$upload = $this->createMock(BaseFile::class);
+		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
+		FileRules::create($newFile, $upload);
+	}
+
+	public function testCreateHarmfulContents(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.svg', 'parent' => $parent]);
+		$upload = new BaseFile(static::FIXTURES . '/test.svg');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
 
 		FileRules::create($file, $upload);
 	}
@@ -331,6 +381,8 @@ class FileRulesTest extends ModelTestCase
 			]
 		]);
 
+		$this->app->impersonate('kirby');
+
 		$page = $this->app->page('test');
 
 		// create real file with content and move into page root
@@ -352,92 +404,26 @@ class FileRulesTest extends ModelTestCase
 		FileRules::create($newFile, $upload);
 	}
 
-	public function testCreateDifferentFileWithSameFilename(): void
-	{
-		$testImage = static::FIXTURES . '/test.jpg';
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'files' => [
-							['filename' => 'test.jpg', 'content' => ['template' => 'test']],
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $this->app->page('test');
-
-		// create real file with content and move into page root
-		F::copy($testImage, $page->root() . '/test.jpg');
-		F::write($page->root() . '/test.jpg.txt', 'Template: test');
-
-		$newFile = new File([
-			'filename' => 'test.jpg',
-			'parent' => $page,
-			'content' => [
-				'template' => 'test'
-			]
-		]);
-
-		$this->expectException(DuplicateException::class);
-		$this->expectExceptionMessage('A file with the name "test.jpg" already exists');
-
-		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
-		FileRules::create($newFile, $upload);
-	}
-
-	public function testCreateHarmfulContents(): void
-	{
-		$blueprint = $this->createMock(FileBlueprint::class);
-
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(true);
-
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['permissions', 'blueprint', 'filename', '__call'])
-			->getMock();
-		$file->method('blueprint')->willReturn($blueprint);
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('filename')->willReturn('test.svg');
-		$file->method('__call')->with('extension')->willReturn('svg');
-
-		$upload = new BaseFile(static::FIXTURES . '/test.svg');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The URL is not allowed in attribute "xlink:href" (line 2)');
-
-		FileRules::create($file, $upload);
-	}
-
 	public function testCreateWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(false);
+		$this->app->impersonate('nobody');
 
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('filename')->willReturn('test.jpg');
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be created');
-
-		$upload = $this->createMock(BaseFile::class);
 
 		FileRules::create($file, $upload);
 	}
 
 	public function testDeleteWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('delete')->willReturn(false);
+		$this->app->impersonate('nobody');
 
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be deleted');
@@ -445,66 +431,9 @@ class FileRulesTest extends ModelTestCase
 		FileRules::delete($file);
 	}
 
-	public function testReplaceWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(false);
-
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The file cannot be replaced');
-
-		$upload = $this->createMock(BaseFile::class);
-
-		FileRules::replace($file, $upload);
-	}
-
-	public function testReplaceInvalidMimeExtension(): void
-	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(true);
-
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['permissions', '__call'])
-			->getMock();
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('__call')->willReturnCallback(fn ($method, $args = []) => match ($method) {
-			'mime'      => 'image/jpeg',
-			'extension' => 'jpg'
-		});
-
-		$upload = $this->createMock(BaseFile::class);
-		$upload->method('mime')->willReturn('image/png');
-		$upload->method('extension')->willReturn('png');
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
-
-		FileRules::replace($file, $upload);
-	}
-
 	public function testReplaceHarmfulContents(): void
 	{
-		$blueprint = $this->createMock(FileBlueprint::class);
-
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('replace')->willReturn(true);
-
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['__call', 'permissions', 'blueprint', 'filename'])
-			->getMock();
-		$file->method('blueprint')->willReturn($blueprint);
-		$file->method('filename')->willReturn('test.svg');
-		$file->method('permissions')->willReturn($permissions);
-		$file->method('__call')->with('mime')->willReturnCallback(fn ($method, $args = []) => match ($method) {
-			'extension' => 'svg',
-			'mime'      => 'image/svg+xml'
-		});
-
+		$file   = $this->fileOnDisk('test.svg');
 		$upload = new BaseFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
@@ -513,13 +442,37 @@ class FileRulesTest extends ModelTestCase
 		FileRules::replace($file, $upload);
 	}
 
+	public function testReplaceInvalidMimeExtension(): void
+	{
+		$file   = $this->fileOnDisk('test.jpg');
+		$upload = new BaseFile(static::FIXTURES . '/doc.pdf');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
+
+		FileRules::replace($file, $upload);
+	}
+
+	public function testReplaceWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The file cannot be replaced');
+
+		FileRules::replace($file, $upload);
+	}
+
 	public function testUpdateWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(FilePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
+		$this->app->impersonate('nobody');
 
-		$file = $this->createMock(File::class);
-		$file->method('permissions')->willReturn($permissions);
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('The file cannot be updated');
@@ -527,195 +480,117 @@ class FileRulesTest extends ModelTestCase
 		FileRules::update($file, []);
 	}
 
-	public static function extensionProvider(): array
+	public function testValidExtension(): void
 	{
-		return [
-			['jpg', true],
-			['png', true],
-			['', false, 'The extensions for "test" is missing'],
-			['php', false, 'You are not allowed to upload PHP files'],
-			['phar', false, 'You are not allowed to upload PHP files'],
-			['pht', false, 'You are not allowed to upload PHP files'],
-			['phtml', false, 'You are not allowed to upload PHP files'],
-			['php4', false, 'You are not allowed to upload PHP files'],
-			['1phar2', false, 'You are not allowed to upload PHP files'],
-			['pht5', false, 'You are not allowed to upload PHP files'],
-			['phtml5', false, 'You are not allowed to upload PHP files'],
-			['htm', false, 'You are not allowed to upload HTML files'],
-			['html', false, 'You are not allowed to upload HTML files'],
-			['dhtml', false, 'You are not allowed to upload HTML files'],
-			['exe', false, 'The extension "exe" is not allowed'],
-			['txt', false, 'The extension "txt" is not allowed'],
-		];
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectNotToPerformAssertions();
+
+		FileRules::validExtension($file, 'jpg');
 	}
 
-	#[DataProvider('extensionProvider')]
-	public function testValidExtension(
-		string $extension,
-		bool $expected,
-		string|null $message = null
-	): void {
-		$file = $this->createMock(File::class);
-		$file->method('filename')->willReturn('test');
-
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage($message);
-		} else {
-			$this->expectNotToPerformAssertions();
-		}
-
-		FileRules::validExtension($file, $extension);
-	}
-
-	public static function fileProvider(): array
+	public function testValidExtensionWithForbiddenExtension(): void
 	{
-		return [
-			// valid examples
-			['test.jpg', 'jpg', 'image/jpeg', true],
-			['abc.png', 'png', 'image/png', true],
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
-			// extension
-			['test', '', 'text/plain', false, 'The extensions for "test" is missing'],
-			['test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
-			['test.html', 'html', 'text/plain', false, 'You are not allowed to upload HTML files'],
-			['test.php', 'php', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.pht', 'pht', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.phtml', 'phtml', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.phar', 'phar', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.exe', 'exe', 'text/plain', false, 'The extension "exe" is not allowed'],
-			['test.txt', 'txt', 'text/plain', false, 'The extension "txt" is not allowed'],
-			['test.php4', 'php4', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.pht5', 'pht5', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.phtml5', 'phtml5', 'text/plain', false, 'You are not allowed to upload PHP files'],
-			['test.1phar2', '1phar2', 'text/plain', false, 'You are not allowed to upload PHP files'],
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The extension "exe" is not allowed');
 
-			// mime
-			['test', 'jpg', '', false, 'The media type for "test" cannot be detected'],
-			['test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
-			['test.jpg', 'jpg', 'text/html', false, 'The media type "text/html" is not allowed'],
-			['test.jpg', 'jpg', 'application/x-msdownload', false, 'The media type "application/x-msdownload" is not allowed'],
-
-			// filename
-			['', 'jpg', 'image/jpg', false, 'The filename must not be empty'],
-			['.htaccess', 'htaccess', 'application/x-apache', false, 'You are not allowed to upload Apache config files'],
-			['.htpasswd', 'htpasswd', 'application/x-apache', false, 'You are not allowed to upload Apache config files'],
-			['.gitignore', 'gitignore', 'application/x-git', false, 'You are not allowed to upload invisible files'],
-
-			// rule order
-			['.test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
-			['.test.htm', 'htm', 'text/plain', false, 'You are not allowed to upload HTML files'],
-			['.test.jpg', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
-		];
+		FileRules::validExtension($file, 'exe');
 	}
 
-	#[DataProvider('fileProvider')]
-	public function testValidFile(
-		string $filename,
-		string $extension,
-		string $mime,
-		bool $expected,
-		string|null $message = null
-	): void {
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['filename', '__call'])
-			->getMock();
-		$file->method('filename')->willReturn($filename);
-		$file->method('__call')
-			->willReturnCallback(fn ($method, $args = []) => match ($method) {
-				'extension' => $extension,
-				'mime'      => $mime
-			});
+	public function testValidFile(): void
+	{
+		$file = $this->fileOnDisk('test.jpg');
 
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage($message);
-		} else {
-			$this->expectNotToPerformAssertions();
-		}
+		$this->expectNotToPerformAssertions();
 
 		FileRules::validFile($file);
 	}
 
+	public function testValidFilename(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectNotToPerformAssertions();
+
+		FileRules::validFilename($file, 'test.jpg');
+	}
+
+	public function testValidFilenameWithInvisibleFile(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload invisible files');
+
+		FileRules::validFilename($file, '.gitignore');
+	}
+
 	public function testValidFileSkipMime(): void
 	{
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['filename', '__call'])
-			->getMock();
-		$file->method('filename')->willReturn('test.jpg');
-		$file->method('__call')->willReturnCallback(fn ($method, $args = []) => match ($method) {
-			'extension' => 'jpg',
-			'mime'      => 'text/html'
-		});
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+
+		// a file with a valid filename and extension,
+		// but with HTML contents and thus a forbidden MIME type
+		F::write($page->root() . '/test.jpg', '<html><body>test</body></html>');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
 
 		FileRules::validFile($file, false);
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('The media type "text/html" is not allowed');
+
 		FileRules::validFile($file);
 	}
 
-	public static function filenameProvider(): array
+	public function testValidFileWithForbiddenFilename(): void
 	{
-		return [
-			['test.jpg', true],
-			['abc.txt', true],
-			['', false, 'The filename must not be empty'],
-			['.htaccess', false, 'You are not allowed to upload Apache config files'],
-			['.htpasswd', false, 'You are not allowed to upload Apache config files'],
-			['.gitignore', false, 'You are not allowed to upload invisible files'],
-		];
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => '.htaccess', 'parent' => $parent]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('You are not allowed to upload Apache config files');
+
+		FileRules::validFile($file, false);
 	}
 
-	#[DataProvider('filenameProvider')]
-	public function testValidFilename(
-		string $filename,
-		bool $expected,
-		string|null $message = null
-	): void {
-		$file = $this->createMock(File::class);
-		$file->method('filename')->willReturn($filename);
-
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage($message);
-		} else {
-			$this->expectNotToPerformAssertions();
-		}
-
-		FileRules::validFilename($file, $filename);
-	}
-
-	public static function mimeProvider(): array
+	public function testValidMime(): void
 	{
-		return [
-			['image/jpeg', true],
-			['image/png', true],
-			['', false, 'The media type for "test" cannot be detected'],
-			['application/php', false, 'You are not allowed to upload PHP files'],
-			['text/html', false, 'The media type "text/html" is not allowed'],
-			['application/x-msdownload', false, 'The media type "application/x-msdownload" is not allowed'],
-		];
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
+
+		$this->expectNotToPerformAssertions();
+
+		FileRules::validMime($file, 'image/jpeg');
 	}
 
-	#[DataProvider('mimeProvider')]
-	public function testValidMime(
-		string $mime,
-		bool $expected,
-		string|null $message = null
-	): void {
-		$file = $this->createMock(File::class);
-		$file->method('filename')->willReturn('test');
+	public function testValidMimeWithForbiddenMime(): void
+	{
+		$parent = new Page(['slug' => 'test']);
+		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
 
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage($message);
-		} else {
-			$this->expectNotToPerformAssertions();
-		}
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The media type "text/html" is not allowed');
 
-		FileRules::validMime($file, $mime);
+		FileRules::validMime($file, 'text/html');
 	}
 }

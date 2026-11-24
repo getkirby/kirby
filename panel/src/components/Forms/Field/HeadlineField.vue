@@ -4,7 +4,7 @@
 			{{ label }}
 		</k-headline>
 		<footer v-if="help" class="k-field-footer">
-			<k-text class="k-help k-field-help" :html="help" />
+			<k-text class="k-help k-field-help" :text="help" />
 		</footer>
 	</div>
 </template>
@@ -13,7 +13,11 @@
 import { help, label } from "@/mixins/props.js";
 
 /**
- * @example <k-headline-field label="This is a headline" />
+ * @example
+ * <k-headline-field label="This is a headline" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [help, label],

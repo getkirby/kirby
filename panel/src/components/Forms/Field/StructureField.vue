@@ -4,7 +4,7 @@
 		:class="['k-structure-field', $attrs.class]"
 		:input="false"
 		:style="$attrs.style"
-		@click.native.stop
+		@click.stop
 	>
 		<template v-if="hasFields && !disabled" #options>
 			<k-button-group
@@ -14,9 +14,13 @@
 				variant="filled"
 			/>
 			<k-button-group v-else>
-				<template v-if="canSelect">
-					<k-button v-bind="batchEditingToggle" size="xs" variant="filled" />
-				</template>
+				<k-button
+					v-if="canSelect"
+					v-bind="batchEditingToggle"
+					size="xs"
+					variant="filled"
+				/>
+
 				<k-button-group layout="collapsed">
 					<k-button
 						:autofocus="autofocus"
@@ -34,7 +38,7 @@
 						variant="filled"
 						@click="$refs.options.toggle()"
 					/>
-					<k-dropdown-content
+					<k-dropdown
 						ref="options"
 						:options="[
 							{
@@ -56,13 +60,14 @@
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(items)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="items.length">
 			<template v-if="hasFields">
 				<!-- Empty State -->
-				<k-empty v-if="items.length === 0" icon="list-bullet" @click="add()">
+				<k-empty
+					v-if="items.length === 0"
+					icon="list-bullet"
+					v-on="!disabled ? { click: () => add() } : {}"
+				>
 					{{ empty ?? $t("field.structure.empty") }}
 				</k-empty>
 
@@ -71,14 +76,16 @@
 					<k-table
 						:columns="columns"
 						:disabled="disabled"
-						:fields="fields"
+						:fields="subfields"
 						:empty="$t('field.structure.empty')"
 						:index="index"
 						:options="options"
 						:pagination="limit && !isSelecting ? pagination : false"
 						:rows="paginatedItems"
 						:selecting="isSelecting"
+						:selected="selected"
 						:sortable="isSortable"
+						class="k-structure-field-table"
 						@cell="open($event.row, $event.columnIndex)"
 						@input="onTableInput"
 						@option="option"
@@ -100,7 +107,7 @@
 			<template v-else>
 				<k-empty icon="list-bullet">{{ $t("fields.empty") }}</k-empty>
 			</template>
-		</k-input-validator>
+		</k-validator>
 	</k-field>
 </template>
 
@@ -108,6 +115,10 @@
 import { props as Field } from "@/components/Forms/Field.vue";
 import batchEditing from "@/mixins/batchEditing";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, batchEditing],
 	inheritAttrs: false,
@@ -175,6 +186,7 @@ export default {
 			default: () => []
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			items: [],
@@ -190,10 +202,6 @@ export default {
 
 		batchEditingEvent() {
 			return "structure.selecting";
-		},
-
-		batchEditingIdentifier() {
-			return "_id";
 		},
 
 		canSelect() {
@@ -317,17 +325,24 @@ export default {
 				align: "center",
 				details: true
 			};
+		},
+		/**
+		 * Fields with their own endpoints, so that
+		 * the cell previews can load from them
+		 */
+		subfields() {
+			return this.$helper.field.subfields(this, this.fields);
 		}
 	},
 	watch: {
 		value: {
 			handler(value) {
-				this.stopSelecting();
-
 				if (value !== this.items) {
+					this.stopSelecting();
 					this.items = this.toItems(value);
 				}
 			},
+			deep: true,
 			immediate: true
 		}
 	},
@@ -421,9 +436,9 @@ export default {
 				id: this.id,
 				props: {
 					disabled: this.disabled,
-					icon: this.icon ?? "list-bullet",
-					next: this.items[index + 1],
-					prev: this.items[index - 1],
+					icon: "list-bullet",
+					next: index < this.items.length - 1,
+					prev: index > 0,
 					tabs: {
 						content: {
 							fields: this.form(field)
@@ -438,10 +453,11 @@ export default {
 						const index = this.findIndex(item);
 
 						// update the prev/next navigation
-						this.$panel.drawer.props.next = this.items[index + 1];
-						this.$panel.drawer.props.prev = this.items[index - 1];
+						// in case the updated input changed its sorting position
+						this.$panel.drawer.props.next = index < this.items.length - 1;
+						this.$panel.drawer.props.prev = index > 0;
 
-						this.$set(this.items, index, value);
+						this.items[index] = value;
 						this.save();
 					},
 					next: () => {
@@ -563,7 +579,9 @@ export default {
 		},
 
 		removeSelected() {
-			this.items = this.items.filter((item) => !this.selected.includes(item));
+			this.items = this.items.filter(
+				(item) => this.selected.includes(item._id) === false
+			);
 			this.save();
 		},
 
@@ -620,11 +638,8 @@ export default {
 	margin-top: var(--spacing-3);
 }
 
-/* Allow interaction with disabled structure field to open the drawer */
-.k-structure-field[data-disabled="true"] {
+/* Restore cursor for disabled structure field content */
+.k-structure-field-table[aria-disabled="true"] {
 	cursor: initial;
-}
-.k-structure-field[data-disabled="true"] * {
-	pointer-events: initial;
 }
 </style>

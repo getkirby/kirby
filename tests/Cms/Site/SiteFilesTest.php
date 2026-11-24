@@ -9,7 +9,7 @@ use TypeError;
 #[CoversClass(Site::class)]
 class SiteFilesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteFiles';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteFiles';
 
 	public function testCreateFile(): void
 	{

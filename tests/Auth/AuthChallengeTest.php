@@ -1,0 +1,592 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\F;
+use Kirby\Tests\MockTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Throwable;
+
+#[CoversClass(Auth::class)]
+class AuthChallengeTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Auth.AuthChallenge';
+
+	protected static string $password;
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('12345678');
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			],
+			'users' => [
+				[
+					'email'    => 'marge@simpsons.com',
+					'id'       => 'marge',
+					'password' => self::$password
+				],
+				[
+					'email' => 'test@exämple.com',
+					'id'    => 'idn'
+				],
+				[
+					'email' => 'invalid@example.com',
+					'id'    => 'invalid'
+				]
+			]
+		]);
+
+		// the email challenge is opt-in as a second factor,
+		// so enable it for the user that tests the 2FA flow
+		F::write(
+			static::TMP . '/site/accounts/marge/.htpasswd',
+			self::$password . "\n" . '{"email":true}'
+		);
+
+		$this->auth = $this->app->auth();
+	}
+
+	public function testCreateChallenge(): void
+	{
+		$status  = $this->auth->createChallenge('marge@simpsons.com');
+		$session = $this->app->session();
+
+		$this->assertSame('pending', $status->state()->value);
+		$this->assertSame('email', $status->challenge(false));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertSame('login', $session->get('kirby.challenge.mode'));
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+	}
+
+	public function testCreateChallengeClearsStaleState(): void
+	{
+		$session = $this->app->session();
+
+		// a first challenge stores its type and data
+		$this->auth->createChallenge('marge@simpsons.com');
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+		$this->assertNotNull($session->get('kirby.challenge.data'));
+
+		try {
+			$this->auth->createChallenge('lisa@simpsons.com');
+		} catch (Throwable) {
+			// expected in debug mode
+		}
+
+		// nothing of the first challenge may survive, otherwise its code
+		// could be verified against the new email
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testCreateChallengeCustomTimeout(): void
+	{
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'challenge'  => [
+						'timeout' => 42
+					],
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$time    = time();
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$timeout = $session->get('kirby.challenge.timeout');
+		$this->assertGreaterThanOrEqual($time + 42, $timeout);
+		$this->assertLessThanOrEqual($time + 43, $timeout);
+	}
+
+	public static function unknownUserProvider(): array
+	{
+		return [
+			['lisa@simpsons.com'],
+			['marge'],
+			['user://marge'],
+		];
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testCreateChallengeInvalidUser(string $email): void
+	{
+		$this->app  = $this->app->clone(['options' => ['auth' => ['debug' => false]]]);
+		$this->auth = $this->app->auth();
+		$status  = $this->auth->createChallenge($email);
+		$session = $this->app->session();
+
+		$this->assertSame('pending', $status->state()->value);
+		$this->assertNull($status->challenge(false));
+		$this->assertSame($email, $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+	}
+
+	public function testCreateChallengeRateLimitingLog(): void
+	{
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$this->auth->createChallenge('marge@simpsons.com');
+
+		$log   = $this->auth->limits()->log();
+		$ip    = $this->app->visitor()->ip(hash: true);
+
+		$this->assertSame(1, $log['by-ip'][$ip]['trials'] ?? null);
+		$this->assertSame(1, $log['by-email']['marge@simpsons.com']['trials'] ?? null);
+	}
+
+	public function testCreateChallengeWithMixedCaseEmail(): void
+	{
+		$status = $this->auth->createChallenge('Marge@Simpsons.com');
+
+		$this->assertSame('pending', $status->state()->value);
+		$this->assertSame('email', $status->challenge(false));
+	}
+
+	public function testLogin2fa(): void
+	{
+		$status = $this->auth->login2fa('marge@simpsons.com', '12345678');
+		$this->assertSame('pending', $status->state()->value);
+		$this->assertSame('email', $status->challenge(false));
+	}
+
+	#[DataProvider('unknownUserProvider')]
+	public function testLogin2faInvalidUser(string $email): void
+	{
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'      => false,
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('Invalid login');
+
+		$this->auth->login2fa($email, 'springfield123');
+	}
+
+	public function testSwitchChallenge(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		$challenge = $this->auth->switchChallenge('email');
+
+		$this->assertInstanceOf(Challenge::class, $challenge);
+		$this->assertSame('email', $challenge->type());
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+	}
+
+	public function testSwitchChallengeRateLimited(): void
+	{
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'      => false,
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		// the email-based limit only ever applies to existing users,
+		// so it must not be observable from the switch response
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		$this->assertNull($this->auth->switchChallenge('email'));
+	}
+
+	public function testSwitchChallengeRateLimitedDebug(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		$this->expectException(RateLimitException::class);
+		$this->auth->switchChallenge('email');
+	}
+
+	public function testSwitchChallengeUnavailable(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+
+		// same result as for a missing user: no error,
+		// but a generically pending session
+		$this->assertNull($this->auth->switchChallenge('totp'));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
+	public function testVerifyChallenge(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 60);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('12345678')
+		);
+
+		$data = $session->data()->get();
+		$this->assertSame('marge', $data['kirby.userId'] ?? null);
+	}
+
+	public function testVerifyChallengeInvalidCode(): void
+	{
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		try {
+			$this->auth->verifyChallenge('000000');
+			$this->fail('The challenge verification should have failed');
+		} catch (PermissionException) {
+			$log = $this->auth->limits()->log();
+			$ip  = $this->app->visitor()->ip(hash: true);
+
+			$this->assertSame(1, $log['by-ip'][$ip]['trials'] ?? null);
+			$this->assertSame(1, $log['by-email']['marge@simpsons.com']['trials'] ?? null);
+		}
+	}
+
+	public function testVerifyChallengeInvalidCodeFiresLoginFailedHookOnce(): void
+	{
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$count = 0;
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		try {
+			$this->auth->verifyChallenge('000000');
+		} catch (PermissionException) {
+			// expected
+		}
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testVerifyChallengeNoChallenge(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->auth->verifyChallenge('123456');
+	}
+
+	public function testVerifyChallengeNoChallengeDoesNotTrack(): void
+	{
+		// a code submission without an active challenge is not an
+		// authentication attempt: it must neither consume the IP
+		// rate-limit budget nor fire the user.login:failed hook
+		F::remove(static::TMP . '/site/accounts/.logins');
+
+		$count = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		try {
+			$this->auth->verifyChallenge('123456');
+			$this->fail('The challenge verification should have failed');
+		} catch (InvalidArgumentException) {
+			$this->assertSame(0, $count);
+			$this->assertSame([], $this->auth->limits()->log()['by-ip']);
+			$this->assertFileDoesNotExist(static::TMP . '/site/accounts/.logins');
+		}
+	}
+
+	public function testVerifyChallengePasswordReset(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'password-reset');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 60);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('12345678')
+		);
+
+		// a password-reset challenge flags the session so the user
+		// may set a new password without knowing the previous one;
+		// the flag is bound to the user the challenge was issued for
+		$data = $session->data()->get();
+		$this->assertSame('marge', $data['kirby.resetPassword'] ?? false);
+	}
+
+	public static function pendingWithoutChallengeProvider(): array
+	{
+		return [
+			// missing user (`Auth::createChallenge()`)
+			['lisa@simpsons.com', 0],
+			// existing user without an available challenge
+			// (e.g. `Challenges::switch()` to an unavailable type)
+			['marge@simpsons.com', 1],
+		];
+	}
+
+	#[DataProvider('pendingWithoutChallengeProvider')]
+	public function testVerifyChallengePendingWithoutChallenge(
+		string $email,
+		int $emailTrials
+	): void {
+		// a generically pending session (see `Challenges::keepPending()`)
+		// must be handled like a wrong code for a real challenge:
+		// same generic error, rate-limit tracking and timing jitter,
+		// otherwise it would reveal whether the user exists
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$count = 0;
+
+		$this->app  = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			],
+			'options' => [
+				'auth' => [
+					'debug'      => false,
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		try {
+			$this->auth->verifyChallenge('000000');
+			$this->fail('The challenge verification should have failed');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.access.code', $e->getKey());
+
+			$log = $this->auth->limits()->log();
+			$ip  = $this->app->visitor()->ip(hash: true);
+
+			$this->assertSame(1, $count);
+			$this->assertSame(1, $log['by-ip'][$ip]['trials'] ?? null);
+			$this->assertSame($emailTrials, $log['by-email'][$email]['trials'] ?? 0);
+		}
+	}
+
+	public function testVerifyChallengeRateLimited(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		$this->expectException(RateLimitException::class);
+		$this->auth->verifyChallenge('123456');
+	}
+
+	public function testVerifyChallengeRateLimitedFiresFailedHookOnce(): void
+	{
+		$count = 0;
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		try {
+			$this->auth->verifyChallenge('123456');
+		} catch (RateLimitException) {
+			// expected
+		}
+
+		$this->assertSame(1, $count);
+	}
+
+	public function testVerifyChallengeReturnsNullIfFailDoesNotThrow(): void
+	{
+		// custom auth that swallows fail() to reach the null return
+		$auth = new class ($this->app) extends Auth {
+			protected function fail(Throwable $exception, Throwable|null $fallback = null): void
+			{
+				// intentionally ignore
+			}
+		};
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', MockTime::$time + 1);
+
+		$this->assertNull($auth->verifyChallenge('654321'));
+	}
+
+	public function testVerifyChallengeTimeLimited(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() - 10);
+
+		try {
+			$this->auth->verifyChallenge('123456');
+			$this->fail('The challenge should have timed out');
+		} catch (ChallengeTimeoutException) {
+			$this->assertNull($session->get('kirby.challenge.email'));
+			$this->assertNull($session->get('kirby.challenge.type'));
+		}
+	}
+
+	public function testVerifyChallengeWithMixedCaseEmail(): void
+	{
+		$session = $this->app->session();
+
+		$session->set('kirby.challenge.email', 'Marge@Simpsons.com');
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 60);
+
+		$this->assertSame(
+			$this->app->user('marge@simpsons.com'),
+			$this->auth->verifyChallenge('12345678')
+		);
+	}
+}

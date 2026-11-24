@@ -29,29 +29,28 @@ use Stringable;
  * $model->uuid()->toString();
  *
  * // get model from an UUID string
- * Uuid::for('page://HhX1YtRR2ImG6h4')->model();
+ * Uuid::from('page://HhX1YtRR2ImG6h4')->model();
  *
  * // cache actions
  * $model->uuid()->populate();
  * $model->uuid()->clear();
  * ```
- * @since 3.8.0
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
  *
- * @template TModel of \Kirby\Uuid\Identifiable
+ * @template TModel of Identifiable
  */
 abstract class Uuid implements Stringable
 {
-	protected const TYPE = 'uuid';
+	protected const string TYPE = 'uuid';
 
 	/**
 	 * Customizable callback function for generating new ID strings instead
 	 * of `Str::random()`. Receives length of string as parameter.
+	 *
+	 * @var (Closure(int): string)|null
 	 */
 	public static Closure|null $generator = null;
 
@@ -59,7 +58,7 @@ abstract class Uuid implements Stringable
 	 * Collection that is likely to contain the model and
 	 * that will be checked first to speed up the lookup
 	 *
-	 * @var \Kirby\Cms\Collection<TModel>|null
+	 * @var Collection<TModel>|null
 	 */
 	public Collection|null $context;
 
@@ -69,6 +68,10 @@ abstract class Uuid implements Stringable
 	public Identifiable|null $model;
 	public Uri $uri;
 
+	/**
+	 * @param TModel|null $model
+	 * @param Collection<TModel>|null $context
+	 */
 	public function __construct(
 		string|null $uuid = null,
 		Identifiable|null $model = null,
@@ -80,7 +83,6 @@ abstract class Uuid implements Stringable
 				message: 'UUIDs have been disabled via the `content.uuid` config option.'
 			);
 		}
-
 
 		$this->context = $context;
 		$this->model   = $model;
@@ -104,8 +106,15 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * Removes the current UUID from cache,
-	 * recursively including all children if needed
+	 * @see self::toString()
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
+	}
+
+	/**
+	 * Removes the current UUID from cache
 	 */
 	public function clear(): bool
 	{
@@ -122,7 +131,7 @@ abstract class Uuid implements Stringable
 	 * up the UUID/model from index
 	 * @internal
 	 *
-	 * @return \Generator<TModel>
+	 * @return Generator<TModel>
 	 */
 	final public function context(): Generator
 	{
@@ -162,51 +171,16 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
-	 * Shorthand to create instance
-	 * by passing either UUID or model
+	 * Creates a UUID object for a model object
 	 */
 	final public static function for(
-		string|Identifiable $seed,
+		Identifiable $seed,
 		Collection|null $context = null
 	): static|null {
-		// if globally disabled, return null
 		if (Uuids::enabled() === false) {
 			return null;
 		}
 
-		// for UUID string
-		if (is_string($seed) === true) {
-			if ($uri = Str::before($seed, '://')) {
-				return match ($uri) {
-					'page'   => new PageUuid(uuid: $seed, context: $context),
-					'file'   => new FileUuid(uuid: $seed, context: $context),
-					'site'   => new SiteUuid(uuid: $seed, context: $context),
-					'user'   => new UserUuid(uuid: $seed, context: $context),
-					// TODO: activate for uuid-block-structure-support
-					// 'block'  => new BlockUuid(uuid: $seed, context: $context),
-					// 'struct' => new StructureUuid(uuid: $seed, context: $context),
-					default  => throw new InvalidArgumentException(
-						message: 'Invalid UUID URI: ' . $seed
-					)
-				};
-			}
-
-			// permalinks
-			if ($url = Str::after($seed, '/@/')) {
-				$parts = explode('/', $url);
-
-				return static::for(
-					$parts[0] . '://' . $parts[1],
-					$context
-				);
-			}
-
-			throw new InvalidArgumentException(
-				message: 'Invalid UUID string: ' . $seed
-			);
-		}
-
-		// for model object
 		return match (true) {
 			$seed instanceof Page
 				=> new PageUuid(model: $seed, context: $context),
@@ -225,6 +199,43 @@ abstract class Uuid implements Stringable
 				message: 'UUID not supported for: ' . $seed::class
 			)
 		};
+	}
+
+	/**
+	 * Creates a UUID object from a UUID string
+	 * @since 6.0.0
+	 */
+	final public static function from(
+		string $uuid,
+		string|array|null $type = null,
+		Collection|null $context = null
+	): static|null {
+		if (Uuids::enabled() === false) {
+			return null;
+		}
+
+		if ($type !== null && static::is($uuid, $type) === false) {
+			return null;
+		}
+
+		if ($scheme = Str::before($uuid, '://')) {
+			return match ($scheme) {
+				'page'   => new PageUuid(uuid: $uuid, context: $context),
+				'file'   => new FileUuid(uuid: $uuid, context: $context),
+				'site'   => new SiteUuid(uuid: $uuid, context: $context),
+				'user'   => new UserUuid(uuid: $uuid, context: $context),
+				// TODO: activate for uuid-block-structure-support
+				// 'block'  => new BlockUuid(uuid: $uuid, context: $context),
+				// 'struct' => new StructureUuid(uuid: $uuid, context: $context),
+				default  => throw new InvalidArgumentException(
+					message: 'Invalid UUID type "' . $scheme . '" in ' . $uuid
+				)
+			};
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Invalid UUID string: ' . $uuid
+		);
 	}
 
 	/**
@@ -272,7 +283,7 @@ abstract class Uuid implements Stringable
 	 * into one iterator
 	 * @internal
 	 *
-	 * @return \Generator<TModel>
+	 * @return Generator<string, TModel>
 	 */
 	final public function indexes(): Generator
 	{
@@ -323,6 +334,8 @@ abstract class Uuid implements Stringable
 
 	/**
 	 * Returns key for cache entry
+	 *
+	 * @return ($generate is true ? string : string|null)
 	 */
 	public function key(bool $generate = false): string|null
 	{
@@ -346,7 +359,7 @@ abstract class Uuid implements Stringable
 	 * Tries to find the identifiable model in cache
 	 * or index and returns the object
 	 *
-	 * @param bool $lazy If `true`, only lookup from cache
+	 * @param $lazy If `true`, only lookup from cache
 	 * @return TModel|null
 	 */
 	public function model(bool $lazy = false): Identifiable|null
@@ -359,26 +372,28 @@ abstract class Uuid implements Stringable
 			return $this->model;
 		}
 
-		if ($lazy === false) {
-			if (App::instance()->option('content.uuid.index') === false) {
-				if (App::instance()->option('debug') === true) {
-					throw new NotFoundException(
-						message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
-					);
-				}
+		if ($lazy === true) {
+			return null;
+		}
 
-				return null;
+		if (App::instance()->option('content.uuid.index') === false) {
+			if (App::instance()->option('debug') === true) {
+				throw new NotFoundException(
+					message: 'Model for UUID ' . $this->uri->toString() . ' could not be found without searching in the site index'
+				);
 			}
 
-			if ($this->model = $this->findByIndex()) {
-				// lazily fill cache by writing to cache
-				// whenever looked up from index to speed
-				// up future lookups of the same UUID
-				// also force to update value again if it is already cached
-				$this->populate($this->isCached());
+			return null;
+		}
 
-				return $this->model;
-			}
+		if ($this->model = $this->findByIndex()) {
+			// lazily fill cache by writing to cache
+			// whenever looked up from index to speed
+			// up future lookups of the same UUID
+			// also force to update value again if it is already cached
+			$this->populate($this->isCached());
+
+			return $this->model;
 		}
 
 		return null;
@@ -428,11 +443,7 @@ abstract class Uuid implements Stringable
 	{
 		$model = $this->model();
 
-		if ($model === null) {
-			return null;
-		}
-
-		if (method_exists($model, 'url') === false) {
+		if ($model === null || method_exists($model, 'url') === false) {
 			return null;
 		}
 
@@ -447,18 +458,19 @@ abstract class Uuid implements Stringable
 	}
 
 	/**
+	 * Returns the type of the UUID
+	 * @since 6.0.0
+	 */
+	public function type(): string
+	{
+		return static::TYPE;
+	}
+
+	/**
 	 * Returns value to be stored in cache
 	 */
 	public function value(): string|array
 	{
 		return $this->model()->id();
-	}
-
-	/**
-	 * @see self::render()
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

@@ -10,6 +10,9 @@
  * history.add({ id: "b", url: "/b" });
  * history.last;        // { id: "b", url: "/b" }
  * history.goto("a");   // { id: "a", url: "/a" }
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default class History<T extends { id: string }> {
 	milestones: T[] = [];

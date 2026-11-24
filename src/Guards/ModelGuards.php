@@ -1,0 +1,223 @@
+<?php
+
+namespace Kirby\Guards;
+
+use Kirby\Cms\Model;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\User;
+use Kirby\Exception\AbilityException;
+use Kirby\Exception\Exception;
+use Kirby\Exception\PermissionException;
+use SensitiveParameter;
+use WeakMap;
+
+/**
+ * Bundles all guard layers for a model object: the abilities,
+ * the permissions and the validators. It also composes those
+ * layers for the actions of the model and is therefore the
+ * only layer that knows the full recipe for an action.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @template TModel of Model
+ * @template TAbilities of ModelAbilities<TModel>
+ * @template TPermissions of ModelPermissions<TModel>
+ * @template TValidators of ModelValidators<TModel>
+ */
+abstract class ModelGuards
+{
+	use HasActions;
+
+	/**
+	 * Guards of each model, see `::for()`
+	 *
+	 * @var WeakMap<Model, ModelGuards>|null
+	 */
+	protected static WeakMap|null $cache = null;
+
+	/**
+	 * @var TAbilities
+	 */
+	protected ModelAbilities $abilities;
+
+	/**
+	 * @var TPermissions
+	 */
+	protected ModelPermissions $permissions;
+
+	/**
+	 * @var TValidators
+	 */
+	protected ModelValidators $validators;
+
+	/**
+	 * Child classes create their abilities, permissions
+	 * and validators for the model and user
+	 *
+	 * @param TModel $model
+	 */
+	public function __construct(
+		protected Model $model,
+		protected User $user
+	) {
+	}
+
+	/**
+	 * @return TAbilities
+	 */
+	public function abilities(): ModelAbilities
+	{
+		return $this->abilities;
+	}
+
+	/**
+	 * Returns the availability of every action that the
+	 * blueprint of the model defines an option for.
+	 *
+	 * @return array<string, bool>
+	 */
+	public function availability(): array
+	{
+		// only models with a blueprint can define options
+		if ($this->model instanceof ModelWithContent === false) {
+			return [];
+		}
+
+		/** @var array<string, mixed> $options */
+		$options = $this->model->blueprint()->options();
+		$array   = [];
+
+		foreach (array_keys($options) as $action) {
+			$array[$action] = $this->isAvailable($action);
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Checks if an action is available to be executed. In comparison to
+	 * `::ensureExecutable()`, this does not validate any input for the action yet.
+	 * It will only check the ability and the permissions to execute this action.
+	 * This is typically used to check if UI elements in the Panel should be
+	 * available or not.
+	 *
+	 * @param $default Used if the action has no permission rule
+	 * @throws AbilityException|PermissionException
+	 */
+	public function ensureAvailable(string $action, bool $default = false): void
+	{
+		// the model must be able to execute the action without
+		// breaking system logic. This always takes priority over
+		// any other role-based permission rules.
+		$this->abilities()->ensure($action);
+		$this->permissions()->ensure($action, $default);
+	}
+
+	/**
+	 * Runs every check for the given action, including the
+	 * validators for its arguments. Actions with a dedicated
+	 * `ensureTo<Action>()` method in the child class are handed
+	 * over to it, all others fall back to `::ensureAvailable()`
+	 * and the validators.
+	 *
+	 * @throws AbilityException|PermissionException|Exception
+	 */
+	public function ensureExecutable(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): void {
+		if ($this->has($action) === true) {
+			$this->{$this->method($action)}(...$arguments);
+
+			return;
+		}
+
+		$this->ensureAvailable($action);
+		$this->validators()->ensure($action, ...$arguments);
+	}
+
+	/**
+	 * Returns the guards for the model,
+	 * bound to the currently authenticated user.
+	 */
+	public static function for(Model $model): static
+	{
+		$user   = User::ensure();
+		$cache  = static::$cache ??= new WeakMap();
+		$cached = $cache[$model] ?? null;
+
+		// the guards are bound to the current user and must
+		// be rebuilt whenever the user changes
+		if (
+			$cached instanceof static === true &&
+			$cached->user() === $user
+		) {
+			return $cached;
+		}
+
+		return $cache[$model] = new static(
+			model: $model,
+			user: $user
+		);
+	}
+
+	/**
+	 * Non-throwing counterpart of `::ensureAvailable()`
+	 *
+	 * @param $default Used if the action has no permission rule
+	 */
+	public function isAvailable(string $action, bool $default = false): bool
+	{
+		try {
+			$this->ensureAvailable($action, $default);
+
+			return true;
+		} catch (AbilityException|PermissionException) {
+			return false;
+		}
+	}
+
+	/**
+	 * Non-throwing counterpart of `::ensureExecutable()`. As the
+	 * validators are part of the action, this catches every exception
+	 * the layers can throw, not just the ability and permission
+	 * exceptions.
+	 */
+	public function isExecutable(
+		string $action,
+		#[SensitiveParameter]
+		mixed ...$arguments
+	): bool {
+		try {
+			$this->ensureExecutable($action, ...$arguments);
+
+			return true;
+		} catch (Exception) {
+			return false;
+		}
+	}
+
+	/**
+	 * @return TPermissions
+	 */
+	public function permissions(): ModelPermissions
+	{
+		return $this->permissions;
+	}
+
+	public function user(): User
+	{
+		return $this->user;
+	}
+
+	/**
+	 * @return TValidators
+	 */
+	public function validators(): ModelValidators
+	{
+		return $this->validators;
+	}
+}

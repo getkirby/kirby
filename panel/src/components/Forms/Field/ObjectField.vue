@@ -1,5 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="id" class="k-object-field">
+	<k-field
+		v-bind="$props"
+		:class="['k-object-field', $attrs.class]"
+		:input="id"
+		:style="$attrs.style"
+	>
 		<!-- Remove button -->
 		<template v-if="!disabled && hasFields" #options>
 			<k-button
@@ -26,7 +31,7 @@
 				class="k-table k-object-field-table"
 			>
 				<tbody>
-					<template v-for="field in fields">
+					<template v-for="field in subfields">
 						<tr
 							v-if="field.saveable && $helper.field.isVisible(field, value)"
 							:key="field.name"
@@ -37,6 +42,7 @@
 							</th>
 							<k-table-cell
 								:column="field"
+								:disabled="disabled"
 								:field="field"
 								:mobile="true"
 								:value="object[field.name]"
@@ -46,20 +52,22 @@
 					</template>
 				</tbody>
 			</table>
-			<k-empty v-else icon="box" @click="add">
+
+			<k-empty v-else icon="box" v-on="!disabled ? { click: () => add() } : {}">
 				{{ empty ?? $t("field.object.empty") }}
 			</k-empty>
 		</template>
-		<template v-else>
-			<k-empty icon="box">{{ $t("fields.empty") }}</k-empty>
-		</template>
+
+		<k-empty v-else icon="box">{{ $t("fields.empty") }}</k-empty>
 
 		<!-- Validation -->
 		<input
 			type="checkbox"
 			:checked="!isEmpty"
 			:required="required"
+			aria-hidden="true"
 			class="input-hidden"
+			tabindex="-1"
 		/>
 	</k-field>
 </template>
@@ -68,6 +76,10 @@
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Field, Input],
 	props: {
@@ -75,6 +87,7 @@ export default {
 		fields: [Object, Array],
 		value: [String, Object]
 	},
+	emits: ["input"],
 	data() {
 		return {
 			object: {}
@@ -88,6 +101,13 @@ export default {
 			return (
 				this.object === null || this.$helper.object.length(this.object) === 0
 			);
+		},
+		/**
+		 * Fields with their own endpoints, so that
+		 * the cell previews can load from them
+		 */
+		subfields() {
+			return this.$helper.field.subfields(this, this.fields);
 		}
 	},
 	watch: {
@@ -105,7 +125,11 @@ export default {
 			this.open();
 		},
 		cell(name, value) {
-			this.$set(this.object, name, value);
+			if (this.disabled === true) {
+				return;
+			}
+
+			this.object[name] = value;
 			this.save();
 		},
 		/**
@@ -153,7 +177,7 @@ export default {
 						// sure to make them reactive if they don't
 						// exist yet
 						for (const field in value) {
-							this.$set(this.object, field, value[field]);
+							this.object[field] = value[field];
 						}
 
 						this.save();

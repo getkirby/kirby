@@ -4,9 +4,10 @@ import JsonRequestError from "@/errors/JsonRequestError";
 import RequestError from "@/errors/RequestError";
 import State from "./state";
 import Timer from "@/helpers/timer";
+import type Panel from "./panel";
 
-type NotificationState = {
-	context: "dialog" | "drawer" | "view" | null;
+export type NotificationState = {
+	context: Panel["context"] | null;
 	details: Record<string, unknown>;
 	icon: string | null;
 	isOpen: boolean;
@@ -30,10 +31,32 @@ export function defaults(): NotificationState {
 }
 
 /**
- * Manages the Panel's notifications
- * @since 4.0.0
+ * Normalizes an unknown value to an Error instance
  */
-export default function Notification(panel: TODO) {
+function toError(error: unknown): Error & { details?: unknown } {
+	if (typeof error === "string") {
+		return new Error(error);
+	}
+
+	if (error instanceof Error) {
+		return error;
+	}
+
+	const obj = error as { message?: unknown; details?: unknown };
+	const message =
+		typeof obj?.message === "string" ? obj.message : "Something went wrong";
+
+	return Object.assign(new Error(message), { details: obj?.details ?? {} });
+}
+
+/**
+ * Manages the Panel's notifications
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
+ */
+export default function Notification(panel: Panel) {
 	const parent = State("notification", defaults());
 
 	return reactive({
@@ -67,7 +90,7 @@ export default function Notification(panel: TODO) {
 		 * panel.notification.error("Something went wrong");
 		 * panel.notification.error(new Error("Something went wrong"));
 		 */
-		error(error: Error | string): Prettify<NotificationState> {
+		error(error: unknown): Prettify<NotificationState> {
 			if (error instanceof AuthError) {
 				// only redirect to logout if panel state actually
 				// assumes the user is authenticated, otherwise
@@ -81,54 +104,27 @@ export default function Notification(panel: TODO) {
 				return this.fatal(error);
 			}
 
-			let notification: Partial<NotificationState> = {};
-
-			if (error instanceof RequestError) {
-				// get the broken element in the response json that
-				// has an error message. This can be deprecated later
-				// when the server always sends back a simple error
-				// response without nesting it in $dropdown, $dialog, etc.
-				const response = Object.values(error.response.json) as Array<{
-					error?: string;
-					details: Record<string, unknown>;
-				} | null>;
-
-				const broken = response.find(
-					(element) => typeof element?.error === "string"
-				);
-
-				if (broken) {
-					notification = {
-						message: broken.error,
-						details: broken.details
-					};
-				}
-
-				// flat API error responses carry their details on the error itself
-				notification.details ??= error.details as Record<string, unknown>;
-			}
-
-			if (error instanceof Error) {
-				notification.message ||= error.message;
-			} else if (typeof error === "string") {
-				notification.message ||= error;
-			}
-
-			// fill in fallback defaults
-			notification.message ||= "Something went wrong";
-			notification.details ??= {};
+			const err = toError(error);
+			const message = err.message || "Something went wrong";
 
 			// open the error dialog in views
 			if (panel.context === "view") {
-				panel.dialog.open({
-					component: "k-error-dialog",
-					props: notification
-				});
+				if (err instanceof RequestError) {
+					panel.dialog.open(err.dialog());
+				} else {
+					panel.dialog.open({
+						component: "k-error-dialog",
+						props: {
+							message,
+							details: err.details ?? {}
+						}
+					});
+				}
 			}
 
 			// show the error notification bar
 			return this.open({
-				message: notification.message,
+				message,
 				icon: "alert",
 				theme: "negative",
 				type: "error"

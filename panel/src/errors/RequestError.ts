@@ -3,7 +3,10 @@ import type { PanelResponse } from "@/panel/request";
 /**
  * Stores the request and response in the error
  * object to allow for more detailed error inspection
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default class RequestError extends Error {
 	details: unknown;
@@ -31,6 +34,46 @@ export default class RequestError extends Error {
 		this.key = response.json.key as string | undefined;
 		this.request = request;
 		this.response = response;
+	}
+
+	dialog() {
+		const state = this.state();
+
+		// the exception class is only exposed in debug mode
+		if (
+			state.exception === "Kirby\\Exception\\FormValidationException" ||
+			this.key === "error.form.incomplete"
+		) {
+			return {
+				component: "k-validation-error-dialog",
+				props: {
+					message: this.message,
+					fields: state.details
+				}
+			};
+		}
+
+		return {
+			component: "k-request-error-dialog",
+			props: {
+				message: this.message,
+				request: {
+					url: this.request.url,
+					method: this.request.method
+				},
+				response: {
+					status: this.response.status
+				},
+				exception: {
+					file: state.file,
+					line: state.line,
+					type: state.exception,
+					url: state.editor
+				},
+				details: state.details,
+				trace: state.trace
+			}
+		};
 	}
 
 	state() {

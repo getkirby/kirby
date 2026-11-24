@@ -4,7 +4,8 @@
 			:labels="true"
 			:options="[
 				{ value: 'dark', text: 'Dark', icon: 'moon' },
-				{ value: 'light', text: 'Light', icon: 'sun' }
+				{ value: 'light', text: 'Light', icon: 'sun' },
+				{ value: 'negative', text: 'Negative', icon: 'alert' }
 			]"
 			:value="theme"
 			@input="theme = $event"

@@ -1,0 +1,33 @@
+<?php
+
+namespace Kirby\Panel\Controller\Search;
+
+use Kirby\Cms\User;
+use Kirby\Cms\Users;
+use Kirby\Panel\Ui\Item\UserItem;
+
+/**
+ * Controls the search requests for users
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class UsersSearchController extends ModelsSearchController
+{
+	/**
+	 * @param User $model
+	 */
+	public function item($model): UserItem
+	{
+		return new UserItem(user: $model);
+	}
+
+	public function models(): Users
+	{
+		return $this->kirby
+			->users()
+			->filter('isListable', true)
+			->search($this->query);
+	}
+}

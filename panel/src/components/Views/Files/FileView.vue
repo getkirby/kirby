@@ -43,13 +43,17 @@
 
 		<k-model-tabs :diff="diff" :tab="tab.name" :tabs="tabs" />
 
-		<k-sections
-			:blueprint="blueprint"
+		<k-model-form
+			:api="api"
+			:columns="tab.columns"
 			:content="content"
-			:empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
+			:diff="diff"
+			:empty="
+				$panel.config.debug
+					? $panel.html($t('file.blueprint', { blueprint: $esc(blueprint) }))
+					: null
+			"
 			:lock="lock"
-			:parent="api"
-			:tab="tab"
 			@input="onInput"
 			@submit="onSubmit"
 		/>
@@ -59,6 +63,10 @@
 <script>
 import ModelView from "../ModelView.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: ModelView,
 	props: {

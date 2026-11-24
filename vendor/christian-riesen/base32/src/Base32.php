@@ -29,13 +29,20 @@ class Base32
      */
     protected const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=';
 
-    protected const BASE32HEX_PATTERN = '/[^A-Z2-7]/';
+    /**
+     * Number of padding characters that may legally trail an encoded
+     * block, keyed by count. Any other count is a malformed encoding.
+     *
+     * A final quantum of 1/2/3/4 bytes is encoded as 2/4/5/7 significant
+     * characters padded to 8 with 6/4/3/1 '=' characters respectively;
+     * a full 5-byte quantum has no padding.
+     */
+    protected const VALID_PADDING = [0 => true, 1 => true, 3 => true, 4 => true, 6 => true];
 
     /**
      * Maps the Base32 character to its corresponding bit value.
      */
     protected const MAPPING = [
-        '=' => 0b00000,
         'A' => 0b00000,
         'B' => 0b00001,
         'C' => 0b00010,
@@ -116,51 +123,70 @@ class Base32
     /**
      * Decodes base32.
      *
+     * This decoder conforms to RFC 4648: the input is rejected (rather than
+     * sanitized) if it is not a canonical encoding. It is case-sensitive and
+     * requires correct padding.
+     *
      * @param string $base32String Base32 encoded string
+     *
+     * @throws \InvalidArgumentException if $base32String is not valid RFC 4648 base32
      *
      * @return string Clear text string
      */
     public static function decode(string $base32String): string
     {
-        // Only work in upper cases
-        $base32String = \strtoupper($base32String);
-
-        // Remove anything that is not base32 alphabet
-        $base32String = \preg_replace(static::BASE32HEX_PATTERN, '', $base32String);
-
         // Empty string results in empty string
-        if ('' === $base32String || null === $base32String) {
+        if ('' === $base32String) {
             return '';
         }
 
-        $decoded = '';
-
-        //Set the initial values
         $len = \strlen($base32String);
-        $n = 0;
-        $bitLen = 5;
-        $val = static::MAPPING[$base32String[0]];
 
-        while ($n < $len) {
-            //If the bit length has fallen below 8, shift left 5 and add the next pentet.
-            if ($bitLen < 8) {
-                $val = $val << 5;
-                $bitLen += 5;
-                $n++;
-                $pentet = $base32String[$n] ?? '=';
+        // RFC 4648: encoded data is a whole number of 8-character blocks,
+        // padding included.
+        if (0 !== $len % 8) {
+            throw new \InvalidArgumentException('Base32: input length must be a multiple of 8.');
+        }
 
-                //If the new pentet is padding, make this the last iteration.
-                if ('=' === $pentet) {
-                    $n = $len;
-                }
-                $val += static::MAPPING[$pentet];
-            } else {
-                $shift = $bitLen - 8;
+        // Padding must be a contiguous run of '=' at the very end.
+        $padLen = 0;
+        while ($padLen < $len && '=' === $base32String[$len - 1 - $padLen]) {
+            $padLen++;
+        }
 
-                $decoded .= \chr($val >> $shift);
-                $val = $val & ((1 << $shift) - 1);
-                $bitLen -= 8;
+        if (!isset(static::VALID_PADDING[$padLen])) {
+            throw new \InvalidArgumentException('Base32: invalid padding.');
+        }
+
+        $dataLen = $len - $padLen;
+
+        $decoded = '';
+        $val = 0;
+        $bitLen = 0;
+
+        for ($i = 0; $i < $dataLen; $i++) {
+            $char = $base32String[$i];
+
+            // Reject anything outside the alphabet, including a stray '='
+            // before the trailing padding run.
+            if (!isset(static::MAPPING[$char])) {
+                throw new \InvalidArgumentException(\sprintf('Base32: invalid character "%s" at offset %d.', $char, $i));
             }
+
+            $val = ($val << 5) | static::MAPPING[$char];
+            $bitLen += 5;
+
+            if ($bitLen >= 8) {
+                $bitLen -= 8;
+                $decoded .= \chr(($val >> $bitLen) & 0xFF);
+                $val &= (1 << $bitLen) - 1;
+            }
+        }
+
+        // Any leftover bits that do not form a full byte must be zero,
+        // otherwise the encoding is non-canonical.
+        if (0 !== $val) {
+            throw new \InvalidArgumentException('Base32: non-zero trailing bits.');
         }
 
         return $decoded;

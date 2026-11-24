@@ -12,23 +12,13 @@ use Stringable;
  * The Event object is created whenever the `$kirby->trigger()`
  * or `$kirby->apply()` methods are called. It collects all
  * event information and handles calling the individual hooks.
- * @since 3.4.0
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>,
- *            Ahmet Bora
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.4.0
  */
 class Event implements Stringable
 {
-	/**
-	 * The event type
-	 * (e.g. `page` in `page.create:after`)
-	 */
-	protected string $type;
-
 	/**
 	 * The event action
 	 * (e.g. `create` in `page.create:after`)
@@ -42,10 +32,16 @@ class Event implements Stringable
 	protected string|null $state;
 
 	/**
+	 * The event type
+	 * (e.g. `page` in `page.create:after`)
+	 */
+	protected string $type;
+
+	/**
 	 * Class constructor
 	 *
-	 * @param string $name Full event name (e.g. `page.create:after`)
-	 * @param array $arguments Associative array of named event arguments
+	 * @param $name Full event name (e.g. `page.create:after`)
+	 * @param array<string, mixed> $arguments Associative array of named event arguments
 	 */
 	public function __construct(
 		protected string $name,
@@ -57,11 +53,9 @@ class Event implements Stringable
 		$regex = '/^(?<type>.+?)(?:\.(?<action>[^.]*?))?(?:\:(?<state>.*))?$/';
 		preg_match($regex, $name, $matches, PREG_UNMATCHED_AS_NULL);
 
-		$this->name      = $name;
-		$this->type      = $matches['type'];
-		$this->action    = $matches['action'] ?? null;
-		$this->state     = $matches['state'] ?? null;
-		$this->arguments = $arguments;
+		$this->type   = $matches['type'];
+		$this->action = $matches['action'] ?? null;
+		$this->state  = $matches['state'] ?? null;
 	}
 
 	/**
@@ -109,6 +103,8 @@ class Event implements Stringable
 
 	/**
 	 * Returns the arguments of the event
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function arguments(): array
 	{
@@ -119,7 +115,7 @@ class Event implements Stringable
 	 * Calls a hook with the event data and returns
 	 * the hook's return value
 	 *
-	 * @param object|null $bind Optional object to bind to the hook function
+	 * @param $bind Optional object to bind to the hook function
 	 */
 	public function call(object|null $bind, Closure $hook): mixed
 	{
@@ -130,8 +126,7 @@ class Event implements Stringable
 		];
 
 		// magically call the hook with the arguments it requested
-		$hook = new Controller($hook);
-		return $hook->call($bind, $data);
+		return (new Controller($hook))->call($bind, $data);
 	}
 
 	/**
@@ -145,6 +140,8 @@ class Event implements Stringable
 	/**
 	 * Returns the full list of possible wildcard
 	 * event names based on the current event name
+	 *
+	 * @return list<string>
 	 */
 	public function nameWildcards(): array
 	{
@@ -160,7 +157,6 @@ class Event implements Stringable
 
 		if ($this->action !== null && $this->state !== null) {
 			// full $type.$action:$state event
-
 			return [
 				$this->type . '.*:' . $this->state,
 				$this->type . '.' . $this->action . ':*',
@@ -174,7 +170,6 @@ class Event implements Stringable
 
 		if ($this->state !== null) {
 			// event without action: $type:$state
-
 			return [
 				$this->type . ':*',
 				'*:' . $this->state,
@@ -184,7 +179,6 @@ class Event implements Stringable
 
 		if ($this->action !== null) {
 			// event without state: $type.$action
-
 			return [
 				$this->type . '.*',
 				'*.' . $this->action,
@@ -206,6 +200,8 @@ class Event implements Stringable
 
 	/**
 	 * Returns the event data as array
+	 *
+	 * @return array{name: string, arguments: array<string, mixed>}
 	 */
 	public function toArray(): array
 	{
@@ -235,7 +231,7 @@ class Event implements Stringable
 	 * Updates a given argument with a new value
 	 *
 	 * @unstable
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public function updateArgument(string $name, $value): void
 	{
@@ -247,7 +243,6 @@ class Event implements Stringable
 
 		// no new value has been supplied by the apply hook
 		if ($value === null) {
-
 			// To support legacy model modification
 			// in hooks without return values, we need to
 			// check the state of the updated argument.

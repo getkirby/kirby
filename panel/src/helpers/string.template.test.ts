@@ -91,4 +91,19 @@ describe("$helper.string.template", () => {
 		const result = string.template("{{ title.length }}", values);
 		expect(result).toBe("5");
 	});
+
+	it("should return strings without placeholders unchanged", () => {
+		expect(string.template("Just a plain label", values)).toBe(
+			"Just a plain label"
+		);
+		expect(string.template("100% done", values)).toBe("100% done");
+		expect(string.template("", values)).toBe("");
+	});
+
+	it("should scrub brace syntax coming from a resolved value", () => {
+		// a value that itself contains template syntax must not leak it
+		expect(string.template("{{ inject }}", { inject: "{{ title }}" })).toBe(
+			"…"
+		);
+	});
 });

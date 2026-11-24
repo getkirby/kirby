@@ -2,13 +2,16 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\SiteBlueprint;
 use Kirby\Content\VersionId;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
+use Kirby\Guards\SiteGuards;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
+use Kirby\Uuid\SiteUuid;
 
 /**
  * The `$site` object is the root element
@@ -16,13 +19,10 @@ use Kirby\Toolkit\BlockCollectionAccess;
  * the main content folder with its
  * `site.txt`.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @method \Kirby\Uuid\SiteUuid uuid()
+ * @method SiteUuid uuid()
  */
 class Site extends ModelWithContent
 {
@@ -31,7 +31,7 @@ class Site extends ModelWithContent
 	use HasMethods;
 	use SiteActions;
 
-	public const CLASS_ALIAS = 'site';
+	public const string CLASS_ALIAS = 'site';
 
 	/**
 	 * The SiteBlueprint object
@@ -61,9 +61,9 @@ class Site extends ModelWithContent
 	protected string $homePageId;
 
 	/**
-	 * Cache for the inventory array
+	 * Inventory of the site directory
 	 */
-	protected array|null $inventory = null;
+	protected Inventory|null $inventory = null;
 
 	/**
 	 * The current page object
@@ -73,7 +73,7 @@ class Site extends ModelWithContent
 	/**
 	 * The absolute path to the site directory
 	 */
-	protected string $root;
+	protected string|null $root = null;
 
 	/**
 	 * The page url
@@ -166,11 +166,8 @@ class Site extends ModelWithContent
 	 */
 	public function blueprint(): SiteBlueprint
 	{
-		if ($this->blueprint instanceof SiteBlueprint) {
-			return $this->blueprint;
-		}
-
-		return $this->blueprint = SiteBlueprint::factory('site', null, $this);
+		/** @var SiteBlueprint */
+		return $this->blueprint ??= SiteBlueprint::factory($this, 'site');
 	}
 
 	/**
@@ -228,6 +225,14 @@ class Site extends ModelWithContent
 	}
 
 	/**
+	 * Returns the guards object for this site
+	 */
+	public function guards(): SiteGuards
+	{
+		return SiteGuards::for($this);
+	}
+
+	/**
 	 * Returns the home page object
 	 */
 	public function homePage(): Page|null
@@ -248,15 +253,11 @@ class Site extends ModelWithContent
 	 * and children in the site directory
 	 */
 	#[BlockCollectionAccess]
-	public function inventory(): array
+	public function inventory(): Inventory
 	{
-		if ($this->inventory !== null) {
-			return $this->inventory;
-		}
-
 		$kirby = $this->kirby();
 
-		return $this->inventory = Inventory::for(
+		return $this->inventory ??= new Inventory(
 			$this->root(),
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
@@ -282,7 +283,7 @@ class Site extends ModelWithContent
 	 */
 	public function isAccessible(): bool
 	{
-		return SitePermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
 	}
 
 	/**
@@ -314,11 +315,13 @@ class Site extends ModelWithContent
 	/**
 	 * Gets the last modification date of all pages
 	 * in the content folder.
+	 *
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
 		string|null $format = null,
 		string|null $handler = null
-	): int|string {
+	): int|string|false {
 		return Dir::modified($this->root(), $format, $handler);
 	}
 
@@ -331,8 +334,8 @@ class Site extends ModelWithContent
 	 * prop, the home page will be returned if
 	 * it can be found. (see `Site::homePage()`)
 	 *
-	 * @param string|null $path omit for current page,
-	 *                          otherwise e.g. `notes/across-the-ocean`
+	 * @param $path omit for current page,
+	 *             otherwise e.g. `notes/across-the-ocean`
 	 */
 	public function page(string|null $path = null): Page|null
 	{
@@ -383,14 +386,13 @@ class Site extends ModelWithContent
 	public function previewUrl(VersionId|string $versionId = 'latest'): string|null
 	{
 		// the site needs its own preview permission
-		if ($this->permissions()->can('preview') !== true) {
+		if ($this->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 
-		// the site preview defaults to the home page, so for backward
-		// compatibility we also check the home page's preview permission
-		// @todo Remove in 6.0.0, only check `site.preview`
-		if ($this->homePage()?->permissions()->can('preview') !== true) {
+		// the preview renders the home page with its preview token
+		// @todo 7.0 Only check `site.preview` with a site preview token
+		if ($this->homePage()?->guards()->isAvailable('preview') !== true) {
 			return null;
 		}
 
@@ -403,6 +405,7 @@ class Site extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function root(): string
 	{
+		/** @var string */
 		return $this->root ??= $this->kirby()->root('content');
 	}
 
@@ -410,6 +413,8 @@ class Site extends ModelWithContent
 	 * Returns the SiteRules class instance
 	 * which is being used in various methods
 	 * to check for valid actions and input.
+	 *
+	 * @deprecated 6.0.0 Use `$site->guards()` instead
 	 */
 	protected function rules(): SiteRules
 	{
@@ -471,6 +476,7 @@ class Site extends ModelWithContent
 			return $this->urlForLanguage($language);
 		}
 
+		/** @var string */
 		return $this->url ?? $this->kirby()->url();
 	}
 
@@ -482,6 +488,7 @@ class Site extends ModelWithContent
 		string|null $languageCode = null,
 		array|null $options = null
 	): string {
+		/** @var string */
 		return
 			$this->kirby()->language($languageCode)?->url() ??
 			$this->kirby()->url();

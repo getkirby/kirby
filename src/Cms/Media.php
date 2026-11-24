@@ -15,9 +15,6 @@ use Throwable;
  * Handles all tasks to get the Media API
  * up and running and link files correctly
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -72,7 +69,7 @@ class Media
 	public static function publish(File $file, string $dest): bool
 	{
 		// never publish risky files (e.g. HTML, PHP or Apache config files)
-		FileRules::validFile($file, false);
+		$file->guards()->validators()->validateFile(mime: false);
 
 		$src       = $file->root();
 		$version   = dirname($dest);
@@ -190,8 +187,8 @@ class Media
 
 		// get both old and new versions (pre and post Kirby 3.4.0)
 		$versions = [
-			...glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR),
-			...glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR)
+			...glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR) ?: [],
+			...glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR) ?: []
 		];
 
 		// delete all versions of the file

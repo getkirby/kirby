@@ -3,23 +3,20 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Cms\Blueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Filesystem\Dir;
 use Kirby\Http\Uri;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Home::class)]
 class HomeTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Home';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Home';
 
 	protected function setUp(): void
 	{
-		Blueprint::$loaded = [];
+		parent::setUp();
 
 		// fake a valid server
 		$_SERVER['SERVER_SOFTWARE'] = 'php';
@@ -34,15 +31,6 @@ class HomeTest extends TestCase
 				]
 			],
 		]);
-
-		Dir::make(static::TMP);
-	}
-
-	protected function tearDown(): void
-	{
-		$this->app->session()->destroy();
-		unset($_SERVER['SERVER_SOFTWARE']);
-		Dir::remove(static::TMP);
 	}
 
 	public function testAlternative(): void
@@ -53,9 +41,9 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
-
-		$this->assertSame('/panel/site', Home::alternative($user));
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/site', $home->alternative());
 	}
 
 	public function testAlternativeWithLimitedAccess(): void
@@ -81,9 +69,9 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
-
-		$this->assertSame('/panel/users', Home::alternative($user));
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/users', $home->alternative());
 	}
 
 	public function testAlternativeWithOnlyAccessToAccounts(): void
@@ -111,9 +99,9 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
-
-		$this->assertSame('/panel/account', Home::alternative($user));
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/account', $home->alternative());
 	}
 
 	public function testAlternativeWithoutPanelAccess(): void
@@ -134,9 +122,9 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
-
-		$this->assertSame('/', Home::alternative($user));
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertSame('/', $home->alternative());
 	}
 
 	public function testAlternativeWithoutViewAccess(): void
@@ -161,12 +149,13 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
+		$this->app->impersonate('test@getkirby.com');
 
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('There’s no available Panel page to redirect to');
 
-		Home::alternative($user);
+		$home = $this->app->panel()->home();
+		$home->alternative();
 	}
 
 	public function testHasAccess(): void
@@ -182,22 +171,43 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
 
-		$this->assertTrue(Home::hasAccess($user, 'site'));
-		$this->assertTrue(Home::hasAccess($user, 'pages/test'));
-		$this->assertTrue(Home::hasAccess($user, 'users/test@getkirby.com'));
-		$this->assertTrue(Home::hasAccess($user, 'account'));
+		$this->assertTrue($home->hasAccess('site'));
+		$this->assertTrue($home->hasAccess('pages/test'));
+		$this->assertTrue($home->hasAccess('users/test@getkirby.com'));
+		$this->assertTrue($home->hasAccess('account'));
 
 		// dialogs and dropdowns never get access
-		$this->assertFalse(Home::hasAccess($user, 'dialogs/users/create'));
-		$this->assertFalse(Home::hasAccess($user, 'dropdowns/users/test@getkirby.com'));
+		$this->assertFalse($home->hasAccess('dialogs/users/create'));
+		$this->assertFalse($home->hasAccess('dropdowns/users/test@getkirby.com'));
 
 		// invalid routes return false
-		$this->assertFalse(Home::hasAccess($user, 'does/not/exist/at/all'));
+		$this->assertFalse($home->hasAccess('does/not/exist/at/all'));
 
 		// unauthenticated views return true
-		$this->assertTrue(Home::hasAccess($user, 'browser'));
+		$this->assertTrue($home->hasAccess('browser'));
+	}
+
+	public function testHasAccessAfterLoginInSameRequest(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$panel = $this->app->panel();
+		$home  = $panel->home();
+
+		// areas are resolved before the user is authenticated
+		$this->assertFalse($home->hasAccess('site'));
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$this->assertTrue($home->hasAccess('site'));
+		$this->assertSame('/panel/site', $home->url());
 	}
 
 	public function testHasAccessWithLimitedAccess(): void
@@ -223,49 +233,38 @@ class HomeTest extends TestCase
 			]
 		]);
 
-		$user = $this->app->impersonate('test@getkirby.com');
-
-		$this->assertFalse(Home::hasAccess($user, 'site'));
-		$this->assertFalse(Home::hasAccess($user, 'pages/test'));
-		$this->assertTrue(Home::hasAccess($user, 'users/test@getkirby.com'));
-		$this->assertTrue(Home::hasAccess($user, 'account'));
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertFalse($home->hasAccess('site'));
+		$this->assertFalse($home->hasAccess('pages/test'));
+		$this->assertTrue($home->hasAccess('users/test@getkirby.com'));
+		$this->assertTrue($home->hasAccess('account'));
 	}
 
 	public function testHasValidDomain(): void
 	{
-		$uri = Uri::current();
-		$this->assertTrue(Home::hasValidDomain($uri));
+		$home = $this->app->panel()->home();
+		$uri  = Uri::current();
+		$this->assertTrue($home->hasValidDomain($uri));
 
 		$uri = new Uri('/');
-		$this->assertTrue(Home::hasValidDomain($uri));
+		$this->assertTrue($home->hasValidDomain($uri));
 
 		$uri = new Uri('https://getkirby.com');
-		$this->assertFalse(Home::hasValidDomain($uri));
-	}
-
-	public function testIsPanelUrl(): void
-	{
-		$this->assertTrue(Home::isPanelUrl('/panel'));
-		$this->assertTrue(Home::isPanelUrl('/panel/pages/test'));
-		$this->assertFalse(Home::isPanelUrl('test'));
-	}
-
-	public function testPanelPath(): void
-	{
-		$this->assertSame('site', Home::panelPath('/panel/site'));
-		$this->assertSame('pages/test', Home::panelPath('/panel/pages/test'));
-		$this->assertSame('', Home::panelPath('/test/page'));
+		$this->assertFalse($home->hasValidDomain($uri));
 	}
 
 	public function testRemembered(): void
 	{
-		$this->assertNull(Home::remembered());
+		$home = $this->app->panel()->home();
+		$this->assertNull($home->remembered());
 	}
 
 	public function testRememberedFromSession(): void
 	{
 		$this->app->session()->set('panel.path', 'users');
-		$this->assertSame('/panel/users', Home::remembered());
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/users', $home->remembered());
 	}
 
 	public function testUrl(): void
@@ -278,7 +277,34 @@ class HomeTest extends TestCase
 
 		$this->app->impersonate('test@getkirby.com');
 
-		$this->assertSame('/panel/site', Home::url());
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/site', $home->url());
+	}
+
+	public function testUrlWithAccountAccessOnly(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'users/editor' => [
+					'name' => 'editor',
+					'permissions' => [
+						'access' => [
+							'site'  => false,
+							'users' => false,
+							'system' => false
+						]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/account', $home->url());
 	}
 
 	public static function customHomeProvider(): array
@@ -324,8 +350,8 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('test@getkirby.com');
-
-		$this->assertSame($expected, Home::url());
+		$home = $this->app->panel()->home();
+		$this->assertSame($expected, $home->url());
 	}
 
 	public function testUrlWithInvalidCustomHome(): void
@@ -355,21 +381,8 @@ class HomeTest extends TestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('External URLs are not allowed for Panel redirects');
 
-		Home::url();
-	}
-
-	public function testUrlWithRememberedPath(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				['email' => 'test@getkirby.com', 'role' => 'admin']
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-		$this->app->session()->set('panel.path', 'users');
-
-		$this->assertSame('/panel/users', Home::url());
+		$home = $this->app->panel()->home();
+		$home->url();
 	}
 
 	public function testUrlWithInvalidRememberedPath(): void
@@ -383,7 +396,8 @@ class HomeTest extends TestCase
 		$this->app->impersonate('test@getkirby.com');
 		$this->app->session()->set('panel.path', 'login');
 
-		$this->assertSame('/panel/site', Home::url());
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/site', $home->url());
 	}
 
 	public function testUrlWithMissingSiteAccess(): void
@@ -405,36 +419,44 @@ class HomeTest extends TestCase
 		]);
 
 		$this->app->impersonate('editor@getkirby.com');
-		$this->assertSame('/panel/users', Home::url());
-	}
 
-	public function testUrlWithAccountAccessOnly(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'users/editor' => [
-					'name' => 'editor',
-					'permissions' => [
-						'access' => [
-							'site'  => false,
-							'users' => false,
-							'system' => false
-						]
-					]
-				]
-			],
-			'users' => [
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$this->app->impersonate('editor@getkirby.com');
-
-		$this->assertSame('/panel/account', Home::url());
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/users', $home->url());
 	}
 
 	public function testUrlWithoutUser(): void
 	{
-		$this->assertSame('/panel/login', Home::url());
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/login', $home->url());
+	}
+
+	public function testUrlWithPasswordReset(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$this->app->session()->set('kirby.resetPassword', $this->app->user()->id());
+
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/reset-password', $home->url());
+	}
+
+	public function testUrlWithRememberedPath(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$this->app->session()->set('panel.path', 'users');
+
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/users', $home->url());
 	}
 }

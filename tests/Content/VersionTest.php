@@ -16,7 +16,52 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Version::class)]
 class VersionTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.Version';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.Version';
+
+	public function testContentFileInvalidStorage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->model->changeStorage(MemoryStorage::class);
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Version::contentFile() is only available for plain text storage');
+
+		$version->contentFile();
+	}
+
+	public function testContentFileMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame($this->contentFile('en'), $version->contentFile());
+		$this->assertSame($this->contentFile('en'), $version->contentFile('en'));
+		$this->assertSame($this->contentFile('en'), $version->contentFile($this->app->language('en')));
+		$this->assertSame($this->contentFile('de'), $version->contentFile('de'));
+		$this->assertSame($this->contentFile('de'), $version->contentFile($this->app->language('de')));
+	}
+
+	public function testContentFileSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertSame($this->contentFile(), $version->contentFile());
+	}
 
 	public function testContentMultiLanguage(): void
 	{
@@ -34,6 +79,50 @@ class VersionTest extends TestCase
 		$this->assertSame($expected['en']['content']['title'], $version->content()->get('title')->value());
 		$this->assertSame($expected['de']['content']['title'], $version->content('de')->get('title')->value());
 		$this->assertSame($expected['de']['content']['title'], $version->content($this->app->language('de'))->get('title')->value());
+	}
+
+	public function testContentPrepareFields(): void
+	{
+		$this->setUpSingleLanguage();
+
+		// for pages
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$version->update([
+			'lock' => 'test',
+			'slug' => 'foo',
+			'text' => 'Lorem ipsum'
+		]);
+
+		$this->assertSame([
+			'slug' => 'foo',
+			'text' => 'Lorem ipsum'
+		], $version->content()->toArray());
+
+		// for files
+		$model = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->model
+		]);
+
+		$version = new Version(
+			model: $model,
+			id: VersionId::latest()
+		);
+
+		$version->create([
+			'lock'     => 'test',
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum'
+		]);
+
+		$this->assertSame([
+			'template' => 'foo',
+			'text'     => 'Lorem ipsum',
+		], $version->content()->toArray());
 	}
 
 	public function testContentSingleLanguage(): void
@@ -251,78 +340,6 @@ class VersionTest extends TestCase
 	{
 		Blueprint::$loaded = [];
 		parent::tearDown();
-	}
-
-	public function testContentPrepareFields(): void
-	{
-		$this->setUpSingleLanguage();
-
-		// for pages
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$version->update([
-			'lock' => 'test',
-			'slug' => 'foo',
-			'text' => 'Lorem ipsum'
-		]);
-
-		$this->assertSame([
-			'slug' => 'foo',
-			'text' => 'Lorem ipsum'
-		], $version->content()->toArray());
-
-		// for files
-		$model = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->model
-		]);
-
-		$version = new Version(
-			model: $model,
-			id: VersionId::latest()
-		);
-
-		$version->create([
-			'lock'     => 'test',
-			'template' => 'foo',
-			'text'     => 'Lorem ipsum'
-		]);
-
-		$this->assertSame([
-			'template' => 'foo',
-			'text'     => 'Lorem ipsum',
-		], $version->content()->toArray());
-	}
-
-	public function testContentFileMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->assertSame($this->contentFile('en'), $version->contentFile());
-		$this->assertSame($this->contentFile('en'), $version->contentFile('en'));
-		$this->assertSame($this->contentFile('en'), $version->contentFile($this->app->language('en')));
-		$this->assertSame($this->contentFile('de'), $version->contentFile('de'));
-		$this->assertSame($this->contentFile('de'), $version->contentFile($this->app->language('de')));
-	}
-
-	public function testContentFileSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->assertSame($this->contentFile(), $version->contentFile());
 	}
 
 	public function testCreateMultiLanguage(): void
@@ -583,6 +600,22 @@ class VersionTest extends TestCase
 		$this->assertTrue($version->exists($this->app->language('de')));
 	}
 
+	public function testExistsLatestSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertDirectoryExists($this->model->root());
+
+		// the default version exists without content file as long as
+		// the page directory exists
+		$this->assertTrue($version->exists());
+	}
+
 	public function testExistsWithLanguageWildcard(): void
 	{
 		$this->setUpMultiLanguage();
@@ -607,22 +640,6 @@ class VersionTest extends TestCase
 		// The wildcard should now still return true
 		// because the English translation still exists
 		$this->assertTrue($version->exists('*'));
-	}
-
-	public function testExistsLatestSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->assertDirectoryExists($this->model->root());
-
-		// the default version exists without content file as long as
-		// the page directory exists
-		$this->assertTrue($version->exists());
 	}
 
 	public function testId(): void
@@ -1216,6 +1233,21 @@ class VersionTest extends TestCase
 		$this->assertSame($content, $version->content()->toArray());
 	}
 
+	public function testReadLatestWithoutContentFile(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertFileDoesNotExist($this->contentFile());
+
+		// the page has empty content if there's no default content file
+		$this->assertSame([], $version->read());
+	}
+
 	public function testReadMultiLanguage(): void
 	{
 		$this->setUpMultiLanguage();
@@ -1245,21 +1277,6 @@ class VersionTest extends TestCase
 		$expected = $this->createContentSingleLanguage();
 
 		$this->assertSame($expected['content'], $version->read());
-	}
-
-	public function testReadLatestWithoutContentFile(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->assertFileDoesNotExist($this->contentFile());
-
-		// the page has empty content if there's no default content file
-		$this->assertSame([], $version->read());
 	}
 
 	public function testReadWithDirtyFields(): void
@@ -1314,7 +1331,6 @@ class VersionTest extends TestCase
 			'title'    => null,
 			'subtitle' => 'Subtitle DE'
 		], 'de');
-
 
 		$this->assertSame($contentEN, $version->read('en'));
 		$this->assertSame(['subtitle' => 'Subtitle DE'], $version->read('de'));
@@ -1859,6 +1875,21 @@ class VersionTest extends TestCase
 		$this->assertArrayNotHasKey('date', $version->read('de'));
 	}
 
+	public function testUrlInvalidModel(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Only pages and the site have a content preview URL');
+
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model->file(),
+			id: VersionId::latest()
+		);
+
+		$version->url();
+	}
+
 	public function testUrlPage(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1872,18 +1903,6 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertSame('/a-page', $version->url());
-	}
-
-	public function testUrlPageUnauthenticated(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->model,
-			id: VersionId::latest()
-		);
-
-		$this->assertNull($version->url());
 	}
 
 	public static function pageUrlProvider(): array
@@ -2003,6 +2022,18 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
+	public function testUrlPageUnauthenticated(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$version = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+
+		$this->assertNull($version->url());
+	}
+
 	public function testUrlSite(): void
 	{
 		$this->setUpSingleLanguage();
@@ -2016,18 +2047,6 @@ class VersionTest extends TestCase
 		);
 
 		$this->assertSame('/', $version->url());
-	}
-
-	public function testUrlSiteUnauthenticated(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$version = new Version(
-			model: $this->app->site(),
-			id: VersionId::latest()
-		);
-
-		$this->assertNull($version->url());
 	}
 
 	public static function siteUrlProvider(): array
@@ -2121,18 +2140,15 @@ class VersionTest extends TestCase
 		$this->assertSame($expected, $version->url());
 	}
 
-	public function testUrlInvalidModel(): void
+	public function testUrlSiteUnauthenticated(): void
 	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Only pages and the site have a content preview URL');
-
 		$this->setUpSingleLanguage();
 
 		$version = new Version(
-			model: $this->model->file(),
+			model: $this->app->site(),
 			id: VersionId::latest()
 		);
 
-		$version->url();
+		$this->assertNull($version->url());
 	}
 }

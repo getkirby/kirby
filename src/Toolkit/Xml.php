@@ -7,9 +7,6 @@ use SimpleXMLElement;
 /**
  * XML parser and creator class
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -17,6 +14,8 @@ class Xml
 {
 	/**
 	 * HTML to XML conversion table for entities
+	 *
+	 * @var array<string, string>|null
 	 */
 	public static array|null $entities = [
 		'&nbsp;' => '&#160;', '&iexcl;' => '&#161;', '&cent;' => '&#162;', '&pound;' => '&#163;', '&curren;' => '&#164;', '&yen;' => '&#165;', '&brvbar;' => '&#166;', '&sect;' => '&#167;',
@@ -61,11 +60,10 @@ class Xml
 	/**
 	 * Generates a single attribute or a list of attributes
 	 *
-	 * @param string|array $name String: A single attribute with that name will be generated.
-	 *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
-	 * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
-	 *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
-	 * @return string|null The generated XML attributes string
+	 * @param $name String: A single attribute with that name will be generated.
+	 *             Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+	 * @param $value If used with a `$name` string, pass the value of the attribute here.
+	 *              If used with a `$name` array, this can be set to `false` to disable attribute sorting.
 	 */
 	public static function attr(
 		string|array $name,
@@ -125,12 +123,11 @@ class Xml
 	 * `@namespaces` (array with XML namespaces) and
 	 * `@value` (element content)
 	 *
-	 * @param array|string $props The source array or tag content (used internally)
-	 * @param string $name The name of the root element
-	 * @param bool $head Include the XML declaration head or not
-	 * @param string $indent Indentation string, defaults to two spaces
-	 * @param int $level The indentation level (used internally)
-	 * @return string The XML string
+	 * @param $props The source array or tag content (used internally)
+	 * @param $name Name of the root element
+	 * @param $head Whether to include the XML declaration head
+	 * @param $indent Indentation string
+	 * @param $level Indentation level (used internally)
 	 */
 	public static function create(
 		array|string $props,
@@ -142,17 +139,12 @@ class Xml
 		if (is_array($props) === true) {
 			if (A::isAssociative($props) === true) {
 				// a tag with attributes or named children
-
-				// extract metadata from special array keys
 				$name       = $props['@name'] ?? $name;
 				$attributes = $props['@attributes'] ?? [];
 				$value      = $props['@value'] ?? null;
 
-				if (isset($props['@namespaces']) === true) {
-					foreach ($props['@namespaces'] as $key => $namespace) {
-						$key = 'xmlns' . (($key) ? ':' . $key : '');
-						$attributes[$key] = $namespace;
-					}
+				foreach ($props['@namespaces'] ?? [] as $prefix => $namespace) {
+					$attributes['xmlns' . ($prefix ? ':' . $prefix : '')] = $namespace;
 				}
 
 				// continue with just the children
@@ -167,12 +159,12 @@ class Xml
 					// there are children, use them instead of the value
 
 					$value = [];
-					foreach ($props as $childName => $childItem) {
+					foreach ($props as $key => $child) {
 						// render the child, but don't include the
 						// indentation of the first line
 						$value[] = trim(static::create(
-							$childItem,
-							$childName,
+							$child,
+							$key,
 							false,
 							$indent,
 							$level + 1
@@ -192,9 +184,9 @@ class Xml
 
 				$result = [];
 
-				foreach ($props as $childItem) {
+				foreach ($props as $child) {
 					$result[] = static::create(
-						$childItem,
+						$child,
 						$name,
 						false,
 						$indent,
@@ -205,8 +197,6 @@ class Xml
 				$result = implode(PHP_EOL, $result);
 			}
 		} else {
-			// scalar value
-
 			$result = static::tag($name, $props, [], $indent, $level);
 		}
 
@@ -242,7 +232,7 @@ class Xml
 	 * // output: some &#252;ber crazy stuff
 	 * ```
 	 *
-	 * @param bool $html True = Convert to HTML-safe first
+	 * @param $html Whether to convert to HTML-safe first
 	 */
 	public static function encode(
 		string|null $string,
@@ -275,33 +265,36 @@ class Xml
 
 	/**
 	 * Returns the HTML-to-XML entity translation table
+	 *
+	 * @return array<string, string>
 	 */
 	public static function entities(): array
 	{
-		return self::$entities;
+		return self::$entities ?? [];
 	}
 
 	/**
 	 * Parses an XML string and returns an array
 	 *
-	 * @return array|null Parsed array or `null` on error
+	 * @return array<string, mixed>|null Parsed array or `null` on error
 	 */
 	public static function parse(string $xml): array|null
 	{
-		$xml = @simplexml_load_string($xml);
+		$element = @simplexml_load_string($xml);
 
-		if (is_object($xml) === false) {
+		if ($element === false) {
 			return null;
 		}
 
-		return static::simplify($xml);
+		return static::simplify($element);
 	}
 
 	/**
 	 * Breaks a SimpleXMLElement down into a simpler tree
 	 * structure of arrays and strings
 	 *
-	 * @param bool $collectName Whether the element name should be collected (for the root element)
+	 * @param $collectName Whether the element name should be collected (for the root element)
+	 * @return ($collectName is true ? array<string, mixed> : array<string, mixed>|string)
 	 */
 	public static function simplify(
 		SimpleXMLElement $element,
@@ -333,6 +326,7 @@ class Xml
 			}
 		}
 
+		/** @psalm-suppress RedundantCondition */
 		if ($attributeArray !== []) {
 			$array['@attributes'] = $attributeArray;
 		}
@@ -394,13 +388,11 @@ class Xml
 	/**
 	 * Builds an XML tag
 	 *
-	 * @param string $name Tag name
-	 * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
-	 *                                   generate a self-closing tag; pass an empty string to generate empty content
-	 * @param array $attr An associative array with additional attributes for the tag
-	 * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
-	 * @param int $level Indentation level
-	 * @return string The generated XML
+	 * @param $content Scalar value or array with multiple lines of content or `null` to
+	 *                generate a self-closing tag; pass an empty string to generate empty content
+	 * @param $attr An associative array with additional attributes for the tag
+	 * @param $indent Indentation string or `null` for output on one line
+	 * @param $level Indentation level
 	 */
 	public static function tag(
 		string $name,

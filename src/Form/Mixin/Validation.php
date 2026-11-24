@@ -5,23 +5,24 @@ namespace Kirby\Form\Mixin;
 use Closure;
 use Exception;
 use Kirby\Form\Validations;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
 
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the validation logic for running and collecting field errors.
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait Validation
 {
 	/**
-	 * If `true`, the field has to be filled in correctly to be saved.
+	 * Additional validator rules for the value, e.g. `email` or `['minLength' => 3]`
 	 */
-	protected bool $required;
+	#[Prop(export: false)]
+	protected array|string|null $validate = null;
 
 	/**
 	 * Runs all validations and returns an array of
@@ -73,13 +74,11 @@ trait Validation
 		return $errors;
 	}
 
-	/**
-	 * Checks if the field is required
-	 */
-	public function isRequired(): bool
-	{
-		return $this->required;
-	}
+	abstract public function hasValue(): bool;
+
+	abstract public function isActive(): bool;
+
+	abstract public function isEmpty(): bool;
 
 	/**
 	 * Checks if the field is invalid
@@ -89,6 +88,8 @@ trait Validation
 		return $this->errors() !== [];
 	}
 
+	abstract public function isRequired(): bool;
+
 	/**
 	 * Checks if the field is valid
 	 */
@@ -97,14 +98,21 @@ trait Validation
 		return $this->errors() === [];
 	}
 
-	public function required(): bool
+	/**
+	 * Checks if the field needs a value before being saved;
+	 * this is the case if all of the following requirements are met:
+	 * - The field has a value
+	 * - The field is required
+	 * - The field is currently empty
+	 * - The field is not currently inactive because of a `when` rule
+	 */
+	protected function needsValue(): bool
 	{
-		return $this->required;
-	}
-
-	protected function setRequired(bool $required = false): void
-	{
-		$this->required = $required;
+		return
+			$this->hasValue() === true &&
+			$this->isRequired() === true &&
+			$this->isEmpty() === true &&
+			$this->isActive() === true;
 	}
 
 	/**
@@ -114,4 +122,6 @@ trait Validation
 	{
 		return [];
 	}
+
+	abstract public function value(bool $default = false): mixed;
 }

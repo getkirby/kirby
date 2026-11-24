@@ -2,31 +2,95 @@
 
 namespace Kirby\Form\Field;
 
+use DateTime;
+use DateTimeImmutable;
+use Kirby\Toolkit\Date;
+use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(DateField::class)]
+#[CoversClass(DateTimeField::class)]
 class DateFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testDisplay(): void
 	{
 		$field = $this->field('date');
+		$this->assertSame('YYYY-MM-DD', $field->display());
 
-		$this->assertSame('date', $field->type());
-		$this->assertSame('date', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertFalse($field->time());
-		$this->assertTrue($field->save());
+		$field = $this->field('date', ['display' => 'dd.mm.yyyy']);
+		$this->assertSame('DD.MM.YYYY', $field->display());
+
+		$field = $this->field('date', ['display' => 'D. [de] MMMM yyyy']);
+		$this->assertSame('D. [de] MMMM YYYY', $field->display());
+
+		$field = $this->field('date', ['display' => '[Am] dd. MMMM']);
+		$this->assertSame('[Am] DD. MMMM', $field->display());
+
+		$field = $this->field('date', ['display' => 'dd[mm']);
+		$this->assertSame('DD[MM', $field->display());
 	}
 
-	public function testEmptyDate(): void
+	public function testDisplayWithTranslation(): void
 	{
+		$props = [
+			'display' => [
+				'en' => 'MM/DD/YYYY',
+				'de' => 'DD.MM.YYYY'
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('MM/DD/YYYY', $this->field('date', $props)->display());
+
+		I18n::$locale = 'de';
+		$this->assertSame('DD.MM.YYYY', $this->field('date', $props)->display());
+	}
+
+	public function testMax(): void
+	{
+		// a date-only field cuts it down to its own precision
 		$field = $this->field('date', [
-			'value' => null
+			'max' => '2020-10-31 08:15'
 		]);
 
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->toString());
+		$this->assertSame('2020-10-31', $field->max());
+
+		// with a time part, the full precision is kept
+		$field = $this->field('date', [
+			'time' => true,
+			'max'  => '2020-10-31 08:15'
+		]);
+
+		$this->assertSame('2020-10-31 08:15:00', $field->max());
+
+		// without a boundary
+		$field = $this->field('date');
+
+		$this->assertNull($field->max());
+	}
+
+	public function testMin(): void
+	{
+		// a date-only field cuts it down to its own precision
+		$field = $this->field('date', [
+			'min' => '2020-10-01 09:00'
+		]);
+
+		$this->assertSame('2020-10-01', $field->min());
+
+		// with a time part, the full precision is kept
+		$field = $this->field('date', [
+			'time' => true,
+			'min'  => '2020-10-01 09:00'
+		]);
+
+		$this->assertSame('2020-10-01 09:00:00', $field->min());
+
+		// without a boundary
+		$field = $this->field('date');
+
+		$this->assertNull($field->min());
 	}
 
 	public function testMinMax(): void
@@ -37,7 +101,6 @@ class DateFieldTest extends TestCase
 			'max'   => '2020-10-31'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -46,7 +109,6 @@ class DateFieldTest extends TestCase
 			'value' => '2020-10-10'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -57,7 +119,6 @@ class DateFieldTest extends TestCase
 			'max'   => '2020-10-31'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -68,7 +129,6 @@ class DateFieldTest extends TestCase
 			'max'   => '2020-10-10'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -79,11 +139,10 @@ class DateFieldTest extends TestCase
 			'value' => '2020-10-03'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date between 01.10.2020 and 02.10.2020',
+			'minMax' => 'Please enter a date between 2020-10-01 and 2020-10-02',
 		], $field->errors());
 
 		// min & max failed (with time)
@@ -94,11 +153,10 @@ class DateFieldTest extends TestCase
 			'value' => '2020-10-03 12:34'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date between 01.10.2020 10:04 and 02.10.2020 08:15',
+			'minMax' => 'Please enter a date between 2020-10-01 10:04:00 and 2020-10-02 08:15:00',
 		], $field->errors());
 
 		// min failed
@@ -107,11 +165,10 @@ class DateFieldTest extends TestCase
 			'value' => '2020-09-10'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date after 01.10.2020',
+			'minMax' => 'Please enter a date after 2020-10-01',
 		], $field->errors());
 
 		// max failed
@@ -120,51 +177,78 @@ class DateFieldTest extends TestCase
 			'value' => '2020-11-10'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 		$this->assertSame([
-			'minMax' => 'Please enter a date before 31.10.2020',
+			'minMax' => 'Please enter a date before 2020-10-31',
 		], $field->errors());
 	}
 
-	public function testFillWithEmptyValue(): void
+	public function testProps(): void
+	{
+		$field = $this->field('date');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'after'       => null,
+			'autofocus'   => false,
+			'before'      => null,
+			'calendar'    => true,
+			'disabled'    => false,
+			'display'     => 'YYYY-MM-DD',
+			'format'      => 'Y-m-d',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => 'calendar',
+			'label'       => 'Date',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'date',
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => ['size' => 1, 'unit' => 'day'],
+			'time'        => false,
+			'translate'   => true,
+			'type'        => 'date',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testReset(): void
 	{
 		$field = $this->field('date');
 		$field->fill('2012-12-12');
-
 		$this->assertSame('2012-12-12 00:00:00', $field->toFormValue());
 
-		$field->fillWithEmptyValue();
-
+		$field->reset();
 		$this->assertSame('', $field->toFormValue());
 	}
 
-	public static function valueProvider(): array
+	public function testRoundToStepWithoutTime(): void
 	{
-		return [
-			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
-			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
-			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
-			['something', ''],
-		];
+		$field = $this->field('date');
+
+		$field->fill('2026-10-01 14:35');
+		$this->assertSame('2026-10-01', $field->toStoredValue());
+
+		$field->fill('2026-10-01 23:59:59');
+		$this->assertSame('2026-10-01', $field->toStoredValue());
+
+		$field = $this->field('date', ['default' => 'now']);
+		$this->assertSame(date('Y-m-d') . ' 00:00:00', $field->default());
 	}
 
-	public function testSave(): void
+	public function testRoundToStepWithTime(): void
 	{
-		// default value
-		$field = $this->field('date', [
-			'value' => '12.12.2012',
-		]);
+		$field = $this->field('date', ['time' => true]);
 
-		$this->assertSame('2012-12-12', $field->data());
-
-		// empty value
-		$field = $this->field('date', [
-			'value'  => null,
-		]);
-
-		$this->assertSame('', $field->data());
+		$field->fill('2026-10-01 23:58');
+		$this->assertSame('2026-10-02 00:00:00', $field->toStoredValue());
 	}
 
 	/**
@@ -177,8 +261,65 @@ class DateFieldTest extends TestCase
 			'default' => 'now',
 		]);
 
-		$now = date('Y-m-d H:i:s', strtotime('now'));
+		$now = (new Date())->round('minute', 5)->toString(timezone: false);
 		$this->assertSame($now, $field->default());
+	}
+
+	public function testTimeWithTimes(): void
+	{
+		$field = $this->field('date', [
+			'time' => ['times' => false]
+		]);
+
+		$this->assertFalse($field->time()['times']);
+	}
+
+	public function testTimeWithTranslatedDisplay(): void
+	{
+		$props = [
+			'time' => [
+				'display' => [
+					'en' => 'hh:mm a',
+					'de' => 'HH:mm'
+				]
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('hh:mm a', $this->field('date', $props)->time()['display']);
+
+		I18n::$locale = 'de';
+		$this->assertSame('HH:mm', $this->field('date', $props)->time()['display']);
+	}
+
+	public function testToStoredValue(): void
+	{
+		// default value
+		$field = $this->field('date', [
+			'value' => '12.12.2012',
+		]);
+
+		$this->assertSame('2012-12-12', $field->toStoredValue());
+
+		// empty value
+		$field = $this->field('date', [
+			'value'  => null,
+		]);
+
+		$this->assertSame('', $field->toStoredValue());
+	}
+
+	public static function valueProvider(): array
+	{
+		return [
+			['12.12.2012', date('Y-m-d H:i:s', strtotime('2012-12-12'))],
+			['2016-11-21', date('Y-m-d H:i:s', strtotime('2016-11-21'))],
+			['2016-11-21 12:12:12', date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
+			[new DateTime('2016-11-21 12:12:12'), date('Y-m-d H:i:s', strtotime('2016-11-21 12:10:00')), 5],
+			[new DateTimeImmutable('2016-11-21'), date('Y-m-d H:i:s', strtotime('2016-11-21'))],
+			['something', ''],
+			[null, ''],
+		];
 	}
 
 	#[DataProvider('valueProvider')]
@@ -190,20 +331,5 @@ class DateFieldTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $field->value());
-	}
-
-	public function testValueWithoutTimeIgnoresStoredTime(): void
-	{
-		$field = $this->field('date', [
-			'value' => '2026-09-22 12:00:01'
-		]);
-
-		$this->assertSame('2026-09-22 00:00:00', $field->value());
-
-		$field = $this->field('date', [
-			'value' => '2026-09-22 23:59:59'
-		]);
-
-		$this->assertSame('2026-09-22 00:00:00', $field->value());
 	}
 }

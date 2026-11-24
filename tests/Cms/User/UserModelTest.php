@@ -11,7 +11,7 @@ class UserTestModel extends User
 #[CoversClass(User::class)]
 class UserModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserModel';
 
 	protected function setUp(): void
 	{
@@ -52,5 +52,4 @@ class UserModelTest extends ModelTestCase
 
 		$this->assertInstanceOf(UserTestModel::class, $user);
 	}
-
 }

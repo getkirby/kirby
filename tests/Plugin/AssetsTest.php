@@ -3,6 +3,7 @@
 namespace Kirby\Plugin;
 
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\TestCase;
@@ -11,8 +12,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/plugin-assets';
-	public const TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
+	public const string FIXTURES = __DIR__ . '/fixtures/plugin-assets';
+	public const string TMP      = KIRBY_TMP_DIR . '/Plugin.Assets';
 
 	protected function setUp(): void
 	{
@@ -40,6 +41,12 @@ class AssetsTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public function testAppCallInvalid(): void
+	{
+		$response = App::instance()->call('media/plugins/test/test/test.invalid');
+		$this->assertNull($response);
+	}
+
 	public function testClean(): void
 	{
 		// create orphans
@@ -64,13 +71,16 @@ class AssetsTest extends TestCase
 	public function testCss(): void
 	{
 		// assets defined in plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::TMP,
-			'assets' => [
-				'test.css' => static::TMP . '/test.css',
-				'test.js'  => static::TMP . '/test.js'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					'test.css' => static::TMP . '/test.css',
+					'test.js'  => static::TMP . '/test.js'
+				]
+			],
+			root: static::TMP
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertCount(2, $assets);
@@ -83,13 +93,16 @@ class AssetsTest extends TestCase
 	public function testFactory(): void
 	{
 		// assets defined in plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => [
-				'c.css' => static::FIXTURES . '/a.css',
-				'd.css' => static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					'c.css' => static::FIXTURES . '/a.css',
+					'd.css' => static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -98,13 +111,16 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('d.css')->root());
 
 		// assets defined as non-associative array in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => [
-				static::FIXTURES . '/a.css',
-				static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => [
+					static::FIXTURES . '/a.css',
+					static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -113,13 +129,16 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets defined als closure in the plugin config
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root'   => static::FIXTURES,
-			'assets' => fn () => [
-				static::FIXTURES . '/a.css',
-				static::FIXTURES . '/foo/b.css'
-			]
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			extends: [
+				'assets' => fn () => [
+					static::FIXTURES . '/a.css',
+					static::FIXTURES . '/foo/b.css'
+				]
+			],
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -128,9 +147,10 @@ class AssetsTest extends TestCase
 		$this->assertSame(static::FIXTURES . '/foo/b.css', $assets->get('foo/b.css')->root());
 
 		// assets gathered from `assets` folder inside plugin root
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::FIXTURES
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertInstanceOf(Assets::class, $assets);
@@ -140,12 +160,23 @@ class AssetsTest extends TestCase
 
 	public function testPlugin(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => static::FIXTURES
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: static::FIXTURES
+		);
 
 		$assets = Assets::factory($plugin);
 		$this->assertSame($plugin, $assets->plugin());
+	}
+
+	public function testPluginWithoutParent(): void
+	{
+		$assets = new Assets();
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('This assets collection has no associated plugin');
+
+		$assets->plugin();
 	}
 
 	public function testResolve(): void
@@ -217,7 +248,6 @@ class AssetsTest extends TestCase
 		$this->assertSame(200, $response->code());
 		$this->assertSame('text/css', $response->type());
 
-
 		$media    = static::TMP . '/media/plugins/getkirby/a/3526409702-1337000000/assets/test.css';
 		$response = Assets::resolve(
 			'getkirby/a',
@@ -226,11 +256,5 @@ class AssetsTest extends TestCase
 		);
 		$this->assertNull($response);
 		$this->assertFalse(is_link($media));
-	}
-
-	public function testAppCallInvalid(): void
-	{
-		$response = App::instance()->call('media/plugins/test/test/test.invalid');
-		$this->assertNull($response);
 	}
 }

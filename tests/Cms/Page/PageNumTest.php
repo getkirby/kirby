@@ -8,7 +8,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class PageNumTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageNum';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageNum';
 
 	public function testNum(): void
 	{
@@ -20,6 +20,15 @@ class PageNumTest extends ModelTestCase
 		$this->assertSame(1, $page->num());
 	}
 
+	public function testNumWithEmptyValue(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->assertNull($page->num());
+	}
+
 	public function testNumWithInvalidValue(): void
 	{
 		$this->expectException(TypeError::class);
@@ -28,14 +37,5 @@ class PageNumTest extends ModelTestCase
 			'slug' => 'test',
 			'num'  => []
 		]);
-	}
-
-	public function testNumWithEmptyValue(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertNull($page->num());
 	}
 }

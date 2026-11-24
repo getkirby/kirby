@@ -6,7 +6,7 @@
 		:style="$attrs.style"
 	>
 		<k-empty
-			v-if="!options?.length"
+			v-if="choices.length === 0"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
@@ -14,6 +14,7 @@
 			v-else
 			ref="input"
 			v-bind="$props"
+			:options="choices"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>
@@ -26,10 +27,22 @@ import { props as RadioInput } from "../Input/RadioInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-radio-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, RadioInput],
 	inheritAttrs: false,
+	emits: ["input"],
+	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one
+		 */
+		choices() {
+			return this.$helper.field.options(this.options ?? [], this.value);
+		}
+	},
 	methods: {
 		focus() {
 			this.$refs.input.focus();

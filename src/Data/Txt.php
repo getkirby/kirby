@@ -9,75 +9,11 @@ use Kirby\Toolkit\Str;
 /**
  * Kirby Txt Data Handler
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Txt extends Handler
 {
-	/**
-	 * Converts an array to an encoded Kirby txt string
-	 */
-	public static function encode($data): string
-	{
-		$result = [];
-
-		foreach (A::wrap($data) as $key => $value) {
-			if (empty($key) === true || $value === null) {
-				continue;
-			}
-
-			$key          = Str::ucfirst(Str::slug(
-				string: $key,
-				language: false
-			));
-			$value        = static::encodeValue($value);
-			$result[$key] = static::encodeResult($key, $value);
-		}
-
-		return implode("\n\n----\n\n", $result);
-	}
-
-	/**
-	 * Helper for converting the value
-	 */
-	protected static function encodeValue(array|string|float $value): string
-	{
-		// avoid problems with certain values
-		$value = match (true) {
-			is_array($value) => Data::encode($value, 'yaml'),
-			is_float($value) => Str::float($value),
-			default          => $value
-		};
-
-		// escape accidental dividers within a field
-		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value);
-
-		return $value;
-	}
-
-	/**
-	 * Helper for converting the key and value to the result string
-	 */
-	protected static function encodeResult(string $key, string $value): string
-	{
-		$value = trim($value);
-		$result = $key . ':';
-
-		$result .= match (preg_match('!\R!', $value)) {
-			// multi-line content
-			1 => "\n\n",
-			// single line content, just add space after colon
-			default => ' ',
-		};
-
-		$result .= $value;
-
-		return $result;
-	}
-
 	/**
 	 * Parses a Kirby txt string and returns a multi-dimensional array
 	 */
@@ -115,7 +51,7 @@ class Txt extends Handler
 				$key = str_replace(['-', ' '], '_', $key);
 
 				// Don't add fields with empty keys
-				if (empty($key) === true) {
+				if ($key === '') {
 					continue;
 				}
 
@@ -131,5 +67,68 @@ class Txt extends Handler
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Converts an array to an encoded Kirby txt string
+	 */
+	public static function encode($data): string
+	{
+		$result = [];
+
+		foreach (A::wrap($data) as $key => $value) {
+			if (empty($key) === true || $value === null) {
+				continue;
+			}
+
+			$key          = Str::ucfirst(Str::slug(
+				string: $key,
+				language: false
+			));
+			$value        = static::encodeValue($value);
+			$result[$key] = static::encodeResult($key, $value);
+		}
+
+		return implode("\n\n----\n\n", $result);
+	}
+
+	/**
+	 * Helper for converting the key and value to the result string
+	 */
+	protected static function encodeResult(string $key, string $value): string
+	{
+		$value = trim($value);
+		$result = $key . ':';
+
+		$result .= match (preg_match('!\R!', $value)) {
+			// multi-line content
+			1 => "\n\n",
+			// single line content, just add space after colon
+			default => ' ',
+		};
+
+		$result .= $value;
+
+		return $result;
+	}
+
+	/**
+	 * Helper for converting the value
+	 */
+	protected static function encodeValue(array|bool|float|int|string $value): string
+	{
+		// avoid problems with certain values
+		$value = match (true) {
+			$value === true  => 'true',
+			$value === false => 'false',
+			is_array($value) => $value === [] ? '' : Data::encode($value, 'yaml'),
+			is_float($value) => Str::float($value) ?? '',
+			default          => (string)$value
+		};
+
+		// escape accidental dividers within a field
+		$value = preg_replace('!(?<=\n|^)----!', '\\----', $value) ?? $value;
+
+		return $value;
 	}
 }

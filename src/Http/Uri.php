@@ -11,9 +11,6 @@ use Throwable;
 /**
  * Uri builder class
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -25,9 +22,16 @@ class Uri implements Stringable
 	public static Uri|null $current = null;
 
 	/**
+	 * Supported schemes
+	 *
+	 * @var list<string>
+	 */
+	protected static array $schemes = ['http', 'https', 'ftp'];
+
+	/**
 	 * The fragment after the hash
 	 */
-	protected string|false|null $fragment;
+	protected string|null $fragment;
 
 	/**
 	 * The host address
@@ -35,14 +39,14 @@ class Uri implements Stringable
 	protected string|null $host;
 
 	/**
-	 * The optional password for basic authentication
-	 */
-	protected string|false|null $password;
-
-	/**
 	 * The optional list of params
 	 */
 	protected Params $params;
+
+	/**
+	 * The optional password for basic authentication
+	 */
+	protected string|false|null $password;
 
 	/**
 	 * The optional path
@@ -68,12 +72,6 @@ class Uri implements Stringable
 	 * https or http
 	 */
 	protected string|null $scheme;
-
-	/**
-	 * Supported schemes
-	 */
-	protected static array $schemes = ['http', 'https', 'ftp'];
-
 	protected bool $slash;
 
 	/**
@@ -84,7 +82,7 @@ class Uri implements Stringable
 	/**
 	 * Creates a new URI object
 	 *
-	 * @param array $inject Additional props to inject if a URL string is passed
+	 * @param $inject Additional props to inject if a URL string is passed
 	 */
 	public function __construct(array|string $props = [], array $inject = [])
 	{
@@ -93,10 +91,10 @@ class Uri implements Stringable
 			// colon in the string but the string is a relative URL
 			if (Url::isAbsolute($props) === false) {
 				$props = 'https://getkirby.com/' . $props;
-				$props = parse_url($props);
+				$props = parse_url($props) ?: [];
 				unset($props['scheme'], $props['host']);
 			} else {
-				$props = parse_url($props);
+				$props = parse_url($props) ?: [];
 			}
 
 			$props['username'] = $props['user'] ?? null;
@@ -214,7 +212,7 @@ class Uri implements Stringable
 			return static::$current;
 		}
 
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			$environment = $app->environment();
 		}
 
@@ -253,6 +251,15 @@ class Uri implements Stringable
 		return $domain;
 	}
 
+	/**
+	 * Returns the fragment after the hash
+	 * @since 5.1.0
+	 */
+	public function fragment(): string|null
+	{
+		return $this->fragment;
+	}
+
 	public function hasFragment(): bool
 	{
 		return $this->fragment !== null && $this->fragment !== '';
@@ -289,6 +296,7 @@ class Uri implements Stringable
 				$this->setHost($host);
 			}
 		}
+
 		return $this;
 	}
 
@@ -298,7 +306,7 @@ class Uri implements Stringable
 	 */
 	public static function index(array $props = []): static
 	{
-		if ($app = App::instance(null, true)) {
+		if ($app = App::instance(lazy: true)) {
 			$url = $app->url('index');
 		}
 
@@ -308,7 +316,8 @@ class Uri implements Stringable
 	}
 
 	/**
-	 * Inherit query, params and fragment from a parent Uri
+	 * Inherit query, params and fragment from a parent Uri;
+	 * the Uri's own values win over the parent's
 	 * @since 5.2.0
 	 * @return $this
 	 */
@@ -318,11 +327,11 @@ class Uri implements Stringable
 			$parent = new static($parent);
 		}
 
-		$this->query->merge($parent->query());
-		$this->params->merge($parent->params());
+		$this->setQuery($this->query->toArray() + $parent->query()->toArray());
+		$this->setParams($this->params->toArray() + $parent->params()->toArray());
 
-		if ($fragment = $parent->fragment()) {
-			$this->setFragment($fragment);
+		if ($this->hasFragment() === false) {
+			$this->setFragment($parent->fragment());
 		}
 
 		return $this;
@@ -337,12 +346,40 @@ class Uri implements Stringable
 	}
 
 	/**
-	 * Returns the fragment after the hash
-	 * @since 5.1.0
+	 * Parses the path inside the props and extracts
+	 * the params unless disabled
+	 *
+	 * @return array<string, mixed> Modified props array
 	 */
-	public function fragment(): string|null
+	protected static function parsePath(array $props): array
 	{
-		return $this->fragment;
+		// extract params, the rest is the path;
+		// only do this if not explicitly disabled (set to `false`)
+		if (isset($props['params']) === false || $props['params'] !== false) {
+			$extract           = Params::extract($props['path']);
+			$props['params'] ??= $extract['params'];
+			$props['path']     = $extract['path'];
+			$props['slash']  ??= $extract['slash'];
+
+			return $props;
+		}
+
+		// use the full path;
+		// automatically detect the trailing slash from it if possible
+		if (is_string($props['path']) === true) {
+			$props['slash'] = str_ends_with($props['path'], '/') === true;
+		}
+
+		return $props;
+	}
+
+	/**
+	 * Returns the Uri's query object
+	 * @since 6.0.0
+	 */
+	public function query(): Query
+	{
+		return $this->query;
 	}
 
 	/**
@@ -350,7 +387,8 @@ class Uri implements Stringable
 	 */
 	public function setFragment(string|null $fragment = null): static
 	{
-		$this->fragment = $fragment ? ltrim($fragment, '#') : null;
+		$fragment       = ltrim($fragment ?? '', '#');
+		$this->fragment = $fragment !== '' ? $fragment : null;
 		return $this;
 	}
 
@@ -407,12 +445,10 @@ class Uri implements Stringable
 			$port = null;
 		}
 
-		if ($port !== null) {
-			if ($port < 1 || $port > 65535) {
-				throw new InvalidArgumentException(
-					message: 'Invalid port format: ' . $port
-				);
-			}
+		if ($port !== null && ($port < 1 || $port > 65535)) {
+			throw new InvalidArgumentException(
+				message: 'Invalid port format: ' . $port
+			);
 		}
 
 		$this->port = $port;
@@ -469,6 +505,8 @@ class Uri implements Stringable
 
 	/**
 	 * Converts the Url object to an array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
@@ -487,9 +525,16 @@ class Uri implements Stringable
 		return $array;
 	}
 
-	public function toJson(...$arguments): string
+	public function toJson(int $flags = 0, int $depth = 512): string
 	{
-		return json_encode($this->toArray(), ...$arguments);
+		/** @var string $json */
+		$json = json_encode(
+			$this->toArray(),
+			$flags | JSON_THROW_ON_ERROR,
+			$depth
+		);
+
+		return $json;
 	}
 
 	/**
@@ -505,9 +550,12 @@ class Uri implements Stringable
 			$slash = false;
 		}
 
-		$path = $this->path->toString($slash) . $this->params->toString(true);
+		// relative root URLs already start with a slash,
+		// another one would turn params into a host (`//page:2`)
+		$path  = $this->path->toString($slash);
+		$path .= $this->params->toString($slash === true || $path !== '');
 
-		if ($this->slash && ($path !== '' || $slash === true)) {
+		if ($this->slash === true && ($path !== '' || $slash === true)) {
 			$path .= '/';
 		}
 
@@ -537,34 +585,7 @@ class Uri implements Stringable
 				$this->setHost($host);
 			}
 		}
+
 		return $this;
-	}
-
-	/**
-	 * Parses the path inside the props and extracts
-	 * the params unless disabled
-	 *
-	 * @return array Modified props array
-	 */
-	protected static function parsePath(array $props): array
-	{
-		// extract params, the rest is the path;
-		// only do this if not explicitly disabled (set to `false`)
-		if (isset($props['params']) === false || $props['params'] !== false) {
-			$extract           = Params::extract($props['path']);
-			$props['params'] ??= $extract['params'];
-			$props['path']     = $extract['path'];
-			$props['slash']  ??= $extract['slash'];
-
-			return $props;
-		}
-
-		// use the full path;
-		// automatically detect the trailing slash from it if possible
-		if (is_string($props['path']) === true) {
-			$props['slash'] = str_ends_with($props['path'], '/') === true;
-		}
-
-		return $props;
 	}
 }

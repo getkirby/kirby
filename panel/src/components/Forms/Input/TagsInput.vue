@@ -1,5 +1,10 @@
 <template>
-	<div :data-can-add="canAdd" class="k-tags-input">
+	<div
+		:class="['k-tags-input', $attrs.class]"
+		:data-can-add="canAdd"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
@@ -10,10 +15,10 @@
 				:removable="true"
 				@edit="edit"
 				@input="$emit('input', $event)"
-				@click.native.stop="$refs.toggle?.$el?.click()"
+				@click.stop="$refs.toggle?.$el?.click()"
 			>
 				<k-button
-					v-if="!max || value.length < max"
+					v-if="!disabled && (!max || value.length < max)"
 					:id="id"
 					ref="toggle"
 					:autofocus="autofocus"
@@ -22,8 +27,8 @@
 					size="xs"
 					icon="add"
 					@click="$refs.create.open()"
-					@keydown.native.delete="$refs.tags.focus('prev')"
-					@keydown.native="toggle"
+					@keydown.delete="$refs.tags.focus('prev')"
+					@keydown="toggle"
 				/>
 			</k-tags>
 		</k-input-validator>
@@ -34,6 +39,7 @@
 			:multiple="false"
 			:options="replacableOptions"
 			:value="editing?.tag.value ?? ''"
+			@close="editing = null"
 			@create="replace"
 			@input="replace"
 		/>
@@ -74,9 +80,14 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: Multiselect,
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			editing: null
@@ -151,12 +162,19 @@ export default {
 			const tags = this.$helper.object.clone(this.value);
 
 			for (let tag of inputs) {
+				// no new tags if this is full
+				if (this.max && tags.length >= this.max) {
+					break;
+				}
+
 				// convert input to tag object
 				tag = this.$refs.tags.tag(tag, this.separator);
 
-				// no new tags if this is full,
-				// check if the tag is accepted
-				if (this.isAllowed(tag) === true) {
+				// check if the tag is accepted and not added yet
+				if (
+					this.isAllowed(tag) === true &&
+					tags.includes(tag.value) === false
+				) {
 					tags.push(tag.value);
 				}
 			}
@@ -240,7 +258,7 @@ export default {
 .k-tags-input {
 	padding: var(--tags-gap);
 }
-.k-tags-input[data-can-add="true"] {
+.k-tags-input[data-can-add="true"]:not([data-disabled="true"]) {
 	cursor: pointer;
 }
 
@@ -248,10 +266,10 @@ export default {
 	--button-color-text: var(--input-color-placeholder);
 	opacity: 0;
 }
-.k-tags-input-toggle.k-button:focus {
+.k-tags-input-toggle.k-button:is(:hover, :focus-visible) {
 	--button-color-text: var(--input-color-text);
 }
-.k-tags-input:focus-within .k-tags-input-toggle {
+.k-tags-input:is(:hover, :focus-within) .k-tags-input-toggle {
 	opacity: 1;
 }
 

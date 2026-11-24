@@ -2,12 +2,13 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the `width` prop to set the field's column span in the field grid
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait Width
 {
@@ -15,15 +16,11 @@ trait Width
 	 * The width of the field in the field grid.
 	 * Available widths: `1/1`, `1/2`, `1/3`, `1/4`, `2/3`, `3/4`
 	 */
-	protected string|null $width;
-
-	protected function setWidth(string|null $width = null): void
-	{
-		$this->width = $width;
-	}
+	#[Prop]
+	protected string $width = '1/1';
 
 	public function width(): string
 	{
-		return $this->width ?? '1/1';
+		return $this->width;
 	}
 }

@@ -2,184 +2,85 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Api;
 use Kirby\Cms\App;
 use Kirby\Cms\Block;
 use Kirby\Cms\Blocks as BlocksCollection;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Data\Json;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Pretty;
+use Kirby\Panel\Controller\Dialog\FieldDialogController;
+use Kirby\Panel\Controller\Drawer\FieldDrawerController;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
 use Throwable;
 
-class BlocksField extends FieldClass
+/**
+ * Allows editors to add, arrange, and configure multiple block types in a single field
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+class BlocksField extends InputField implements ProvidesAcceptedFileBlueprints
 {
 	use EmptyState;
 	use Max;
 	use Min;
+	use Pretty;
 
-	protected Fieldsets $fieldsets;
+	/**
+	 * Defines the allowed block types in the blocks field. See below.
+	 */
+	#[Prop(computed: true, default: Fieldsets::DEFAULT)]
+	protected array|null $fieldsets = null;
+
+	/**
+	 * Cache for the Fieldsets collection
+	 */
+	protected Fieldsets|null $fieldsetsCollection = null;
+
+	/**
+	 * Cache for all Form instances for each fieldset
+	 *
+	 * @var array<string, Form>
+	 */
 	protected array $forms;
-	protected string|null $group;
-	protected bool $pretty;
-	protected mixed $value = [];
-
-	public function __construct(array $params = [])
-	{
-		$this->setFieldsets(
-			$params['fieldsets'] ?? null,
-			$params['model'] ?? App::instance()->site()
-		);
-
-		parent::__construct($params);
-
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setGroup($params['group'] ?? 'blocks');
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setPretty($params['pretty'] ?? false);
-	}
-
-	public function blocksToValues(
-		array $blocks,
-		string $to = 'toFormValues'
-	): array {
-		$result = [];
-
-		foreach ($blocks as $block) {
-			try {
-				$form = $this->fieldsetForm($block['type']);
-
-				// overwrite the block content with form values
-				$block['content'] = $form->reset()->fill(input: $block['content'])->$to();
-
-				// create id if not exists
-				$block['id'] ??= Str::uuid();
-			} catch (Throwable) {
-				// skip invalid blocks
-			} finally {
-				$result[] = $block;
-			}
-		}
-
-		return $result;
-	}
-
-	public function fields(string $type): array
-	{
-		return $this->fieldset($type)->fields();
-	}
-
-	public function fieldset(string $type): Fieldset
-	{
-		if ($fieldset = $this->fieldsets->find($type)) {
-			return $fieldset;
-		}
-
-		throw new NotFoundException(
-			'The fieldset ' . $type . ' could not be found'
-		);
-	}
-
-	protected function fieldsetForm(string $type): Form
-	{
-		return $this->forms[$type] ??= $this->form($this->fields($type));
-	}
-
-	public function fieldsets(): Fieldsets
-	{
-		return $this->fieldsets;
-	}
-
-	public function fieldsetGroups(): array|null
-	{
-		$groups = $this->fieldsets()->groups();
-		return $groups === [] ? null : $groups;
-	}
 
 	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 * Group name to identify all block fields that can share blocks via drag & drop
 	 */
-	#[BlockCollectionAccess]
-	public function fill(mixed $value): static
-	{
-		$value  = BlocksCollection::parse($value);
-		$blocks = BlocksCollection::factory($value)->toArray();
-		$this->value = $this->blocksToValues($blocks);
-
-		return $this;
-	}
-
-	public function form(array $fields): Form
-	{
-		return new Form(
-			fields: $fields,
-			model: $this->model,
-			language: 'current'
-		);
-	}
-
-	public function isEmpty(): bool
-	{
-		return count($this->value()) === 0;
-	}
-
-	public function group(): string
-	{
-		return $this->group;
-	}
-
-	public function pretty(): bool
-	{
-		return $this->pretty;
-	}
+	#[Prop]
+	protected string $group = 'blocks';
+	protected array $value = [];
 
 	/**
-	 * Paste action for blocks:
-	 *  - generates new uuids for the blocks
-	 *  - filters only supported fieldsets
-	 *  - applies max limit if defined
+	 * Collects the accepted file blueprints of all fieldsets
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
 	 */
-	public function pasteBlocks(array $blocks): array
+	public function acceptedFileBlueprints(): array
 	{
-		$blocks = $this->blocksToValues($blocks);
+		$blueprints = [];
 
-		foreach ($blocks as $index => &$block) {
-			$block['id'] = Str::uuid();
-
-			// remove the block if it's not available
-			try {
-				$this->fieldset($block['type']);
-			} catch (Throwable) {
-				unset($blocks[$index]);
-			}
+		foreach ($this->fieldsets() as $fieldset) {
+			$form       = $this->form($fieldset->fields());
+			$blueprints = [...$blueprints, ...$form->fields()->acceptedFileBlueprints()];
 		}
 
-		return array_values($blocks);
+		return $blueprints;
 	}
 
-	public function props(): array
-	{
-		return [
-			'empty'          => $this->empty(),
-			'fieldsets'      => $this->fieldsets()->toArray(),
-			'fieldsetGroups' => $this->fieldsetGroups(),
-			'group'          => $this->group(),
-			'max'            => $this->max(),
-			'min'            => $this->min(),
-		] + parent::props();
-	}
-
-	public function routes(): array
+	public function api(): array
 	{
 		$field = $this;
 
@@ -208,7 +109,7 @@ class BlocksField extends FieldClass
 					$fields = $field->fields($fieldsetType);
 					$form   = $field->form($fields);
 
-					$form->fill(input: $form->defaults());
+					$form->fill(defaults: true);
 
 					return Block::factory([
 						'content' => $form->toFormValues(),
@@ -224,66 +125,213 @@ class BlocksField extends FieldClass
 					string $fieldName,
 					string|null $path = null
 				) use ($field) {
+					/** @var Api $api */
+					$api    = $this;
 					$fields = $field->fields($fieldsetType);
 					$field  = $field->form($fields)->field($fieldName);
 
-					$fieldApi = $this->clone([
+					$fieldApi = $api->clone([
 						'routes' => $field->api(),
-						'data'   => [
-							...$this->data(),
-							'field' => $field
-						]
+						'data'   => [...$api->data(), 'field' => $field]
 					]);
 
 					return $fieldApi->call(
 						$path,
-						$this->requestMethod(),
-						$this->requestData()
+						$api->requestMethod(),
+						$api->requestData()
 					);
 				}
 			],
 		];
 	}
 
-	protected function setDefault(mixed $default = null): void
-	{
-		// set id for blocks if not exists
-		if (is_array($default) === true) {
-			array_walk($default, function (&$block) {
+	/**
+	 * @param 'toFormValues'|'toStoredValues' $to
+	 * @return list<array>
+	 */
+	public function blocksToValues(
+		array $blocks,
+		string $to = 'toFormValues'
+	): array {
+		$result = [];
+
+		foreach ($blocks as $block) {
+			try {
+				$form = $this->fieldsetForm($block['type']);
+				$block['content'] = $form->reset()->fill(input: $block['content'])->$to();
 				$block['id'] ??= Str::uuid();
-			});
+			} catch (Throwable) {
+				// skip invalid blocks
+			} finally {
+				$result[] = $block;
+			}
 		}
 
-		parent::setDefault($default);
+		return $result;
 	}
 
-	protected function setFieldsets(
-		string|array|null $fieldsets,
-		ModelWithContent $model
-	): void {
-		if (is_string($fieldsets) === true) {
-			$fieldsets = [];
+	/**
+	 * @return array|null
+	 */
+	public function default(): mixed
+	{
+		$default = $this->default;
+
+		if (is_array($default) === false) {
+			return null;
 		}
 
-		$this->fieldsets = Fieldsets::factory(
-			$fieldsets,
-			['parent' => $model]
+		array_walk($default, function (&$block) {
+			$block['id'] ??= Str::uuid();
+		});
+
+		return $default;
+	}
+
+	public function dialogs(): array
+	{
+		return [
+			[
+				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string|null $path = null
+				) {
+					$fields = $this->fields($fieldsetType);
+					$field  = $this->form($fields)->field($fieldName);
+					return new FieldDialogController($field, $path);
+				}
+			],
+		];
+	}
+
+	public function drawers(): array
+	{
+		return [
+			[
+				'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
+				'method'  => 'ALL',
+				'action'  => function (
+					string $fieldsetType,
+					string $fieldName,
+					string|null $path = null
+				) {
+					$fields = $this->fields($fieldsetType);
+					$field  = $this->form($fields)->field($fieldName);
+					return new FieldDrawerController($field, $path);
+				}
+			],
+		];
+	}
+
+	public function fields(string $type): array
+	{
+		return $this->fieldset($type)->fields();
+	}
+
+	public function fieldset(string $type): Fieldset
+	{
+		if ($fieldset = $this->fieldsets()->findByKey($type)) {
+			return $fieldset;
+		}
+
+		throw new NotFoundException(
+			'The fieldset ' . $type . ' could not be found'
 		);
 	}
 
-	protected function setGroup(string|null $group = null): void
+	protected function fieldsetForm(string $type): Form
 	{
-		$this->group = $group;
+		return $this->forms[$type] ??= $this->form($this->fields($type));
 	}
 
-	protected function setPretty(bool $pretty = false): void
+	public function fieldsetGroups(): array|null
 	{
-		$this->pretty = $pretty;
+		$groups = $this->fieldsets()->groups();
+		return $groups === [] ? null : $groups;
 	}
 
-	public function toStoredValue(bool $default = false): mixed
+	public function fieldsets(): Fieldsets
 	{
-		$value  = $this->toFormValue($default);
+		return $this->fieldsetsCollection ??= Fieldsets::factory(
+			$this->fieldsets,
+			['parent' => $this->model()]
+		);
+	}
+
+	#[BlockCollectionAccess]
+	public function fill(mixed $value): static
+	{
+		if ($value instanceof BlocksCollection) {
+			$value = $value->toArray();
+		}
+
+		$value  = BlocksCollection::parse($value);
+		$blocks = BlocksCollection::factory($value)->toArray();
+		return parent::fill(value: $this->blocksToValues($blocks));
+	}
+
+	public function form(array $fields): Form
+	{
+		return new Form(
+			fields: $fields,
+			model: $this->model,
+			language: 'current'
+		);
+	}
+
+	public function group(): string
+	{
+		return $this->group;
+	}
+
+	public function isEmpty(): bool
+	{
+		return count($this->value()) === 0;
+	}
+
+	/**
+	 * Paste action for blocks:
+	 *  - generates new uuids for the blocks
+	 *  - filters only supported fieldsets
+	 *
+	 * @return list<array>
+	 */
+	public function pasteBlocks(array $blocks): array
+	{
+		$blocks = $this->blocksToValues($blocks);
+
+		foreach ($blocks as $index => &$block) {
+			$block['id'] = Str::uuid();
+
+			// remove the block if it's not available
+			try {
+				$this->fieldset($block['type']);
+			} catch (Throwable) {
+				unset($blocks[$index]);
+			}
+		}
+
+		return array_values($blocks);
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'fieldsets'      => $this->fieldsets()->toArray(),
+			'fieldsetGroups' => $this->fieldsetGroups(),
+		];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function toStoredValue(): mixed
+	{
+		$value  = parent::toStoredValue();
 		$blocks = $this->blocksToValues((array)$value, 'toStoredValues');
 
 		// returns empty string to avoid storing empty array as string `[]`
@@ -301,37 +349,29 @@ class BlocksField extends FieldClass
 			'blocks' => function ($value) {
 				if ($this->min && count($value) < $this->min) {
 					throw new InvalidArgumentException(
-						key: match ($this->min) {
-							1       => 'blocks.min.singular',
-							default => 'blocks.min.plural'
-						},
+						key: 'blocks.min.' . ($this->min === 1 ? 'singular' : 'plural'),
 						data: ['min' => $this->min]
 					);
 				}
 
 				if ($this->max && count($value) > $this->max) {
 					throw new InvalidArgumentException(
-						key: match ($this->max) {
-							1       => 'blocks.max.singular',
-							default => 'blocks.max.plural'
-						},
+						key: 'blocks.max.' . ($this->max === 1 ? 'singular' : 'plural'),
 						data: ['max' => $this->max]
 					);
 				}
 
-				$forms  = [];
-				$index  = 0;
+				$forms = [];
+				$index = 0;
 
 				foreach ($value as $block) {
 					$index++;
 					$type = $block['type'];
 
-					// create the form for the block
-					// and cache it for later use
 					if (isset($forms[$type]) === false) {
 						try {
 							$fieldset     = $this->fieldset($type);
-							$fields       = $fieldset->fields() ?? [];
+							$fields       = $fieldset->fields();
 							$forms[$type] = $this->form($fields);
 						} catch (Throwable) {
 							// skip invalid blocks
@@ -339,19 +379,17 @@ class BlocksField extends FieldClass
 						}
 					}
 
-					// overwrite the content with the serialized form
 					$form = $forms[$type]->reset()->fill($block['content']);
 
 					foreach ($form->fields() as $field) {
 						$errors = $field->errors();
 
-						// rough first validation
-						if (count($errors) > 0) {
+						if ($errors !== []) {
 							throw new InvalidArgumentException(
-								key:'blocks.validation',
+								key: 'blocks.validation',
 								data: [
 									'field'    => $field->label(),
-									'fieldset' => $fieldset->name(),
+									'fieldset' => $this->fieldset($type)->name(),
 									'index'    => $index
 								]
 							);

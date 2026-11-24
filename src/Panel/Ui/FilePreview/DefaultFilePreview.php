@@ -1,0 +1,40 @@
+<?php
+
+namespace Kirby\Panel\Ui\FilePreview;
+
+use Kirby\Cms\File;
+use Kirby\Panel\Ui\FilePreview;
+
+/**
+ * Fallback file preview component
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
+ *
+ * @unstable
+ */
+class DefaultFilePreview extends FilePreview
+{
+	public function __construct(
+		public File $file,
+		public string $component = 'k-default-file-preview'
+	) {
+	}
+
+	/**
+	 * Accepts any file as last resort
+	 */
+	public static function accepts(File $file): bool
+	{
+		return true;
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'image' => $this->image()
+		];
+	}
+}

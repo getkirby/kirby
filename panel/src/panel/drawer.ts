@@ -1,0 +1,154 @@
+import Modal, {
+	defaults as modalDefaults,
+	save,
+	type ModalState
+} from "./modal";
+import { isObject } from "@/helpers/object";
+import { reactive } from "vue";
+import { type Listener } from "./listeners";
+import type Panel from "./panel";
+
+export type DrawerState = ModalState;
+
+export function defaults(): DrawerState {
+	return {
+		...modalDefaults()
+	};
+}
+
+// Options used when opening a drawer
+export type DrawerOptions = DrawerState & {
+	replace?: boolean;
+	tab?: string;
+	url?: string;
+};
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
+ */
+export default function Drawer(panel: Panel) {
+	const parent = Modal(panel, "drawer", defaults());
+
+	// shortcut to submit drawers
+	panel.events.on("drawer.save", (e?: Event) => {
+		e?.preventDefault();
+		save(panel, "drawer");
+	});
+
+	return reactive({
+		...parent,
+
+		get breadcrumb(): DrawerState[] {
+			return this.history.milestones;
+		},
+
+		get icon(): string {
+			const icon = this.props.icon as string | undefined;
+			return icon ?? "box";
+		},
+
+		listeners(): Record<string, Listener> {
+			return {
+				...parent.listeners.call(this),
+				crumb: this.goTo.bind(this),
+				tab: this.tab.bind(this)
+			};
+		},
+
+		/**
+		 * Opens drawer via JS object or loads it from the server
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer');
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer', () => {
+		 *  // on submit
+		 * });
+		 *
+		 * @example
+		 * panel.drawer.open('some/drawer', {
+		 *   query: {
+		 *     template: 'some-template'
+		 *   },
+		 *   on: {
+		 *     submit: () => {},
+		 *     cancel: () => {}
+		 *   }
+		 * });
+		 *
+		 * @example
+		 * panel.drawer.open({
+		 *   component: 'k-forms-drawer',
+		 *   props: {
+		 *      fields: {}
+		 *   },
+		 *   on: {
+		 *     submit: () => {},
+		 *     cancel: () => {}
+		 *   }
+		 * });
+		 */
+		async open(
+			drawer: string | URL | Partial<Prettify<DrawerOptions>>,
+			options: Partial<Prettify<DrawerOptions>> | Listener = {}
+		): Promise<Prettify<DrawerState>> {
+			// extract replace and tab before drawer is transformed
+			const replace = isObject(drawer) ? drawer.replace : undefined;
+			const tab = isObject(drawer) ? drawer.tab : undefined;
+
+			// handle drawer object with url property
+			if (isObject(drawer) && drawer.url) {
+				options = drawer;
+				drawer = drawer.url;
+				delete options.url;
+			}
+
+			// prefix URLs
+			if (typeof drawer === "string") {
+				drawer = `/drawers/${drawer}`;
+			}
+
+			await parent.open.call(this, drawer, options);
+
+			// open the provided or first tab
+			this.tab(tab);
+
+			// get the current state and add it to the history
+			// (we need to fetch the state freshly as it is altered by `this.tab()`)
+			const state = this.state();
+
+			if (state?.id) {
+				const milestone = state as DrawerState & { id: string };
+				this.history.add(milestone, replace);
+			}
+
+			this.focus();
+
+			return state;
+		},
+
+		tab(tab?: string): void {
+			const tabs = (this.props.tabs ?? {}) as Record<
+				string,
+				{ fields: unknown }
+			>;
+			tab ??= Object.keys(tabs)[0];
+
+			if (!tab) {
+				return;
+			}
+
+			this.props.fields = tabs[tab].fields;
+			this.props.tab = tab;
+
+			this.emit("tab", tab);
+
+			setTimeout(() => {
+				this.focus();
+			});
+		}
+	});
+}

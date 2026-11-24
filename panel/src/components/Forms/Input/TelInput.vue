@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-tel-input', $attrs.class]"
+		:style="$attrs.style"
 		type="tel"
-		class="k-tel-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -23,9 +24,14 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="tel" @input="tel = $event" name="tel" type="tel" />
+ * @example
+ * <k-input :value="tel" @input="tel = $event" name="tel" type="tel" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

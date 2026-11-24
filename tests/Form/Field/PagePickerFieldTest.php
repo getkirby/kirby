@@ -1,0 +1,451 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use Kirby\Panel\Controller\Dialog\PagePickerDialogController;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(PagePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class PagePickerFieldTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.PagePickerField';
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'a',
+						'content'  => ['uuid'  => 'my-a'],
+						'children' => [
+							[
+								'slug' => 'aa',
+								'content' => ['uuid'  => 'my-aa'],
+							],
+							[
+								'slug' => 'ab',
+								'content' => ['uuid'  => 'my-ab'],
+							],
+						]
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+					],
+				]
+			]
+		]);
+	}
+
+	public function model()
+	{
+		return $this->app->page('a');
+	}
+
+	public function testApiItems(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test Title',
+							'uuid'  => 'my-test-uuid'
+						],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'related' => [
+									'type' => 'pagepicker',
+								]
+							]
+						]
+					],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+					],
+					[
+						'slug' => 'c',
+						'content' => ['uuid'  => 'my-c'],
+					],
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'test,a,b'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api()->call('pages/test/fields/related/items');
+
+		$this->assertCount(3, $api);
+		$this->assertSame('page://my-test-uuid', $api[0]['uuid']);
+		$this->assertSame('page://my-a', $api[1]['uuid']);
+		$this->assertSame('page://my-b', $api[2]['uuid']);
+	}
+
+	public function testApiItemsWithMissingModel(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => ['uuid' => 'my-test-uuid'],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'related' => [
+									'type' => 'pagepicker',
+								]
+							]
+						]
+					],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'page://my-a,page://does-not-exist'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api()->call('pages/test/fields/related/items');
+
+		$this->assertCount(2, $api);
+
+		// the existing page is resolved as usual
+		$this->assertSame('a', $api[0]['id']);
+		$this->assertSame('page://my-a', $api[0]['uuid']);
+
+		// the missing page shows the ID that is stored in the content file
+		$this->assertSame('page://does-not-exist', $api[1]['id']);
+		$this->assertSame('page://does-not-exist', $api[1]['uuid']);
+		$this->assertSame('page://does-not-exist', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'pages/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => ['uuid' => 'my-test-uuid'],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'related' => [
+									'type' => 'pagepicker',
+								]
+							]
+						]
+					],
+					[
+						'slug' => 'a',
+						'content' => ['uuid'  => 'my-a'],
+					],
+					[
+						'slug' => 'b',
+						'content' => ['uuid'  => 'my-b'],
+						'template' => 'secret-' . $uuid,
+					],
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'page://my-a,page://my-b'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/related/items');
+
+		$this->assertCount(2, $api);
+
+		// the listable page is resolved as usual
+		$this->assertSame('a', $api[0]['id']);
+		$this->assertSame('page://my-a', $api[0]['uuid']);
+
+		// the page that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('page://my-b', $api[1]['id']);
+		$this->assertSame('page://my-b', $api[1]['uuid']);
+		$this->assertSame('[unknown]', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
+	public function testDefaultWithString(): void
+	{
+		$field = $this->field('pagepicker', [
+			'default' => 'a/aa'
+		]);
+		$this->assertSame(['a/aa'], $field->default());
+
+		$field = $this->field('pagepicker', [
+			'default' => "- a/aa\n- a/ab"
+		]);
+		$this->assertSame(['a/aa', 'a/ab'], $field->default());
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model()
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(PagePickerDialogController::class, $dialog);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('pagepicker', ['empty' => 'Test']);
+		$this->assertSame('Test', $field->empty());
+
+		$field = $this->field('pagepicker', [
+			'empty' => ['en' => 'Test', 'de' => 'Töst']
+		]);
+		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFillWithPage(): void
+	{
+		$field = $this->field('pagepicker', ['model' => $this->model()]);
+		$field->fill($this->app->page('b'));
+
+		$this->assertSame(['page://my-b'], $field->toStoredValue());
+	}
+
+	public function testFillWithPages(): void
+	{
+		$field = $this->field('pagepicker', ['model' => $this->model()]);
+		$field->fill($this->model()->children());
+
+		$this->assertSame(['page://my-aa', 'page://my-ab'], $field->toStoredValue());
+	}
+
+	public function testImage(): void
+	{
+		// query string
+		$field = $this->field('pagepicker', [
+			'image' => 'page.image',
+			'model' => $this->model()
+		]);
+
+		$this->assertSame('page.image', $field->image());
+		$this->assertSame('page', $field->toItem($this->app->page('b'))['image']['icon']);
+		$this->assertInstanceOf(PagePickerDialogController::class, $field->dialogs()['picker']());
+
+		// disabled
+		$field = $this->field('pagepicker', [
+			'image' => false,
+			'model' => $this->model()
+		]);
+
+		$this->assertFalse($field->image());
+		$this->assertNull($field->toItem($this->app->page('b'))['image']);
+		$this->assertInstanceOf(PagePickerDialogController::class, $field->dialogs()['picker']());
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('pagepicker', ['required' => true]);
+		$this->assertFalse($field->isValid());
+
+		$field = $this->field('pagepicker', [
+			'required' => true,
+			'value'    => ['a/aa'],
+		]);
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+			],
+			'max' => 1
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->max());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+			],
+			'min' => 3
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model()
+		]);
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Pagepicker',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'pagepicker',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'subpages'    => true,
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'pagepicker',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testRequired(): void
+	{
+		$field = $this->field('pagepicker', ['required' => true]);
+		$this->assertTrue($field->required());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testToFormValue(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa', // exists
+				'a/ab', // exists
+				'a/ac'  // does not exist
+			]
+		]);
+
+		// the missing page keeps its stored ID
+		$expected = [
+			'page://my-aa',
+			'page://my-ab',
+			'a/ac'
+		];
+
+		$this->assertSame($expected, $field->toFormValue());
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('pagepicker');
+		$model = $field->toModel('a/aa');
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertSame('a/aa', $model->id());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('pagepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a/aa',                 // exists
+				'page://my-ab',         // exists
+				'page://does-not-exist' // does not exist
+			]
+		]);
+
+		// the missing page keeps its stored ID
+		$expected = [
+			'page://my-aa',
+			'page://my-ab',
+			'page://does-not-exist'
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+}

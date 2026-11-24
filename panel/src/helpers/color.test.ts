@@ -4,10 +4,7 @@ import color from "./color";
 describe("$helper.css.color()", () => {
 	document.documentElement.style.setProperty("--color-white", "white");
 	document.documentElement.style.setProperty("--color-blue-200", "blue-200");
-	document.documentElement.style.setProperty(
-		"--color-background",
-		"background"
-	);
+	document.documentElement.style.setProperty("--color-dark", "background");
 
 	const data: Record<string, [unknown, string | undefined][]> = {
 		"should return nothing for non-strings": [
@@ -31,7 +28,7 @@ describe("$helper.css.color()", () => {
 			["LightSeaGreen", "lightseagreen"],
 			["DarkSalmon", "darksalmon"],
 			["MediumSlateBlue", "mediumslateblue"],
-			["Background", "var(--color-background)"],
+			["Dark", "var(--color-dark)"],
 			["#E2E2E2", "#e2e2e2"]
 		]
 	};

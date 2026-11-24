@@ -4,6 +4,8 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use DOMAttr;
+use DOMCdataSection;
+use DOMComment;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
@@ -15,17 +17,14 @@ use DOMXPath;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Url;
+use SplObjectStorage;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
- * @since 3.5.8
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.8
  */
 class Dom
 {
@@ -58,6 +57,18 @@ class Dom
 	];
 
 	/**
+	 * HTML elements whose content an HTML parser reads as text
+	 * (raw text, RCDATA, script data and plaintext) until the
+	 * matching closing tag.
+	 *
+	 * @link https://html.spec.whatwg.org/multipage/parsing.html#parsing-html-fragments
+	 */
+	protected const RAW_TEXT = [
+		'iframe', 'noembed', 'noframes', 'noscript', 'plaintext',
+		'script', 'style', 'textarea', 'title', 'xmp'
+	];
+
+	/**
 	 * Cache for the HTML body
 	 */
 	protected DOMElement|null $body;
@@ -75,16 +86,22 @@ class Dom
 	protected array $doctypes = [];
 
 	/**
-	 * Class constructor
+	 * Cache for `Dom::hasElementChild()`
 	 *
-	 * @param string $code XML or HTML original input code
-	 * @param string $type Document type (`'HTML'` or `'XML'`)
+	 * @var SplObjectStorage<DOMElement, bool>
+	 */
+	protected SplObjectStorage $elementChildren;
+
+	/**
+	 * @param $code XML or HTML original input code
+	 * @param $type Document type (`'HTML'` or `'XML'`)
 	 */
 	public function __construct(
 		protected string $code,
 		protected string $type = 'HTML'
 	) {
 		$this->doc  = new DOMDocument();
+		$this->elementChildren = new SplObjectStorage();
 		$this->type = strtoupper($type);
 
 		// Switch libxml into internal error handling mode so warnings
@@ -105,7 +122,6 @@ class Dom
 			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
 			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
-
 			// Newer libxml2 versions may not attach the injected XML node
 			// inside <html>. Instead, they may convert it into a top-level
 			// comment node that sits before <html>:
@@ -124,10 +140,9 @@ class Dom
 
 				if (
 					// Case 1: libxml preserved it as a processing instruction
-					($node->nodeType === XML_PI_NODE && $node->data === $xml) ||
+					($node instanceof DOMProcessingInstruction && $node->data === $xml) ||
 					// Case 2: libxml converted it into a comment node
-					// (<!--?xml encoding="UTF-8" id="..."-->)
-					($node->nodeType === XML_COMMENT_NODE && strpos($node->data, $xml) !== false)
+					($node instanceof DOMComment && strpos($node->data, $xml) !== false)
 				) {
 					static::remove($node);
 					break;
@@ -170,11 +185,230 @@ class Dom
 	}
 
 	/**
+	 * Collects all comments and CDATA sections in document order
+	 *
+	 * @since 5.6.4
+	 *
+	 * @return array<DOMComment|DOMCdataSection>
+	 */
+	protected function characterData(): array
+	{
+		// walk the tree by hand instead of using XPath: libxml sorts the
+		// results of a query by comparing comment nodes along their
+		// siblings, which takes quadratic time for many siblings
+		$nodes = [];
+		$next  = $this->doc->firstChild;
+
+		while ($next !== null) {
+			$node = $next;
+
+			if (
+				$node->nodeType === XML_COMMENT_NODE ||
+				$node->nodeType === XML_CDATA_SECTION_NODE
+			) {
+				$nodes[] = $node;
+			}
+
+			// entity references point into the declarations of the doctype,
+			// which may already be removed, so don't walk into them
+			if (
+				$node->nodeType !== XML_ENTITY_REF_NODE &&
+				$node->firstChild !== null
+			) {
+				$next = $node->firstChild;
+				continue;
+			}
+
+			// continue with the next sibling of the closest
+			// ancestor that has one
+			while ($node !== null && $node->nextSibling === null) {
+				$node = $node->parentNode;
+			}
+
+			$next = $node?->nextSibling;
+		}
+
+		return $nodes;
+	}
+
+	/**
+	 * Determines how an HTML parser reads the content of a node once the
+	 * document is embedded in an HTML page: whether the node sits in
+	 * foreign content (SVG/MathML) and which raw text element holds it
+	 *
+	 * @since 5.6.0
+	 *
+	 * @return array{element: DOMElement|null, foreign: bool, markup: bool, rawText: string|null}
+	 */
+	protected static function context(DOMNode $node): array
+	{
+		$ancestors = [];
+
+		for (
+			$parent = $node->parentNode;
+			$parent instanceof DOMElement;
+			$parent = $parent->parentNode
+		) {
+			$ancestors[] = $parent;
+		}
+
+		// the foreign root the current element sits in (`math`, `svg` or
+		// `null` in HTML content) and whether it is an integration point
+		$root        = null;
+		$integration = false;
+
+		// whether the current element sits in an HTML `<select>`
+		$select = false;
+
+		// walk from the outermost element inwards, the order in which an
+		// HTML parser assigns a namespace to each of them
+		foreach (array_reverse($ancestors) as $ancestor) {
+			$name = Str::lower($ancestor->nodeName);
+
+			// these leave the foreign subtree behind entirely, whatever
+			// the surrounding namespace is
+			if (static::isBreakout($ancestor) === true) {
+				$root        = null;
+				$integration = false;
+			} else {
+				// in HTML content only `<svg>`/`<math>` open foreign
+				// content; inside it everything stays foreign until an
+				// integration point hands the children back to HTML
+				if ($root === null || $integration === true) {
+					$root = match ($name) {
+						'math', 'svg' => $name,
+						default       => null
+					};
+				}
+
+				$integration =
+					$root !== null &&
+					static::isIntegration($ancestor, $root) === true;
+			}
+
+			if ($root === null && $name === 'select') {
+				$select = true;
+			}
+
+			// a parser enters raw text at the outermost such element and
+			// reads everything below it as text, so nothing deeper is an
+			// element to it at all
+			if (
+				$root === null &&
+				in_array($name, static::RAW_TEXT, true) === true
+			) {
+				// but `<noscript>` is only raw text while scripting is
+				// enabled and inside a `<select>` the parser ignores the
+				// start tag of most raw text elements, so in both cases
+				// it may read their content as markup after all
+				return [
+					'element' => $ancestor,
+					'foreign' => false,
+					'markup'  => $name === 'noscript' || $select === true,
+					'rawText' => $name
+				];
+			}
+		}
+
+		// the content of an integration point itself is not treated as
+		// foreign either: older Chromium versions already degrade
+		// `<![CDATA[` to a bogus comment there, unlike the spec
+		return [
+			'element' => null,
+			'foreign' => $root !== null && $integration === false,
+			'markup'  => false,
+			'rawText' => null
+		];
+	}
+
+	/**
 	 * Returns the document object
 	 */
 	public function document(): DOMDocument
 	{
 		return $this->doc;
+	}
+
+	/**
+	 * Returns the document markup as HTML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with full HTML markup
+	 *                  even if the input didn't have it
+	 */
+	protected function exportHtml(bool $normalize = false): string
+	{
+		// enforce export as UTF-8 by injecting a <meta> tag
+		// at the beginning of the document
+		$metaTag = $this->doc->createElement('meta');
+		$metaTag->setAttribute('http-equiv', 'Content-Type');
+		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
+		$metaTag->setAttribute('id', Str::random(10));
+		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
+
+		if (
+			preg_match('/<html[> ]/i', $this->code) === 1 ||
+			$this->doc->doctype !== null ||
+			$normalize === true
+		) {
+			// full document
+			$html = $this->doc->saveHTML();
+		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
+			// there was a <body>, but no <html>; export just the <body>
+			$html = $this->doc->saveHTML($this->body());
+		} else {
+			// just an HTML snippet
+			$html = $this->innerMarkup($this->body());
+		}
+
+		// remove the <meta> tag from the document and from the output
+		static::remove($metaTag);
+		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
+
+		// if the original input contained an HTML doctype, some libxml
+		// implementations expand it to the long HTML4 transitional doctype
+		// when saving. Normalize it back to the short `<!DOCTYPE html>`
+		// to keep behavior consistent across environments.
+		if (
+			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
+			preg_match('/<!doctype\s+html/i', $this->code) === 1
+		) {
+			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
+		}
+
+		return trim($html);
+	}
+
+	/**
+	 * Returns the document markup as XML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration
+	 *                  even if the input didn't have it
+	 */
+	protected function exportXml(bool $normalize = false): string
+	{
+		if (
+			Str::contains($this->code, '<?xml ', true) === false &&
+			$normalize === false
+		) {
+			// the input didn't contain an XML declaration;
+			// only return child nodes, which omits it
+			$result = [];
+
+			foreach ($this->doc->childNodes as $node) {
+				$result[] = $this->doc->saveXML($node);
+			}
+
+			return implode("\n", $result);
+		}
+
+		// ensure that the document is encoded as UTF-8
+		// unless a different encoding was specified in
+		// the input or before exporting
+		$this->doc->encoding ??= 'UTF-8';
+
+		return trim($this->doc->saveXML());
 	}
 
 	/**
@@ -207,7 +441,9 @@ class Dom
 					$code = 0xFFFD;
 				}
 
-				return mb_chr($code);
+				$char = mb_chr($code, 'UTF-8');
+
+				return $char === false ? "\u{FFFD}" : $char;
 			},
 			$value
 		);
@@ -246,9 +482,56 @@ class Dom
 	}
 
 	/**
-	 * Checks for allowed attributes according to the allowlist
+	 * Checks if the element has at least one child element
 	 *
-	 * @return true|string If not allowed, an error message is returned
+	 * @since 5.6.4
+	 */
+	protected function hasElementChild(DOMElement $element): bool
+	{
+		// finding the first child element walks all non-element children
+		// before it, so only do this once for each element instead of for
+		// each of the many comments or CDATA sections it may hold
+		if (isset($this->elementChildren[$element]) === false) {
+			$this->elementChildren[$element] = $element->firstElementChild !== null;
+		}
+
+		return $this->elementChildren[$element];
+	}
+
+	/**
+	 * Checks if the URL contains a directory traversal sequence;
+	 * a dot segment may be percent-encoded, which the browser
+	 * decodes before it resolves the path
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function hasTraversal(string $url): bool
+	{
+		$url = str_replace(['%2e', '%2E'], '.', $url);
+
+		return
+			Str::contains($url, '../') !== false ||
+			Str::contains($url, '..\\') !== false;
+	}
+
+	/**
+	 * Returns the XML or HTML markup contained in the node
+	 */
+	public function innerMarkup(DOMNode $node): string
+	{
+		$markup = '';
+		$method = 'save' . $this->type;
+
+		foreach ($node->childNodes as $child) {
+			$markup .= $node->ownerDocument->$method($child);
+		}
+
+		return $markup;
+	}
+
+	/**
+	 * Checks for allowed attributes according to the allowlist.
+	 * If not allowed, an error message is returned.
 	 */
 	public static function isAllowedAttr(
 		DOMAttr $attr,
@@ -301,10 +584,9 @@ class Dom
 	}
 
 	/**
-	 * Checks for allowed attributes according to the global allowlist
+	 * Checks for allowed attributes according to the global allowlist.
+	 * If not allowed, an error message is returned.
 	 * @internal
-	 *
-	 * @return true|string If not allowed, an error message is returned
 	 */
 	public static function isAllowedGlobalAttr(
 		DOMAttr $attr,
@@ -340,9 +622,8 @@ class Dom
 	}
 
 	/**
-	 * Checks if the URL is acceptable for URL attributes
-	 *
-	 * @return true|string If not allowed, an error message is returned
+	 * Checks if the URL is acceptable for URL attributes.
+	 * If not allowed, an error message is returned.
 	 */
 	public static function isAllowedUrl(
 		string $url,
@@ -352,7 +633,7 @@ class Dom
 		$url     = Str::lower(Url::normalize($url));
 
 		// allow empty URL values
-		if (empty($url) === true) {
+		if ($url === '') {
 			return true;
 		}
 
@@ -374,7 +655,7 @@ class Dom
 		) {
 			// if a CMS instance is active, only allow the URL
 			// if it doesn't point outside of the index URL
-			if ($kirby = App::instance(null, true)) {
+			if ($kirby = App::instance(lazy: true)) {
 				$indexUrl = $kirby->url('index', true)->path()->toString(true);
 
 				// only the path is relevant for the comparison, as the
@@ -459,7 +740,10 @@ class Dom
 		if (Str::startsWith($url, 'mailto:') === true) {
 			$address = Str::after($url, 'mailto:');
 
-			if (empty($address) === true || V::email($address) === true) {
+			if (
+				$address === '' ||
+				V::email($address) === true
+			) {
 				return true;
 			}
 
@@ -471,7 +755,7 @@ class Dom
 			$address = Str::after($url, 'tel:');
 
 			if (
-				empty($address) === true ||
+				$address === '' ||
 				preg_match('!^[+]?[0-9]+$!', $address) === 1
 			) {
 				return true;
@@ -481,6 +765,57 @@ class Dom
 		}
 
 		return 'Unknown URL type';
+	}
+
+	/**
+	 * Checks if an element makes an HTML parser leave foreign content
+	 * (SVG/MathML) and continue in the HTML namespace
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isBreakout(DOMElement $node): bool
+	{
+		$name = Str::lower($node->nodeName);
+
+		// the spec lists `<font>` in a rule of its own that only applies
+		// when it carries one of these three attributes
+		if ($name === 'font') {
+			return
+				$node->hasAttribute('color') === true ||
+				$node->hasAttribute('face') === true ||
+				$node->hasAttribute('size') === true;
+		}
+
+		return in_array($name, static::BREAKOUT, true) === true;
+	}
+
+	/**
+	 * Checks if an element hands its children back to HTML content,
+	 * which only elements of its own foreign root can do
+	 *
+	 * @since 5.6.0
+	 */
+	protected static function isIntegration(
+		DOMElement $node,
+		string $root
+	): bool {
+		$name = Str::lower($node->nodeName);
+
+		if (in_array($name, static::INTEGRATION[$root], true) === false) {
+			return false;
+		}
+
+		// `<annotation-xml>` is only an HTML integration point when it
+		// declares one of these two encodings
+		if ($name === 'annotation-xml') {
+			$encoding = Str::lower($node->getAttribute('encoding'));
+
+			return
+				$encoding === 'text/html' ||
+				$encoding === 'application/xhtml+xml';
+		}
+
+		return true;
 	}
 
 	/**
@@ -496,27 +831,12 @@ class Dom
 	}
 
 	/**
-	 * Returns the XML or HTML markup contained in the node
-	 */
-	public function innerMarkup(DOMNode $node): string
-	{
-		$markup = '';
-		$method = 'save' . $this->type;
-
-		foreach ($node->childNodes as $child) {
-			$markup .= $node->ownerDocument->$method($child);
-		}
-
-		return $markup;
-	}
-
-	/**
 	 * Checks if a list contains the name of a node
 	 * considering the allowed namespaces
 	 * @internal
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param \Closure|null Comparison callback that returns whether the expected and real name match
+	 * @param $options See `Dom::sanitize()`
+	 * @param $compare Callback that returns whether the expected and real name match
 	 * @return string|false Matched name in the list or `false`
 	 */
 	public static function listContainsName(
@@ -593,253 +913,6 @@ class Dom
 	}
 
 	/**
-	 * Removes a node from the document
-	 */
-	public static function remove(DOMNode $node): void
-	{
-		$node->parentNode->removeChild($node);
-	}
-
-	/**
-	 * Executes an XPath query in the document
-	 *
-	 * @param \DOMNode|null $node Optional context node for relative queries
-	 */
-	public function query(
-		string $query,
-		DOMNode|null $node = null
-	): DOMNodeList|false {
-		return (new DOMXPath($this->doc))->query($query, $node);
-	}
-
-	/**
-	 * Sanitizes the DOM according to the provided configuration
-	 *
-	 * @param array $options Array with the following options:
-	 *                       - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
-	 *                       like `data-` and `aria-`
-	 *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
-	 *                       any attribute
-	 *                       - `allowedDataUris`: List of all MIME types that may be used in
-	 *                       data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
-	 *                       or `true` for any
-	 *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
-	 *                       and inside `url()` wrappers or `true` for any
-	 *                       - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
-	 *                       allowed even if the site index URL is in a subfolder (useful when using
-	 *                       the HTML `<base>` element where the sanitized code will be rendered)
-	 *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
-	 *                       the array keys are reference names that can be referred to from the
-	 *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
-	 *                       and `urlAttrs` lists; the namespace names as used in the document are *not*
-	 *                       validated; setting the whole option to `true` will allow any namespace
-	 *                       - `allowedPIs`: Names of allowed XML processing instructions or
-	 *                       `true` for any
-	 *                       - `allowedTags`: Associative array of all allowed tag names with the
-	 *                       value of either an array with the list of all allowed attributes for
-	 *                       this tag, `true` to allow any attribute from the `allowedAttrs` list
-	 *                       or `false` to allow the tag without any attributes;
-	 *                       not listed tags will be unwrapped (removed, but children are kept);
-	 *                       setting the whole option to `true` will allow any tag
-	 *                       - `attrCallback`: Closure that will receive each `DOMAttr` and may
-	 *                       modify it; the callback must return an array with exception
-	 *                       objects for each modification
-	 *                       - `disallowedTags`: Array of explicitly disallowed tags, which will
-	 *                       be removed completely including their children (matched case-insensitively)
-	 *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
-	 *                       and may throw exceptions on validation errors
-	 *                       - `elementCallback`: Closure that will receive each `DOMElement` and
-	 *                       may modify it; the callback must return an array with exception
-	 *                       objects for each modification
-	 *                       - `urlAttrs`: List of attributes that may contain URLs
-	 * @return array List of validation errors during sanitization
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
-	 */
-	public function sanitize(array $options): array
-	{
-		$options = static::normalizeSanitizeOptions($options);
-
-		$errors = [];
-
-		// validate the doctype;
-		// convert the `DOMNodeList` to an array first, otherwise removing
-		// nodes would shift the list and make subsequent operations fail
-		foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
-			if ($child instanceof DOMDocumentType) {
-				$this->sanitizeDoctype($child, $options, $errors);
-			}
-		}
-
-		// validate all processing instructions like <?xml-stylesheet
-		$pis = $this->query('//processing-instruction()');
-
-		foreach (iterator_to_array($pis, false) as $pi) {
-			$this->sanitizePI($pi, $options, $errors);
-		}
-
-		// validate all elements in the document tree
-		$elements = $this->doc->getElementsByTagName('*');
-
-		foreach (iterator_to_array($elements, false) as $element) {
-			$this->sanitizeElement($element, $options, $errors);
-		}
-
-		// validate all character data (comments and CDATA sections)
-		$characterData = $this->query('//comment() | //text()');
-
-		foreach (iterator_to_array($characterData, false) as $node) {
-			$this->sanitizeCharacterData($node, $errors);
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Returns the document markup as string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with an XML declaration/
-	 *                        full HTML markup even if the input
-	 *                        didn't have them
-	 */
-	public function toString(bool $normalize = false): string
-	{
-		$string = match ($this->type) {
-			'HTML'  => $this->exportHtml($normalize),
-			default => $this->exportXml($normalize)
-		};
-
-		// add trailing newline if the input contained one
-		if (rtrim($this->code, "\r\n") !== $this->code) {
-			$string .= "\n";
-		}
-
-		return $string;
-	}
-
-	/**
-	 * Removes a node from the document but keeps its children
-	 * by moving them one level up
-	 */
-	public static function unwrap(DOMNode $node): void
-	{
-		// snapshot because `insertBefore` moves children out of `$node`,
-		// shifting the live `DOMNodeList`
-		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
-			// discard text nodes as they can be unexpected
-			// directly in the parent element
-			if ($childNode instanceof DOMText) {
-				continue;
-			}
-
-			// the child may use a default namespace (`xmlns="…"`)
-			// that was declared on `$node`; once `$node` is gone,
-			// libxml would rename it to `<default:child>`, so we
-			// copy the declaration to the child to suppress it
-			if (
-				$childNode instanceof DOMElement &&
-				($childNode->prefix === '' || $childNode->prefix === null) &&
-				is_string($childNode->namespaceURI) === true
-			) {
-				$childNode->setAttributeNS(
-					'http://www.w3.org/2000/xmlns/',
-					'xmlns',
-					$childNode->namespaceURI
-				);
-			}
-
-			// move (don't clone) so descendants pending in the
-			// `Dom::sanitize()` snapshot are still sanitized
-			$node->parentNode->insertBefore($childNode, $node);
-		}
-
-		static::remove($node);
-	}
-
-	/**
-	 * Returns the document markup as HTML string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with full HTML markup
-	 *                        even if the input didn't have it
-	 */
-	protected function exportHtml(bool $normalize = false): string
-	{
-		// enforce export as UTF-8 by injecting a <meta> tag
-		// at the beginning of the document
-		$metaTag = $this->doc->createElement('meta');
-		$metaTag->setAttribute('http-equiv', 'Content-Type');
-		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
-		$metaTag->setAttribute('id', Str::random(10));
-		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
-
-		if (
-			preg_match('/<html[> ]/i', $this->code) === 1 ||
-			$this->doc->doctype !== null ||
-			$normalize === true
-		) {
-			// full document
-			$html = $this->doc->saveHTML();
-		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
-			// there was a <body>, but no <html>; export just the <body>
-			$html = $this->doc->saveHTML($this->body());
-		} else {
-			// just an HTML snippet
-			$html = $this->innerMarkup($this->body());
-		}
-
-		// remove the <meta> tag from the document and from the output
-		static::remove($metaTag);
-		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
-
-		// if the original input contained an HTML doctype, some libxml
-		// implementations expand it to the long HTML4 transitional doctype
-		// when saving. Normalize it back to the short `<!DOCTYPE html>`
-		// to keep behavior consistent across environments.
-		if (
-			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
-			preg_match('/<!doctype\s+html/i', $this->code) === 1
-		) {
-			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
-		}
-
-		return trim($html);
-	}
-
-	/**
-	 * Returns the document markup as XML string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with an XML declaration
-	 *                        even if the input didn't have it
-	 */
-	protected function exportXml(bool $normalize = false): string
-	{
-		if (
-			Str::contains($this->code, '<?xml ', true) === false &&
-			$normalize === false
-		) {
-			// the input didn't contain an XML declaration;
-			// only return child nodes, which omits it
-			$result = [];
-
-			foreach ($this->doc->childNodes as $node) {
-				$result[] = $this->doc->saveXML($node);
-			}
-
-			return implode("\n", $result);
-		}
-
-		// ensure that the document is encoded as UTF-8
-		// unless a different encoding was specified in
-		// the input or before exporting
-		$this->doc->encoding ??= 'UTF-8';
-
-		return trim($this->doc->saveXML());
-	}
-
-	/**
 	 * Ensures that all options are set in the user-provided
 	 * options array (otherwise setting the default option)
 	 */
@@ -870,143 +943,123 @@ class Dom
 	}
 
 	/**
-	 * Determines how an HTML parser reads the content of a node once the
-	 * document is embedded in an HTML page: whether the node sits in
-	 * foreign content (SVG/MathML) and which raw text element holds it
+	 * Executes an XPath query in the document
 	 *
-	 * @since 5.6.0
-	 *
-	 * @return array{foreign: bool, rawText: string|null}
+	 * @param $node Optional context node for relative queries
+	 * @throws InvalidArgumentException for invalid XPath queries
 	 */
-	protected static function context(DOMNode $node): array
-	{
-		$ancestors = [];
+	public function query(
+		string $query,
+		DOMNode|null $node = null
+	): DOMNodeList {
+		$path   = new DOMXPath($this->doc);
+		$result = @$path->query($query, $node);
 
-		for (
-			$parent = $node->parentNode;
-			$parent instanceof DOMElement;
-			$parent = $parent->parentNode
-		) {
-			$ancestors[] = $parent;
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid XPath query: ' . $query
+			);
 		}
 
-		// the foreign root the current element sits in (`math`, `svg` or
-		// `null` in HTML content) and whether it is an integration point
-		$root        = null;
-		$integration = false;
+		return $result;
+	}
 
-		// walk from the outermost element inwards, the order in which an
-		// HTML parser assigns a namespace to each of them
-		foreach (array_reverse($ancestors) as $ancestor) {
-			$name = Str::lower($ancestor->nodeName);
+	/**
+	 * Removes a node from the document
+	 */
+	public static function remove(DOMNode $node): void
+	{
+		$node->parentNode->removeChild($node);
+	}
 
-			// these leave the foreign subtree behind entirely, whatever
-			// the surrounding namespace is
-			if (static::isBreakout($ancestor) === true) {
-				$root        = null;
-				$integration = false;
-			} else {
-				// in HTML content only `<svg>`/`<math>` open foreign
-				// content; inside it everything stays foreign until an
-				// integration point hands the children back to HTML
-				if ($root === null || $integration === true) {
-					$root = match ($name) {
-						'math', 'svg' => $name,
-						default       => null
-					};
-				}
+	/**
+	 * Sanitizes the DOM according to the provided configuration
+	 *
+	 * @param $options Array with the following options:
+	 *                - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
+	 *                like `data-` and `aria-`
+	 *                - `allowedAttrs`: Global list of allowed attrs or `true` to allow
+	 *                any attribute
+	 *                - `allowedDataUris`: List of all MIME types that may be used in
+	 *                data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
+	 *                or `true` for any
+	 *                - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+	 *                and inside `url()` wrappers or `true` for any
+	 *                - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
+	 *                allowed even if the site index URL is in a subfolder (useful when using
+	 *                the HTML `<base>` element where the sanitized code will be rendered)
+	 *                - `allowedNamespaces`: Associative array of all allowed namespace URIs;
+	 *                the array keys are reference names that can be referred to from the
+	 *                `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
+	 *                and `urlAttrs` lists; the namespace names as used in the document are *not*
+	 *                validated; setting the whole option to `true` will allow any namespace
+	 *                - `allowedPIs`: Names of allowed XML processing instructions or
+	 *                `true` for any
+	 *                - `allowedTags`: Associative array of all allowed tag names with the
+	 *                value of either an array with the list of all allowed attributes for
+	 *                this tag, `true` to allow any attribute from the `allowedAttrs` list
+	 *                or `false` to allow the tag without any attributes;
+	 *                not listed tags will be unwrapped (removed, but children are kept);
+	 *                setting the whole option to `true` will allow any tag
+	 *                - `attrCallback`: Closure that will receive each `DOMAttr` and may
+	 *                modify it; the callback must return an array with exception
+	 *                objects for each modification
+	 *                - `disallowedTags`: Array of explicitly disallowed tags, which will
+	 *                be removed completely including their children (matched case-insensitively)
+	 *                - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
+	 *                and may throw exceptions on validation errors
+	 *                - `elementCallback`: Closure that will receive each `DOMElement` and
+	 *                may modify it; the callback must return an array with exception
+	 *                objects for each modification
+	 *                - `urlAttrs`: List of attributes that may contain URLs
+	 *
+	 * @throws InvalidArgumentException If the doctype is not valid
+	 */
+	public function sanitize(array $options): array
+	{
+		$options = static::normalizeSanitizeOptions($options);
 
-				$integration =
-					$root !== null &&
-					static::isIntegration($ancestor, $root) === true;
+		$errors = [];
+
+		// validate the doctype;
+		// convert the `DOMNodeList` to an array first, otherwise removing
+		// nodes would shift the list and make subsequent operations fail
+		foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
+			if ($child instanceof DOMDocumentType) {
+				$this->sanitizeDoctype($child, $options, $errors);
 			}
-
-			// a parser enters raw text at the outermost such element and
-			// reads everything below it as text, so nothing deeper is an
-			// element to it at all
-			if (
-				$root === null &&
-				($name === 'style' || $name === 'script')
-			) {
-				return ['foreign' => false, 'rawText' => $name];
-			}
 		}
 
-		return ['foreign' => $root !== null, 'rawText' => null];
-	}
+		// validate all processing instructions like <?xml-stylesheet
+		$pis = $this->query('//processing-instruction()');
 
-	/**
-	 * Checks if the URL contains a directory traversal sequence;
-	 * a dot segment may be percent-encoded, which the browser
-	 * decodes before it resolves the path
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function hasTraversal(string $url): bool
-	{
-		$url = str_replace(['%2e', '%2E'], '.', $url);
-
-		return
-			Str::contains($url, '../') !== false ||
-			Str::contains($url, '..\\') !== false;
-	}
-
-	/**
-	 * Checks if an element makes an HTML parser leave foreign content
-	 * (SVG/MathML) and continue in the HTML namespace
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function isBreakout(DOMElement $node): bool
-	{
-		$name = Str::lower($node->nodeName);
-
-		// the spec lists `<font>` in a rule of its own that only applies
-		// when it carries one of these three attributes
-		if ($name === 'font') {
-			return
-				$node->hasAttribute('color') === true ||
-				$node->hasAttribute('face') === true ||
-				$node->hasAttribute('size') === true;
+		foreach (iterator_to_array($pis, false) as $pi) {
+			$this->sanitizePI($pi, $options, $errors);
 		}
 
-		return in_array($name, static::BREAKOUT, true) === true;
-	}
+		// validate all elements in the document tree
+		$elements = $this->doc->getElementsByTagName('*');
 
-	/**
-	 * Checks if an element hands its children back to HTML content,
-	 * which only elements of its own foreign root can do
-	 *
-	 * @since 5.6.0
-	 */
-	protected static function isIntegration(
-		DOMElement $node,
-		string $root
-	): bool {
-		$name = Str::lower($node->nodeName);
-
-		if (in_array($name, static::INTEGRATION[$root], true) === false) {
-			return false;
+		foreach (iterator_to_array($elements, false) as $element) {
+			$this->sanitizeElement($element, $options, $errors);
 		}
 
-		// `<annotation-xml>` is only an HTML integration point when it
-		// declares one of these two encodings
-		if ($name === 'annotation-xml') {
-			$encoding = Str::lower($node->getAttribute('encoding'));
+		// validate all character data (comments and CDATA sections);
+		// the elements may have changed, so start with a fresh cache
+		$this->elementChildren = new SplObjectStorage();
 
-			return
-				$encoding === 'text/html' ||
-				$encoding === 'application/xhtml+xml';
+		foreach ($this->characterData() as $node) {
+			$this->sanitizeCharacterData($node, $errors);
 		}
 
-		return true;
+		return $errors;
 	}
 
 	/**
 	 * Sanitizes an attribute
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeAttr(
 		DOMAttr $attr,
@@ -1055,50 +1108,79 @@ class Dom
 	 * Sanitizes a comment or CDATA section node
 	 * @since 5.6.0
 	 *
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeCharacterData(
 		DOMNode $node,
 		array &$errors
 	): void {
-		$isComment = $node->nodeType === XML_COMMENT_NODE;
-		$isCdata   = $node->nodeType === XML_CDATA_SECTION_NODE;
-
 		// only comments and CDATA sections are serialized verbatim;
 		// regular text nodes are entity-escaped on export and stay safe
-		if ($isComment === false && $isCdata === false) {
+		if (
+			$node instanceof DOMComment === false &&
+			$node instanceof DOMCdataSection === false
+		) {
 			return;
 		}
 
-		$data = $node->data;
+		$isComment = $node instanceof DOMComment;
+		$data      = $node->data;
 
 		// an HTML parser judges the node by the element it sits in: inside
 		// foreign content `<![CDATA[` stays a CDATA section, while raw text
 		// elements only ever exist in the HTML namespace
-		['foreign' => $foreign, 'rawText' => $rawText] = static::context($node);
+		[
+			'element' => $element,
+			'foreign' => $foreign,
+			'markup'  => $markup,
+			'rawText' => $rawText
+		] = static::context($node);
+
+		// a nested element of the same name ends the raw text early with
+		// its closing tag, after which the parser reads the rest as live
+		// markup again; raw text elements never hold elements legitimately,
+		// so any child element is treated as such
+		if ($element !== null && $markup === false) {
+			$markup = $this->hasElementChild($element);
+		}
+
+		$dangerous = false;
 
 		if ($rawText !== null) {
 			// a raw text element holds neither comments nor CDATA sections,
 			// just text, so only a literal closing tag breaks out of it;
-			// legitimate CSS/JS (e.g. `a > b`) is kept untouched
-			$dangerous = preg_match('#</' . $rawText . '\b#i', $data) === 1;
-		} elseif ($isComment === true) {
-			// the HTML tokenizer ends a comment as soon as the data closes
-			// it: `<!-->`/`<!--->` are already complete comments, `-->` and
-			// `--!>` end one mid-data. What follows is then live markup in
-			// every insertion mode, so foreign content is no shelter
-			$dangerous =
-				Str::startsWith($data, '>') === true ||
-				Str::startsWith($data, '->') === true ||
-				Str::contains($data, '-->') === true ||
-				Str::contains($data, '--!>') === true;
-		} else {
-			// outside foreign content `<![CDATA[` degrades to a comment
-			// that already ends at its first `>`, which exposes the rest
-			// of the data as live markup
-			$dangerous =
-				$foreign === false &&
-				Str::contains($data, '<') === true;
+			// legitimate CSS/JS (e.g. `a > b`) is kept untouched. If the
+			// parser may read the content as markup after all, the node may
+			// just as well end up in any other raw text element, so its
+			// closing tag counts as well
+			$names     = $markup === true ? static::RAW_TEXT : [$rawText];
+			$dangerous = preg_match('#</(' . implode('|', $names) . ')\b#i', $data) === 1;
+		}
+
+		// if the parser may read the content of the raw text element as
+		// live markup, the node needs to pass those checks as well
+		if (
+			$dangerous === false &&
+			($rawText === null || $markup === true)
+		) {
+			$dangerous = match ($isComment) {
+				// the HTML tokenizer ends a comment as soon as the data closes
+				// it: `<!-->`/`<!--->` are already complete comments, `-->` and
+				// `--!>` end one mid-data. What follows is then live markup in
+				// every insertion mode, so foreign content is no shelter
+				true =>
+					Str::startsWith($data, '>') === true ||
+					Str::startsWith($data, '->') === true ||
+					Str::contains($data, '-->') === true ||
+					Str::contains($data, '--!>') === true,
+
+				// outside foreign content `<![CDATA[` degrades to a comment
+				// that already ends at its first `>`, which exposes the rest
+				// of the data as live markup
+				false =>
+					$foreign === false &&
+					Str::contains($data, '<') === true
+			};
 		}
 
 		if ($dangerous === false) {
@@ -1131,8 +1213,8 @@ class Dom
 	/**
 	 * Sanitizes the doctype
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeDoctype(
 		DOMDocumentType $doctype,
@@ -1154,8 +1236,8 @@ class Dom
 	/**
 	 * Sanitizes a single DOM element and its attribute
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeElement(
 		DOMElement $element,
@@ -1223,28 +1305,24 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = [
-						...$errors,
-						...$options['attrCallback']($attr, $options) ?? []
-					];
+					$attrErrors = (array)($options['attrCallback']($attr, $options) ?? []);
+					array_push($errors, ...array_values($attrErrors));
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = [
-				...$errors,
-				...$options['elementCallback']($element, $options) ?? []
-			];
+			$elementErrors = (array)($options['elementCallback']($element, $options) ?? []);
+			array_push($errors, ...array_values($elementErrors));
 		}
 	}
 
 	/**
 	 * Sanitizes a single XML processing instruction
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizePI(
 		DOMProcessingInstruction $pi,
@@ -1278,11 +1356,73 @@ class Dom
 	}
 
 	/**
+	 * Returns the document markup as string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration/
+	 *                  full HTML markup even if the input
+	 *                  didn't have them
+	 */
+	public function toString(bool $normalize = false): string
+	{
+		$string = match ($this->type) {
+			'HTML'  => $this->exportHtml($normalize),
+			default => $this->exportXml($normalize)
+		};
+
+		// add trailing newline if the input contained one
+		if (rtrim($this->code, "\r\n") !== $this->code) {
+			$string .= "\n";
+		}
+
+		return $string;
+	}
+
+	/**
+	 * Removes a node from the document but keeps its children
+	 * by moving them one level up
+	 */
+	public static function unwrap(DOMNode $node): void
+	{
+		// snapshot because `insertBefore` moves children out of `$node`,
+		// shifting the live `DOMNodeList`
+		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
+			// discard text nodes as they can be unexpected
+			// directly in the parent element
+			if ($childNode instanceof DOMText) {
+				continue;
+			}
+
+			// the child may use a default namespace (`xmlns="…"`)
+			// that was declared on `$node`; once `$node` is gone,
+			// libxml would rename it to `<default:child>`, so we
+			// copy the declaration to the child to suppress it
+			if (
+				$childNode instanceof DOMElement &&
+				($childNode->prefix === '' || $childNode->prefix === null) &&
+				is_string($childNode->namespaceURI) === true
+			) {
+				$childNode->setAttributeNS(
+					'http://www.w3.org/2000/xmlns/',
+					'xmlns',
+					$childNode->namespaceURI
+				);
+			}
+
+			// move (don't clone) so descendants pending in the
+			// `Dom::sanitize()` snapshot are still sanitized
+			$node->parentNode->insertBefore($childNode, $node);
+		}
+
+		static::remove($node);
+	}
+
+	/**
 	 * Validates the document type
 	 *
-	 * @param array $options See `Dom::sanitize()`
+	 * @param $options See `Dom::sanitize()`
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
+	 * @throws InvalidArgumentException If the doctype is not valid
 	 */
 	protected function validateDoctype(
 		DOMDocumentType $doctype,

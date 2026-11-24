@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-email-field', $attrs.class]"
 		:input="id"
+		:link="undefined"
 		:style="$attrs.style"
 	>
 		<k-input
@@ -13,7 +14,7 @@
 		>
 			<template #icon>
 				<k-button
-					v-if="link"
+					v-if="link && mailto"
 					:icon="icon"
 					:link="mailto"
 					:title="$t('open')"
@@ -32,8 +33,14 @@ import { props as Input } from "../Input.vue";
 import { props as EmailInput } from "../Input/EmailInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>` for additional information.
- * @example <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
+ * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>`
+ * for additional information.
+ *
+ * @example
+ * <k-email-field :value="email" @input="email = $event" name="email" label="Email" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, EmailInput],
@@ -48,6 +55,7 @@ export default {
 			default: "email"
 		}
 	},
+	emits: ["input"],
 	computed: {
 		mailto() {
 			return this.value?.length > 0 ? "mailto:" + this.value : null;

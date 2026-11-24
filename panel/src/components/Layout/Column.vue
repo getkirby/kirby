@@ -13,10 +13,14 @@
 /**
  * The Column component can be used within a <k-grid> component to layout elements in a very convenient way. The Grid is based on 12 columns by default and each column can change its width.
  *
- * @example <k-grid>
+ * @example
+ * <k-grid>
  *   <k-column width="2/3">…</k-column>
  *   <k-column width="1/3">…</k-column>
  * </k-grid>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -48,16 +52,5 @@ export default {
 	position: sticky;
 	top: calc(var(--header-sticky-offset) + 2vh);
 	z-index: 2;
-}
-
-.k-column[data-disabled="true"] {
-	cursor: not-allowed;
-	opacity: 0.4;
-}
-.k-column[data-disabled="true"] * {
-	pointer-events: none;
-}
-.k-column[data-disabled="true"] .k-text[data-theme="help"] * {
-	pointer-events: initial;
 }
 </style>

@@ -2,6 +2,7 @@ import { reactive } from "vue";
 import { isUrl } from "@/helpers/url";
 import listeners, { type Listener } from "./listeners";
 import State from "./state";
+import Panel from "./panel";
 
 export type FeatureState = {
 	// the feature component
@@ -40,14 +41,17 @@ export function defaults(): FeatureState {
 /**
  * Feature objects isolate functionality and state of Panel features
  * like drawers, dialogs, notifications and views
- * @since 4.0.0
  *
  * @param panel - The Panel singleton
  * @param key - Identifies this state in backend responses
  * @param defaults - Initial values; also defines which keys are tracked
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Feature<T extends FeatureState>(
-	panel: TODO,
+	panel: Panel,
 	key: string,
 	defaults: T
 ) {
@@ -224,7 +228,7 @@ export default function Feature<T extends FeatureState>(
 				return;
 			}
 
-			const state = response["$" + this.key()] as FeatureState | undefined;
+			const state = response[this.key()] as FeatureState | undefined;
 
 			// the state cannot be updated
 			if (!state || state.component !== this.component) {
@@ -270,7 +274,7 @@ export default function Feature<T extends FeatureState>(
 		 * Creates a full URL object for the current path
 		 */
 		url(): URL {
-			return panel.url(this.path, this.query);
+			return panel.url(this.path ?? undefined, this.query);
 		}
 	});
 }

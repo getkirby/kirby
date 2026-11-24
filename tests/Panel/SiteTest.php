@@ -10,12 +10,12 @@ use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Kirby\Panel\Site::class)]
+#[CoversClass(Site::class)]
 #[CoversClass(Model::class)]
 class SiteTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Site';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Site';
 
 	protected function setUp(): void
 	{
@@ -37,30 +37,6 @@ class SiteTest extends TestCase
 	{
 		$site = new ModelSite($props);
 		return new Site($site);
-	}
-
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-open-view-button',
-			'k-preview-view-button',
-			'k-languages-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
-	}
-
-	public function testDropdownOption(): void
-	{
-		$model = $this->panel([
-			'content' => [
-				'title' => 'Test site'
-			]
-		]);
-
-		$option = $model->dropdownOption();
-
-		$this->assertSame('home', $option['icon']);
-		$this->assertSame('Test site', $option['text']);
-		$this->assertSame('/site', $option['link']);
 	}
 
 	public function testImage(): void
@@ -102,54 +78,30 @@ class SiteTest extends TestCase
 
 		// cover disabled as default
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => false,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => false,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-96x.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => true,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => true,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 
 	public function testPath(): void
 	{
 		$this->assertSame('site', $this->panel()->path());
-	}
-
-	public function testProps(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('previewUrl', $props['model']);
-		$this->assertArrayHasKey('title', $props['model']);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-	}
-
-	public function testPreviewPermissionsWithoutHomePage(): void
-	{
-		$props = $this->panel()->props();
-
-		$this->assertFalse($props['permissions']['preview']);
 	}
 
 	public function testPreviewPermissionsWithHomePage(): void
@@ -173,6 +125,13 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertTrue($props['permissions']['preview']);
+	}
+
+	public function testPreviewPermissionsWithoutHomePage(): void
+	{
+		$props = $this->panel()->props();
+
+		$this->assertFalse($props['permissions']['preview']);
 	}
 
 	public function testPreviewPermissionsWithoutSitePermission(): void
@@ -210,12 +169,5 @@ class SiteTest extends TestCase
 		$props = $this->app->site()->panel()->props();
 
 		$this->assertFalse($props['permissions']['preview']);
-	}
-
-	public function testView(): void
-	{
-		$view = $this->panel()->view();
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-site-view', $view['component']);
 	}
 }

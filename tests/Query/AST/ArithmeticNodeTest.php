@@ -40,20 +40,6 @@ class ArithmeticNodeTest extends TestCase
 		$this->assertSame($expected, $node->resolve($visitor));
 	}
 
-	public function testResolveWithVariables(): void
-	{
-		$node = new ArithmeticNode(
-			left: new VariableNode('a'),
-			operator: '+',
-			right: new VariableNode('b')
-		);
-
-		$context = ['a' => 5, 'b' => 3];
-
-		$visitor = new DefaultVisitor(context: $context);
-		$this->assertSame(8, $node->resolve($visitor));
-	}
-
 	public function testResolveWithComplexExpressions(): void
 	{
 		$node = new ArithmeticNode(
@@ -70,6 +56,20 @@ class ArithmeticNodeTest extends TestCase
 		$this->assertSame(10, $node->resolve($visitor));
 	}
 
+	public function testResolveWithDivisionByZero(): void
+	{
+		$node = new ArithmeticNode(
+			left: new LiteralNode(5),
+			operator: '/',
+			right: new LiteralNode(0)
+		);
+
+		// Visitor should throw exception for division by zero
+		$visitor = new DefaultVisitor();
+		$this->expectException(DivisionByZeroError::class);
+		$node->resolve($visitor);
+	}
+
 	public function testResolveWithFloats(): void
 	{
 		$node = new ArithmeticNode(
@@ -82,29 +82,18 @@ class ArithmeticNodeTest extends TestCase
 		$this->assertSame(11.0, $node->resolve($visitor));
 	}
 
-	public function testResolveWithNegativeNumbers(): void
-	{
-		$node = new ArithmeticNode(
-			left: new LiteralNode(-5),
-			operator: '+',
-			right: new LiteralNode(3)
-		);
-
-		$visitor = new DefaultVisitor();
-		$this->assertSame(-2, $node->resolve($visitor));
-	}
-
-	public function testResolveWithDivisionByZero(): void
+	public function testResolveWithInvalidOperator(): void
 	{
 		$node = new ArithmeticNode(
 			left: new LiteralNode(5),
-			operator: '/',
-			right: new LiteralNode(0)
+			operator: '^',
+			right: new LiteralNode(3)
 		);
 
-		// Visitor should throw exception for division by zero
+		// Visitor should throw exception for invalid operator
 		$visitor = new DefaultVisitor();
-		$this->expectException(DivisionByZeroError::class);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Unknown arithmetic operator: ^');
 		$node->resolve($visitor);
 	}
 
@@ -122,18 +111,29 @@ class ArithmeticNodeTest extends TestCase
 		$node->resolve($visitor);
 	}
 
-	public function testResolveWithInvalidOperator(): void
+	public function testResolveWithNegativeNumbers(): void
 	{
 		$node = new ArithmeticNode(
-			left: new LiteralNode(5),
-			operator: '^',
+			left: new LiteralNode(-5),
+			operator: '+',
 			right: new LiteralNode(3)
 		);
 
-		// Visitor should throw exception for invalid operator
 		$visitor = new DefaultVisitor();
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Unknown arithmetic operator: ^');
-		$node->resolve($visitor);
+		$this->assertSame(-2, $node->resolve($visitor));
+	}
+
+	public function testResolveWithVariables(): void
+	{
+		$node = new ArithmeticNode(
+			left: new VariableNode('a'),
+			operator: '+',
+			right: new VariableNode('b')
+		);
+
+		$context = ['a' => 5, 'b' => 3];
+
+		$visitor = new DefaultVisitor(context: $context);
+		$this->assertSame(8, $node->resolve($visitor));
 	}
 }

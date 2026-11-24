@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(UserUuid::class)]
 class UserUuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.UserUuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.UserUuid';
 
 	public function testIndex(): void
 	{
@@ -21,7 +21,7 @@ class UserUuidTest extends TestCase
 	public function testModel(): void
 	{
 		$user = $this->app->user('my-user');
-		$this->assertIsUser($user, Uuid::for('user://my-user')->model());
+		$this->assertIsUser($user, Uuid::from('user://my-user')->model());
 	}
 
 	public function testPopulate(): void

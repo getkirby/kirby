@@ -55,10 +55,14 @@ export const props = {
 };
 
 /**
- * Wapper around a native HTML `<a>` element that ensures the
+ * Wrapper around a native HTML `<a>` element that ensures the
  * correct routing behavior for Panel as well as external links.
  *
- * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
+ * @example
+ * <k-link to="https://getkirby.com">Kirby Website</k-link>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
@@ -71,7 +75,7 @@ export default {
 	emits: ["click"],
 	computed: {
 		downloadAttr() {
-			return this.download ? this.href.split("/").pop() : undefined;
+			return this.download ? String(this.href).split("/").pop() : undefined;
 		},
 		href() {
 			if (typeof this.to === "function") {
@@ -82,11 +86,13 @@ export default {
 				return "";
 			}
 
-			if (this.to[0] === "/" && !this.target) {
+			// protocol-relative URLs are no Panel paths
+			if (this.to[0] === "/" && this.to[1] !== "/" && !this.target) {
 				return this.$url(this.to);
 			}
 
 			if (
+				typeof this.to === "string" &&
 				this.to.includes("@") === true &&
 				this.to.includes("/") === false &&
 				this.to.startsWith("mailto:") === false
@@ -119,6 +125,11 @@ export default {
 
 			// don't route if a target is set
 			if (this.target) {
+				return false;
+			}
+
+			// don't route downloads
+			if (this.download === true) {
 				return false;
 			}
 

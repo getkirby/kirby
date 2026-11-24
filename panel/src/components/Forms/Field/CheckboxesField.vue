@@ -14,7 +14,10 @@
 				class="k-field-counter"
 			/>
 
-			<k-button-group v-if="batch" layout="collapsed">
+			<k-button-group
+				v-if="batch === true && disabled === false"
+				layout="collapsed"
+			>
 				<k-button
 					:disabled="value.length === 0"
 					:responsive="true"
@@ -26,7 +29,7 @@
 					{{ $t("deselect.all") }}
 				</k-button>
 				<k-button
-					:disabled="value.length >= options.length"
+					:disabled="value.length >= choices.length"
 					:responsive="true"
 					icon="select-all"
 					size="xs"
@@ -39,7 +42,7 @@
 		</template>
 
 		<k-empty
-			v-if="!options?.length"
+			v-if="choices.length === 0"
 			:text="$t('options.none')"
 			icon="checklist"
 		/>
@@ -47,6 +50,7 @@
 			v-else
 			ref="input"
 			v-bind="$props"
+			:options="choices"
 			@input="$emit('input', $event)"
 		/>
 	</k-field>
@@ -59,13 +63,26 @@ import { props as CheckboxesInput } from "../Input/CheckboxesInput.vue";
 import counter from "@/mixins/forms/counter.js";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-checkboxes-input>` for additional information.
+ * Have a look at `<k-field>`, `<k-input>` and `<k-checkboxes-input>`
+ * for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, CheckboxesInput, counter],
 	inheritAttrs: false,
 	props: {
 		batch: Boolean
+	},
+	emits: ["input"],
+	computed: {
+		/**
+		 * The options with an `[unknown]` option for each value without one
+		 */
+		choices() {
+			return this.$helper.field.options(this.options ?? [], this.value);
+		}
 	},
 	methods: {
 		deselectAll() {

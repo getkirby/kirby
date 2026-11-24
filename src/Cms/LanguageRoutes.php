@@ -3,25 +3,32 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
+use Kirby\Http\Route;
 
+/**
+ * Generates multi-language routes for the Kirby router
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 class LanguageRoutes
 {
 	/**
 	 * Creates all multi-language routes
+	 *
+	 * @return list<array<string, mixed>>
 	 */
 	public static function create(App $kirby): array
 	{
-		$routes = [];
-
-		// add the route for the home page
-		$routes[] = static::home($kirby);
+		// start with the route for the home page
+		$routes = [static::home($kirby)];
 
 		// Kirby's base url
 		$baseurl = $kirby->url();
 
 		foreach ($kirby->languages() as $language) {
 			// ignore languages with a different base url
-			if ($language->baseurl() !== $baseurl) {
+			if ($language->baseUrl() !== $baseurl) {
 				continue;
 			}
 
@@ -54,7 +61,7 @@ class LanguageRoutes
 
 					// jump through to the fallback if nothing
 					// can be found for this language
-					/** @var \Kirby\Http\Route $this */
+					/** @var Route $this */
 					$this->next();
 				}
 			];
@@ -65,10 +72,11 @@ class LanguageRoutes
 		return $routes;
 	}
 
-
 	/**
 	 * Create the fallback route
 	 * for unprefixed default language URLs.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function fallback(App $kirby): array
 	{
@@ -82,7 +90,7 @@ class LanguageRoutes
 
 				// try to redirect prefixed pages
 				if (
-					empty($extension) === true &&
+					$extension === '' &&
 					$page = $kirby->page($path)
 				) {
 					$url = $kirby->request()->url([
@@ -92,22 +100,20 @@ class LanguageRoutes
 					]);
 
 					if ($url->toString() !== $page->url()) {
-						// redirect to translated page directly if translation
-						// is exists and languages detect is enabled
+						// redirect to the translated page directly if the
+						// translation exists and language detection is enabled
 						$lang = $kirby->detectedLanguage()->code();
 
 						if (
-							$kirby->option('languages.detect') === true &&
-							$page->translation($lang)->exists() === true
+							$kirby->option('languages.detect') !== true ||
+							$page->translation($lang)->exists() === false
 						) {
-							return $kirby
-								->response()
-								->redirect($page->url($lang));
+							$lang = null;
 						}
 
 						return $kirby
 							->response()
-							->redirect($page->url());
+							->redirect($page->url($lang), inherit: true);
 					}
 				}
 
@@ -118,10 +124,11 @@ class LanguageRoutes
 
 	/**
 	 * Create the multi-language home page route
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function home(App $kirby): array
 	{
-		// Multi-language home
 		return [
 			'pattern' => '',
 			'method'  => 'ALL',
@@ -138,7 +145,7 @@ class LanguageRoutes
 				if ($languages->count() === 0) {
 					return $kirby
 						->response()
-						->redirect($kirby->defaultLanguage()->url());
+						->redirect($kirby->defaultLanguage()->url(), inherit: true);
 				}
 
 				// if there's just one language,
@@ -150,15 +157,14 @@ class LanguageRoutes
 
 				// language detection on the home page with / as URL
 				if ($kirby->url() !== $currentLanguage->url()) {
-					if ($kirby->option('languages.detect') === true) {
-						return $kirby
-							->response()
-							->redirect($kirby->detectedLanguage()->url());
-					}
+					$language = match ($kirby->option('languages.detect')) {
+						true    => $kirby->detectedLanguage(),
+						default => $currentLanguage
+					};
 
 					return $kirby
 						->response()
-						->redirect($currentLanguage->url());
+						->redirect($language->url(), inherit: true);
 				}
 
 				// render the home page of the current language

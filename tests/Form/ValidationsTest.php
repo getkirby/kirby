@@ -5,8 +5,42 @@ namespace Kirby\Form;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Field\InputField;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+class ValidationsField extends InputField
+{
+	use Mixin\Max;
+	use Mixin\Maxlength;
+	use Mixin\Min;
+	use Mixin\Minlength;
+	use Mixin\Options;
+	use Mixin\Pattern;
+
+	protected mixed $value = null;
+
+	public function __construct(
+		int|null $max = null,
+		int|null $maxlength = null,
+		int|null $min = null,
+		int|null $minlength = null,
+		array|string|null $options = null,
+		string|null $pattern = null,
+		mixed ...$args
+	) {
+		parent::__construct(...$args);
+
+		$this->max       = $max;
+		$this->maxlength = $maxlength;
+		$this->min       = $min;
+		$this->minlength = $minlength;
+		$this->options   = $options;
+		$this->pattern   = $pattern;
+	}
+}
+
+#[CoversClass(Validations::class)]
 class ValidationsTest extends TestCase
 {
 	protected function setUp(): void
@@ -16,26 +50,6 @@ class ValidationsTest extends TestCase
 				'index' => '/dev/null'
 			]
 		]);
-
-		Field::$types = [
-			'test' => [
-				'props' => [
-					'options' => fn (array $options = []) => $options
-				]
-			]
-		];
-	}
-
-	protected function tearDown(): void
-	{
-		Field::$types = [];
-	}
-
-	public function testBooleanValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
-		$this->assertTrue(Validations::boolean($field, true));
 	}
 
 	public function testBooleanInvalid(): void
@@ -44,15 +58,18 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please confirm or deny');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = new ValidationsField(model: $page);
 		Validations::boolean($field, 'nope');
 	}
 
-	public function testDateValid(): void
+	public function testBooleanValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
-		$this->assertTrue(Validations::date($field, '2012-12-12'));
+		$field = new ValidationsField(model: $page);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::boolean($field, true);
 	}
 
 	public function testDateInvalid(): void
@@ -61,15 +78,18 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid date');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = new ValidationsField(model: $page);
 		Validations::date($field, 'somewhen');
 	}
 
-	public function testEmailValid(): void
+	public function testDateValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
-		$this->assertTrue(Validations::email($field, 'test@getkirby.com'));
+		$field = new ValidationsField(model: $page);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::date($field, '2012-12-12');
 	}
 
 	public function testEmailInvalid(): void
@@ -78,19 +98,18 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid email address');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = new ValidationsField(model: $page);
 		Validations::email($field, 'test[at]getkirby.com');
 	}
 
-	public function testMaxValid(): void
+	public function testEmailValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'model' => $page,
-			'max' => 5
-		]);
+		$field = new ValidationsField(model: $page);
 
-		$this->assertTrue(Validations::max($field, 4));
+		$this->expectNotToPerformAssertions();
+
+		Validations::email($field, 'test@getkirby.com');
 	}
 
 	public function testMaxInvalid(): void
@@ -99,23 +118,12 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a value equal to or lower than 5');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'max' => 5,
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			max: 5,
+			model: $page
+		);
 
 		Validations::max($field, 6);
-	}
-
-	public function testMaxLengthValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'maxlength' => 5,
-			'model' => $page
-		]);
-
-		$this->assertTrue(Validations::maxlength($field, 'test'));
 	}
 
 	public function testMaxLengthInvalid(): void
@@ -124,23 +132,38 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a shorter value. (max. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'maxlength' => 5,
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			maxlength: 5,
+			model: $page
+		);
 
 		Validations::maxlength($field, 'testest');
 	}
 
-	public function testMinValid(): void
+	public function testMaxLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'min' => 5,
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			maxlength: 5,
+			model: $page
+		);
 
-		$this->assertTrue(Validations::min($field, 6));
+		$this->expectNotToPerformAssertions();
+
+		Validations::maxlength($field, 'test');
+	}
+
+	public function testMaxValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			model: $page,
+			max: 5
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::max($field, 4);
 	}
 
 	public function testMinInvalid(): void
@@ -149,23 +172,12 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a value equal to or greater than 5');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'min' => 5,
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			min: 5,
+			model: $page
+		);
 
 		Validations::min($field, 4);
-	}
-
-	public function testMinLengthValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'minlength' => 5,
-			'model' => $page
-		]);
-
-		$this->assertTrue(Validations::minlength($field, 'testest'));
 	}
 
 	public function testMinLengthInvalid(): void
@@ -174,96 +186,38 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a longer value. (min. 5 characters)');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'minlength' => 5,
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			minlength: 5,
+			model: $page
+		);
 
 		Validations::minlength($field, 'test');
 	}
 
-	public function testPatternValid(): void
+	public function testMinLengthValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
-			'model' => $page
-		]);
+		$field = new ValidationsField(
+			minlength: 5,
+			model: $page
+		);
 
-		$this->assertTrue(Validations::pattern($field, '#fff'));
-		$this->assertTrue(Validations::pattern($field, '#222'));
-		$this->assertTrue(Validations::pattern($field, '#afafaf'));
-		$this->assertTrue(Validations::pattern($field, '#34b3cd'));
+		$this->expectNotToPerformAssertions();
+
+		Validations::minlength($field, 'testest');
 	}
 
-	public function testPatternInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The value does not match the expected pattern');
-
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'pattern' => '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
-			'model' => $page
-		]);
-
-		Validations::pattern($field, '#MMM');
-	}
-
-	public function testPatternInvalidMatchButMore(): void
+	public function testMinValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'pattern' => '\d{3,4}',
-			'model'   => $page
-		]);
+		$field = new ValidationsField(
+			min: 5,
+			model: $page
+		);
 
-		$this->assertTrue(Validations::pattern($field, '123'));
-		$this->assertTrue(Validations::pattern($field, '1234'));
+		$this->expectNotToPerformAssertions();
 
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The value does not match the expected pattern');
-
-		Validations::pattern($field, '12345');
-	}
-
-	public function testRequiredValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'required' => true,
-			'model' => $page
-		]);
-
-		$this->assertTrue(Validations::required($field, 'something'));
-	}
-
-	public function testRequiredInvalid(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Please enter something');
-
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'required' => true,
-			'model' => $page
-		]);
-
-		Validations::required($field, '');
-	}
-
-	public function testOptionValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'options' => [
-				['value' => 'a'],
-				['value' => 'b']
-			],
-			'model' => $page
-		]);
-
-		$this->assertTrue(Validations::option($field, 'a'));
+		Validations::min($field, 6);
 	}
 
 	public function testOptionInvalid(): void
@@ -272,29 +226,15 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'options' => [
+		$field = new ValidationsField(
+			options: [
 				['value' => 'a'],
 				['value' => 'b']
 			],
-			'model' => $page
-		]);
+			model: $page
+		);
 
 		Validations::option($field, 'c');
-	}
-
-	public function testOptionsValid(): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'options' => [
-				['value' => 'a'],
-				['value' => 'b']
-			],
-			'model' => $page
-		]);
-
-		$this->assertTrue(Validations::options($field, ['a', 'b']));
 	}
 
 	public function testOptionsInvalid(): void
@@ -303,22 +243,160 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please select a valid option');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', [
-			'options' => [
+		$field = new ValidationsField(
+			options: [
 				['value' => 'a'],
 				['value' => 'b']
 			],
-			'model' => $page
-		]);
+			model: $page
+		);
 
 		Validations::options($field, ['a', 'c']);
 	}
 
-	public function testTimeValid(): void
+	public function testOptionsValid(): void
 	{
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
-		$this->assertTrue(Validations::time($field, '10:12'));
+		$field = new ValidationsField(
+			options: [
+				['value' => 'a'],
+				['value' => 'b']
+			],
+			model: $page
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::options($field, ['a', 'b']);
+	}
+
+	public function testOptionsWithNumericValues(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			options: [
+				['value' => 36],
+				['value' => 38.5]
+			],
+			model: $page
+		);
+
+		Validations::options($field, ['36', '38.5']);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please select a valid option');
+
+		Validations::options($field, ['36', '40']);
+	}
+
+	public function testOptionValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			options: [
+				['value' => 'a'],
+				['value' => 'b']
+			],
+			model: $page
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::option($field, 'a');
+	}
+
+	public function testOptionWithNumericValues(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			options: [
+				['value' => 1],
+				['value' => 2.5]
+			],
+			model: $page
+		);
+
+		Validations::option($field, '1');
+		Validations::option($field, '2.5');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please select a valid option');
+
+		Validations::option($field, '3');
+	}
+
+	public function testPatternInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The value does not match the expected pattern');
+
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			pattern: '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
+			model: $page
+		);
+
+		Validations::pattern($field, '#MMM');
+	}
+
+	public function testPatternInvalidMatchButMore(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			pattern: '\d{3,4}',
+			model: $page
+		);
+
+		Validations::pattern($field, '123');
+		Validations::pattern($field, '1234');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The value does not match the expected pattern');
+
+		Validations::pattern($field, '12345');
+	}
+
+	public function testPatternValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			pattern: '^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$',
+			model: $page
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::pattern($field, '#fff');
+		Validations::pattern($field, '#222');
+		Validations::pattern($field, '#afafaf');
+		Validations::pattern($field, '#34b3cd');
+	}
+
+	public function testRequiredInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter something');
+
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			required: true,
+			model: $page
+		);
+
+		Validations::required($field, '');
+	}
+
+	public function testRequiredValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(
+			required: true,
+			model: $page
+		);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::required($field, 'something');
 	}
 
 	public function testTimeInvalid(): void
@@ -327,7 +405,48 @@ class ValidationsTest extends TestCase
 		$this->expectExceptionMessage('Please enter a valid time');
 
 		$page  = new Page(['slug' => 'test']);
-		$field = new Field('test', ['model' => $page]);
+		$field = new ValidationsField(model: $page);
 		Validations::time($field, '99:99');
+	}
+
+	public function testTimeValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(model: $page);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::time($field, '10:12');
+	}
+
+	public function testUrlEmpty(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(model: $page);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::url($field, null);
+		Validations::url($field, '');
+	}
+
+	public function testUrlInvalid(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid URL');
+
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(model: $page);
+		Validations::url($field, 'getkirby.com');
+	}
+
+	public function testUrlValid(): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$field = new ValidationsField(model: $page);
+
+		$this->expectNotToPerformAssertions();
+
+		Validations::url($field, 'https://getkirby.com');
 	}
 }

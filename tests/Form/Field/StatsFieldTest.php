@@ -3,10 +3,12 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Panel\Ui\Stats;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(StatsField::class)]
 class StatsFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('stats');
 
@@ -19,7 +21,6 @@ class StatsFieldTest extends TestCase
 		$this->assertInstanceOf(Stats::class, $field->stats());
 
 		$props = $field->props();
-
 		$this->assertSame('Stats', $props['label']);
 		$this->assertSame('stats', $props['name']);
 		$this->assertSame('stats', $props['type']);

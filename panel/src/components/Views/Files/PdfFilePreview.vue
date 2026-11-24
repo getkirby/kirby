@@ -4,12 +4,13 @@
 		:data-supported="supported"
 	>
 		<object
+			:aria-label="$t('preview')"
 			:data="url"
 			type="application/pdf"
 			class="k-pdf-file-preview-object"
 		>
 			<k-file-preview-frame>
-				<a :href="url">
+				<a :aria-label="$t('open')" :href="url">
 					<k-icon
 						:color="$helper.color(image.color)"
 						:type="image.icon"
@@ -26,7 +27,10 @@
 <script>
 /**
  * File view preview for PDF documents
- * @since 5.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default {
 	props: {

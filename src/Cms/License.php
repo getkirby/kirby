@@ -14,18 +14,16 @@ use Kirby\Toolkit\V;
 use Throwable;
 
 /**
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class License
 {
-	public const HISTORY = [
+	public const array HISTORY = [
 		'3' => '2019-02-05',
 		'4' => '2023-11-28',
-		'5' => '2025-06-24'
+		'5' => '2025-06-24',
+		'6' => '2026-11-24'
 	];
 
 	/**
@@ -33,14 +31,14 @@ class License
 	 * the next hub reissue attempt for an expired license is made.
 	 * @since 5.5.0
 	 */
-	protected const REISSUE_BACKOFF = [5, 60, 180, 720, 1440];
-	protected const SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';
+	protected const array REISSUE_BACKOFF = [5, 60, 180, 720, 1440];
+	protected const string SALT = 'kwAHMLyLPBnHEskzH9pPbJsBxQhKXZnX';
 
 	protected App $kirby;
 
 	// cache
-	protected LicenseStatus $status;
-	protected LicenseType $type;
+	protected LicenseStatus|null $status = null;
+	protected LicenseType|null $type = null;
 
 	public function __construct(
 		protected string|null $activation = null,
@@ -71,12 +69,26 @@ class License
 
 	/**
 	 * Returns the activation date if available
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function activation(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		return $this->activation !== null ? Str::date(strtotime($this->activation), $format, $handler) : null;
+		if ($this->activation === null) {
+			return null;
+		}
+
+		$timestamp = strtotime($this->activation);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -123,12 +135,26 @@ class License
 
 	/**
 	 * Returns the purchase date if available
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function date(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		return $this->date !== null ? Str::date(strtotime($this->date), $format, $handler) : null;
+		if ($this->date === null) {
+			return null;
+		}
+
+		$timestamp = strtotime($this->date);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -335,15 +361,6 @@ class License
 	}
 
 	/**
-	 * Prepares the email address to be make sure it
-	 * does not have trailing spaces and is lowercase.
-	 */
-	protected function normalizeEmail(string $email): string
-	{
-		return Str::lower(trim($email));
-	}
-
-	/**
 	 * Prepares the domain to be comparable
 	 */
 	protected function normalizeDomain(string $domain): string
@@ -371,6 +388,15 @@ class License
 		}
 
 		return $domain;
+	}
+
+	/**
+	 * Prepares the email address to be make sure it
+	 * does not have trailing spaces and is lowercase.
+	 */
+	protected function normalizeEmail(string $email): string
+	{
+		return Str::lower(trim($email));
 	}
 
 	/**
@@ -514,17 +540,28 @@ class License
 
 	/**
 	 * Returns the renewal date
+	 *
+	 * @return ($format is null ? int|null : string|null)
 	 */
 	public function renewal(
 		string|IntlDateFormatter|null $format = null,
 		string|null $handler = null
 	): int|string|null {
-		if ($this->activation === null) {
+		$activation = $this->activation();
+
+		if ($activation === null) {
 			return null;
 		}
 
-		$time = strtotime('+3 years', $this->activation());
-		return Str::date($time, $format, $handler);
+		$timestamp = strtotime('+3 years', $activation);
+
+		if ($timestamp === false) {
+			return null;
+		}
+
+		$result = Str::date($timestamp, $format, $handler);
+
+		return $result === false ? null : $result;
 	}
 
 	/**
@@ -545,12 +582,20 @@ class License
 			$message = $response->json()['message'] ?? 'The request failed';
 
 			throw new LogicException(
-				key: $response->code(),
-				message: $message,
+				message:  $message,
+				httpCode: $response->code(),
 			);
 		}
 
-		return $response->json();
+		$result = $response->json();
+
+		if ($result === null) {
+			throw new LogicException(
+				message: 'Invalid JSON response from hub'
+			);
+		}
+
+		return $result;
 		// @codeCoverageIgnoreEnd
 	}
 
@@ -560,6 +605,7 @@ class License
 	 */
 	public static function root(): string
 	{
+		/** @var string */
 		return App::instance()->root('license');
 	}
 

@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-email-input', $attrs.class]"
+		:style="$attrs.style"
 		type="email"
-		class="k-email-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -25,9 +26,14 @@ export const props = {
 };
 
 /**
- * @example <k-email-input :value="email" @input="email = $event" name="email" />
+ * @example
+ * <k-email-input :value="email" @input="email = $event" name="email" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

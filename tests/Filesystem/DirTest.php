@@ -3,11 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Exception;
-use Kirby\Cms\App;
-use Kirby\Cms\Helpers;
-use Kirby\Cms\Page;
 use Kirby\TestCase;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -29,39 +25,19 @@ class DirRemoveRecursiveThrows extends Dir
 {
 	protected static function removeRecursive(string $dir): void
 	{
-		throw new \Exception('test: cleanup failure');
+		throw new Exception('test: cleanup failure');
 	}
 }
 
 #[CoversClass(Dir::class)]
 class DirTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/dir';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
+	public const string FIXTURES = __DIR__ . '/fixtures/dir';
+	public const string TMP      = KIRBY_TMP_DIR . '/Filesystem.Dir';
 
 	protected function tearDown(): void
 	{
-		Helpers::$deprecations['dir-inventory'] = true;
 		Dir::remove(static::TMP);
-	}
-
-	protected function create(array $items, ...$args)
-	{
-		// the tests below intentionally cover the deprecated
-		// `Dir::inventory()` method, which still needs to work
-		Helpers::$deprecations['dir-inventory'] = false;
-
-		foreach ($items as $item) {
-			$root = static::TMP . '/' . $item;
-
-			if ($extension = F::extension($item)) {
-				F::write($root, '');
-			} else {
-				Dir::make($root);
-			}
-		}
-
-		return Dir::inventory(static::TMP, ...$args);
 	}
 
 	public function testCopy(): void
@@ -78,18 +54,15 @@ class DirTest extends TestCase
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
-	public function testCopyNonRecursive(): void
+	public function testCopyExistingTarget(): void
 	{
 		$src    = static::FIXTURES . '/copy';
-		$target = static::TMP . '/copy';
+		$target = static::FIXTURES . '/copy';
 
-		$result = Dir::copy($src, $target, false);
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The target directory "' . $target . '" exists');
 
-		$this->assertTrue($result);
-
-		$this->assertFileExists($target . '/a.txt');
-		$this->assertFileDoesNotExist($target . '/subfolder/b.txt');
-		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
+		Dir::copy($src, $target);
 	}
 
 	public function testCopyIgnore(): void
@@ -107,6 +80,28 @@ class DirTest extends TestCase
 		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
+	public function testCopyInvalidTarget(): void
+	{
+		$src    = static::FIXTURES . '/copy';
+		$target = '';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The target directory "' . $target . '" could not be created');
+
+		Dir::copy($src, $target);
+	}
+
+	public function testCopyMissingSource(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
+
+		$src    = '/does-not-exist';
+		$target = static::TMP . '/copy';
+
+		Dir::copy($src, $target);
+	}
+
 	public function testCopyNoIgnore(): void
 	{
 		$src    = static::FIXTURES . '/copy';
@@ -122,37 +117,18 @@ class DirTest extends TestCase
 		$this->assertFileExists($target . '/subfolder/.gitignore');
 	}
 
-	public function testCopyMissingSource(): void
+	public function testCopyNonRecursive(): void
 	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
-
-		$src    = '/does-not-exist';
+		$src    = static::FIXTURES . '/copy';
 		$target = static::TMP . '/copy';
 
-		Dir::copy($src, $target);
-	}
+		$result = Dir::copy($src, $target, false);
 
-	public function testCopyExistingTarget(): void
-	{
-		$src    = static::FIXTURES . '/copy';
-		$target = static::FIXTURES . '/copy';
+		$this->assertTrue($result);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The target directory "' . $target . '" exists');
-
-		Dir::copy($src, $target);
-	}
-
-	public function testCopyInvalidTarget(): void
-	{
-		$src    = static::FIXTURES . '/copy';
-		$target = '';
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The target directory "' . $target . '" could not be created');
-
-		Dir::copy($src, $target);
+		$this->assertFileExists($target . '/a.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/b.txt');
+		$this->assertFileDoesNotExist($target . '/subfolder/.gitignore');
 	}
 
 	public function testExists(): void
@@ -189,27 +165,6 @@ class DirTest extends TestCase
 		];
 
 		$this->assertSame($expected, Dir::index($dir));
-	}
-
-	public function testIndexRecursive(): void
-	{
-		Dir::make($dir = static::TMP);
-		Dir::make(static::TMP . '/sub');
-		Dir::make(static::TMP . '/sub/sub');
-
-		F::write(static::TMP . '/a.txt', 'test');
-		F::write(static::TMP . '/sub/b.txt', 'test');
-		F::write(static::TMP . '/sub/sub/c.txt', 'test');
-
-		$expected = [
-			'a.txt',
-			'sub',
-			'sub/b.txt',
-			'sub/sub',
-			'sub/sub/c.txt'
-		];
-
-		$this->assertSame($expected, Dir::index($dir, true));
 	}
 
 	public function testIndexIgnore(): void
@@ -267,6 +222,34 @@ class DirTest extends TestCase
 		]));
 	}
 
+	public function testIndexRecursive(): void
+	{
+		Dir::make($dir = static::TMP);
+		Dir::make(static::TMP . '/sub');
+		Dir::make(static::TMP . '/sub/sub');
+
+		F::write(static::TMP . '/a.txt', 'test');
+		F::write(static::TMP . '/sub/b.txt', 'test');
+		F::write(static::TMP . '/sub/sub/c.txt', 'test');
+
+		$expected = [
+			'a.txt',
+			'sub',
+			'sub/b.txt',
+			'sub/sub',
+			'sub/sub/c.txt'
+		];
+
+		$this->assertSame($expected, Dir::index($dir, true));
+	}
+
+	public function testIsReadable(): void
+	{
+		Dir::make(static::TMP);
+
+		$this->assertSame(is_readable(static::TMP), Dir::isReadable(static::TMP));
+	}
+
 	public function testIsWritable(): void
 	{
 		Dir::make(static::TMP);
@@ -274,211 +257,37 @@ class DirTest extends TestCase
 		$this->assertSame(is_writable(static::TMP), Dir::isWritable(static::TMP));
 	}
 
-	public function testInventory(): void
+	public function testLink(): void
 	{
-		$inventory = $this->create([
-			'1_project-a',
-			'2_project-b',
-			'cover.jpg',
-			'cover.jpg.txt',
-			'projects.txt',
-			'_ignore.txt',
-			'.invisible'
-		]);
+		$source = static::TMP . '/source';
+		$link   = static::TMP . '/link';
 
-		$this->assertSame('project-a', $inventory['children'][0]['slug']);
-		$this->assertSame(1, $inventory['children'][0]['num']);
+		Dir::make($source);
 
-		$this->assertSame('project-b', $inventory['children'][1]['slug']);
-		$this->assertSame(2, $inventory['children'][1]['num']);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('jpg', $inventory['files']['cover.jpg']['extension']);
-		$this->assertArrayNotHasKey('_ignore.txt', $inventory['files']);
-		$this->assertArrayNotHasKey('.invisible', $inventory['files']);
-
-		$this->assertSame('projects', $inventory['template']);
+		$this->assertTrue(Dir::link($source, $link));
+		$this->assertTrue(is_link($link));
 	}
 
-	public function testInventoryWithSkippedFiles(): void
+	public function testLinkExistingLink(): void
 	{
-		$inventory = $this->create([
-			'valid.jpg',
-			'skipped.html',
-			'skipped.htm',
-			'skipped.php'
-		]);
+		$source = static::TMP . '/source';
+		$link   = static::TMP . '/link';
 
-		$expected = [
-			'valid.jpg'
-		];
+		Dir::make($source);
+		Dir::link($source, $link);
 
-		$this->assertSame($expected, A::pluck($inventory['files'], 'filename'));
+		$this->assertTrue(Dir::link($source, $link));
 	}
 
-	public function testInventoryChildSorting(): void
+	public function testLinkWithoutSource(): void
 	{
-		$inventory = $this->create([
-			'1_project-c',
-			'10_project-b',
-			'11_project-a',
-		]);
+		$source = static::TMP . '/source';
+		$link   = static::TMP . '/link';
 
-		$this->assertSame('project-c', $inventory['children'][0]['slug']);
-		$this->assertSame('project-b', $inventory['children'][1]['slug']);
-		$this->assertSame('project-a', $inventory['children'][2]['slug']);
-	}
+		$this->expectExceptionMessage('Expection');
+		$this->expectExceptionMessage('The directory "' . $source . '" does not exist and cannot be linked');
 
-	public function testInventoryChildWithLeadingZero(): void
-	{
-		$inventory = $this->create([
-			'01_project-c',
-			'02_project-b',
-			'03_project-a',
-		]);
-
-		$this->assertSame('project-c', $inventory['children'][0]['slug']);
-		$this->assertSame(1, $inventory['children'][0]['num']);
-
-		$this->assertSame('project-b', $inventory['children'][1]['slug']);
-		$this->assertSame(2, $inventory['children'][1]['num']);
-
-		$this->assertSame('project-a', $inventory['children'][2]['slug']);
-		$this->assertSame(3, $inventory['children'][2]['num']);
-	}
-
-	public function testInventoryFileSorting(): void
-	{
-		$inventory = $this->create([
-			'1-c.jpg',
-			'10-b.jpg',
-			'11-a.jpg',
-		]);
-
-		$files = array_values($inventory['files']);
-
-		$this->assertSame('1-c.jpg', $files[0]['filename']);
-		$this->assertSame('10-b.jpg', $files[1]['filename']);
-		$this->assertSame('11-a.jpg', $files[2]['filename']);
-	}
-
-	public function testInventoryMissingTemplate(): void
-	{
-		$inventory = $this->create([
-			'cover.jpg',
-			'cover.jpg.txt'
-		]);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('default', $inventory['template']);
-	}
-
-	public function testInventoryTemplateWithDotInFilename(): void
-	{
-		$inventory = $this->create([
-			'cover.jpg',
-			'cover.jpg.txt',
-			'article.video.txt'
-		]);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article.video', $inventory['template']);
-	}
-
-	public function testInventoryExtension(): void
-	{
-		$inventory = $this->create([
-			'cover.jpg',
-			'cover.jpg.md',
-			'article.md'
-		], 'md');
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testInventoryIgnore(): void
-	{
-		$inventory = $this->create([
-			'cover.jpg',
-			'article.txt'
-		], 'txt', ['cover.jpg']);
-
-		$this->assertCount(0, $inventory['files']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testInventoryMultilang(): void
-	{
-		$inventory = $this->create([
-			'cover.jpg',
-			'cover.jpg.en.txt',
-			'article.en.txt',
-			'article.de.txt'
-		], 'txt', null, true);
-
-		$this->assertSame('cover.jpg', $inventory['files']['cover.jpg']['filename']);
-		$this->assertSame('article', $inventory['template']);
-	}
-
-	public function testInventoryChildModels(): void
-	{
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'A'
-		];
-
-		$inventory = $this->create([
-			'child-with-model-a/a.txt',
-			'child-with-model-b/b.txt',
-			'child-without-model-c/c.txt'
-		]);
-
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
-
-		Page::$models = [];
-	}
-
-	public function testInventoryChildMultilangModels(): void
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch',
-				]
-			]
-		]);
-
-		Page::$models = [
-			'a' => 'A',
-			'b' => 'A'
-		];
-
-		$inventory = $this->create([
-			'child-with-model-a/a.de.txt',
-			'child-with-model-a/a.en.txt',
-			'child-with-model-b/b.de.txt',
-			'child-with-model-b/b.en.txt',
-			'child-without-model-c/c.de.txt',
-			'child-without-model-c/c.en.txt'
-		], 'txt', null, true);
-
-		$this->assertSame('a', $inventory['children'][0]['model']);
-		$this->assertSame('b', $inventory['children'][1]['model']);
-		$this->assertNull($inventory['children'][2]['model']);
-
-		Page::$models = [];
+		Dir::link($source, $link);
 	}
 
 	public function testMake(): void
@@ -517,39 +326,6 @@ class DirTest extends TestCase
 		$this->assertFalse(Dir::move('/does-not-exist', static::TMP . '/2'));
 	}
 
-	public function testLink(): void
-	{
-		$source = static::TMP . '/source';
-		$link   = static::TMP . '/link';
-
-		Dir::make($source);
-
-		$this->assertTrue(Dir::link($source, $link));
-		$this->assertTrue(is_link($link));
-	}
-
-	public function testLinkExistingLink(): void
-	{
-		$source = static::TMP . '/source';
-		$link   = static::TMP . '/link';
-
-		Dir::make($source);
-		Dir::link($source, $link);
-
-		$this->assertTrue(Dir::link($source, $link));
-	}
-
-	public function testLinkWithoutSource(): void
-	{
-		$source = static::TMP . '/source';
-		$link   = static::TMP . '/link';
-
-		$this->expectExceptionMessage('Expection');
-		$this->expectExceptionMessage('The directory "' . $source . '" does not exist and cannot be linked');
-
-		Dir::link($source, $link);
-	}
-
 	public function testRead(): void
 	{
 		Dir::make(static::TMP);
@@ -586,236 +362,6 @@ class DirTest extends TestCase
 		];
 
 		$this->assertSame($expected, $files);
-	}
-
-	public function testRealpath(): void
-	{
-		$path = Dir::realpath(__DIR__ . '/../Filesystem');
-		$this->assertSame(__DIR__, $path);
-	}
-
-	public function testRealpathToMissingFile(): void
-	{
-		$path = __DIR__ . '/../does-not-exist';
-
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory does not exist at the given path: "' . $path . '"');
-
-		Dir::realpath($path);
-	}
-
-	public function testRealpathToParent(): void
-	{
-		$parent = __DIR__ . '/..';
-		$dir    = $parent . '/Filesystem';
-		$path   = Dir::realpath($dir, $parent);
-
-		$this->assertSame(__DIR__, $path);
-	}
-
-	public function testRealpathToNonExistingParent(): void
-	{
-		$parent = __DIR__ . '/../does-not-exist';
-		$dir    = __DIR__ . '/../Filesystem';
-
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
-
-		Dir::realpath($dir, $parent);
-	}
-
-	public function testRealpathToInvalidParent(): void
-	{
-		$parent = __DIR__ . '/../Cms';
-		$dir    = __DIR__ . '/../Filesystem';
-
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory is not within the parent directory');
-
-		Dir::realpath($dir, $parent);
-	}
-
-	public function testRealpathToSiblingWithSharedPrefix(): void
-	{
-		// a sibling directory whose name starts with
-		// the parent's name (`site2` vs `site`) must not
-		// pass the containment check
-		Dir::make(static::TMP . '/site');
-		Dir::make($dir = static::TMP . '/site2');
-
-		$this->expectException('Exception');
-		$this->expectExceptionMessage('The directory is not within the parent directory');
-
-		Dir::realpath($dir, static::TMP . '/site');
-	}
-
-	public function testRemove(): void
-	{
-		Dir::make(static::TMP);
-
-		$this->assertDirectoryExists(static::TMP);
-		$this->assertTrue(Dir::remove(static::TMP));
-		$this->assertDirectoryDoesNotExist(static::TMP);
-	}
-
-	public function testRemoveNonExistent(): void
-	{
-		$this->assertTrue(Dir::remove(static::TMP . '/does-not-exist'));
-	}
-
-	public function testRemoveThrowsAfterRetryExhausted(): void
-	{
-		if (posix_getuid() === 0) {
-			$this->markTestSkipped('Cannot test permission-restricted removal as root');
-		}
-
-		$parent = static::TMP . '/locked-parent';
-		$dir    = $parent . '/locked';
-
-		Dir::make($dir . '/inner');
-
-		// Read-only parent prevents rename() from removing $dir's directory entry.
-		// Read-only $dir prevents removeRecursive() from deleting the inner subdirectory.
-		chmod($parent, 0555);
-		chmod($dir, 0555);
-
-		try {
-			$this->expectException(Exception::class);
-			$this->expectExceptionMessage('The directory could not be deleted');
-			Dir::remove($dir);
-		} finally {
-			// Dir::remove() is expected to throw (fail), so $dir still exists;
-			// restore permissions so tearDown's Dir::remove(static::TMP) can clean up.
-			chmod($dir, 0755);
-			chmod($parent, 0755);
-		}
-	}
-
-	public function testRemoveWithContents(): void
-	{
-		Dir::make(static::TMP . '/sub');
-		F::write(static::TMP . '/file.txt', 'test');
-		F::write(static::TMP . '/sub/nested.txt', 'test');
-
-		$this->assertTrue(Dir::remove(static::TMP));
-		$this->assertDirectoryDoesNotExist(static::TMP);
-	}
-
-	public function testRemoveWithDeeplyNested(): void
-	{
-		Dir::make(static::TMP . '/a');
-		Dir::make(static::TMP . '/a/b');
-		Dir::make(static::TMP . '/a/b/c');
-		F::write(static::TMP . '/a/file.txt', 'test');
-		F::write(static::TMP . '/a/b/file.txt', 'test');
-		F::write(static::TMP . '/a/b/c/file.txt', 'test');
-
-		$this->assertTrue(Dir::remove(static::TMP));
-		$this->assertDirectoryDoesNotExist(static::TMP);
-	}
-
-	public function testRemoveWithSymlinkChild(): void
-	{
-		$source = static::TMP . '/source';
-		$dir    = static::TMP . '/dir';
-
-		Dir::make($source);
-		Dir::make($dir);
-		symlink($source, $dir . '/link');
-
-		$this->assertTrue(Dir::remove($dir));
-		$this->assertDirectoryDoesNotExist($dir);
-		$this->assertDirectoryExists($source);
-	}
-
-	public function testRemoveCatchesCleanupError(): void
-	{
-		Dir::make(static::TMP);
-
-		// DirRemoveRecursiveThrows always throws from removeRecursive;
-		// remove() must catch it and still return true because the
-		// original path was already atomically renamed away before cleanup ran.
-		$this->assertTrue(DirRemoveRecursiveThrows::remove(static::TMP));
-		$this->assertDirectoryDoesNotExist(static::TMP);
-	}
-
-	public function testRemoveFallbackSucceedsOnFirstAttempt(): void
-	{
-		Dir::make(static::TMP . '/sub');
-		F::write(static::TMP . '/file.txt', 'test');
-
-		// Blocking rename forces the in-place fallback; the first removeRecursive
-		// call should clear all content and delete the directory.
-		FileTest::$block[] = 'rename';
-
-		try {
-			$this->assertTrue(Dir::remove(static::TMP));
-			$this->assertDirectoryDoesNotExist(static::TMP);
-		} finally {
-			FileTest::$block = [];
-		}
-	}
-
-	public function testRemoveFallbackSucceedsOnRetry(): void
-	{
-		$dir = static::TMP . '/target';
-
-		Dir::make($dir . '/inner');
-
-		// Blocking rename forces the fallback; DirFlakyRemoveRecursive is a
-		// no-op for the first two calls so the retry loop must eventually
-		// succeed and return true from inside the loop.
-		FileTest::$block[]                  = 'rename';
-		DirFlakyRemoveRecursive::$failCount = 2;
-
-		try {
-			$this->assertTrue(DirFlakyRemoveRecursive::remove($dir));
-			$this->assertDirectoryDoesNotExist($dir);
-		} finally {
-			FileTest::$block                    = [];
-			DirFlakyRemoveRecursive::$failCount = 0;
-		}
-	}
-
-	public function testRemoveVanishedBeforeRename(): void
-	{
-		Dir::make($dir = static::TMP . '/vanished');
-
-		// another process removes the directory right before
-		// the rename, which then fails like with a blocked one
-		FileTest::$mocks['rename'] = function (string $old): bool {
-			if (is_dir($old) === true) {
-				rmdir($old);
-			}
-
-			return false;
-		};
-
-		try {
-			$this->assertTrue(Dir::remove($dir));
-			$this->assertDirectoryDoesNotExist($dir);
-		} finally {
-			FileTest::$mocks = [];
-		}
-	}
-
-	public function testRemoveLeavesNoTmpSiblings(): void
-	{
-		Dir::make(static::TMP);
-		$parent = dirname(static::TMP);
-
-		Dir::remove(static::TMP);
-
-		// no .remove-* tmp dirs should be left in the parent
-		$leftovers = glob($parent . '/.remove-*');
-		$this->assertSame([], $leftovers);
-	}
-
-	public function testIsReadable(): void
-	{
-		Dir::make(static::TMP);
-
-		$this->assertSame(is_readable(static::TMP), Dir::isReadable(static::TMP));
 	}
 
 	public function testReadDirsAndFiles(): void
@@ -867,6 +413,241 @@ class DirTest extends TestCase
 		$this->assertSame($expected, $files);
 	}
 
+	public function testRealpath(): void
+	{
+		$path = Dir::realpath(__DIR__ . '/../Filesystem');
+		$this->assertSame(__DIR__, $path);
+	}
+
+	public function testRealpathToInvalidParent(): void
+	{
+		$parent = __DIR__ . '/../Cms';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, $parent);
+	}
+
+	public function testRealpathToItself(): void
+	{
+		// the parent directory itself is not considered
+		// to be *within* the parent directory
+		Dir::make($dir = static::TMP . '/site');
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, $dir);
+	}
+
+	public function testRealpathToMissingFile(): void
+	{
+		$path = __DIR__ . '/../does-not-exist';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory does not exist at the given path: "' . $path . '"');
+
+		Dir::realpath($path);
+	}
+
+	public function testRealpathToNonExistingParent(): void
+	{
+		$parent = __DIR__ . '/../does-not-exist';
+		$dir    = __DIR__ . '/../Filesystem';
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+
+		Dir::realpath($dir, $parent);
+	}
+
+	public function testRealpathToParent(): void
+	{
+		$parent = __DIR__ . '/..';
+		$dir    = $parent . '/Filesystem';
+		$path   = Dir::realpath($dir, $parent);
+
+		$this->assertSame(__DIR__, $path);
+	}
+
+	public function testRealpathToSiblingWithSharedPrefix(): void
+	{
+		// a sibling directory whose name starts with
+		// the parent's name (`site2` vs `site`) must not
+		// pass the containment check
+		Dir::make(static::TMP . '/site');
+		Dir::make($dir = static::TMP . '/site2');
+
+		$this->expectException('Exception');
+		$this->expectExceptionMessage('The directory is not within the parent directory');
+
+		Dir::realpath($dir, static::TMP . '/site');
+	}
+
+	public function testRemove(): void
+	{
+		Dir::make(static::TMP);
+
+		$this->assertDirectoryExists(static::TMP);
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveCatchesCleanupError(): void
+	{
+		Dir::make(static::TMP);
+
+		// DirRemoveRecursiveThrows always throws from removeRecursive;
+		// remove() must catch it and still return true because the
+		// original path was already atomically renamed away before cleanup ran.
+		$this->assertTrue(DirRemoveRecursiveThrows::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveFallbackSucceedsOnFirstAttempt(): void
+	{
+		Dir::make(static::TMP . '/sub');
+		F::write(static::TMP . '/file.txt', 'test');
+
+		// Blocking rename forces the in-place fallback; the first removeRecursive
+		// call should clear all content and delete the directory.
+		FileTest::$block[] = 'rename';
+
+		try {
+			$this->assertTrue(Dir::remove(static::TMP));
+			$this->assertDirectoryDoesNotExist(static::TMP);
+		} finally {
+			FileTest::$block = [];
+		}
+	}
+
+	public function testRemoveFallbackSucceedsOnRetry(): void
+	{
+		$dir = static::TMP . '/target';
+
+		Dir::make($dir . '/inner');
+
+		// Blocking rename forces the fallback; DirFlakyRemoveRecursive is a
+		// no-op for the first two calls so the retry loop must eventually
+		// succeed and return true from inside the loop.
+		FileTest::$block[]                  = 'rename';
+		DirFlakyRemoveRecursive::$failCount = 2;
+
+		try {
+			$this->assertTrue(DirFlakyRemoveRecursive::remove($dir));
+			$this->assertDirectoryDoesNotExist($dir);
+		} finally {
+			FileTest::$block                    = [];
+			DirFlakyRemoveRecursive::$failCount = 0;
+		}
+	}
+
+	public function testRemoveLeavesNoTmpSiblings(): void
+	{
+		Dir::make(static::TMP);
+		$parent = dirname(static::TMP);
+
+		Dir::remove(static::TMP);
+
+		// no .remove-* tmp dirs should be left in the parent
+		$leftovers = glob($parent . '/.remove-*');
+		$this->assertSame([], $leftovers);
+	}
+
+	public function testRemoveNonExistent(): void
+	{
+		$this->assertTrue(Dir::remove(static::TMP . '/does-not-exist'));
+	}
+
+	public function testRemoveThrowsAfterRetryExhausted(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test permission-restricted removal as root');
+		}
+
+		$parent = static::TMP . '/locked-parent';
+		$dir    = $parent . '/locked';
+
+		Dir::make($dir . '/inner');
+
+		// Read-only parent prevents rename() from removing $dir's directory entry.
+		// Read-only $dir prevents removeRecursive() from deleting the inner subdirectory.
+		chmod($parent, 0555);
+		chmod($dir, 0555);
+
+		try {
+			$this->expectException(Exception::class);
+			$this->expectExceptionMessage('The directory could not be deleted');
+			Dir::remove($dir);
+		} finally {
+			// Dir::remove() is expected to throw (fail), so $dir still exists;
+			// restore permissions so tearDown's Dir::remove(static::TMP) can clean up.
+			chmod($dir, 0755);
+			chmod($parent, 0755);
+		}
+	}
+
+	public function testRemoveVanishedBeforeRename(): void
+	{
+		Dir::make($dir = static::TMP . '/vanished');
+
+		// another process removes the directory right before
+		// the rename, which then fails like with a blocked one
+		FileTest::$mocks['rename'] = function (string $old): bool {
+			if (is_dir($old) === true) {
+				rmdir($old);
+			}
+
+			return false;
+		};
+
+		try {
+			$this->assertTrue(Dir::remove($dir));
+			$this->assertDirectoryDoesNotExist($dir);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testRemoveWithContents(): void
+	{
+		Dir::make(static::TMP . '/sub');
+		F::write(static::TMP . '/file.txt', 'test');
+		F::write(static::TMP . '/sub/nested.txt', 'test');
+
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveWithDeeplyNested(): void
+	{
+		Dir::make(static::TMP . '/a');
+		Dir::make(static::TMP . '/a/b');
+		Dir::make(static::TMP . '/a/b/c');
+		F::write(static::TMP . '/a/file.txt', 'test');
+		F::write(static::TMP . '/a/b/file.txt', 'test');
+		F::write(static::TMP . '/a/b/c/file.txt', 'test');
+
+		$this->assertTrue(Dir::remove(static::TMP));
+		$this->assertDirectoryDoesNotExist(static::TMP);
+	}
+
+	public function testRemoveWithSymlinkChild(): void
+	{
+		$source = static::TMP . '/source';
+		$dir    = static::TMP . '/dir';
+
+		Dir::make($source);
+		Dir::make($dir);
+		symlink($source, $dir . '/link');
+
+		$this->assertTrue(Dir::remove($dir));
+		$this->assertDirectoryDoesNotExist($dir);
+		$this->assertDirectoryExists($source);
+	}
+
 	public function testSize(): void
 	{
 		Dir::make(static::TMP);
@@ -880,6 +661,11 @@ class DirTest extends TestCase
 		$this->assertSame('15 B', Dir::niceSize(static::TMP));
 
 		Dir::remove(static::TMP);
+	}
+
+	public function testSizeOfNonExistingDir(): void
+	{
+		$this->assertFalse(Dir::size('/does-not-exist'));
 	}
 
 	public function testSizeWithNestedFolders(): void
@@ -897,11 +683,6 @@ class DirTest extends TestCase
 		$this->assertSame('15 B', Dir::niceSize(static::TMP));
 
 		Dir::remove(static::TMP);
-	}
-
-	public function testSizeOfNonExistingDir(): void
-	{
-		$this->assertFalse(Dir::size('/does-not-exist'));
 	}
 
 	public function testWasModifiedAfter(): void

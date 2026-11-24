@@ -10,20 +10,17 @@ use Kirby\Toolkit\A;
  * Collection of possible options for
  * select fields, radio fields, etc.
  *
- * @package   Kirby Option
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Option\Option>
+ * @extends Collection<Option>
  */
 class Options extends Collection
 {
 	public function __construct(array $objects = [])
 	{
 		foreach ($objects as $object) {
-			$this->__set($object->value, $object);
+			$this->__set($object->id(), $object);
 		}
 	}
 
@@ -40,7 +37,7 @@ class Options extends Collection
 	}
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public static function factory(
 		array $items = [],
@@ -49,6 +46,11 @@ class Options extends Collection
 		$collection = new static();
 
 		foreach ($items as $key => $option) {
+			if ($option instanceof Option) {
+				$collection->__set($option->id(), $option);
+				continue;
+			}
+
 			// convert an associative value => text array into props;
 			// skip if option is already an array of option props
 			if (
@@ -68,6 +70,14 @@ class Options extends Collection
 		return $collection;
 	}
 
+	/**
+	 * Renders all options
+	 *
+	 * @param $safeMode Whether to escape special HTML characters in
+	 *                 the option text for safe output in the Panel;
+	 *                 only set to `false` if the text is later escaped!
+	 * @return list<array>
+	 */
 	public function render(ModelWithContent $model, bool $safeMode = true): array
 	{
 		$options = [];

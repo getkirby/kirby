@@ -1,6 +1,8 @@
 {
   "recommendations": [
     "dbaeumer.vscode-eslint",
-    "oxc.oxc-vscode"
+    "oxc.oxc-vscode",
+    "recca0120.vscode-phpunit",
+    "vitest.explorer"
   ]
 }

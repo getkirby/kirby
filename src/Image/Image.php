@@ -17,17 +17,11 @@ use Kirby\Toolkit\Html;
  * Extends the `Kirby\Filesystem\File` class with
  * those image-specific methods.
  *
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Image extends File
 {
-	protected Exif|null $exif = null;
-	protected Dimensions|null $dimensions = null;
-
 	public static array $resizableTypes = [
 		'avif',
 		'jpg',
@@ -37,18 +31,10 @@ class Image extends File
 		'webp'
 	];
 
-	public static array $viewableTypes = [
-		'avif',
-		'jpg',
-		'jpeg',
-		'gif',
-		'png',
-		'svg',
-		'webp'
-	];
-
 	/**
 	 * Validation rules to be used for `::match()`
+	 *
+	 * @var array<string, array{0: string, 1: string}>
 	 */
 	public static array $validations = [
 		'maxsize'     => ['size',   'max'],
@@ -59,6 +45,18 @@ class Image extends File
 		'minheight'   => ['height', 'min'],
 		'orientation' => ['orientation', 'same']
 	];
+	public static array $viewableTypes = [
+		'avif',
+		'jpg',
+		'jpeg',
+		'gif',
+		'png',
+		'svg',
+		'webp'
+	];
+
+	protected Dimensions|null $dimensions = null;
+	protected Exif|null $exif = null;
 
 	/**
 	 * Returns the `<img>` tag for the image object
@@ -77,7 +75,23 @@ class Image extends File
 			return $this->dimensions;
 		}
 
-		if (in_array($this->mime(), [
+		$mime   = null;
+		$header = $this->exists() ? (string)@file_get_contents($this->root, false, null, 0, 16) : '';
+
+		// read the type from the header, `mime()` reads up to 7 MB of the file
+		if (
+			str_starts_with($header, "\xFF\xD8\xFF") === true ||
+			(str_starts_with($header, "\x89PNG\r\n\x1A\n") === true && substr($header, 12, 4) === 'IHDR') ||
+			(str_starts_with($header, 'RIFF') === true && substr($header, 8, 4) === 'WEBP')
+		) {
+			$mime = $this->imagesize()['mime'] ?? null;
+		}
+
+		if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) === false) {
+			$mime = $this->mime();
+		}
+
+		if (in_array($mime, [
 			'image/avif',
 			'image/gif',
 			'image/jpeg',
@@ -150,14 +164,6 @@ class Image extends File
 	}
 
 	/**
-	 * Checks if the dimensions of the asset are portrait
-	 */
-	public function isPortrait(): bool
-	{
-		return $this->dimensions()->portrait();
-	}
-
-	/**
 	 * Checks if the dimensions of the asset are landscape
 	 */
 	public function isLandscape(): bool
@@ -166,11 +172,11 @@ class Image extends File
 	}
 
 	/**
-	 * Checks if the dimensions of the asset are square
+	 * Checks if the dimensions of the asset are portrait
 	 */
-	public function isSquare(): bool
+	public function isPortrait(): bool
 	{
-		return $this->dimensions()->square();
+		return $this->dimensions()->portrait();
 	}
 
 	/**
@@ -194,6 +200,14 @@ class Image extends File
 	}
 
 	/**
+	 * Checks if the dimensions of the asset are square
+	 */
+	public function isSquare(): bool
+	{
+		return $this->dimensions()->square();
+	}
+
+	/**
 	 * Checks if a preview can be displayed for the file
 	 * in the Panel or in the frontend
 	 */
@@ -203,20 +217,20 @@ class Image extends File
 	}
 
 	/**
-	 * Returns the ratio of the asset
-	 */
-	public function ratio(): float
-	{
-		return $this->dimensions()->ratio();
-	}
-
-	/**
 	 * Returns the orientation as string
 	 * `landscape` | `portrait` | `square`
 	 */
 	public function orientation(): string|false
 	{
 		return $this->dimensions()->orientation();
+	}
+
+	/**
+	 * Returns the ratio of the asset
+	 */
+	public function ratio(): float
+	{
+		return $this->dimensions()->ratio();
 	}
 
 	/**

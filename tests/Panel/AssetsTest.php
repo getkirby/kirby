@@ -2,29 +2,23 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
-use Kirby\TestCase;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Assets::class)]
 class AssetsTest extends TestCase
 {
-	public const TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
-	public const VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
+	public const string TMP               = KIRBY_TMP_DIR . '/Panel.Assets';
+	public const string VITE_RUNNING_PATH = KIRBY_DIR . '/panel/.vite-running';
 
 	protected bool $hadViteRunning;
 
 	protected function setUp(): void
 	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
+		parent::setUp();
 
 		// initialize development mode to a known state
 		$this->hadViteRunning = is_file(static::VITE_RUNNING_PATH);
@@ -35,8 +29,7 @@ class AssetsTest extends TestCase
 
 	protected function tearDown(): void
 	{
-		// clear session file first
-		$this->app->session()->destroy();
+		parent::tearDown();
 
 		// reset development mode
 		if ($this->hadViteRunning === true) {
@@ -44,14 +37,6 @@ class AssetsTest extends TestCase
 		} else {
 			F::remove(static::VITE_RUNNING_PATH);
 		}
-
-		Dir::remove(static::TMP);
-
-		// clear fake json requests
-		$_GET = [];
-
-		// clean up $_SERVER
-		unset($_SERVER['SERVER_SOFTWARE']);
 	}
 
 	public function setCustomUrl()
@@ -71,8 +56,7 @@ class AssetsTest extends TestCase
 
 	public function setDevMode(): void
 	{
-		// dev mode
-		$app = $this->app->clone([
+		$this->app->clone([
 			'request' => [
 				'url' => 'http://sandbox.test'
 			],
@@ -87,6 +71,15 @@ class AssetsTest extends TestCase
 		touch(static::VITE_RUNNING_PATH);
 	}
 
+	public function setPluginDevMode(): void
+	{
+		F::write($this->app->root('plugins') . '/test/index.js', 'test');
+		F::write($this->app->root('plugins') . '/test/index.dev.js', 'test');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
+	}
+
 	public function testCss(): void
 	{
 		// default asset setup
@@ -95,8 +88,7 @@ class AssetsTest extends TestCase
 		$css     = $assets->css();
 
 		// css
-		$this->assertSame($base . '/css/style.min.css', $css['index']);
-		$this->assertSame('/media/plugins/index.css?0', $css['plugins']);
+		$this->assertSame(['index' => $base . '/css/style.min.css'], $css);
 	}
 
 	public function testCssInDevMode(): void
@@ -107,7 +99,7 @@ class AssetsTest extends TestCase
 		$css    = $assets->css();
 
 		// css
-		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
+		$this->assertSame([], $css);
 	}
 
 	public function testCssWithCustomFile(): void
@@ -169,7 +161,23 @@ class AssetsTest extends TestCase
 		$css    = $assets->css();
 
 		// css
-		$this->assertSame(['plugins' => '/media/plugins/index.css?0'], $css);
+		$this->assertSame([], $css);
+	}
+
+	public function testCssWithPlugins(): void
+	{
+		// a plugin with only a stylesheet
+		F::write(static::TMP . '/site/plugins/a/index.css', 'a');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
+
+		$css = (new Assets())->css();
+
+		$this->assertSame([
+			'/media/panel/' . $this->app->versionHash() . '/css/style.min.css',
+			'/media/plugins/plugins/a.' . hash('xxh3', 'a') . '.css'
+		], array_values($css));
 	}
 
 	public function testExternalWithCustomCssJs(): void
@@ -256,6 +264,25 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/my-favicon.png', $favicons[1]['href']);
 	}
 
+	public function testFaviconsWithCustomInvalidSetup(): void
+	{
+		// array
+		$this->app->clone([
+			'options' => [
+				'panel' => [
+					'favicon' => 5
+				]
+			]
+		]);
+
+		$assets = new Assets();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid panel.favicon option');
+
+		$assets->favicons();
+	}
+
 	public function testFaviconsWithCustomStringSetup(): void
 	{
 		// array
@@ -277,25 +304,6 @@ class AssetsTest extends TestCase
 		$this->assertSame('/assets/favicon.ico', $favicons[0]['href']);
 	}
 
-	public function testFaviconsWithCustomInvalidSetup(): void
-	{
-		// array
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'favicon' => 5
-				]
-			]
-		]);
-
-		$assets = new Assets();
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid panel.favicon option');
-
-		$assets->favicons();
-	}
-
 	public function testFaviconsWithCustomUrl(): void
 	{
 		$this->setDevMode();
@@ -315,10 +323,82 @@ class AssetsTest extends TestCase
 	public function testIcons(): void
 	{
 		$assets = new Assets();
-		$icons = $assets->icons();
 
-		$this->assertNotNull($icons);
-		$this->assertTrue(str_contains($icons, '<svg'));
+		$this->assertSame(
+			'/panel/assets/' . $this->app->versionHash() . '/icons.svg',
+			$assets->icons()
+		);
+	}
+
+	public function testIconsInDevMode(): void
+	{
+		$this->setDevMode();
+
+		$assets   = new Assets();
+		$modified = F::modified($this->app->root('panel') . '/public/img/icons.svg');
+
+		$this->assertSame(
+			'/panel/assets/' . $modified . '/icons.svg',
+			$assets->icons()
+		);
+	}
+
+	public function testIconsRoot(): void
+	{
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/dist/img/icons.svg',
+			$assets->iconsRoot()
+		);
+	}
+
+	public function testIconsRootInDevMode(): void
+	{
+		$this->setDevMode();
+
+		$assets = new Assets();
+
+		$this->assertSame(
+			$this->app->root('panel') . '/public/img/icons.svg',
+			$assets->iconsRoot()
+		);
+	}
+
+	public function testIconsWithCustomMediaUrl(): void
+	{
+		$this->app = $this->app->clone([
+			'urls' => [
+				'media' => 'https://cdn.getkirby.com/media'
+			]
+		]);
+
+		// the sprite must stay on the Panel origin, even if
+		// the media folder is served from a CDN
+		$assets = new Assets();
+
+		$this->assertSame(
+			'/panel/assets/' . $this->app->versionHash() . '/icons.svg',
+			$assets->icons()
+		);
+	}
+
+	public function testIconsWithCustomPanelSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'panel' => [
+					'slug' => 'admin'
+				]
+			]
+		]);
+
+		$assets = new Assets();
+
+		$this->assertSame(
+			'/admin/assets/' . $this->app->versionHash() . '/icons.svg',
+			$assets->icons()
+		);
 	}
 
 	public function testImportMaps(): void
@@ -326,7 +406,14 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$importMaps = $assets->importMaps();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $importMaps['vue']);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.prod.js', $importMaps['vue']);
+	}
+
+	public function testIsDev(): void
+	{
+		$this->assertFalse((new Assets())->isDev());
+		$this->setDevMode();
+		$this->assertTrue((new Assets())->isDev());
 	}
 
 	public function testJs(): void
@@ -341,14 +428,8 @@ class AssetsTest extends TestCase
 		$this->assertSame('module', $js['vendor']['type']);
 
 		$this->assertSame($base . '/js/plugins.js', $js['plugin-registry']['src']);
-		$this->assertSame('module', $js['plugin-registry']['type']);
-
-		$this->assertSame('/media/plugins/index.js?0', $js['plugins']['src']);
-		$this->assertTrue($js['plugins']['defer']);
-		$this->assertArrayNotHasKey('type', $js['plugins']);
-
 		$this->assertSame($base . '/js/index.min.js', $js['index']['src']);
-		$this->assertSame('module', $js['index']['type']);
+		$this->assertSame([], $js['index']['plugins']);
 	}
 
 	public function testJsInDevMode(): void
@@ -361,7 +442,6 @@ class AssetsTest extends TestCase
 
 		$this->assertSame([
 			'plugin-registry' => $base . '/js/plugins.js',
-			'plugins'         => '/media/plugins/index.js?0',
 			'index'           => $base . '/src/index.js',
 			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
@@ -384,7 +464,6 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$assets = $assets->custom('panel.js');
 		$this->assertStringContainsString('/panel.js', $assets['custom-0']);
-
 
 		// multiple
 		$this->app->clone([
@@ -429,10 +508,24 @@ class AssetsTest extends TestCase
 		// js
 		$this->assertSame([
 			'plugin-registry' => $base . '/js/plugins.js',
-			'plugins'         => '/media/plugins/index.js?0',
 			'index'           => $base . '/src/index.js',
 			'vite'            => $base . '/@vite/client'
 		], array_map(fn ($js) => $js['src'], $js));
+	}
+
+	public function testJsWithPlugins(): void
+	{
+		F::write(static::TMP . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+		F::write(static::TMP . '/site/plugins/a/index.js', 'a');
+
+		// app must be created again to load the new plugin
+		$this->app->clone();
+
+		$js = (new Assets())->js();
+
+		$this->assertSame([
+			'/media/plugins/test/a.' . hash('xxh3', 'a') . '.js'
+		], $js['index']['plugins']);
 	}
 
 	public function testLink(): void
@@ -453,7 +546,7 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm.browser.min.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.prod.js', $vue);
 	}
 
 	public function testVueInDevMode(): void
@@ -463,24 +556,16 @@ class AssetsTest extends TestCase
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm.browser.js', $vue);
+		$this->assertSame('http://sandbox.test:3000/node_modules/vue/dist/vue.esm-browser.js', $vue);
 	}
 
-	public function testVueWithDisabledTemplateCompiler(): void
+	public function testVueInPluginDevMode(): void
 	{
-		$this->app->clone([
-			'options' => [
-				'panel' => [
-					'vue' => [
-						'compiler' => false
-					]
-				]
-			]
-		]);
+		$this->setPluginDevMode();
 
 		$assets = new Assets();
 		$vue    = $assets->vue();
 
-		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.runtime.esm.min.js', $vue);
+		$this->assertSame('/media/panel/' . $this->app->versionHash() . '/js/vue.esm-browser.js', $vue);
 	}
 }

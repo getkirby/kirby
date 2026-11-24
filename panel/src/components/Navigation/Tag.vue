@@ -26,9 +26,7 @@
 		</slot>
 
 		<template v-if="text">
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-if="html" class="k-tag-text" v-html="text" />
-			<span v-else class="k-tag-text">{{ text }}</span>
+			<span v-safe-html="content" class="k-tag-text" />
 		</template>
 		<template v-else-if="$slots.default">
 			<span class="k-tag-text">
@@ -41,12 +39,14 @@
 			v-if="isRemovable"
 			class="k-tag-toggle"
 			icon="cancel-small"
-			@click.native.stop="remove"
+			@click.stop="remove"
 		/>
 	</component>
 </template>
 
 <script>
+import html from "@/panel/html";
+
 export const props = {
 	props: {
 		/**
@@ -56,6 +56,7 @@ export const props = {
 		/**
 		 * If set to `true`, the `text` is rendered as HTML code,
 		 * otherwise as plain text
+		 * @deprecated 6.0.0 Pass trusted HTML as `text` instead
 		 */
 		html: {
 			type: Boolean
@@ -65,7 +66,8 @@ export const props = {
 		 */
 		removable: Boolean,
 		/**
-		 * @values "dark"|"light"
+		 * Color themes tint the light tag
+		 * @values "dark"|"light"|"positive"|"negative"|"notice"|"warning"|"info"
 		 * @since 5.0.0
 		 */
 		theme: {
@@ -78,7 +80,11 @@ export const props = {
 /**
  * A simple tag button with optional image/icon and remove button
  *
- * @example <k-tag>Design</k-tag>
+ * @example
+ * <k-tag>Design</k-tag>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
@@ -103,12 +109,18 @@ export default {
 		 */
 		link: String,
 		/**
-		 * Text to display in the bubble
+		 * Text to display in the bubble.
+		 * A plain string is escaped, trusted HTML is rendered as-is.
 		 */
 		text: String
 	},
 	emits: ["remove"],
 	computed: {
+		content() {
+			// the deprecated `html` flag rendered the text raw,
+			// so it stays trusted
+			return this.html === true ? html(this.text) : this.text;
+		},
 		isRemovable() {
 			return this.removable && !this.disabled;
 		},
@@ -116,6 +128,13 @@ export default {
 			// removable tags need to be focusable, no matter which
 			// element they render as, to be removed by keyboard
 			return this.isRemovable === true ? 0 : null;
+		}
+	},
+	created() {
+		if (this.html === true) {
+			window.panel.deprecated(
+				"`k-tag`: the `html` prop has been deprecated. Pass trusted HTML as `text` instead."
+			);
 		}
 	},
 	methods: {
@@ -139,6 +158,7 @@ export default {
 :root {
 	--tag-color-back: var(--color-gray-950);
 	--tag-color-text: var(--color-white);
+	--tag-color-icon: currentColor;
 	--tag-color-toggle: currentColor;
 	--tag-color-disabled-back: var(--color-gray-600);
 	--tag-color-disabled-text: var(--tag-color-text);
@@ -152,6 +172,20 @@ export default {
 	--tag-color-text: var(--color-text);
 	--tag-color-disabled-back: var(--color-gray-200);
 	--tag-color-disabled-text: var(--color-gray-600);
+}
+
+/* color themes, e.g. `negative`, tint the light tag */
+.k-tag[data-theme]:not([data-theme="dark"], [data-theme="light"]) {
+	--tag-color-back: light-dark(var(--theme-color-300), var(--theme-color-850));
+	--tag-color-text: var(--color-text);
+	--tag-color-icon: var(--theme-color-icon);
+	--tag-color-disabled-back: var(--color-gray-200);
+	--tag-color-disabled-text: var(--color-gray-600);
+}
+/* the tint carries the state, icons need no background of their own */
+.k-tag[data-theme]:not([data-theme="dark"], [data-theme="light"])
+	.k-icon-frame.k-tag-image {
+	background: none;
 }
 
 .k-tag {
@@ -184,6 +218,7 @@ button.k-tag:not([aria-disabled="true"]) {
 	border-start-start-radius: var(--tag-rounded);
 	border-end-start-radius: var(--tag-rounded);
 	background-clip: padding-box;
+	color: var(--tag-color-icon);
 }
 
 .k-tag-text {

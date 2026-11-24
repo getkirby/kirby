@@ -6,7 +6,17 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	emits: ["click"]
 };
 </script>
+
+<style>
+.k-login-alert {
+	border-radius: var(--rounded);
+}
+</style>

@@ -15,7 +15,6 @@
 				<li v-for="(choice, index) in choices" :key="index">
 					<k-choice-input
 						v-bind="choice"
-						@click="toggle(choice.value)"
 						@input="$emit('input', choice.value)"
 					/>
 				</li>
@@ -35,17 +34,18 @@ export const props = {
 			default: 1,
 			type: Number
 		},
-		reset: {
-			default: true,
-			type: Boolean
-		},
 		theme: String,
 		value: [String, Number, Boolean]
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		choices() {
 			const hasIcons = this.options.some((option) => option.icon);
@@ -60,6 +60,7 @@ export default {
 					info: option.info,
 					label: option.text,
 					name: this.name ?? this.id,
+					theme: option.theme,
 					type: "radio",
 					value: option.value
 				};
@@ -72,11 +73,6 @@ export default {
 		},
 		select() {
 			this.focus();
-		},
-		toggle(value) {
-			if (value === this.value && this.reset && !this.required) {
-				this.$emit("input", "");
-			}
 		}
 	}
 };

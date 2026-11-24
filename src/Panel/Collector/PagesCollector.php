@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Collector;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -10,22 +11,23 @@ use Kirby\Cms\User;
 use Kirby\Cms\Users;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends ModelsCollector<Pages>
  */
 class PagesCollector extends ModelsCollector
 {
+	/**
+	 * @param array{only?: list<string>|null, except?: list<string>} $blueprints Lists `only` pages with these blueprints (or with any for `null`) and none with the blueprints in `except`
+	 */
 	public function __construct(
 		protected int|null $limit = null,
 		protected int $page = 1,
-		protected Site|Page|User|null $parent = null,
+		protected Site|Page|User|File|null $parent = null,
 		protected string|null $query = null,
 		protected string|null $status = null,
-		protected array $templates = [],
-		protected array $templatesIgnore = [],
+		protected array $blueprints = [],
 		protected string|null $search = null,
 		protected string|null $sortBy = null,
 		protected bool $flip = false,
@@ -55,27 +57,24 @@ class PagesCollector extends ModelsCollector
 		// because `unset()` is updating the original data, `filter()` is just filtering
 		// also it has been tested that there is no performance difference
 		// even in 0.1 seconds on 100k virtual pages
-		return $models->filter(function (Page $model): bool {
+		$only   = $this->blueprints['only'] ?? null;
+		$except = $this->blueprints['except'] ?? [];
+
+		return $models->filter(function (Page $model) use ($only, $except): bool {
 			// remove all protected and hidden pages
 			if ($model->isListable() === false) {
 				return false;
 			}
 
-			$intendedTemplate = $model->intendedTemplate()->name();
+			$blueprint = $model->intendedTemplate()->name();
 
-			// filter by all set templates
-			if (
-				$this->templates &&
-				in_array($intendedTemplate, $this->templates, true) === false
-			) {
+			// filter by the listed blueprints
+			if ($only !== null && in_array($blueprint, $only, true) === false) {
 				return false;
 			}
 
-			// exclude by all ignored templates
-			if (
-				$this->templatesIgnore &&
-				in_array($intendedTemplate, $this->templatesIgnore, true) === true
-			) {
+			// exclude the blueprints in `except`
+			if (in_array($blueprint, $except, true) === true) {
 				return false;
 			}
 

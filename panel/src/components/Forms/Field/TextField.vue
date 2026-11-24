@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 		<k-input
@@ -27,11 +27,17 @@ import counter from "@/mixins/forms/counter.js";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>`
  * for additional information.
- * @example <k-text-field :value="text" @input="text = $event" name="text" label="Boring text" />
+ *
+ * @example
+ * <k-text-field :value="text" @input="text = $event" name="text" label="Boring text" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, TextInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		inputType() {
 			if (this.$helper.isComponent(`k-${this.type}-input`)) {

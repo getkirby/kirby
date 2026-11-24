@@ -3,27 +3,13 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(TextField::class)]
+#[CoversClass(StringField::class)]
 class TextFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('text');
-
-		$this->assertSame('text', $field->type());
-		$this->assertSame('text', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertNull($field->placeholder());
-		$this->assertTrue($field->counter());
-		$this->assertNull($field->maxlength());
-		$this->assertNull($field->minlength());
-		$this->assertNull($field->pattern());
-		$this->assertFalse($field->spellcheck());
-		$this->assertTrue($field->save());
-	}
-
 	public static function converterDataProvider(): array
 	{
 		return [
@@ -49,19 +35,7 @@ class TextFieldTest extends TestCase
 		$this->assertSame($expected, $field->default());
 	}
 
-	public function testFillWithEmptyValue(): void
-	{
-		$field = $this->field('text');
-		$field->fill('test');
-
-		$this->assertSame('test', $field->toFormValue());
-
-		$field->fillWithEmptyValue();
-
-		$this->assertSame('', $field->toFormValue());
-	}
-
-	public function testInvalidConverter(): void
+	public function testConverterInvalid(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage('Invalid converter "does-not-exist"');
@@ -69,6 +43,54 @@ class TextFieldTest extends TestCase
 		$field = $this->field('text', [
 			'converter' => 'does-not-exist',
 		]);
+
+		$field->converter();
+	}
+
+	public function testDefault(): void
+	{
+		$field = $this->field('text', [
+			'default' => 'test',
+		]);
+
+		$this->assertSame('test', $field->default());
+
+		$field = $this->field('text', [
+			'default' => 'test',
+		]);
+
+		$this->assertSame('test', $field->default());
+	}
+
+	#[DataProvider('converterDataProvider')]
+	public function testDefaultWithConverter($converter, $input, $expected): void
+	{
+		$field = $this->field('text', [
+			'default'   => $input,
+			'converter' => $converter
+		]);
+
+		$this->assertSame($expected, $field->default());
+	}
+
+	public function testDefaultWithStringTemplate(): void
+	{
+		$field = $this->field('text', [
+			'default' => 'test {{ 1 + 2 }}',
+		]);
+
+		$this->assertSame('test 3', $field->default());
+	}
+
+	public function testMaxLength(): void
+	{
+		$field = $this->field('text', [
+			'value'     => 'test',
+			'maxlength' => 3
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('maxlength', $field->errors());
 	}
 
 	public function testMinLength(): void
@@ -82,14 +104,60 @@ class TextFieldTest extends TestCase
 		$this->assertArrayHasKey('minlength', $field->errors());
 	}
 
-	public function testMaxLength(): void
+	public function testPreselect(): void
 	{
-		$field = $this->field('text', [
-			'value'     => 'test',
-			'maxlength' => 3
-		]);
+		$field = $this->field('text');
+		$this->assertFalse($field->preselect());
 
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('maxlength', $field->errors());
+		$field = $this->field('text', ['preselect' => true]);
+		$this->assertTrue($field->preselect());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('text');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'after'        => null,
+			'autocomplete' => null,
+			'autofocus'    => false,
+			'before'       => null,
+			'converter'    => null,
+			'counter'      => true,
+			'disabled'     => false,
+			'font'         => 'sans-serif',
+			'help'         => null,
+			'hidden'       => false,
+			'icon'         => null,
+			'label'        => 'Text',
+			'maxlength'    => null,
+			'minlength'    => null,
+			'name'         => 'text',
+			'pattern'      => null,
+			'placeholder'  => null,
+			'preselect'    => false,
+			'required'     => false,
+			'saveable'     => true,
+			'spellcheck'   => null,
+			'translate'    => true,
+			'type'         => 'text',
+			'when'         => null,
+			'width'        => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('text');
+		$field->fill('test');
+		$this->assertSame('test', $field->toFormValue());
+
+		$field->reset();
+		$this->assertSame('', $field->toFormValue());
 	}
 }

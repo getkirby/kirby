@@ -20,7 +20,10 @@
 					:ratio="ratio"
 					back="pattern"
 				>
-					<img :src="`https://picsum.photos/600/850?t=` + $helper.uuid()" />
+					<img
+						alt=""
+						:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					/>
 				</k-frame>
 			</k-grid>
 		</k-lab-example>
@@ -56,7 +59,10 @@
 					:ratio="ratio"
 					theme="passive"
 				>
-					<img :src="`https://picsum.photos/600/850?t=` + $helper.uuid()" />
+					<img
+						alt=""
+						:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					/>
 				</k-frame>
 			</k-grid>
 		</k-lab-example>
@@ -69,7 +75,10 @@
 					:ratio="ratio"
 					theme="passive"
 				>
-					<img :src="`https://picsum.photos/600/850?t=` + $helper.uuid()" />
+					<img
+						alt=""
+						:src="`https://picsum.photos/600/850?t=` + $helper.uuid()"
+					/>
 				</k-frame>
 			</k-grid>
 		</k-lab-example>
@@ -83,6 +92,7 @@
 					theme="passive"
 				>
 					<iframe
+						title="YouTube video"
 						src="https://www.youtube-nocookie.com/embed/MurryIhhIFg"
 						frameborder="0"
 						allow="autoplay; encrypted-media"

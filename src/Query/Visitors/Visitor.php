@@ -3,39 +3,19 @@
 namespace Kirby\Query\Visitors;
 
 use Closure;
+use Kirby\Query\AST\ClosureNode;
 
 /**
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
- *
- * Every visitor class must implement the following methods.
- * As PHP won't allow increasing the typing specificity, we
- * aren't actually adding them here in the abstract class, so that
- * the actual visitor classes can work with much more specific type hints.
- *
- * @method mixed arguments(array $arguments)
- * @method mixed arithmetic(mixed $left, string $operator, mixed $right)
- * @method mixed arrayList(array $elements)
- * @method mixed closure($ClosureNode $node))
- * @method mixed coalescence($left, $right)
- * @method mixed comparison(mixed $left, string $operator, mixed $right)
- * @method mixed function($name, $arguments)
- * @method mixed literal($value)
- * @method mixed logical(mixed $left, string $operator, mixed $right)
- * @method mixed memberAccess($object, string|int $member, $arguments, bool $nullSafe = false)
- * @method mixed ternary($condition, $true, $false)
- * @method mixed variable(string $name)
  */
 abstract class Visitor
 {
 	/**
-	 * @param array<string,Closure> $global valid global function closures
-	 * @param array<string,mixed> $context data bindings for the query
+	 * @param array<string, Closure> $global Valid global function closures
+	 * @param array<string, mixed> $context Data bindings for the query
 	 */
 	public function __construct(
 		public array $global = [],
@@ -43,4 +23,54 @@ abstract class Visitor
 		protected Closure|null $interceptor = null
 	) {
 	}
+
+	abstract public function arguments(array $arguments): array;
+
+	abstract public function arithmetic(
+		int|float $left,
+		string $operator,
+		int|float $right
+	): int|float;
+
+	abstract public function arrayList(array $elements): array;
+
+	abstract public function closure(ClosureNode $node): Closure;
+
+	abstract public function coalescence(mixed $left, Closure $right): mixed;
+
+	abstract public function comparison(
+		mixed $left,
+		string $operator,
+		mixed $right
+	): bool;
+
+	abstract public function function(string $name, array $arguments): mixed;
+
+	abstract public function literal(mixed $value): mixed;
+
+	abstract public function logical(
+		mixed $left,
+		string $operator,
+		Closure $right
+	): bool;
+
+	abstract public function memberAccess(
+		mixed $object,
+		string|int $member,
+		array|null $arguments,
+		bool $nullSafe = false
+	): mixed;
+
+	/**
+	 * @since 6.0.0
+	 */
+	abstract public function not(mixed $value): bool;
+
+	abstract public function ternary(
+		mixed $condition,
+		Closure|null $true,
+		Closure $false
+	): mixed;
+
+	abstract public function variable(string $name): mixed;
 }

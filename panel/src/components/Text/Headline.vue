@@ -12,7 +12,11 @@
 /**
  * Use to display consistently sized headlines
  *
- * @example <k-headline>This is a nice headline</k-headline>
+ * @example
+ * <k-headline>This is a nice headline</k-headline>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

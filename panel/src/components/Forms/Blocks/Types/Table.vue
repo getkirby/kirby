@@ -5,7 +5,7 @@
 		:empty="$t('field.structure.empty')"
 		:rows="rows"
 		:style="$attrs.style"
-		@dblclick.native="open"
+		@dblclick="open"
 	/>
 </template>
 
@@ -16,6 +16,9 @@ import Block from "./Default.vue";
  * Preview for the `table` block
  *
  * @displayName BlockTypeTable
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,

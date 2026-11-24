@@ -8,7 +8,39 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PageChangeSlugTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSlug';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSlug';
+
+	public function testChangeSlugHooks(): void
+	{
+		$calls = 0;
+		$phpunit = $this;
+
+		$app = $this->app->clone([
+			'hooks' => [
+				'page.changeSlug:before' => function (Page $page, $slug, $languageCode) use ($phpunit, &$calls) {
+					$phpunit->assertSame('test', $page->slug());
+					$phpunit->assertSame('new-test', $slug);
+					$phpunit->assertNull($languageCode);
+					$calls++;
+				},
+				'page.changeSlug:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
+					$phpunit->assertSame('new-test', $newPage->slug());
+					$phpunit->assertSame('test', $oldPage->slug());
+					$calls++;
+				}
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$page->changeSlug('new-test');
+
+		$this->assertSame(2, $calls);
+	}
 
 	public static function slugProvider(): array
 	{
@@ -120,37 +152,4 @@ class PageChangeSlugTest extends ModelTestCase
 		$this->assertIsPage($modified, $site->childrenAndDrafts()->get($expected));
 		$this->assertSame($newRoot, $modified->root());
 	}
-
-	public function testChangeSlugHooks(): void
-	{
-		$calls = 0;
-		$phpunit = $this;
-
-		$app = $this->app->clone([
-			'hooks' => [
-				'page.changeSlug:before' => function (Page $page, $slug, $languageCode) use ($phpunit, &$calls) {
-					$phpunit->assertSame('test', $page->slug());
-					$phpunit->assertSame('new-test', $slug);
-					$phpunit->assertNull($languageCode);
-					$calls++;
-				},
-				'page.changeSlug:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
-					$phpunit->assertSame('new-test', $newPage->slug());
-					$phpunit->assertSame('test', $oldPage->slug());
-					$calls++;
-				}
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$page->changeSlug('new-test');
-
-		$this->assertSame(2, $calls);
-	}
-
 }

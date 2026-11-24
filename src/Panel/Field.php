@@ -5,96 +5,36 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Find;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Roles;
-use Kirby\Form\Form;
-use Kirby\Http\Router;
-use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
+use Kirby\Form\Field\EmailField;
+use Kirby\Form\Field\HiddenField;
+use Kirby\Form\Field\PasswordField;
+use Kirby\Form\Field\SlugField;
+use Kirby\Panel\Form\Field\FilePositionField;
+use Kirby\Panel\Form\Field\PagePositionField;
+use Kirby\Panel\Form\Field\RoleField;
+use Kirby\Panel\Form\Field\TemplateField;
+use Kirby\Panel\Form\Field\TitleField;
+use Kirby\Panel\Form\Field\TranslationField;
+use Kirby\Panel\Form\Field\UsernameField;
 
 /**
  * Provides common field prop definitions
  * for dialogs and other places
- * @since 3.6.0
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class Field
 {
-	/**
-	 * Creates the routes for a field dialog
-	 * This is most definitely not a good place for this
-	 * method, but as long as the other classes are
-	 * not fully refactored, it still feels appropriate
-	 */
-	public static function dialog(
-		ModelWithContent $model,
-		string $fieldName,
-		string|null $path = null,
-		string $method = 'GET',
-	) {
-		$field  = Form::for($model)->field($fieldName);
-		$routes = [];
-
-		foreach ($field->dialogs() as $dialogId => $dialog) {
-			$routes = [
-				...$routes,
-				...Dialog::routes(
-					id: $dialogId,
-					areaId: 'site',
-					options: $dialog
-				)
-			];
-		}
-
-		return Router::execute($path, $method, $routes);
-	}
-
-	/**
-	 * Creates the routes for a field drawer
-	 * This is most definitely not a good place for this
-	 * method, but as long as the other classes are
-	 * not fully refactored, it still feels appropriate
-	 */
-	public static function drawer(
-		ModelWithContent $model,
-		string $fieldName,
-		string|null $path = null,
-		string $method = 'GET',
-	) {
-		$field  = Form::for($model)->field($fieldName);
-		$routes = [];
-
-		foreach ($field->drawers() as $drawerId => $drawer) {
-			$routes = [
-				...$routes,
-				...Drawer::routes(
-					id: $drawerId,
-					areaId: 'site',
-					options: $drawer
-				)
-			];
-		}
-
-		return Router::execute($path, $method, $routes);
-	}
-
 	/**
 	 * A standard email field
 	 */
 	public static function email(array $props = []): array
 	{
-		return [
-			'label'   => I18n::translate('email'),
-			'type'    => 'email',
-			'counter' => false,
-			...$props
-		];
+		return (new EmailField(...$props))->toArray();
 	}
 
 	/**
@@ -102,51 +42,18 @@ class Field
 	 */
 	public static function filePosition(File $file, array $props = []): array
 	{
-		$index   = 0;
-		$options = [];
-
-		foreach ($file->siblings(false)->sorted() as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = match ($sibling->isListable()) {
-				true  => [
-					'value'    => $sibling->id(),
-					'text'     => $sibling->filename(),
-					'disabled' => true
-				],
-				false => [
-					'value'    => '-' . $index,
-					'text'     => '–',
-					'disabled' => true
-				]
-			};
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		return [
-			'label'   => I18n::translate('file.sort'),
-			'type'    => 'select',
-			'empty'   => false,
-			'options' => $options,
+		$field = new FilePositionField(...[
+			'file'     => $file,
+			'required' => true,
 			...$props
-		];
+		]);
+
+		return $field->toArray();
 	}
 
-
-	public static function hidden(): array
+	public static function hidden(array $props = []): array
 	{
-		return ['hidden' => true];
+		return (new HiddenField(...$props))->toArray();
 	}
 
 	/**
@@ -154,52 +61,18 @@ class Field
 	 */
 	public static function pagePosition(Page $page, array $props = []): array
 	{
-		$index    = 0;
-		$options  = [];
-		$siblings = $page->parentModel()->children()->listed()->not($page);
-
-		foreach ($siblings as $sibling) {
-			$index++;
-
-			$options[] = [
-				'value' => $index,
-				'text'  => $index
-			];
-
-			$options[] = match ($sibling->isListable()) {
-				true  => [
-					'value'    => $sibling->id(),
-					'text'     => $sibling->title()->value(),
-					'disabled' => true
-				],
-				false => [
-					'value'    => '-' . $index,
-					'text'     => '–',
-					'disabled' => true
-				]
-			};
-		}
-
-		$index++;
-
-		$options[] = [
-			'value' => $index,
-			'text'  => $index
-		];
-
-		// if only one available option,
-		// hide field when not in debug mode
-		if (count($options) < 2) {
-			return static::hidden();
-		}
-
-		return [
-			'label'    => I18n::translate('page.changeStatus.position'),
-			'type'     => 'select',
+		$field = new PagePositionField(...[
+			'page'     => $page,
 			'required' => true,
-			'options'  => $options,
 			...$props
-		];
+		]);
+
+		// hide filed when there is only one available option
+		if (count($field->options()) < 2) {
+			return static::hidden($props);
+		}
+
+		return $field->toArray();
 	}
 
 	/**
@@ -207,11 +80,7 @@ class Field
 	 */
 	public static function password(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('password'),
-			'type'  => 'password',
-			...$props
-		];
+		return (new PasswordField(...$props))->toArray();
 	}
 
 	/**
@@ -230,67 +99,43 @@ class Field
 		// is not allowed to change role to admin
 		$roles = $roles->filter(
 			fn ($role) =>
-				$role->name() !== 'admin' ||
+				$role->isAdmin() === false ||
 				$kirby->user()?->isAdmin() === true
 		);
 
-		// turn roles into radio field options
-		$roles = $roles->values(fn ($role) => [
-			'text'  => $role->title(),
-			'info'  => $role->description() ?? I18n::translate('role.description.placeholder'),
-			'value' => $role->name()
+		$field = new RoleField(...[
+			'roles' => $roles,
+			...$props
 		]);
 
-		return [
-			'label'   => I18n::translate('role'),
-			'type'    => count($roles) < 1 ? 'hidden' : 'radio',
-			'options' => $roles,
-			...$props
-		];
+		if (count($field->options()) <= 1) {
+			return static::hidden([
+				'name' => 'role',
+				...$props
+			]);
+		}
+
+		return $field->toArray();
 	}
 
 	public static function slug(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('slug'),
-			'type'  => 'slug',
-			'allow' => Str::$defaults['slug']['allowed'],
-			...$props
-		];
+		return (new SlugField(...$props))->toArray();
 	}
 
 	public static function template(
 		array|null $blueprints = [],
 		array|null $props = []
 	): array {
-		$options = [];
-
-		foreach ($blueprints as $blueprint) {
-			$options[] = [
-				'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
-				'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
-			];
-		}
-
-		return [
-			'label'    => I18n::translate('template'),
-			'type'     => 'select',
-			'empty'    => false,
-			'options'  => $options,
-			'icon'     => 'template',
-			'disabled' => count($options) <= 1,
-			...$props
-		];
+		return (new TemplateField(...[
+			'blueprints' => $blueprints,
+			...$props ?? [],
+		]))->toArray();
 	}
 
 	public static function title(array $props = []): array
 	{
-		return [
-			'label' => I18n::translate('title'),
-			'type'  => 'text',
-			'icon'  => 'title',
-			...$props
-		];
+		return (new TitleField(...$props))->toArray();
 	}
 
 	/**
@@ -298,31 +143,11 @@ class Field
 	 */
 	public static function translation(array $props = []): array
 	{
-		$translations = [];
-		foreach (App::instance()->translations() as $translation) {
-			$translations[] = [
-				'text'  => $translation->name(),
-				'value' => $translation->code()
-			];
-		}
-
-		return [
-			'label'   => I18n::translate('language'),
-			'type'    => 'select',
-			'icon'    => 'translate',
-			'options' => $translations,
-			'empty'   => false,
-			...$props
-		];
+		return (new TranslationField(...$props))->toArray();
 	}
 
 	public static function username(array $props = []): array
 	{
-		return [
-			'icon'  => 'user',
-			'label' => I18n::translate('name'),
-			'type'  => 'text',
-			...$props
-		];
+		return (new UsernameField(...$props))->toArray();
 	}
 }

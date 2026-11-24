@@ -1,6 +1,5 @@
 <template>
-	<!-- eslint-disable-next-line vue/no-v-html -->
-	<div v-if="html" v-bind="attrs" v-html="html"></div>
+	<div v-if="content" v-safe-html="content" v-bind="attrs" />
 	<div v-else v-bind="attrs">
 		<!-- @slot Text content -->
 		<slot />
@@ -8,12 +7,18 @@
 </template>
 
 <script>
+import html from "@/panel/html";
+
 /**
  * A container for all multi-line text with additional formats.
  *
- * @example <k-text>
-  <b>Lorem</b> <a href="#">ipsum</a> <i>dolor</i> …
-</k-text>
+ * @example
+ * <k-text>
+ * 	<b>Lorem</b> <a href="#">ipsum</a> <i>dolor</i> …
+ * </k-text>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -23,15 +28,21 @@ export default {
 		 */
 		align: String,
 		/**
-		 * HTML content to render instead
-		 * of the default slot
+		 * HTML content to render instead of the default slot
+		 * @deprecated 6.0.0 Use `text` instead
 		 */
 		html: String,
 		/**
 		 * Font size of the text
 		 * @values tiny, small, medium, large, huge
 		 */
-		size: String
+		size: String,
+		/**
+		 * Content to render instead of the default slot.
+		 * A plain string is escaped, trusted HTML is rendered as-is.
+		 * @since 6.0.0
+		 */
+		text: String
 	},
 	computed: {
 		attrs() {
@@ -40,6 +51,18 @@ export default {
 				"data-align": this.align,
 				"data-size": this.size
 			};
+		},
+		content() {
+			// the deprecated `html` prop was always rendered raw,
+			// so it stays trusted
+			return this.html !== undefined ? html(this.html) : this.text;
+		}
+	},
+	created() {
+		if (this.html !== undefined) {
+			window.panel.deprecated(
+				"`k-text`: the `html` prop has been deprecated. Use `text` instead."
+			);
 		}
 	}
 };

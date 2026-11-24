@@ -22,20 +22,17 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" :options="options" align-x="end" />
+				<k-dropdown ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="value.length">
 			<k-layouts
 				ref="layouts"
 				v-bind="$props"
 				@input="$emit('input', $event)"
 			/>
-		</k-input-validator>
+		</k-validator>
 
 		<footer v-if="!disabled && hasFieldsets">
 			<k-button
@@ -54,9 +51,14 @@ import { props as FieldProps } from "../Field.vue";
 import { props as LayoutsProps } from "@/components/Forms/Layouts/Layouts.vue";
 import { autofocus } from "@/mixins/props.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldProps, LayoutsProps, autofocus],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		hasFieldsets() {
 			return this.$helper.object.length(this.fieldsets) > 0;

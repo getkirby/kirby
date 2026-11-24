@@ -4,27 +4,19 @@
 		:caption-marks="captionMarks"
 		:disabled="disabled"
 		:empty-text="$t('field.blocks.video.placeholder') + ' …'"
-		:is-empty="!video"
+		:is-empty="isEmpty"
 		empty-icon="video"
 		class="k-block-type-video-figure"
 		@open="open"
 		@update="update"
 	>
-		<k-frame ratio="16/9">
-			<template v-if="video">
-				<video
-					v-if="location == 'kirby'"
-					:src="video"
-					:poster="poster"
-					controls
-				/>
-				<iframe
-					v-else
-					:src="video"
-					referrerpolicy="strict-origin-when-cross-origin"
-				/>
-			</template>
-		</k-frame>
+		<k-video-frame
+			:controls="content.controls"
+			:file="file"
+			:poster="poster"
+			:url="url"
+			element="div"
+		/>
 	</k-block-figure>
 </template>
 
@@ -33,6 +25,9 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeVideo
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,
@@ -40,18 +35,28 @@ export default {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
 		},
-		location() {
-			return this.content.location;
+		file() {
+			if (this.isInternal) {
+				return this.content.video?.[0];
+			}
+
+			return undefined;
+		},
+		isEmpty() {
+			return this.isInternal ? !this.file : !this.url;
+		},
+		isInternal() {
+			return this.content.location === "kirby";
 		},
 		poster() {
 			return this.content.poster?.[0]?.url;
 		},
-		video() {
-			if (this.content.location === "kirby") {
-				return this.content.video?.[0]?.url;
+		url() {
+			if (!this.isInternal) {
+				return this.content.url;
 			}
 
-			return this.$helper.embed.video(this.content.url ?? "", true);
+			return undefined;
 		}
 	}
 };

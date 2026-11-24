@@ -1,9 +1,10 @@
 <template>
 	<k-range-input
 		v-bind="$props"
+		:class="['k-alpha-input', $attrs.class]"
 		:min="0"
 		:max="1"
-		class="k-alpha-input"
+		:style="$attrs.style"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -32,11 +33,17 @@ export const props = {
 
 /**
  * Input to select a color's alpha value.
- * @since 4.0.0
- * @example <k-alpha-input :value="value" @input="value = $event" />
+ *
+ * @example
+ * <k-alpha-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 

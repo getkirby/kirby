@@ -8,13 +8,10 @@ use Kirby\Toolkit\Str;
 
 /**
  * The `Helpers` class hosts a few handy helper methods
- * @since 3.7.0
  *
- * @package   Kirby Cms
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.7.0
  */
 class Helpers
 {
@@ -27,42 +24,26 @@ class Helpers
 	 * ```php
 	 * Helpers::$deprecations['<deprecation-key>'] = false;
 	 * ```
+	 *
+	 * @var array<string, bool>
 	 */
 	public static array $deprecations = [
-		// The internal `$model->contentFile*()` methods have been deprecated
-		'model-content-file' => true,
-
-		// Passing `$category = null` to `Permissions::for()` is not supported
-		'permissions-for-category-null' => true,
-
 		// Setting undefined permission categories or actions is deprecated
 		// and will be ignored in a future version. Custom permissions should
 		// be registered via the `permissions` extension instead.
-		// The warning is disabled by default for now, as it is triggered
-		// while loading roles and would thus break the Panel on every request
-		// even though the permission is still applied.
-		// TODO: switch to true in v6
-		'permissions-undefined' => false,
+		'permissions-undefined' => true,
 
 		// Passing an `info` array inside the `extends` array
 		// has been deprecated. Pass the individual entries (e.g. root, version)
 		// directly as named arguments.
-		// TODO: switch to true in v6
-		'plugin-extends-root' => false,
-
-		// The `Content\Translation` class keeps a set of methods from the old
-		// `ContentTranslation` class for compatibility that should no longer be used.
-		// Some of them can be replaced by using `Version` class methods instead
-		// (see method comments). `Content\Translation::contentFile` should be avoided
-		//  entirely and has no recommended replacement.
-		'translation-methods' => true
+		'plugin-extends-root' => true
 	];
 
 	/**
 	 * Triggers a deprecation warning if debug mode is active
 	 * and warning has not been suppressed via `Helpers::$deprecations`
 	 *
-	 * @param string|null $key If given, the key will be checked against the static array
+	 * @param $key If given, the key will be checked against the static array
 	 * @return bool Whether the warning was triggered
 	 */
 	public static function deprecated(
@@ -114,11 +95,11 @@ class Helpers
 	 * for all PHP errors and warnings
 	 * @since 3.7.4
 	 *
-	 * @param \Closure $action Any action that may cause an error or warning
-	 * @param \Closure $condition Closure that returns bool to determine if to
-	 *                            suppress an error, receives arguments for
-	 *                            `set_error_handler()`
-	 * @param mixed $fallback Value to return when error is suppressed
+	 * @param $action Any action that may cause an error or warning
+	 * @param $condition Closure that returns bool to determine if to
+	 *                  suppress an error, receives arguments for
+	 *                  `set_error_handler()`
+	 * @param $fallback Value to return when error is suppressed
 	 * @return mixed Return value of the `$action` closure,
 	 *               possibly overridden by `$fallback`
 	 */
@@ -191,7 +172,7 @@ class Helpers
 	 * Checks if a helper was overridden by the user
 	 * by setting the `KIRBY_HELPER_*` constant
 	 *
-	 * @param string $name Name of the helper
+	 * @param $name Name of the helper
 	 */
 	public static function hasOverride(string $name): bool
 	{
@@ -203,19 +184,19 @@ class Helpers
 	 * Determines the size/length of numbers,
 	 * strings, arrays and countable objects
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	public static function size(mixed $value): int
 	{
-		if (is_numeric($value)) {
+		if (is_numeric($value) === true) {
 			return (int)$value;
 		}
 
-		if (is_string($value)) {
+		if (is_string($value) === true) {
 			return Str::length(trim($value));
 		}
 
-		if (is_countable($value)) {
+		if (is_countable($value) === true) {
 			return count($value);
 		}
 

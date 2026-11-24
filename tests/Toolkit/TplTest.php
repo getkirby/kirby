@@ -6,18 +6,18 @@ use Error;
 
 class TplTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-
-	public function testLoadWithGoodTemplate(): void
-	{
-		$tpl = Tpl::load(static::FIXTURES . '/tpl/good.php', ['name' => 'Peter']);
-		$this->assertSame('Hello Peter', $tpl);
-	}
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testLoadWithBadTemplate(): void
 	{
 		$this->expectException(Error::class);
 		Tpl::load(static::FIXTURES . '/tpl/bad.php');
+	}
+
+	public function testLoadWithGoodTemplate(): void
+	{
+		$tpl = Tpl::load(static::FIXTURES . '/tpl/good.php', ['name' => 'Peter']);
+		$this->assertSame('Hello Peter', $tpl);
 	}
 
 	public function testLoadWithNonExistingFile(): void

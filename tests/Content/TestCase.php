@@ -8,20 +8,33 @@ use Kirby\Data\Data;
 use Kirby\FileSystem\Dir;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
-	public const TMP = KIRBY_TMP_DIR;
+	public const string TMP = KIRBY_TMP_DIR;
 
 	protected ModelWithContent $model;
 
-	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null): void
+	protected function setUp(): void
 	{
-		$this->assertFileExists($this->contentFile($language, $versionId));
+		$this->setUpTmp();
+	}
+
+	protected function tearDown(): void
+	{
+		DiscardingStorage::$discard = false;
+
+		App::destroy();
+		$this->tearDownTmp();
 	}
 
 	public function assertContentFileDoesNotExist(string|null $language = null, VersionId|null $versionId = null): void
 	{
 		$this->assertFileDoesNotExist($this->contentFile($language, $versionId));
+	}
+
+	public function assertContentFileExists(string|null $language = null, VersionId|null $versionId = null): void
+	{
+		$this->assertFileExists($this->contentFile($language, $versionId));
 	}
 
 	public function contentFile(string|null $language = null, VersionId|null $versionId = null): string
@@ -72,11 +85,6 @@ class TestCase extends BaseTestCase
 			'content' => $content,
 			'file'    => $file
 		];
-	}
-
-	protected function setUp(): void
-	{
-		$this->setUpTmp();
 	}
 
 	public function setUpMultiLanguage(
@@ -133,13 +141,5 @@ class TestCase extends BaseTestCase
 		$this->model = $this->app->page('a-page');
 
 		Dir::make($this->model->root());
-	}
-
-	protected function tearDown(): void
-	{
-		DiscardingStorage::$discard = false;
-
-		App::destroy();
-		$this->tearDownTmp();
 	}
 }

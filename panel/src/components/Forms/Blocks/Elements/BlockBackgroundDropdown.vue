@@ -8,7 +8,7 @@
 		>
 			<k-color-frame :color="valueAdapted" ratio="1/1" />
 		</k-button>
-		<k-dropdown-content
+		<k-dropdown
 			ref="dropdown"
 			align-x="end"
 			:options="[
@@ -31,10 +31,15 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	props: {
 		value: String
 	},
+	emits: ["input"],
 	computed: {
 		valueAdapted() {
 			if (this.value === "transparent") {

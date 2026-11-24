@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Exception;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
@@ -13,22 +14,21 @@ use Throwable;
 
 /**
  * A collection of blocks
- * @since 3.5.0
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  *
- * @extends \Kirby\Cms\Items<\Kirby\Cms\Block>
+ * @extends Items<Block>
  */
 class Blocks extends Items
 {
-	public const ITEM_CLASS = Block::class;
+	public const string ITEM_CLASS = Block::class;
 
 	/**
 	 * All registered blocks methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
@@ -49,25 +49,6 @@ class Blocks extends Items
 	public function excerpt(mixed ...$args): string
 	{
 		return Str::excerpt($this->toHtml(), ...$args);
-	}
-
-	/**
-	 * Wrapper around the factory to
-	 * catch blocks from layouts
-	 */
-	public static function factory(
-		array|null $items = null,
-		array $params = []
-	): static {
-		$items = static::extractFromLayouts($items ?? []);
-
-		// @deprecated old editor format
-		// @todo block.converter remove eventually
-		// @codeCoverageIgnoreStart
-		$items = BlockConverter::editorBlocks($items);
-		// @codeCoverageIgnoreEnd
-
-		return parent::factory($items, $params);
 	}
 
 	/**
@@ -103,6 +84,25 @@ class Blocks extends Items
 	}
 
 	/**
+	 * Wrapper around the factory to
+	 * catch blocks from layouts
+	 */
+	public static function factory(
+		array|null $items = null,
+		array $params = []
+	): static {
+		$items = static::extractFromLayouts($items ?? []);
+
+		// @deprecated old editor format
+		// @todo block.converter remove eventually
+		// @codeCoverageIgnoreStart
+		$items = BlockConverter::editorBlocks($items);
+		// @codeCoverageIgnoreEnd
+
+		return parent::factory($items, $params);
+	}
+
+	/**
 	 * Checks if a given block type exists in the collection
 	 * @since 3.6.0
 	 */
@@ -121,13 +121,13 @@ class Blocks extends Items
 			is_array($input) === false
 		) {
 			try {
-				$input = Json::decode((string)$input);
+				$input = Json::decode($input);
 			} catch (Throwable) {
 				// @deprecated try to import the old YAML format
 				// @todo block.converter remove eventually
 				// @codeCoverageIgnoreStart
 				try {
-					$yaml  = Yaml::decode((string)$input);
+					$yaml  = Yaml::decode($input);
 					$first = A::first($yaml);
 
 					// check for valid yaml
@@ -145,7 +145,7 @@ class Blocks extends Items
 				} catch (Throwable) {
 					// the next 2 lines remain after removing block.converter
 					// @codeCoverageIgnoreEnd
-					$parser = new Parsley((string)$input, new BlockSchema());
+					$parser = new Parsley($input, new BlockSchema());
 					$input  = $parser->blocks();
 					// @codeCoverageIgnoreStart
 				}

@@ -1,0 +1,54 @@
+<?php
+
+namespace Kirby\Form\Mixin;
+
+use Kirby\Form\Form;
+use Kirby\Reflection\Attributes\Prop;
+
+/**
+ * Provides nested fields and form handling for complex field types
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+trait Fields
+{
+	/**
+	 * Fields setup for the form. Works just like fields in regular forms.
+	 */
+	#[Prop]
+	protected array $fields = [];
+
+	/**
+	 * Cache for the form instance
+	 */
+	protected Form|null $form = null;
+
+	/**
+	 * Returns the props for all fields in the form
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public function fields(): array
+	{
+		if ($this->fields === []) {
+			return [];
+		}
+
+		return $this->form()->fields()->toProps(defaults: true);
+	}
+
+	/**
+	 * Creates and caches the form instance with all fields
+	 */
+	public function form(): Form
+	{
+		$this->form ??= new Form(
+			fields: $this->fields,
+			model: $this->model(),
+			language: 'current'
+		);
+
+		return $this->form->reset();
+	}
+}

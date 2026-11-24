@@ -9,9 +9,6 @@ use Kirby\Filesystem\F;
  * for partial content delivery, primarily
  * used for video streaming in browsers
  *
- * @package   Kirby Http
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  * @since     5.3.0
@@ -53,17 +50,15 @@ class Range
 			return false;
 		}
 
-		[$startStr, $endStr] = $parts;
-		$startStr = trim($startStr);
-		$endStr   = trim($endStr);
+		[$from, $to] = array_map(trim(...), $parts);
 
 		// handle "bytes=-500" (last 500 bytes)
-		if ($startStr === '') {
-			if (is_numeric($endStr) === false) {
+		if ($from === '') {
+			if (is_numeric($to) === false) {
 				return false;
 			}
 
-			$suffix = (int)$endStr;
+			$suffix = (int)$to;
 
 			if ($suffix <= 0) {
 				return false;
@@ -80,19 +75,19 @@ class Range
 		}
 
 		// validate that start is numeric
-		if (is_numeric($startStr) === false) {
+		if (is_numeric($from) === false) {
 			return false;
 		}
 
-		$start = (int)$startStr;
+		$start = (int)$from;
 
 		// handle "bytes=1024-" (from byte 1024 to end)
-		if ($endStr === '') {
+		if ($to === '') {
 			$end = $size - 1;
-		} elseif (is_numeric($endStr) === false) {
+		} elseif (is_numeric($to) === false) {
 			return false;
 		} else {
-			$end = (int)$endStr;
+			$end = (int)$to;
 
 			// clamp end to file size if a client overshoots
 			if ($end >= $size) {

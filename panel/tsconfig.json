@@ -12,13 +12,13 @@
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		"jsx": "preserve",
-		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"lib": ["ESNext", "DOM"],
 		"types": ["vite/client", "vitest"],
-		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["./src/*"],
+			"@test/*": ["./tests/*"]
 		}
 	},
-	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "tests/**/*.ts"],
 	"exclude": ["node_modules", "dist"]
 }

@@ -3,14 +3,16 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Field\TestCase;
+use Kirby\Http\Remote;
+use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(OptionsApi::class)]
 class OptionsApiTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testConstruct(): void
 	{
@@ -56,6 +58,27 @@ class OptionsApiTest extends TestCase
 		$this->assertNull($options->value);
 	}
 
+	public function testLoadBlocksInjectedHost(): void
+	{
+		$defaults = Remote::$defaults;
+		Remote::$defaults = [...$defaults, 'test' => true];
+
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => ['host' => '127.0.0.1']
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		try {
+			$options = new OptionsApi(url: 'http://{{ page.host }}/api.json');
+			$options->load($page);
+		} finally {
+			Remote::$defaults = $defaults;
+		}
+	}
+
 	public function testLoadNoJson(): void
 	{
 		$model   = new Page(['slug' => 'test']);
@@ -63,6 +86,23 @@ class OptionsApiTest extends TestCase
 		$this->expectException(NotFoundException::class);
 		$this->expectExceptionMessage('Options could not be loaded from API: https://example.com');
 		$options->resolve($model);
+	}
+
+	public function testLoadTrustsBlueprintHost(): void
+	{
+		// a local or intranet host in the blueprint must not be
+		// rejected, only a host injected by a query template is
+		$defaults = Remote::$defaults;
+		Remote::$defaults = [...$defaults, 'test' => true];
+
+		$page    = new Page(['slug' => 'test']);
+		$options = new OptionsApi(url: 'http://127.0.0.1:8080/api.json');
+
+		try {
+			$this->assertNull($options->load($page));
+		} finally {
+			Remote::$defaults = $defaults;
+		}
 	}
 
 	public function testPolyfill(): void
@@ -83,22 +123,26 @@ class OptionsApiTest extends TestCase
 		$options = new OptionsApi(static::FIXTURES . '/data.json');
 		$result  = $options->render($model);
 
-		$this->assertSame('A', $result[0]['text']);
+		$this->assertSame('A', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
+		$this->assertSame('B', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 	}
 
-	public function testResolveSimple(): void
+	public function testResolveApplyFieldMethods(): void
 	{
 		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
+		$options = new OptionsApi(
+			url: static::FIXTURES . '/data.json',
+			text: '{{ item.name }}',
+			value: '{{ item.name.slug }}'
+		);
 		$result  = $options->render($model);
 
-		$this->assertSame('A', $result[0]['text']);
-		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
-		$this->assertSame('b', $result[1]['value']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
+		$this->assertSame('company-a', $result[0]['value']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
+		$this->assertSame('company-b', $result[1]['value']);
 	}
 
 	public function testResolveCustomKeys(): void
@@ -111,25 +155,10 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('info@company-a.com', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('info@company-b.com', $result[1]['value']);
-	}
-
-	public function testResolveQuery(): void
-	{
-		$model   = new Page(['slug' => 'test']);
-		$options = new OptionsApi(
-			url: static::FIXTURES . '/data-nested.json',
-			query: 'Directory.Companies'
-		);
-		$result  = $options->render($model);
-
-		$this->assertSame('A', $result[0]['text']);
-		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('B', $result[1]['text']);
-		$this->assertSame('b', $result[1]['value']);
 	}
 
 	public function testResolveCustomKeysAndQuery(): void
@@ -143,9 +172,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('info@company-a.com', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
+		$this->assertSame('Company B', (string)$result[1]['text']);
 		$this->assertSame('info@company-b.com', $result[1]['value']);
 	}
 
@@ -161,18 +190,18 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// with simple array
 		$options = new OptionsApi(static::FIXTURES . '/data-simple-html.json');
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('a', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('b', $result[1]['value']);
 
 		// with query
@@ -184,9 +213,9 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', $result[0]['text']);
+		$this->assertSame('We are &lt;b&gt;great&lt;/b&gt;', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', $result[1]['text']);
+		$this->assertSame('We are &lt;b&gt;better&lt;/b&gt;', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// text unescaped using {< >}
@@ -196,9 +225,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.slogan }}'
 		);
 		$result = $options->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// text unescaped using {< >} (simple array)
@@ -208,9 +237,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.value }}'
 		);
 		$result = $options->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 
 		// test unescaped with disabled safe mode
@@ -220,9 +249,9 @@ class OptionsApiTest extends TestCase
 			value: '{{ item.slogan }}'
 		);
 		$result = $options->resolve($model, false)->render($model);
-		$this->assertSame('We are <b>great</b>', $result[0]['text']);
+		$this->assertSame('We are <b>great</b>', (string)$result[0]['text']);
 		$this->assertSame('We are <b>great</b>', $result[0]['value']);
-		$this->assertSame('We are <b>better</b>', $result[1]['text']);
+		$this->assertSame('We are <b>better</b>', (string)$result[1]['text']);
 		$this->assertSame('We are <b>better</b>', $result[1]['value']);
 	}
 
@@ -240,23 +269,34 @@ class OptionsApiTest extends TestCase
 		);
 		$result = $options->render($model);
 
-		$this->assertSame('{{ page.slug }}', $result[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
 	}
 
-	public function testResolveApplyFieldMethods(): void
+	public function testResolveQuery(): void
 	{
 		$model   = new Page(['slug' => 'test']);
 		$options = new OptionsApi(
-			url: static::FIXTURES . '/data.json',
-			text: '{{ item.name }}',
-			value: '{{ item.name.slug }}'
+			url: static::FIXTURES . '/data-nested.json',
+			query: 'Directory.Companies'
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
-		$this->assertSame('company-a', $result[0]['value']);
-		$this->assertSame('Company B', $result[1]['text']);
-		$this->assertSame('company-b', $result[1]['value']);
+		$this->assertSame('A', (string)$result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', (string)$result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
+	}
+
+	public function testResolveSimple(): void
+	{
+		$model   = new Page(['slug' => 'test']);
+		$options = new OptionsApi(static::FIXTURES . '/data-simple.json');
+		$result  = $options->render($model);
+
+		$this->assertSame('A', (string)$result[0]['text']);
+		$this->assertSame('a', $result[0]['value']);
+		$this->assertSame('B', (string)$result[1]['text']);
+		$this->assertSame('b', $result[1]['value']);
 	}
 
 	public function testResolveSimpleArrays(): void
@@ -270,7 +310,7 @@ class OptionsApiTest extends TestCase
 		);
 		$result  = $options->render($model);
 
-		$this->assertSame('Company A', $result[0]['text']);
+		$this->assertSame('Company A', (string)$result[0]['text']);
 		$this->assertSame('company-a', $result[0]['value']);
 	}
 }

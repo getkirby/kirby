@@ -1,13 +1,16 @@
 import { reactive } from "vue";
 import Feature, { defaults, type FeatureState } from "./feature";
 import { type Listener } from "./listeners";
+import type Panel from "./panel";
 
-type DropdownState = FeatureState & {};
+export type DropdownState = FeatureState & {};
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
-export default function Dropdown(panel: TODO) {
+export default function Dropdown(panel: Panel) {
 	const parent = Feature(panel, "dropdown", defaults() as DropdownState);
 
 	return reactive({
@@ -33,6 +36,7 @@ export default function Dropdown(panel: TODO) {
 		/**
 		 * @deprecated 4.0.0
 		 */
+		/* v8 ignore next -- deprecated, excluded from coverage */
 		openAsync(
 			dropdown: string,
 			options: Partial<Prettify<DropdownState>> | Listener = {}

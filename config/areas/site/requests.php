@@ -1,25 +1,30 @@
 <?php
 
-use Kirby\Cms\App;
-use Kirby\Panel\Controller\PageTree;
+use Kirby\Panel\Controller\Request\FileItemsRequestController;
+use Kirby\Panel\Controller\Request\PageItemsRequestController;
+use Kirby\Panel\Controller\Request\PageTreeParentsRequestController;
+use Kirby\Panel\Controller\Request\PageTreeRequestController;
+use Kirby\Panel\Controller\Request\UserItemsRequestController;
 
 return [
+	'items.files' => [
+		'pattern' => 'items/files',
+		'action'  => FileItemsRequestController::class
+	],
+	'items.pages' => [
+		'pattern' => 'items/pages',
+		'action'  => PageItemsRequestController::class
+	],
+	'items.users' => [
+		'pattern' => 'items/users',
+		'action'  => UserItemsRequestController::class
+	],
 	'tree' => [
 		'pattern' => 'site/tree',
-		'action'  => function () {
-			return (new PageTree())->children(
-				parent: App::instance()->request()->get('parent'),
-				moving: App::instance()->request()->get('move')
-			);
-		}
+		'action'  => PageTreeRequestController::class
 	],
 	'tree.parents' => [
 		'pattern' => 'site/tree/parents',
-		'action'  => function () {
-			return (new PageTree())->parents(
-				page: App::instance()->request()->get('page'),
-				includeSite: App::instance()->request()->get('root') === 'true',
-			);
-		}
+		'action'  => PageTreeParentsRequestController::class
 	]
 ];

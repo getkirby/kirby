@@ -14,12 +14,25 @@ class FrontmatterTest extends TestCase
 		$this->assertSame([], Frontmatter::decode(''));
 	}
 
-	public function testDecodeWithArray(): void
+	public function testDecodeEmptyBody(): void
 	{
-		$this->assertSame(
-			['this is' => 'an array'],
-			Frontmatter::decode(['this is' => 'an array'])
-		);
+		// empty body should not produce a text key
+		$string = "---\ntitle: My Title\n---\n";
+
+		$this->assertSame([
+			'title' => 'My Title'
+		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeFallback(): void
+	{
+		// string without --- delimiters falls back to plain YAML
+		$string = "title: My Title\nuuid: abc123\n";
+
+		$this->assertSame([
+			'title' => 'My Title',
+			'uuid'  => 'abc123'
+		], Frontmatter::decode($string));
 	}
 
 	public function testDecodeStandardFrontmatter(): void
@@ -30,6 +43,14 @@ class FrontmatterTest extends TestCase
 			'title' => 'My Title',
 			'uuid'  => 'abc123'
 		], Frontmatter::decode($string));
+	}
+
+	public function testDecodeWithArray(): void
+	{
+		$this->assertSame(
+			['this is' => 'an array'],
+			Frontmatter::decode(['this is' => 'an array'])
+		);
 	}
 
 	public function testDecodeWithBody(): void
@@ -50,27 +71,6 @@ class FrontmatterTest extends TestCase
 		$this->assertSame([
 			'title' => 'My Title',
 			'text'  => 'This is the body.'
-		], Frontmatter::decode($string));
-	}
-
-	public function testDecodeEmptyBody(): void
-	{
-		// empty body should not produce a text key
-		$string = "---\ntitle: My Title\n---\n";
-
-		$this->assertSame([
-			'title' => 'My Title'
-		], Frontmatter::decode($string));
-	}
-
-	public function testDecodeFallback(): void
-	{
-		// string without --- delimiters falls back to plain YAML
-		$string = "title: My Title\nuuid: abc123\n";
-
-		$this->assertSame([
-			'title' => 'My Title',
-			'uuid'  => 'abc123'
 		], Frontmatter::decode($string));
 	}
 
@@ -102,7 +102,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\nuuid: abc123\n---\n",
+			"---\ntitle: 'My Title'\nuuid: abc123\n---\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -115,7 +115,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\nThis is the body.\n",
+			"---\ntitle: 'My Title'\n---\nThis is the body.\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -128,7 +128,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\n",
+			"---\ntitle: 'My Title'\n---\n",
 			Frontmatter::encode($data)
 		);
 	}
@@ -141,7 +141,7 @@ class FrontmatterTest extends TestCase
 		];
 
 		$this->assertSame(
-			"---\ntitle: My Title\n---\n",
+			"---\ntitle: 'My Title'\n---\n",
 			Frontmatter::encode($data)
 		);
 	}

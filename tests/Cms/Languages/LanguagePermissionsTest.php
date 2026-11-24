@@ -10,6 +10,34 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(ModelPermissions::class)]
 class LanguagePermissionsTest extends TestCase
 {
+	public function testCanDeleteWhenNotDeletable(): void
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true
+				],
+				[
+					'code' => 'de'
+				]
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'roles' => [
+				['name' => 'admin']
+			]
+		]);
+
+		$app->impersonate('kirby');
+
+		$language = $app->language('en');
+		$perms    = $language->permissions();
+
+		$this->assertFalse($perms->can('delete'));
+	}
+
 	public static function actionProvider(): array
 	{
 		return [
@@ -38,25 +66,6 @@ class LanguagePermissionsTest extends TestCase
 		$perms    = $language->permissions();
 
 		$this->assertTrue($perms->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithNobody($action): void
-	{
-		new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'roles' => [
-				['name' => 'admin'],
-				['name' => 'editor']
-			]
-		]);
-
-		$language = new Language(['code' => 'en']);
-		$perms    = $language->permissions();
-
-		$this->assertFalse($perms->can($action));
 	}
 
 	#[DataProvider('actionProvider')]
@@ -104,31 +113,22 @@ class LanguagePermissionsTest extends TestCase
 		$this->assertFalse($perms->can($action));
 	}
 
-	public function testCanDeleteWhenNotDeletable(): void
+	#[DataProvider('actionProvider')]
+	public function testWithNobody($action): void
 	{
-		$app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true
-				],
-				[
-					'code' => 'de'
-				]
-			],
+		new App([
 			'roots' => [
 				'index' => '/dev/null'
 			],
 			'roles' => [
-				['name' => 'admin']
+				['name' => 'admin'],
+				['name' => 'editor']
 			]
 		]);
 
-		$app->impersonate('kirby');
-
-		$language = $app->language('en');
+		$language = new Language(['code' => 'en']);
 		$perms    = $language->permissions();
 
-		$this->assertFalse($perms->can('delete'));
+		$this->assertFalse($perms->can($action));
 	}
 }

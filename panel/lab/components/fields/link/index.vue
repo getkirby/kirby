@@ -45,6 +45,14 @@
 					@input="value = $event"
 				/>
 			</k-lab-example>
+
+			<k-lab-example label="Overflow">
+				<k-link-field
+					label="link"
+					:value="overflow"
+					@input="overflow = $event"
+				/>
+			</k-lab-example>
 		</k-lab-examples>
 	</k-lab-form>
 </template>
@@ -53,6 +61,7 @@
 export default {
 	data() {
 		return {
+			overflow: "file://longFilenameLnk1",
 			value: ""
 		};
 	}

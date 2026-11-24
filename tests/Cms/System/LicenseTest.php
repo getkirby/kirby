@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -12,8 +13,8 @@ use ReflectionClass;
 #[CoversClass(License::class)]
 class LicenseTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/LicenseTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.License';
+	public const string FIXTURES = __DIR__ . '/fixtures/LicenseTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.License';
 
 	protected function setUp(): void
 	{
@@ -26,23 +27,6 @@ class LicenseTest extends TestCase
 		return $type->prefix() . '1234' . Str::random(28);
 	}
 
-	public static function providerForLicenseUrls(): array
-	{
-		return [
-			['example.com', 'example.com'],
-			['www.example.com', 'example.com'],
-			['dev.example.com', 'example.com'],
-			['test.example.com', 'example.com'],
-			['staging.example.com', 'example.com'],
-			['sub.example.com', 'sub.example.com'],
-			['www.example.com/test', 'www.example.com/test'],
-			['dev.example.com/test', 'dev.example.com/test'],
-			['test.example.com/test', 'test.example.com/test'],
-			['staging.example.com/test', 'staging.example.com/test'],
-			['sub.example.com/test', 'sub.example.com/test'],
-		];
-	}
-
 	public function testActivation(): void
 	{
 		$license = new License(
@@ -52,6 +36,20 @@ class LicenseTest extends TestCase
 		$this->assertSame(strtotime($date), $license->activation());
 		$this->assertSame($date, $license->activation('Y-m-d'));
 		$this->assertSame('1/12/2023 00:00', $license->activation('d/M/yyyy HH:mm', 'intl'));
+
+		// no activation set
+		$license = new License();
+
+		$this->assertNull($license->activation());
+		$this->assertNull($license->activation('Y-m-d'));
+
+		// unparseable activation string
+		$license = new License(
+			activation: 'not a real date'
+		);
+
+		$this->assertNull($license->activation());
+		$this->assertNull($license->activation('Y-m-d'));
 	}
 
 	public function testCode(): void
@@ -124,6 +122,20 @@ class LicenseTest extends TestCase
 		$this->assertSame(strtotime($date), $license->date());
 		$this->assertSame($date, $license->date('Y-m-d'));
 		$this->assertSame('1/12/2023 00:00', $license->date('d/M/yyyy HH:mm', 'intl'));
+
+		// no date set
+		$license = new License();
+
+		$this->assertNull($license->date());
+		$this->assertNull($license->date('Y-m-d'));
+
+		// unparseable date string
+		$license = new License(
+			date: 'not a real date'
+		);
+
+		$this->assertNull($license->date());
+		$this->assertNull($license->date('Y-m-d'));
 	}
 
 	public function testDelete(): void
@@ -411,6 +423,23 @@ class LicenseTest extends TestCase
 		$this->assertSame('mail@getkirby.com', $license->email());
 	}
 
+	public static function providerForLicenseUrls(): array
+	{
+		return [
+			['example.com', 'example.com'],
+			['www.example.com', 'example.com'],
+			['dev.example.com', 'example.com'],
+			['test.example.com', 'example.com'],
+			['staging.example.com', 'example.com'],
+			['sub.example.com', 'sub.example.com'],
+			['www.example.com/test', 'www.example.com/test'],
+			['dev.example.com/test', 'dev.example.com/test'],
+			['test.example.com/test', 'test.example.com/test'],
+			['staging.example.com/test', 'staging.example.com/test'],
+			['sub.example.com/test', 'sub.example.com/test'],
+		];
+	}
+
 	#[DataProvider('providerForLicenseUrls')]
 	public function testNormalizeDomain(string $domain, string $expected): void
 	{
@@ -675,6 +704,14 @@ class LicenseTest extends TestCase
 
 		// not activated
 		$license = new License();
+		$this->assertNull($license->renewal());
+		$this->assertNull($license->renewal('Y-m-d'));
+
+		// unparseable activation string
+		$license = new License(
+			activation: 'not a real date'
+		);
+		$this->assertNull($license->renewal());
 		$this->assertNull($license->renewal('Y-m-d'));
 	}
 
@@ -729,7 +766,6 @@ class LicenseTest extends TestCase
 			'order'      => '123456',
 			'expires'    => '2025-01-01 00:00:00',
 		], $license->signatureData());
-
 
 		// without expiry
 		$license = new License(

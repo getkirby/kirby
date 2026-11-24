@@ -39,12 +39,12 @@
 					icon="dots"
 					@click="$refs.dropdown.toggle()"
 				/>
-				<k-dropdown-content ref="dropdown" align-x="end">
+				<k-dropdown ref="dropdown" align-x="end">
 					<k-dropdown-item icon="edit">Edit</k-dropdown-item>
 					<k-dropdown-item icon="copy">Duplicate</k-dropdown-item>
 					<hr />
 					<k-dropdown-item icon="trash">Delete</k-dropdown-item>
-				</k-dropdown-content>
+				</k-dropdown>
 			</k-button-group>
 		</k-lab-example>
 		<k-lab-example :flex="true" label="layout: collapsed and themed">
@@ -69,12 +69,12 @@
 						icon="dots"
 						@click="$refs.dropdown.toggle()"
 					/>
-					<k-dropdown-content ref="dropdown" align-x="end">
+					<k-dropdown ref="dropdown" align-x="end">
 						<k-dropdown-item icon="edit">Edit</k-dropdown-item>
 						<k-dropdown-item icon="copy">Duplicate</k-dropdown-item>
 						<hr />
 						<k-dropdown-item icon="trash">Delete</k-dropdown-item>
-					</k-dropdown-content>
+					</k-dropdown>
 				</k-button-group>
 			</k-bar>
 		</k-lab-example>

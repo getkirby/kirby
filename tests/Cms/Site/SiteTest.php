@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class SiteTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Site';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Site';
 
 	public function testApiUrl(): void
 	{
@@ -108,6 +108,24 @@ class SiteTest extends ModelTestCase
 		$this->assertTrue($site->isAccessible());
 	}
 
+	public function testPanel(): void
+	{
+		$site = new Site();
+		$this->assertInstanceOf(Panel::class, $site->panel());
+	}
+
+	public function testQuery(): void
+	{
+		$site = new Site([
+			'content' => [
+				'title' => 'Mægazine',
+			]
+		]);
+
+		$this->assertSame('Mægazine', $site->query('site.title')->value());
+		$this->assertSame('Mægazine', $site->query('model.title')->value());
+	}
+
 	public function testToArray(): void
 	{
 		$site = new Site();
@@ -147,23 +165,5 @@ class SiteTest extends ModelTestCase
 		$site   = new Site(['url' => 'https://getkirby.com']);
 		$string = $site->toString('{{ site.url }}');
 		$this->assertSame('https://getkirby.com', $string);
-	}
-
-	public function testPanel(): void
-	{
-		$site = new Site();
-		$this->assertInstanceOf(Panel::class, $site->panel());
-	}
-
-	public function testQuery(): void
-	{
-		$site = new Site([
-			'content' => [
-				'title' => 'Mægazine',
-			]
-		]);
-
-		$this->assertSame('Mægazine', $site->query('site.title')->value());
-		$this->assertSame('Mægazine', $site->query('model.title')->value());
 	}
 }

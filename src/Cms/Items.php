@@ -8,35 +8,43 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * A collection of items
- * @since 3.5.0
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  *
- * @template TValue of \Kirby\Cms\Item
- * @extends \Kirby\Cms\Collection<TValue>
+ * @template TValue of Item
+ * @extends Collection<TValue>
  */
 class Items extends Collection
 {
-	public const ITEM_CLASS = Item::class;
+	public const string ITEM_CLASS = Item::class;
+
+	/**
+	 * All registered items methods
+	 *
+	 * @var array<string, Closure>
+	 */
+	public static array $methods = [];
 
 	protected Field|null $field;
 
 	/**
-	 * All registered items methods
+	 * @var array<string, mixed>
 	 */
-	public static array $methods = [];
-
 	protected array $options;
 
 	/**
-	 * @var \Kirby\Cms\ModelWithContent
+	 * @var ModelWithContent
 	 */
 	protected object|null $parent = null;
 
+	/**
+	 * Creates a new collection of items
+	 *
+	 * @param iterable<TValue> $objects
+	 * @param array<string, mixed> $options Options incl. the `parent` model and `field`
+	 */
 	public function __construct($objects = [], array $options = [])
 	{
 		$this->options = $options;
@@ -47,22 +55,20 @@ class Items extends Collection
 	}
 
 	/**
-	 * Creates a new item collection from a
+	 * Creates a new item collection from
 	 * an array of item props
+	 *
+	 * @param array<array<string, mixed>>|null $items
+	 * @param array<string, mixed> $params Collection options, see `::__construct()`
 	 */
 	public static function factory(
 		array|null $items = null,
 		array $params = []
 	): static {
-		if (empty($items) === true || is_array($items) === false) {
-			return new static();
+		if ($items === null || $items === []) {
+			return new static(options: $params);
 		}
 
-		if (is_array($params) === false) {
-			throw new InvalidArgumentException(message: 'Invalid item options');
-		}
-
-		// create a new collection of blocks
 		$collection = new static([], $params);
 
 		foreach ($items as $item) {

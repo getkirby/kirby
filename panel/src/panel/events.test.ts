@@ -1,10 +1,33 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, onTestFinished, vi } from "vitest";
 import Events from "./events";
-import Panel from "./panel.js";
+import Panel from "./panel";
 
 describe("panel.events", () => {
+	describe("clipboard.write", () => {
+		it("should copy the value and confirm it", async () => {
+			const panel = Panel.create(app);
+			const events = Events(panel);
+			const execCommand = document.execCommand;
+			let copied: string | undefined;
+
+			document.execCommand = vi.fn(() => {
+				copied = document.querySelector("textarea")?.value;
+				return true;
+			});
+
+			onTestFinished(() => {
+				document.execCommand = execCommand;
+			});
+
+			events.emit("clipboard.write", "https://getkirby.com");
+
+			expect(copied).toStrictEqual("https://getkirby.com");
+			expect(panel.notification.message).toStrictEqual("copy.success!");
+		});
+	});
+
 	describe("drag & drop", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 		const event = (e: object = {}): DragEvent => e as unknown as DragEvent;
 
@@ -39,8 +62,80 @@ describe("panel.events", () => {
 		});
 	});
 
+	describe("global events", () => {
+		/**
+		 * Subscribes a new event bus to the global
+		 * events and spies on the given event
+		 */
+		function subscribe(type: string) {
+			const events = Events(Panel.create(app));
+			const handler = vi.fn();
+
+			events.subscribe();
+			events.on(type, handler);
+			onTestFinished(() => events.unsubscribe());
+
+			return { events, handler };
+		}
+
+		it.each([
+			["blur", () => new FocusEvent("blur")],
+			["click", () => new MouseEvent("click", { bubbles: true })],
+			["copy", () => new ClipboardEvent("copy", { bubbles: true })],
+			["focus", () => new FocusEvent("focus")],
+			["paste", () => new ClipboardEvent("paste", { bubbles: true })]
+		])("should forward %s events of any element", (type, create) => {
+			const { handler } = subscribe(type);
+			const input = document.createElement("input");
+			const event = create();
+
+			document.body.append(input);
+			input.dispatchEvent(event);
+
+			expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+		});
+
+		it.each([
+			["beforeunload", () => new Event("beforeunload", { cancelable: true })],
+			["offline", () => new Event("offline")],
+			["online", () => new Event("online")],
+			["popstate", () => new PopStateEvent("popstate")]
+		])("should forward %s events of the window", (type, create) => {
+			const { handler } = subscribe(type);
+			const event = create();
+
+			window.dispatchEvent(event);
+
+			expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+		});
+
+		it.each(["dragover", "drop"])(
+			"should forward %s events and prevent their default",
+			(type) => {
+				const { handler } = subscribe(type);
+				const event = new DragEvent(type, { bubbles: true, cancelable: true });
+
+				document.body.dispatchEvent(event);
+
+				expect(handler).toHaveBeenCalledExactlyOnceWith(event);
+				expect(event.defaultPrevented).toStrictEqual(true);
+			}
+		);
+
+		it("should forget the entered element on drop", () => {
+			const { events } = subscribe("drop");
+			const init = { bubbles: true, cancelable: true };
+
+			document.body.dispatchEvent(new DragEvent("dragenter", init));
+			expect(events.entered).toBe(document.body);
+
+			document.body.dispatchEvent(new DragEvent("drop", init));
+			expect(events.entered).toStrictEqual(null);
+		});
+	});
+
 	describe("keychain", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 		const event = (e: object = {}): KeyboardEvent =>
 			e as unknown as KeyboardEvent;
@@ -121,7 +216,7 @@ describe("panel.events", () => {
 	});
 
 	describe("keydown", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should fire keydown event with modifiers", async () => {
@@ -138,7 +233,7 @@ describe("panel.events", () => {
 	});
 
 	describe("keyup", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should fire keyup event with modifiers", async () => {
@@ -155,7 +250,7 @@ describe("panel.events", () => {
 	});
 
 	describe("online/offline", () => {
-		const panel = Panel.create() as TODO;
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should set panel.isOffline to true on offline", () => {
@@ -171,7 +266,7 @@ describe("panel.events", () => {
 	});
 
 	describe("prevent", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should stop propagation and prevent default", () => {
@@ -189,7 +284,7 @@ describe("panel.events", () => {
 	});
 
 	describe("save", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should emit view.save on keydown.cmd.s", () => {
@@ -206,12 +301,11 @@ describe("panel.events", () => {
 	});
 
 	describe("search", () => {
-		const panel = Panel.create();
+		const panel = Panel.create(app);
 		const events = Events(panel);
 
 		it("should call panel.search on keydown.cmd.shift.f", () => {
-			let searched = false;
-			panel.search = () => (searched = true);
+			const search = vi.spyOn(panel, "search").mockResolvedValue(undefined);
 
 			events.keydown({
 				metaKey: true,
@@ -219,19 +313,74 @@ describe("panel.events", () => {
 				key: "f"
 			} as unknown as KeyboardEvent);
 
-			expect(searched).toStrictEqual(true);
+			expect(search).toHaveBeenCalled();
 		});
 
 		it("should call panel.search on keydown.cmd./", () => {
-			let searched = false;
-			panel.search = () => (searched = true);
+			const search = vi.spyOn(panel, "search").mockResolvedValue(undefined);
 
 			events.keydown({
 				metaKey: true,
 				key: "/"
 			} as unknown as KeyboardEvent);
 
-			expect(searched).toStrictEqual(true);
+			expect(search).toHaveBeenCalled();
+		});
+	});
+
+	describe("subscribe / unsubscribe", () => {
+		const panel = Panel.create(app);
+		const events = Events(panel);
+
+		it("should remove every listener it registered", () => {
+			type Call = [string, unknown, boolean];
+			const added: Call[] = [];
+			const removed: Call[] = [];
+
+			const capture = (options?: boolean | EventListenerOptions) =>
+				typeof options === "boolean" ? options : options?.capture === true;
+
+			const spies = [
+				vi
+					.spyOn(document, "addEventListener")
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
+					}),
+				vi
+					.spyOn(window, "addEventListener")
+					.mockImplementation((type, listener, options) => {
+						added.push([type, listener, capture(options)]);
+					}),
+				vi
+					.spyOn(document, "removeEventListener")
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
+					}),
+				vi
+					.spyOn(window, "removeEventListener")
+					.mockImplementation((type, listener, options) => {
+						removed.push([type, listener, capture(options)]);
+					})
+			];
+
+			events.subscribe();
+			events.unsubscribe();
+
+			// a listener is only removed with the same function
+			// reference and the same capture flag it was added with
+			const leaked = added.filter(
+				([type, listener, flag]) =>
+					removed.some(
+						([t, l, f]) => t === type && l === listener && f === flag
+					) === false
+			);
+
+			expect(added.length).toBeGreaterThan(0);
+			expect(leaked).toStrictEqual([]);
+
+			for (const spy of spies) {
+				spy.mockRestore();
+			}
 		});
 	});
 });

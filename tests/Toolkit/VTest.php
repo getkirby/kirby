@@ -2,16 +2,18 @@
 
 namespace Kirby\Toolkit;
 
+use Countable;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Content\Field;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
-class CanBeCounted implements \Countable
+class CanBeCounted implements Countable
 {
 	public function count(): int
 	{
@@ -27,38 +29,13 @@ class HasCount
 	}
 }
 
-// no #[CoversClass]: the validators are closures outside the class and would not count
+#[CoversClass(V::class)]
 class VTest extends TestCase
 {
 	protected function tearDown(): void
 	{
-		App::destroy();
-	}
-
-	public function testValidators(): void
-	{
-		$this->assertNotEmpty(V::$validators);
-		$this->assertNotEmpty(V::validators());
-	}
-
-	public function testCustomValidator(): void
-	{
-		V::$validators['me'] = function ($name): bool {
-			return V::in($name, ['I', 'me', 'myself']);
-		};
-
-		$this->assertTrue(V::me('I'));
-		$this->assertTrue(V::me('me'));
-		$this->assertTrue(V::me('myself'));
-		$this->assertFalse(V::me('you'));
-	}
-
-	public function testCallInvalidMethod(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The validator does not exist: fool');
-
-		V::fool('me');
+		parent::tearDown();
+		V::$validators = [];
 	}
 
 	public function testAccepted(): void
@@ -78,37 +55,6 @@ class VTest extends TestCase
 		$this->assertFalse(V::accepted('0'));
 		$this->assertFalse(V::accepted(null));
 		$this->assertFalse(V::accepted('off'));
-	}
-
-	public function testCallback(): void
-	{
-		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
-		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
-	}
-
-	public function testContains(): void
-	{
-		$this->assertTrue(V::contains('word', 'or'));
-		$this->assertFalse(V::contains('word', 'test'));
-	}
-
-	public function testDenied(): void
-	{
-		$this->assertTrue(V::denied(false));
-		$this->assertTrue(V::denied('false'));
-		$this->assertTrue(V::denied(0));
-		$this->assertTrue(V::denied('0'));
-		$this->assertTrue(V::denied('no'));
-		$this->assertTrue(V::denied('off'));
-
-		$this->assertFalse(V::denied('word'));
-		$this->assertFalse(V::denied(true));
-		$this->assertFalse(V::denied('true'));
-		$this->assertFalse(V::denied(5));
-		$this->assertFalse(V::denied(1));
-		$this->assertFalse(V::denied('1'));
-		$this->assertFalse(V::denied('on'));
-		$this->assertFalse(V::denied(null));
 	}
 
 	public function testAlpha(): void
@@ -137,7 +83,6 @@ class VTest extends TestCase
 		$this->assertTrue(V::alphanum('abc1234'));
 		$this->assertTrue(V::alphanum('0123456789'));
 
-
 		$this->assertFalse(V::alphanum('äöüß'));
 		$this->assertFalse(V::alphanum('abc"§$%&/()=?'));
 
@@ -156,6 +101,36 @@ class VTest extends TestCase
 		$this->assertFalse(V::between('kirby', 2, 4));
 	}
 
+	public function testCallback(): void
+	{
+		$this->assertTrue(V::callback('foo', fn ($value) => $value === 'foo'));
+		$this->assertFalse(V::callback('bar', fn ($value) => $value === 'foo'));
+	}
+
+	public function testCallCustomValidator(): void
+	{
+		V::$validators['me'] =
+			fn ($name): bool => V::in($name, ['I', 'me', 'myself']);
+
+		$this->assertTrue(V::me('I'));
+		$this->assertTrue(V::me('me'));
+		$this->assertTrue(V::me('myself'));
+		$this->assertFalse(V::me('you'));
+	}
+
+	public function testCallInvalidMethod(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The validator does not exist: fool');
+		V::fool('me');
+	}
+
+	public function testContains(): void
+	{
+		$this->assertTrue(V::contains('word', 'or'));
+		$this->assertFalse(V::contains('word', 'test'));
+	}
+
 	public function testDate(): void
 	{
 		$this->assertTrue(V::date('2017-12-24'));
@@ -165,6 +140,64 @@ class VTest extends TestCase
 		$this->assertFalse(V::date('äöüß'));
 		$this->assertFalse(V::date('2017-02-31'));
 		$this->assertFalse(V::date('January 32, 1989'));
+	}
+
+	public function testDateComparison(): void
+	{
+		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-02', '==', '01.01.2345'));
+
+		$this->assertTrue(V::date('2345-01-02', '!=', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-01', '!=', '01.01.2345'));
+
+		$this->assertTrue(V::date('2345-01-02', '>', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-01', '>', '01.01.2345'));
+		$this->assertFalse(V::date('2344-12-31', '>', '01.01.2345'));
+
+		$this->assertTrue(V::date('2345-01-01', '>=', '01.01.2345'));
+		$this->assertTrue(V::date('2345-01-02', '>=', '01.01.2345'));
+		$this->assertFalse(V::date('2344-12-31', '>=', '01.01.2345'));
+
+		$this->assertTrue(V::date('2344-12-31', '<', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-01', '<', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-02', '<', '01.01.2345'));
+
+		$this->assertTrue(V::date('2345-01-01', '<=', '01.01.2345'));
+		$this->assertTrue(V::date('2344-12-31', '<=', '01.01.2345'));
+		$this->assertFalse(V::date('2345-01-02', '<=', '01.01.2345'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+
+		V::date('2345-01-01', '<>', '2345-01-01');
+	}
+
+	public function testDateWithoutOperatorOrTest(): void
+	{
+		// no operator means a simple date validation
+		$this->assertTrue(V::date('2017-12-24', null, null));
+
+		// missing comparison value
+		$this->assertFalse(V::date('2345-01-01', '<'));
+	}
+
+	public function testDenied(): void
+	{
+		$this->assertTrue(V::denied(false));
+		$this->assertTrue(V::denied('false'));
+		$this->assertTrue(V::denied(0));
+		$this->assertTrue(V::denied('0'));
+		$this->assertTrue(V::denied('no'));
+		$this->assertTrue(V::denied('off'));
+
+		$this->assertFalse(V::denied('word'));
+		$this->assertFalse(V::denied(true));
+		$this->assertFalse(V::denied('true'));
+		$this->assertFalse(V::denied(5));
+		$this->assertFalse(V::denied(1));
+		$this->assertFalse(V::denied('1'));
+		$this->assertFalse(V::denied('on'));
+		$this->assertFalse(V::denied(null));
 	}
 
 	public function testDifferent(): void
@@ -185,32 +218,6 @@ class VTest extends TestCase
 
 		// strict
 		$this->assertTrue(V::different('true', true, true));
-	}
-
-	public function testEndsWith(): void
-	{
-		$this->assertTrue(V::endsWith('test', 'st'));
-		$this->assertFalse(V::endsWith('test', 'te'));
-	}
-
-	public function testSame(): void
-	{
-		$this->assertTrue(V::same('foo', 'foo'));
-		$this->assertTrue(V::same('bar', 'bar'));
-		$this->assertTrue(V::same(1, 1));
-		$this->assertTrue(V::same('true', 'true'));
-		$this->assertTrue(V::same(null, null));
-
-		$this->assertFalse(V::same('foo', 'bar'));
-		$this->assertFalse(V::same('bar', 'foo'));
-		$this->assertFalse(V::same(1, 2));
-		$this->assertFalse(V::same(null, 'bar'));
-
-		// non-strict
-		$this->assertTrue(V::same('true', true));
-
-		// strict
-		$this->assertFalse(V::same('true', true, true));
 	}
 
 	public function testEmail(): void
@@ -250,34 +257,30 @@ class VTest extends TestCase
 		$this->assertFalse(V::empty(new Collection(['a'])));
 	}
 
-	public function testDateComparison(): void
+	public function testEndsWith(): void
 	{
-		$this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-02', '==', '01.01.2345'));
+		$this->assertTrue(V::endsWith('test', 'st'));
+		$this->assertFalse(V::endsWith('test', 'te'));
+	}
 
-		$this->assertTrue(V::date('2345-01-02', '!=', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-01', '!=', '01.01.2345'));
+	public function testErrors(): void
+	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
 
-		$this->assertTrue(V::date('2345-01-02', '>', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-01', '>', '01.01.2345'));
-		$this->assertFalse(V::date('2344-12-31', '>', '01.01.2345'));
+		$result = V::errors('test@getkirby.com', [
+			'email',
+			'maxLength' => 17,
+			'minLength' => 17
+		]);
+		$this->assertSame([], $result);
 
-		$this->assertTrue(V::date('2345-01-01', '>=', '01.01.2345'));
-		$this->assertTrue(V::date('2345-01-02', '>=', '01.01.2345'));
-		$this->assertFalse(V::date('2344-12-31', '>=', '01.01.2345'));
-
-		$this->assertTrue(V::date('2344-12-31', '<', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-01', '<', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-02', '<', '01.01.2345'));
-
-		$this->assertTrue(V::date('2345-01-01', '<=', '01.01.2345'));
-		$this->assertTrue(V::date('2344-12-31', '<=', '01.01.2345'));
-		$this->assertFalse(V::date('2345-01-02', '<=', '01.01.2345'));
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
-
-		V::date('2345-01-01', '<>', '2345-01-01');
+		$result = V::errors('a', ['same' => 'b']);
+		$this->assertSame([
+			'same' => 'Error message for same: b',
+		], $result);
 	}
 
 	public function testFilename(): void
@@ -295,431 +298,6 @@ class VTest extends TestCase
 
 		$this->assertFalse(V::in('bastian', ['lukas', 'nico', 'sonja']));
 		$this->assertFalse(V::in('bastian', []));
-	}
-
-	public function testInvalid(): void
-	{
-		$data = [
-			'username' => 123,
-			'email'    => 'homersimpson.com',
-			'zip'      => 'abc',
-			'website'  => '',
-			'created'  => '9999-99-99',
-		];
-
-		$rules = [
-			'username' => ['alpha'],
-			'email'    => ['required', 'email'],
-			'zip'      => ['integer'],
-			'website'  => ['url'],
-			'created'  => ['date']
-		];
-
-		$messages = [
-			'username' => 'The username must not contain numbers',
-			'email'    => 'Invalid email',
-			'zip'      => 'The ZIP must contain only numbers',
-			'created'  => 'Invalid date',
-		];
-
-		$result = V::invalid($data, $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$data = [
-			'username' => 'homer',
-			'email'    => 'homer@simpson.com',
-			'zip'      => 123,
-			'website'  => 'http://example.com',
-			'created'  => '2021-01-01',
-		];
-
-		$result = V::invalid($data, $rules, $messages);
-		$this->assertSame([], $result);
-	}
-
-	public function testInvalidSimple(): void
-	{
-		$data   = ['homer', null];
-		$rules  = [['alpha'], ['required']];
-		$result = V::invalid($data, $rules);
-		$this->assertSame(1, $result[1]);
-	}
-
-	public function testInvalidRequired(): void
-	{
-		$rules    = ['email' => ['required']];
-		$messages = ['email' => ''];
-
-		$result = V::invalid(['email' => null], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['name' => 'homer'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['email' => ''], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['email' => []], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['email' => '0'], $rules, $messages);
-		$this->assertSame([], $result);
-
-		$result = V::invalid(['email' => 0], $rules, $messages);
-		$this->assertSame([], $result);
-
-		$result = V::invalid(['email' => false], $rules, $messages);
-		$this->assertSame([], $result);
-
-		$result = V::invalid(['email' => 'homer@simpson.com'], $rules, $messages);
-		$this->assertSame([], $result);
-	}
-
-	public function testInvalidOptions(): void
-	{
-		$rules = [
-			'username' => ['min' => 6]
-		];
-
-		$messages = [
-			'username' => ''
-		];
-
-		$result = V::invalid(['username' => 'homer'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
-		$this->assertSame([], $result);
-
-		$rules = [
-			'username' => ['between' => [3, 6]]
-		];
-
-		$result = V::invalid(['username' => 'ho'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
-		$this->assertSame($messages, $result);
-
-		$result = V::invalid(['username' => 'homer'], $rules, $messages);
-		$this->assertSame([], $result);
-	}
-
-	public function testInvalidWithMultipleMessages(): void
-	{
-		$data     = ['username' => ''];
-		$rules    = ['username' => ['required', 'alpha', 'min' => 4]];
-		$messages = ['username' => [
-			'The username is required',
-			'The username must contain only letters',
-			'The username must be at least 4 characters long',
-		]];
-
-		$result   = V::invalid(['username' => ''], $rules, $messages);
-		$expected = [
-			'username' => [
-				'The username is required',
-			]
-		];
-		$this->assertSame($expected, $result);
-
-		$result   = V::invalid(['username' => 'a1'], $rules, $messages);
-		$expected = [
-			'username' => [
-				'The username must contain only letters',
-				'The username must be at least 4 characters long',
-			]
-		];
-		$this->assertSame($expected, $result);
-
-		$result   = V::invalid(['username' => 'ab'], $rules, $messages);
-		$expected = [
-			'username' => [
-				'The username must be at least 4 characters long',
-			]
-		];
-		$this->assertSame($expected, $result);
-
-		$result = V::invalid(['username' => 'abcd'], $rules, $messages);
-		$this->assertSame([], $result);
-	}
-
-	public function testNotEmpty(): void
-	{
-		$this->assertFalse(V::notEmpty(''));
-		$this->assertTrue(V::notEmpty(0));
-	}
-
-	public function testNotIn(): void
-	{
-		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
-
-		$this->assertTrue(V::notIn('bastian', ['lukas', 'nico', 'sonja']));
-		$this->assertTrue(V::notIn('bastian', []));
-	}
-
-	public function testInteger(): void
-	{
-		$this->assertTrue(V::integer(5));
-		$this->assertTrue(V::integer(0));
-		$this->assertTrue(V::integer('5'));
-		$this->assertTrue(V::integer(5, true));
-		$this->assertTrue(V::integer(0, true));
-
-		$this->assertFalse(V::integer(5.1));
-		$this->assertFalse(V::integer([5]));
-		$this->assertFalse(V::integer(5.1, true));
-		$this->assertFalse(V::integer('5', true));
-		$this->assertFalse(V::integer(null, true));
-	}
-
-	public function testIp(): void
-	{
-		$this->assertTrue(V::ip('192.168.255.1'));
-		$this->assertTrue(V::ip('8.8.8.8'));
-
-		$this->assertFalse(V::ip(5));
-		$this->assertFalse(V::ip('192.168'));
-		$this->assertFalse(V::ip('192:168:255:12'));
-		$this->assertFalse(V::ip('192.168.255.24.23'));
-	}
-
-	public function testJson(): void
-	{
-		$this->assertTrue(V::json('{"foo": "bar"}'));
-		$this->assertTrue(V::json('{}'));
-		$this->assertTrue(V::json('[]'));
-		$this->assertFalse(V::json('{foo: bar}'));
-		$this->assertFalse(V::json('foo'));
-		$this->assertFalse(V::json([]));
-		$this->assertFalse(V::json(false));
-		$this->assertFalse(V::json(42));
-		$this->assertFalse(V::json(''));
-	}
-
-	public function testLess(): void
-	{
-		$this->assertTrue(V::less(1, 2));
-		$this->assertFalse(V::less(2, 1));
-	}
-
-	public function testMaxLength(): void
-	{
-		$this->assertTrue(V::maxLength('Kirby', 10));
-		$this->assertTrue(V::maxLength('Kirby', 5));
-		$this->assertTrue(V::maxLength(' Kirby ', 5));
-
-		$this->assertFalse(V::maxLength('Kirby', 3));
-	}
-
-	public function testMinLength(): void
-	{
-		$this->assertTrue(V::minLength('Kirby', 2));
-		$this->assertTrue(V::minLength('Kirby', 5));
-
-		$this->assertFalse(V::minLength('Kirby', 6));
-		$this->assertFalse(V::minLength(' Kirby ', 6));
-	}
-
-	public function testMaxWords(): void
-	{
-		$this->assertTrue(V::maxWords('This is Kirby', 10));
-		$this->assertTrue(V::maxWords('This is Kirby', 3));
-		$this->assertTrue(V::maxWords('This is Kirby ', 3));
-
-		$this->assertFalse(V::maxWords('This is Kirby', 2));
-
-		// double spaces don't introduce a third word
-		$this->assertTrue(V::maxWords('hello  world', 2));
-
-		// tabs and newlines count as separators
-		$this->assertTrue(V::maxWords("hello\tworld", 2));
-		$this->assertTrue(V::maxWords("hello\nworld", 2));
-
-		// mixed whitespace
-		$this->assertTrue(V::maxWords("foo  bar\t\tbaz", 3));
-
-		// empty string has zero words
-		$this->assertTrue(V::maxWords('', 0));
-		$this->assertTrue(V::maxWords('   ', 0));
-	}
-
-	public function testMinWords(): void
-	{
-		$this->assertTrue(V::minWords('This is Kirby', 2));
-		$this->assertTrue(V::minWords('This is Kirby', 3));
-
-		$this->assertFalse(V::minWords('This is Kirby', 4));
-		$this->assertFalse(V::minWords('This is Kirby ', 4));
-
-		// double spaces don't introduce a third word
-		$this->assertFalse(V::minWords('hello  world', 3));
-
-		// tabs and newlines count as separators
-		$this->assertTrue(V::minWords("hello\tworld", 2));
-		$this->assertTrue(V::minWords("hello\nworld", 2));
-
-		// mixed whitespace
-		$this->assertTrue(V::minWords("foo  bar\t\tbaz", 3));
-
-		// empty string has zero words
-		$this->assertFalse(V::minWords('', 1));
-		$this->assertFalse(V::minWords('   ', 1));
-	}
-
-	public function testMore(): void
-	{
-		$this->assertTrue(V::more(1, 0));
-		$this->assertFalse(V::more(0, 1));
-	}
-
-	public function testNotContains(): void
-	{
-		$this->assertFalse(V::notContains('word', 'or'));
-		$this->assertTrue(V::notContains('word', 'test'));
-	}
-
-	public function testNum(): void
-	{
-		$this->assertTrue(V::num(2));
-		$this->assertTrue(V::num(3.5));
-
-		$this->assertFalse(V::num('foo'));
-		// $this->assertFalse(V::num('5'));
-		$this->assertFalse(V::num(null));
-		$this->assertFalse(V::num(false));
-	}
-
-	public function testRequired(): void
-	{
-		// required
-		$this->assertTrue(V::required(2));
-		$this->assertTrue(V::required(2));
-
-		$this->assertFalse(V::required(''));
-		$this->assertFalse(V::required(''));
-	}
-
-	public function testRequiredWithReferenceArray(): void
-	{
-		$this->assertTrue(V::required('a', ['a' => 2]));
-		$this->assertTrue(V::required('a', ['a' => 'foo']));
-		$this->assertTrue(V::required('a', ['a' => ['foo']]));
-
-		$this->assertFalse(V::required('a', ['a' => '']));
-		$this->assertFalse(V::required('a', ['a' => null]));
-		$this->assertFalse(V::required('a', ['a' => []]));
-	}
-
-	public function testSize(): void
-	{
-		$this->assertTrue(V::size('foo', 3));
-		$this->assertTrue(V::size(' foo ', 3));
-		$this->assertTrue(V::size(7.9, 7.9));
-		$this->assertTrue(V::size([
-			'bastian',
-			'lukas',
-			'nico'
-		], 3));
-		$this->assertTrue(V::size(new CanBeCounted(), 7));
-		$this->assertTrue(V::size(new HasCount(), 7));
-		$this->assertTrue(V::size(5, 7, '<'));
-		$this->assertTrue(V::size(7, 5, '>'));
-
-		$this->assertFalse(V::size('foo', 4));
-		$this->assertFalse(V::size(' foo ', 5));
-		$this->assertFalse(V::size(7.9, 8));
-		$this->assertFalse(V::size([], 3));
-		$this->assertFalse(V::size(new CanBeCounted(), 8));
-		$this->assertFalse(V::size(new HasCount(), 8));
-		$this->assertFalse(V::size(5, 7, '>'));
-		$this->assertFalse(V::size(7, 5, '<'));
-
-		$field = new Field(null, 'foo', 2);
-		$this->assertTrue(V::size($field->foo(), 2));
-		$this->assertTrue(V::size($field->foo(), 3, '<'));
-		$this->assertTrue(V::size($field->foo(), 1, '>'));
-		$this->assertFalse(V::size($field->foo(), 1, '<'));
-		$this->assertFalse(V::size($field->foo(), 3, '>'));
-
-		$field = new Field(null, 'foo', 'hello');
-		$this->assertTrue(V::size($field->foo(), 5));
-		$this->assertTrue(V::size($field->foo(), 6, '<'));
-		$this->assertTrue(V::size($field->foo(), 4, '>'));
-		$this->assertFalse(V::size($field->foo(), 4, '<'));
-		$this->assertFalse(V::size($field->foo(), 6, '>'));
-	}
-
-	public function testSizeInvalid(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('$value is of type without size');
-
-		V::size(false, 5);
-	}
-
-	public function testSizeInvalidObject(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('$value is an uncountable object');
-
-		V::size(new stdClass(), 5);
-	}
-
-	public function testTel(): void
-	{
-		$this->assertTrue(V::tel('+123456789'));
-		$this->assertTrue(V::tel('00123456789'));
-		$this->assertFalse(V::tel('++123456789'));
-		$this->assertFalse(V::tel('+1234-56789'));
-	}
-
-	public function testTime(): void
-	{
-		$this->assertTrue(V::time('12:12:12'));
-		$this->assertFalse(V::time('24:24:24'));
-	}
-
-	public function testUuid(): void
-	{
-		$this->assertTrue(V::uuid('site://'));
-		$this->assertTrue(V::uuid('page://something'));
-		$this->assertTrue(V::uuid('user://something'));
-		$this->assertTrue(V::uuid('file://something'));
-		$this->assertTrue(V::uuid('file://something/else'));
-		// TODO: activate for  uuid-block-structure-support
-		// $this->assertTrue(V::uuid('struct://something'));
-		// $this->assertTrue(V::uuid('block://something'));
-		// $this->assertTrue(V::uuid('block://something/else'));
-
-		$this->assertTrue(V::uuid('site://', 'site'));
-		$this->assertTrue(V::uuid('page://something', 'page'));
-		$this->assertTrue(V::uuid('user://something', 'user'));
-		$this->assertTrue(V::uuid('file://something', 'file'));
-
-		$this->assertFalse(V::uuid('site://', 'block'));
-		$this->assertFalse(V::uuid('page://something', 'block'));
-		$this->assertFalse(V::uuid('user://something', 'block'));
-		$this->assertFalse(V::uuid('file://something', 'block'));
-
-		$this->assertFalse(V::uuid('file:/something'));
-		$this->assertFalse(V::uuid('foo://something'));
-		$this->assertFalse(V::uuid('page//something'));
-		$this->assertFalse(V::uuid('page//something', 'page'));
-		$this->assertFalse(V::uuid('not a page://something'));
-	}
-
-	public function testUrl(): void
-	{
-		$urls = Data::read(__DIR__ . '/fixtures/urls.json');
-
-		foreach ($urls['valid'] as $url) {
-			$this->assertTrue(V::url($url), "Expected valid: $url");
-		}
-
-		foreach ($urls['invalid'] as $url) {
-			$this->assertFalse(V::url($url), "Expected invalid: $url");
-		}
 	}
 
 	public static function inputProvider(): array
@@ -795,6 +373,515 @@ class VTest extends TestCase
 		$this->assertTrue(V::input($input, $rules));
 	}
 
+	public function testInputWithPercentInMessage(): void
+	{
+		V::$validators['discount'] = fn ($value): bool => false;
+		I18n::$translations['en'] = [
+			'error.validation.discount' => 'Must be 100%s off'
+		];
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Must be 100%s off for field "price"');
+
+		V::input(['price' => 5], ['price' => ['discount' => []]]);
+	}
+
+	public function testInteger(): void
+	{
+		$this->assertTrue(V::integer(5));
+		$this->assertTrue(V::integer(0));
+		$this->assertTrue(V::integer('5'));
+		$this->assertTrue(V::integer(5, true));
+		$this->assertTrue(V::integer(0, true));
+
+		$this->assertFalse(V::integer(5.1));
+		$this->assertFalse(V::integer([5]));
+		$this->assertFalse(V::integer(5.1, true));
+		$this->assertFalse(V::integer('5', true));
+		$this->assertFalse(V::integer(null, true));
+	}
+
+	public function testInvalid(): void
+	{
+		$data = [
+			'username' => 123,
+			'email'    => 'homersimpson.com',
+			'zip'      => 'abc',
+			'website'  => '',
+			'created'  => '9999-99-99',
+		];
+
+		$rules = [
+			'username' => ['alpha'],
+			'email'    => ['required', 'email'],
+			'zip'      => ['integer'],
+			'website'  => ['url'],
+			'created'  => ['date']
+		];
+
+		$messages = [
+			'username' => 'The username must not contain numbers',
+			'email'    => 'Invalid email',
+			'zip'      => 'The ZIP must contain only numbers',
+			'created'  => 'Invalid date',
+		];
+
+		$result = V::invalid($data, $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$data = [
+			'username' => 'homer',
+			'email'    => 'homer@simpson.com',
+			'zip'      => 123,
+			'website'  => 'http://example.com',
+			'created'  => '2021-01-01',
+		];
+
+		$result = V::invalid($data, $rules, $messages);
+		$this->assertSame([], $result);
+	}
+
+	public function testInvalidOptions(): void
+	{
+		$rules = [
+			'username' => ['min' => 6]
+		];
+
+		$messages = [
+			'username' => ''
+		];
+
+		$result = V::invalid(['username' => 'homer'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+		$this->assertSame([], $result);
+
+		$rules = [
+			'username' => ['between' => [3, 6]]
+		];
+
+		$result = V::invalid(['username' => 'ho'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homersimpson'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['username' => 'homer'], $rules, $messages);
+		$this->assertSame([], $result);
+	}
+
+	public function testInvalidRequired(): void
+	{
+		$rules    = ['email' => ['required']];
+		$messages = ['email' => ''];
+
+		$result = V::invalid(['email' => null], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['name' => 'homer'], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['email' => ''], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['email' => []], $rules, $messages);
+		$this->assertSame($messages, $result);
+
+		$result = V::invalid(['email' => '0'], $rules, $messages);
+		$this->assertSame([], $result);
+
+		$result = V::invalid(['email' => 0], $rules, $messages);
+		$this->assertSame([], $result);
+
+		$result = V::invalid(['email' => false], $rules, $messages);
+		$this->assertSame([], $result);
+
+		$result = V::invalid(['email' => 'homer@simpson.com'], $rules, $messages);
+		$this->assertSame([], $result);
+	}
+
+	public function testInvalidSimple(): void
+	{
+		$data   = ['homer', null];
+		$rules  = [['alpha'], ['required']];
+		$result = V::invalid($data, $rules);
+		$this->assertSame(1, $result[1]);
+	}
+
+	public function testInvalidWithMultipleMessages(): void
+	{
+		$data     = ['username' => ''];
+		$rules    = ['username' => ['required', 'alpha', 'min' => 4]];
+		$messages = ['username' => [
+			'The username is required',
+			'The username must contain only letters',
+			'The username must be at least 4 characters long',
+		]];
+
+		$result   = V::invalid(['username' => ''], $rules, $messages);
+		$expected = [
+			'username' => [
+				'The username is required',
+			]
+		];
+		$this->assertSame($expected, $result);
+
+		$result   = V::invalid(['username' => 'a1'], $rules, $messages);
+		$expected = [
+			'username' => [
+				'The username must contain only letters',
+				'The username must be at least 4 characters long',
+			]
+		];
+		$this->assertSame($expected, $result);
+
+		$result   = V::invalid(['username' => 'ab'], $rules, $messages);
+		$expected = [
+			'username' => [
+				'The username must be at least 4 characters long',
+			]
+		];
+		$this->assertSame($expected, $result);
+
+		$result = V::invalid(['username' => 'abcd'], $rules, $messages);
+		$this->assertSame([], $result);
+	}
+
+	public function testIp(): void
+	{
+		$this->assertTrue(V::ip('192.168.255.1'));
+		$this->assertTrue(V::ip('8.8.8.8'));
+
+		$this->assertFalse(V::ip(5));
+		$this->assertFalse(V::ip('192.168'));
+		$this->assertFalse(V::ip('192:168:255:12'));
+		$this->assertFalse(V::ip('192.168.255.24.23'));
+	}
+
+	public function testJson(): void
+	{
+		$this->assertTrue(V::json('{"foo": "bar"}'));
+		$this->assertTrue(V::json('{}'));
+		$this->assertTrue(V::json('[]'));
+		$this->assertFalse(V::json('{foo: bar}'));
+		$this->assertFalse(V::json('foo'));
+		$this->assertFalse(V::json([]));
+		$this->assertFalse(V::json(false));
+		$this->assertFalse(V::json(42));
+		$this->assertFalse(V::json(''));
+	}
+
+	public function testLengthWithNull(): void
+	{
+		$this->assertTrue(V::maxLength(null, 3));
+		$this->assertFalse(V::minLength(null, 1));
+	}
+
+	public function testLess(): void
+	{
+		$this->assertTrue(V::less(1, 2));
+		$this->assertFalse(V::less(2, 1));
+	}
+
+	public function testMaxLength(): void
+	{
+		$this->assertTrue(V::maxLength('Kirby', 10));
+		$this->assertTrue(V::maxLength('Kirby', 5));
+		$this->assertTrue(V::maxLength(' Kirby ', 5));
+
+		$this->assertFalse(V::maxLength('Kirby', 3));
+	}
+
+	public function testMaxWords(): void
+	{
+		$this->assertTrue(V::maxWords('This is Kirby', 10));
+		$this->assertTrue(V::maxWords('This is Kirby', 3));
+		$this->assertTrue(V::maxWords('This is Kirby ', 3));
+
+		$this->assertFalse(V::maxWords('This is Kirby', 2));
+
+		// double spaces don't introduce a third word
+		$this->assertTrue(V::maxWords('hello  world', 2));
+
+		// tabs and newlines count as separators
+		$this->assertTrue(V::maxWords("hello\tworld", 2));
+		$this->assertTrue(V::maxWords("hello\nworld", 2));
+
+		// mixed whitespace
+		$this->assertTrue(V::maxWords("foo  bar\t\tbaz", 3));
+
+		// empty string has zero words
+		$this->assertTrue(V::maxWords('', 0));
+		$this->assertTrue(V::maxWords('   ', 0));
+	}
+
+	public function testMessage(): void
+	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
+		$message = V::message('same', 'a', 'b');
+		$this->assertSame('Error message for same: b', $message);
+	}
+
+	public function testMessageCustomValidator(): void
+	{
+		V::$validators['foo'] = fn (string $bar) => false;
+
+		$message = V::message('foo', 'bar');
+		$this->assertSame('The "foo" validation failed', $message);
+	}
+
+	public function testMessageInvalidValidator(): void
+	{
+		$message = V::message('foo', 'a', 'b');
+		$this->assertNull($message);
+	}
+
+	public function testMinLength(): void
+	{
+		$this->assertTrue(V::minLength('Kirby', 2));
+		$this->assertTrue(V::minLength('Kirby', 5));
+
+		$this->assertFalse(V::minLength('Kirby', 6));
+		$this->assertFalse(V::minLength(' Kirby ', 6));
+	}
+
+	public function testMinWords(): void
+	{
+		$this->assertTrue(V::minWords('This is Kirby', 2));
+		$this->assertTrue(V::minWords('This is Kirby', 3));
+
+		$this->assertFalse(V::minWords('This is Kirby', 4));
+		$this->assertFalse(V::minWords('This is Kirby ', 4));
+
+		// double spaces don't introduce a third word
+		$this->assertFalse(V::minWords('hello  world', 3));
+
+		// tabs and newlines count as separators
+		$this->assertTrue(V::minWords("hello\tworld", 2));
+		$this->assertTrue(V::minWords("hello\nworld", 2));
+
+		// mixed whitespace
+		$this->assertTrue(V::minWords("foo  bar\t\tbaz", 3));
+
+		// empty string has zero words
+		$this->assertFalse(V::minWords('', 1));
+		$this->assertFalse(V::minWords('   ', 1));
+	}
+
+	public function testMore(): void
+	{
+		$this->assertTrue(V::more(1, 0));
+		$this->assertFalse(V::more(0, 1));
+	}
+
+	public function testNotContains(): void
+	{
+		$this->assertFalse(V::notContains('word', 'or'));
+		$this->assertTrue(V::notContains('word', 'test'));
+	}
+
+	public function testNotEmpty(): void
+	{
+		$this->assertFalse(V::notEmpty(''));
+		$this->assertTrue(V::notEmpty(0));
+	}
+
+	public function testNotIn(): void
+	{
+		$this->assertFalse(V::notIn('bastian', ['bastian', 'nico', 'sonja']));
+
+		$this->assertTrue(V::notIn('bastian', ['lukas', 'nico', 'sonja']));
+		$this->assertTrue(V::notIn('bastian', []));
+	}
+
+	public function testNum(): void
+	{
+		$this->assertTrue(V::num(2));
+		$this->assertTrue(V::num(3.5));
+
+		$this->assertFalse(V::num('foo'));
+		// $this->assertFalse(V::num('5'));
+		$this->assertFalse(V::num(null));
+		$this->assertFalse(V::num(false));
+	}
+
+	public function testRequired(): void
+	{
+		// required
+		$this->assertTrue(V::required(2));
+		$this->assertTrue(V::required(2));
+
+		$this->assertFalse(V::required(''));
+		$this->assertFalse(V::required(''));
+	}
+
+	public function testRequiredWithReferenceArray(): void
+	{
+		$this->assertTrue(V::required('a', ['a' => 2]));
+		$this->assertTrue(V::required('a', ['a' => 'foo']));
+		$this->assertTrue(V::required('a', ['a' => ['foo']]));
+
+		$this->assertFalse(V::required('a', ['a' => '']));
+		$this->assertFalse(V::required('a', ['a' => null]));
+		$this->assertFalse(V::required('a', ['a' => []]));
+	}
+
+	public function testSame(): void
+	{
+		$this->assertTrue(V::same('foo', 'foo'));
+		$this->assertTrue(V::same('bar', 'bar'));
+		$this->assertTrue(V::same(1, 1));
+		$this->assertTrue(V::same('true', 'true'));
+		$this->assertTrue(V::same(null, null));
+
+		$this->assertFalse(V::same('foo', 'bar'));
+		$this->assertFalse(V::same('bar', 'foo'));
+		$this->assertFalse(V::same(1, 2));
+		$this->assertFalse(V::same(null, 'bar'));
+
+		// non-strict
+		$this->assertTrue(V::same('true', true));
+
+		// strict
+		$this->assertFalse(V::same('true', true, true));
+	}
+
+	public function testSize(): void
+	{
+		$this->assertTrue(V::size('foo', 3));
+		$this->assertTrue(V::size(' foo ', 3));
+		$this->assertTrue(V::size(7.9, 7.9));
+		$this->assertTrue(V::size([
+			'bastian',
+			'lukas',
+			'nico'
+		], 3));
+		$this->assertTrue(V::size(new CanBeCounted(), 7));
+		$this->assertTrue(V::size(new HasCount(), 7));
+		$this->assertTrue(V::size(5, 7, '<'));
+		$this->assertTrue(V::size(7, 5, '>'));
+
+		$this->assertFalse(V::size('foo', 4));
+		$this->assertFalse(V::size(' foo ', 5));
+		$this->assertFalse(V::size(7.9, 8));
+		$this->assertFalse(V::size([], 3));
+		$this->assertFalse(V::size(new CanBeCounted(), 8));
+		$this->assertFalse(V::size(new HasCount(), 8));
+		$this->assertFalse(V::size(5, 7, '>'));
+		$this->assertFalse(V::size(7, 5, '<'));
+
+		$field = new Field(null, 'foo', 2);
+		$this->assertTrue(V::size($field, 2));
+		$this->assertTrue(V::size($field, 3, '<'));
+		$this->assertTrue(V::size($field, 1, '>'));
+		$this->assertFalse(V::size($field, 1, '<'));
+		$this->assertFalse(V::size($field, 3, '>'));
+
+		$field = new Field(null, 'foo', 'hello');
+		$this->assertTrue(V::size($field, 5));
+		$this->assertTrue(V::size($field, 6, '<'));
+		$this->assertTrue(V::size($field, 4, '>'));
+		$this->assertFalse(V::size($field, 4, '<'));
+		$this->assertFalse(V::size($field, 6, '>'));
+	}
+
+	public function testSizeInvalid(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('$value is of type without size');
+
+		V::size(false, 5);
+	}
+
+	public function testSizeInvalidObject(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('$value is an uncountable object');
+
+		V::size(new stdClass(), 5);
+	}
+
+	public function testTel(): void
+	{
+		$this->assertTrue(V::tel('+123456789'));
+		$this->assertTrue(V::tel('00123456789'));
+		$this->assertFalse(V::tel('++123456789'));
+		$this->assertFalse(V::tel('+1234-56789'));
+	}
+
+	public function testTime(): void
+	{
+		$this->assertTrue(V::time('12:12:12'));
+		$this->assertFalse(V::time('24:24:24'));
+	}
+
+	public function testUrl(): void
+	{
+		$urls = Data::read(__DIR__ . '/fixtures/urls.json');
+
+		foreach ($urls['valid'] as $url) {
+			$this->assertTrue(V::url($url), "Expected valid: $url");
+		}
+
+		foreach ($urls['invalid'] as $url) {
+			$this->assertFalse(V::url($url), "Expected invalid: $url");
+		}
+	}
+
+	public function testUrlWithInvalidUtf8(): void
+	{
+		$this->assertFalse(V::url("not a url \xff"));
+		$this->assertFalse(V::url("javascript:alert(1)//\xff"));
+		$this->assertFalse(V::url("https://getkirby.com/\xff"));
+	}
+
+	public function testUuid(): void
+	{
+		$this->assertTrue(V::uuid('site://'));
+		$this->assertTrue(V::uuid('page://something'));
+		$this->assertTrue(V::uuid('user://something'));
+		$this->assertTrue(V::uuid('file://something'));
+		$this->assertTrue(V::uuid('file://something/else'));
+		// TODO: activate for  uuid-block-structure-support
+		// $this->assertTrue(V::uuid('struct://something'));
+		// $this->assertTrue(V::uuid('block://something'));
+		// $this->assertTrue(V::uuid('block://something/else'));
+
+		$this->assertTrue(V::uuid('site://', 'site'));
+		$this->assertTrue(V::uuid('page://something', 'page'));
+		$this->assertTrue(V::uuid('user://something', 'user'));
+		$this->assertTrue(V::uuid('file://something', 'file'));
+
+		$this->assertFalse(V::uuid('site://', 'block'));
+		$this->assertFalse(V::uuid('page://something', 'block'));
+		$this->assertFalse(V::uuid('user://something', 'block'));
+		$this->assertFalse(V::uuid('file://something', 'block'));
+
+		$this->assertFalse(V::uuid('file:/something'));
+		$this->assertFalse(V::uuid('foo://something'));
+		$this->assertFalse(V::uuid('page//something'));
+		$this->assertFalse(V::uuid('page//something', 'page'));
+		$this->assertFalse(V::uuid('not a page://something'));
+	}
+
+	public function testValidators(): void
+	{
+		$this->assertSame([], V::$validators);
+		$this->assertSame([], V::validators());
+	}
+
+	public function testValidatorsCustomValidator(): void
+	{
+		$this->assertCount(0, V::validators());
+		V::$validators['foo'] = fn (): bool => true;
+		$this->assertCount(1, V::validators());
+	}
+
 	public function testValue(): void
 	{
 		$result = V::value('test@getkirby.com', [
@@ -808,14 +895,28 @@ class VTest extends TestCase
 
 	public function testValueFails(): void
 	{
-		// load the translation strings
-		new App();
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
 
 		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('Please enter "b"');
+		$this->expectExceptionMessage('Error message for same');
 
-		V::value('a', [
-			'same' => 'b'
-		]);
+		V::value('a', ['same' => 'b']);
+	}
+
+	public function testValueFailsNotThrowing(): void
+	{
+		// set up custom i18n strings for test
+		I18n::$translations['en'] = [
+			'error.validation.same' => 'Error message for same: {other}'
+		];
+
+		$result = V::value('a', ['same' => 'b'], fail: false);
+
+		$this->assertSame([
+			'same' => 'Error message for same: b'
+		], $result);
 	}
 }

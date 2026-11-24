@@ -15,14 +15,11 @@ use Stringable;
  * interface around arrays of arrays or objects,
  * with advanced filters, sorting, navigation and more.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
  * @template TValue
- * @extends \Kirby\Toolkit\Iterator<string, TValue>
+ * @extends Iterator<string, TValue>
  */
 class Collection extends Iterator implements Stringable
 {
@@ -35,13 +32,13 @@ class Collection extends Iterator implements Stringable
 	 * Whether the collection keys should be
 	 * treated as case-sensitive
 	 *
-	 * @todo 6.0 Check if case-sensitive can become the
+	 * @todo 7.0 Check if case-sensitive can become the
 	 * default mode, see https://github.com/getkirby/kirby/pull/5635
 	 */
 	protected bool $caseSensitive = false;
 
 	/**
-	 * @var \Kirby\Toolkit\Pagination|null
+	 * @var Pagination|null
 	 */
 	protected $pagination;
 
@@ -49,8 +46,8 @@ class Collection extends Iterator implements Stringable
 	 * Constructor
 	 *
 	 * @param array<string, TValue> $data
-	 * @param bool $caseSensitive Whether the collection keys should be
-	 *                            treated as case-sensitive
+	 * @param $caseSensitive Whether the collection keys should be
+	 *                      treated as case-sensitive
 	 */
 	public function __construct(
 		array $data = [],
@@ -150,12 +147,11 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Creates chunks of the same size.
-	 * The last chunk may be smaller
+	 * Splits the collection into chunks of the same size.
+	 * Returns a new collection with an element for each chunk
+	 * and a sub collection in each chunk. The last chunk may be smaller.
 	 *
-	 * @param int $size Number of elements per chunk
-	 * @return static A new collection with an element for each chunk and
-	 *                a sub collection in each chunk
+	 * @param $size Number of elements per chunk
 	 */
 	public function chunk(int $size): static
 	{
@@ -311,20 +307,6 @@ class Collection extends Iterator implements Stringable
 		return $this->filter(...$args);
 	}
 
-	protected function filterMatchesAny(
-		callable $validator,
-		array $values,
-		$test
-	): bool {
-		foreach ($values as $value) {
-			if ($validator($value, $test) !== false) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	protected function filterMatchesAll(
 		callable $validator,
 		array $values,
@@ -337,6 +319,20 @@ class Collection extends Iterator implements Stringable
 		}
 
 		return true;
+	}
+
+	protected function filterMatchesAny(
+		callable $validator,
+		array $values,
+		$test
+	): bool {
+		foreach ($values as $value) {
+			if ($validator($value, $test) !== false) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected function filterMatchesNone(
@@ -358,7 +354,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Find one or multiple elements by id
 	 *
-	 * @param string ...$keys
+	 * @param string|list<string> ...$keys One or more keys, or a single array of keys
 	 * @return TValue|static
 	 */
 	public function find(...$keys)
@@ -384,6 +380,7 @@ class Collection extends Iterator implements Stringable
 		}
 
 		$collection = clone $this;
+		/** @var array<string, TValue> $result */
 		$collection->data = $result;
 		return $collection;
 	}
@@ -536,13 +533,12 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Groups the elements by a given field or callback function
+	 * Groups the elements by a given field or callback function.
+	 * Returns a new collection with an element for each group
+	 * and a subcollection in each group
 	 *
-	 * @param string|\Closure $field
-	 * @return self A new collection with an element for
-	 *              each group and a subcollection in
-	 *              each group
-	 * @throws \Exception if $field is not a string nor a callback function
+	 * @param string|Closure $field
+	 * @throws Exception if $field is not a string nor a callback function
 	 */
 	public function group(
 		$field,
@@ -629,7 +625,8 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Checks if there is an intersection between the given collection and this collection
+	 * Checks if there is an intersection between
+	 * the given collection and this collection
 	 * @since 3.3.0
 	 */
 	public function intersects(Collection $other): bool
@@ -701,7 +698,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a new object with a limited number of elements
 	 *
-	 * @param int $limit The number of elements to return
+	 * @param $limit The number of elements to return
 	 */
 	public function limit(int $limit): static
 	{
@@ -720,19 +717,9 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Returns the nth element from the collection
-	 *
-	 * @return TValue|null
-	 */
-	public function nth(int $n)
-	{
-		return array_values($this->data)[$n] ?? null;
-	}
-
-	/**
 	 * Returns a Collection without the given element(s)
 	 *
-	 * @param string ...$keys any number of keys, passed as individual arguments
+	 * @param ...$keys any number of keys, passed as individual arguments
 	 */
 	public function not(string ...$keys): static
 	{
@@ -748,11 +735,20 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
+	 * Returns the nth element from the collection
+	 *
+	 * @return TValue|null
+	 */
+	public function nth(int $n)
+	{
+		return array_values($this->data)[$n] ?? null;
+	}
+
+	/**
 	 * Returns a new object starting from the given offset
 	 *
-	 * @param int $offset The index to start from
+	 * @param $offset The index to start from
 	 * @return static|$this
-	 * @psalm-return ($offset is 0 ? $this : static)
 	 */
 	public function offset(int $offset): static
 	{
@@ -784,8 +780,8 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
-	 * Extracts all values for a single field into
-	 * a new array
+	 * Extracts all values for a single field
+	 * into a new array
 	 */
 	public function pluck(
 		string $field,
@@ -912,7 +908,7 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Removes an element from the array by key
 	 *
-	 * @param string $key the name of the key
+	 * @param $key the name of the key
 	 * @return $this
 	 */
 	public function remove(string $key): static
@@ -962,10 +958,9 @@ class Collection extends Iterator implements Stringable
 	/**
 	 * Returns a slice of the object
 	 *
-	 * @param int $offset The optional index to start the slice from
-	 * @param int|null $limit The optional number of elements to return
+	 * @param $offset The optional index to start the slice from
+	 * @param $limit The optional number of elements to return
 	 * @return $this|static
-	 * @psalm-return ($offset is 0 && $limit is null ? $this : static)
 	 */
 	public function slice(
 		int $offset = 0,
@@ -978,31 +973,6 @@ class Collection extends Iterator implements Stringable
 		$collection = clone $this;
 		$collection->data = array_slice($this->data, $offset, $limit);
 		return $collection;
-	}
-
-	/**
-	 * Get sort arguments from a string
-	 */
-	public static function sortArgs(string $sort): array
-	{
-		// if there are commas in the sortBy argument, removes it
-		if (Str::contains($sort, ',') === true) {
-			$sort = Str::replace($sort, ',', '');
-		}
-
-		$args = Str::split($sort, ' ');
-
-		// fill in PHP constants
-		array_walk($args, function (string &$value) {
-			if (
-				Str::startsWith($value, 'SORT_') === true &&
-				defined($value) === true
-			) {
-				$value = constant($value);
-			}
-		});
-
-		return $args;
 	}
 
 	/**
@@ -1138,6 +1108,31 @@ class Collection extends Iterator implements Stringable
 	}
 
 	/**
+	 * Get sort arguments from a string
+	 */
+	public static function sortArgs(string $sort): array
+	{
+		// if there are commas in the sortBy argument, removes it
+		if (Str::contains($sort, ',') === true) {
+			$sort = Str::replace($sort, ',', '');
+		}
+
+		$args = Str::split($sort, ' ');
+
+		// fill in PHP constants
+		array_walk($args, function (string &$value) {
+			if (
+				Str::startsWith($value, 'SORT_') === true &&
+				defined($value) === true
+			) {
+				$value = constant($value);
+			}
+		});
+
+		return $args;
+	}
+
+	/**
 	 * @see self::sort()
 	 *
 	 * @param string|callable $field Field name or value callback to sort by
@@ -1163,10 +1158,12 @@ class Collection extends Iterator implements Stringable
 
 	/**
 	 * Converts the object into a JSON string
+	 *
+	 * @throws \JsonException for invalid JSON
 	 */
 	public function toJson(): string
 	{
-		return json_encode($this->toArray());
+		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -1199,7 +1196,7 @@ class Collection extends Iterator implements Stringable
 	 * This Closure will execute if the first parameter evaluates as false
 	 *
 	 * @since 3.3.0
-	 * @param mixed $condition a truthy or falsy value
+	 * @param $condition a truthy or falsy value
 	 */
 	public function when(
 		$condition,

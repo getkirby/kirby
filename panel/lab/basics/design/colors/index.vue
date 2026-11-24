@@ -13,7 +13,7 @@
 			>
 				<k-box style="--span: 2"> {{ name }}- </k-box>
 				<k-box
-					v-for="(step, index) in steps"
+					v-for="step in steps"
 					:key="step"
 					:style="{
 						background: `var(--color-${name}-${step})`,

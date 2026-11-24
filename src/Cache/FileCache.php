@@ -10,9 +10,6 @@ use Kirby\Toolkit\Str;
 /**
  * File System Cache Driver
  *
- * @package   Kirby Cache
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -26,9 +23,7 @@ class FileCache extends Cache
 	/**
 	 * Sets all parameters which are needed for the file cache
 	 *
-	 * @param array $options 'root' (required)
-	 *                       'prefix' (default: none)
-	 *                       'extension' (file extension for cache files, default: none)
+	 * @param array{root: string, prefix?: string|null, extension?: string|null, ...} $options
 	 */
 	public function __construct(array $options)
 	{
@@ -51,99 +46,6 @@ class FileCache extends Cache
 	}
 
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
-	 */
-	public function enabled(): bool
-	{
-		return is_writable($this->root) === true;
-	}
-
-	/**
-	 * Returns the full root including prefix
-	 */
-	public function root(): string
-	{
-		return $this->root;
-	}
-
-	/**
-	 * Returns the full path to a file for a given key
-	 */
-	protected function file(string $key): string
-	{
-		// strip out invalid characters in each path segment
-		// split by slash or backslash
-		$keyParts = [];
-		foreach (preg_split('#([\/\\\\])#', $key, 0, PREG_SPLIT_DELIM_CAPTURE) as $part) {
-			switch ($part) {
-				case '/':
-					// forward slashes don't need special treatment
-					break;
-
-				case '\\':
-					// backslashes get their own marker in the path
-					// to differentiate the cache key from one with forward slashes
-					$keyParts[] = '_backslash';
-					break;
-
-				case '':
-					// empty part means two slashes in a row;
-					// special marker like for backslashes
-					$keyParts[] = '_empty';
-					break;
-
-				default:
-					// an actual path segment:
-					// check if the segment only contains safe characters;
-					// underscores are *not* safe to guarantee uniqueness
-					// as they are used in the special cases
-					if (preg_match('/^[a-zA-Z0-9-]+$/', $part) === 1) {
-						$keyParts[] = $part;
-					} else {
-						$keyParts[] = Str::slug($part) . '_' . sha1($part);
-					}
-			}
-		}
-
-		$file = $this->root . '/' . implode('/', $keyParts);
-
-		if (isset($this->options['extension'])) {
-			return $file . '.' . $this->options['extension'];
-		}
-
-		return $file;
-	}
-
-	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful
-	 *
-	 * ```php
-	 * // put an item in the cache for 15 minutes
-	 * $cache->set('value', 'my value', 15);
-	 * ```
-	 */
-	public function set(string $key, $value, int $minutes = 0): bool
-	{
-		$file = $this->file($key);
-
-		return F::write($file, (new Value($value, $minutes))->toJson());
-	}
-
-	/**
-	 * Internal method to retrieve the raw cache value;
-	 * needs to return a Value object or null if not found
-	 */
-	public function retrieve(string $key): Value|null
-	{
-		$file  = $this->file($key);
-		$value = F::read($file);
-
-		return $value ? Value::fromJson($value) : null;
-	}
-
-	/**
 	 * Checks when the cache has been created;
 	 * returns the creation timestamp on success
 	 * and false if the item does not exist
@@ -157,6 +59,79 @@ class FileCache extends Cache
 		// get the file for this cache key
 		$file = $this->file($key);
 		return file_exists($file) ? filemtime($file) : false;
+	}
+
+	/**
+	 * Returns whether the cache is ready to store values
+	 */
+	public function enabled(): bool
+	{
+		return is_writable($this->root) === true;
+	}
+
+	/**
+	 * Returns the full path to a file for a given key
+	 */
+	protected function file(string $key): string
+	{
+		// strip out invalid characters in each path segment
+		// split by slash or backslash
+		$parts = [];
+
+		foreach (preg_split('#([\/\\\\])#', $key, 0, PREG_SPLIT_DELIM_CAPTURE) as $part) {
+			switch ($part) {
+				case '/':
+					// forward slashes don't need special treatment
+					break;
+
+				case '\\':
+					// backslashes get their own marker in the path
+					// to differentiate the cache key from one with forward slashes
+					$parts[] = '_backslash';
+					break;
+
+				case '':
+					// empty part means two slashes in a row;
+					// special marker like for backslashes
+					$parts[] = '_empty';
+					break;
+
+				default:
+					// an actual path segment:
+					// check if the segment only contains safe characters;
+					// underscores are *not* safe to guarantee uniqueness
+					// as they are used in the special cases
+					if (preg_match('/^[a-zA-Z0-9-]+$/', $part) === 1) {
+						$parts[] = $part;
+					} else {
+						$parts[] = Str::slug($part) . '_' . sha1($part);
+					}
+			}
+		}
+
+		$file = $this->root . '/' . implode('/', $parts);
+
+		if (isset($this->options['extension']) === true) {
+			return $file . '.' . $this->options['extension'];
+		}
+
+		return $file;
+	}
+
+	/**
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful
+	 */
+	public function flush(): bool
+	{
+		if (
+			Dir::remove($this->root) === true &&
+			Dir::make($this->root) === true
+		) {
+			return true;
+		}
+
+		return false; // @codeCoverageIgnore
 	}
 
 	/**
@@ -186,7 +161,10 @@ class FileCache extends Cache
 			$dir = rtrim($dir, '/\/');
 
 			// checks all directory segments until reaching the root directory
-			while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
+			while (
+				Str::startsWith($dir, $this->root()) === true &&
+				$dir !== $this->root()
+			) {
 				$files = scandir($dir);
 
 				if ($files === false) {
@@ -199,7 +177,8 @@ class FileCache extends Cache
 					// continue with the next level up
 					$dir = dirname($dir);
 				} else {
-					// no need to continue with the next level up as `$dir` was not deleted
+					// no need to continue with the next level up
+					// as `$dir` was not deleted
 					break;
 				}
 			}
@@ -209,18 +188,41 @@ class FileCache extends Cache
 	}
 
 	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful
+	 * Internal method to retrieve the raw cache value;
+	 * needs to return a Value object or null if not found
 	 */
-	public function flush(): bool
+	public function retrieve(string $key): Value|null
 	{
-		if (
-			Dir::remove($this->root) === true &&
-			Dir::make($this->root) === true
-		) {
-			return true;
+		$file = $this->file($key);
+
+		if ($value = F::read($file)) {
+			return Value::fromJson($value);
 		}
 
-		return false; // @codeCoverageIgnore
+		return null;
+	}
+
+	/**
+	 * Returns the full root including prefix
+	 */
+	public function root(): string
+	{
+		return $this->root;
+	}
+
+	/**
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful
+	 *
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
+	 */
+	public function set(string $key, $value, int $minutes = 0): bool
+	{
+		$file  = $this->file($key);
+		$value = new Value($value, $minutes);
+		return F::write($file, $value->toJson());
 	}
 }

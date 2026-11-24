@@ -2,7 +2,7 @@
 
 namespace Kirby\Query\Runners;
 
-use Closure;
+use Kirby\Query\AST\Node;
 use Kirby\Query\Parser\Parser;
 use Kirby\Query\Query;
 use Kirby\Query\Visitors\DefaultVisitor;
@@ -10,11 +10,9 @@ use Kirby\Query\Visitors\DefaultVisitor;
 /**
  * Runner that caches the AST in memory
  *
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 class DefaultRunner extends Runner
@@ -31,27 +29,19 @@ class DefaultRunner extends Runner
 		);
 	}
 
-	protected function resolver(string $query): Closure
+	/**
+	 * Returns the AST of the query, parsed once per query string
+	 * @since 6.0.0
+	 */
+	protected function parse(string $query): Node
 	{
-		// Load closure from cache
-		if (isset($this->cache[$query]) === true) {
-			return $this->cache[$query];
-		}
-
-		// Parse query as AST
-		$parser = new Parser($query);
-		$ast    = $parser->parse();
-
-		// Cache closure to resolve same query
-		return $this->cache[$query] = fn (array $context) => $ast->resolve(
-			new DefaultVisitor($this->global, $context, $this->interceptor)
-		);
+		return $this->cache[$query] ??= (new Parser($query))->parse();
 	}
 
 	/**
 	 * Executes a query within a given data context
 	 *
-	 * @param array $context Optional variables to be passed to the query
+	 * @param $context Optional variables to be passed to the query
 	 *
 	 * @throws \Exception when query is invalid or executor not callable
 	 */
@@ -64,6 +54,12 @@ class DefaultRunner extends Runner
 			return $entry;
 		}
 
-		return $this->resolver($query)($context);
+		$visitor = new DefaultVisitor(
+			global:      $this->global,
+			context:     $context,
+			interceptor: $this->interceptor
+		);
+
+		return $this->parse($query)->resolve($visitor);
 	}
 }

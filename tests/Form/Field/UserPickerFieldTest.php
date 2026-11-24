@@ -1,0 +1,324 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Cms\App;
+use Kirby\Cms\User;
+use Kirby\Panel\Controller\Dialog\UserPickerDialogController;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(UserPickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class UserPickerFieldTest extends TestCase
+{
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'users' => [
+				[
+					'id'    => 'leonardo',
+					'email' => 'leonardo@getkirby.com'
+				],
+				[
+					'id'    => 'raphael',
+					'email' => 'raphael@getkirby.com'
+				],
+				[
+					'id'    => 'michelangelo',
+					'email' => 'michelangelo@getkirby.com'
+				],
+				[
+					'id'    => 'donatello',
+					'email' => 'donatello@getkirby.com'
+				]
+			]
+		]);
+	}
+
+	public function testApiItems(): void
+	{
+		$app = $this->app->clone([
+			'options' => ['api.allowImpersonation' => true],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'authors' => [
+									'type' => 'userpicker',
+								]
+							]
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'leonardo@getkirby.com,raphael@getkirby.com'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api()->call('pages/test/fields/authors/items');
+
+		$this->assertCount(2, $api);
+		$this->assertSame('user://leonardo', $api[0]['uuid']);
+		$this->assertSame('user://raphael', $api[1]['uuid']);
+	}
+
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by role,
+		// so it needs to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				[
+					'name'        => 'editor-' . $uuid,
+					'permissions' => [
+						'users' => ['list' => false]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'authors' => [
+									'type' => 'userpicker',
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				],
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'editor@getkirby.com,admin@getkirby.com'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/authors/items');
+
+		$this->assertCount(2, $api);
+
+		// the editor may list themselves
+		$this->assertSame('editor', $api[0]['id']);
+
+		// the user that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('admin@getkirby.com', $api[1]['id']);
+		$this->assertSame('admin@getkirby.com', $api[1]['uuid']);
+		$this->assertSame('[unknown]', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
+	public function testDefaultUser(): void
+	{
+		$this->app->impersonate('raphael@getkirby.com');
+
+		$field = $this->field('userpicker');
+		$this->assertSame([], $field->default());
+
+		$field = $this->field('userpicker', ['default' => true]);
+		$this->assertSame('raphael', $field->default()[0]);
+
+		$field = $this->field('userpicker', [
+			'default' => [
+				'raphael@getkirby.com',
+				'donatello@getkirby.com'
+			]
+		]);
+
+		$this->assertSame('raphael@getkirby.com', $field->default()[0]);
+		$this->assertSame('donatello@getkirby.com', $field->default()[1]);
+
+		$field = $this->field('userpicker', ['default' => false]);
+		$this->assertSame([], $field->default());
+	}
+
+	public function testDialogs(): void
+	{
+		$field   = $this->field('userpicker');
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(UserPickerDialogController::class, $dialog);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('userpicker', ['empty' => 'Test']);
+		$this->assertSame('Test', $field->empty());
+
+		$field = $this->field('userpicker', [
+			'empty' => ['en' => 'Test', 'de' => 'Töst']
+		]);
+		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFillWithUser(): void
+	{
+		$field = $this->field('userpicker');
+		$field->fill($this->app->user('leonardo'));
+
+		$this->assertSame(['user://leonardo'], $field->toStoredValue());
+	}
+
+	public function testFillWithUsers(): void
+	{
+		$field = $this->field('userpicker');
+		$field->fill($this->app->users()->limit(2));
+
+		$this->assertSame(['user://leonardo', 'user://raphael'], $field->toStoredValue());
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('userpicker', ['required' => true]);
+		$this->assertFalse($field->isValid());
+
+		$field = $this->field('tags', [
+			'required' => true,
+			'value'    => ['leonardo@getkirby.com'],
+		]);
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('userpicker', [
+			'value' => [
+				'leonardo@getkirby.com',
+				'raphael@getkirby.com'
+			],
+			'max' => 1
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->max());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('userpicker', [
+			'value' => [
+				'leonardo@getkirby.com',
+				'raphael@getkirby.com'
+			],
+			'min' => 3
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('userpicker');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Userpicker',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'userpicker',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'userpicker',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testRequired(): void
+	{
+		$field = $this->field('userpicker', ['required' => true]);
+		$this->assertTrue($field->required());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('userpicker');
+		$model = $field->toModel('leonardo@getkirby.com');
+		$this->assertInstanceOf(User::class, $model);
+		$this->assertSame('leonardo@getkirby.com', $model->email());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('userpicker', [
+			'value' => [
+				'leonardo@getkirby.com', // exists
+				'raphael@getkirby.com', // exists
+				'homer@getkirby.com'  // does not exist
+			]
+		]);
+
+		$ids = $field->toStoredValue();
+
+		// the missing user keeps its stored ID
+		$expected = [
+			'user://leonardo',
+			'user://raphael',
+			'homer@getkirby.com'
+		];
+
+		$this->assertSame($expected, $ids);
+	}
+}

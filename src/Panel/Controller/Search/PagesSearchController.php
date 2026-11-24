@@ -1,0 +1,34 @@
+<?php
+
+namespace Kirby\Panel\Controller\Search;
+
+use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
+use Kirby\Panel\Ui\Item\PageItem;
+
+/**
+ * Controls the search requests for pages
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class PagesSearchController extends ModelsSearchController
+{
+	/**
+	 * @param Page $model
+	 */
+	public function item($model): PageItem
+	{
+		return new PageItem(page: $model, info: '{{ page.id }}');
+	}
+
+	public function models(): Pages
+	{
+		return $this->kirby
+			->site()
+			->index(true)
+			->filter('isListable', true)
+			->search($this->query);
+	}
+}

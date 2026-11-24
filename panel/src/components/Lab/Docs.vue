@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 import Warning from "./Docs/Warning.vue";
 import Desc, { props as DescProps } from "./Docs/Description.vue";
 import Examples, { props as ExamplesProps } from "./Docs/Examples.vue";
@@ -37,10 +35,11 @@ import DocBlock, { props as DocBlockProps } from "./Docs/DocBlock.vue";
 import DocWarning from "./DocsWarning.vue";
 import DocParams from "./DocsParams.vue";
 import DocTypes from "./DocsTypes.vue";
-Vue.component("k-lab-docs-warning", DocWarning);
-Vue.component("k-lab-docs-params", DocParams);
-Vue.component("k-lab-docs-types", DocTypes);
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	components: {
 		"k-lab-docs-warning": Warning,
@@ -66,6 +65,13 @@ export default {
 		deprecated: String,
 		isUnstable: Boolean,
 		since: String
+	},
+	created() {
+		if (this.$helper.isComponent("k-lab-docs-warning") === false) {
+			window.panel.app.component("k-lab-docs-warning", DocWarning);
+			window.panel.app.component("k-lab-docs-params", DocParams);
+			window.panel.app.component("k-lab-docs-types", DocTypes);
+		}
 	}
 };
 </script>

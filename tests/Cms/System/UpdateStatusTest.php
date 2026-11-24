@@ -14,11 +14,11 @@ use ReflectionProperty;
 #[CoversClass(UpdateStatus::class)]
 class UpdateStatusTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
+	public const string FIXTURES = __DIR__ . '/fixtures/UpdateStatusTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System.UpdateStatus';
 
-	protected static string $host;
 	protected static array $data = [];
+	protected static string $host;
 
 	public static function setUpBeforeClass(): void
 	{
@@ -34,6 +34,58 @@ class UpdateStatusTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
+	}
+
+	protected function app(string $version, string|null $activation = null): MockApp
+	{
+		MockApp::$version = $version;
+		$app = new MockApp([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
+			]
+		]);
+
+		$property = new ReflectionProperty($app->system(), 'license');
+		$property->setValue($app->system(), new License(activation: $activation));
+
+		return $app;
+	}
+
+	protected static function data(string $name): array
+	{
+		if (isset(static::$data[$name]) === true) {
+			return static::$data[$name];
+		}
+
+		$path = static::FIXTURES . '/logic/' . $name . '.json';
+		$json = Json::read($path);
+
+		// dynamically insert the current PHP version
+		// because we cannot mock it easily
+		if (isset($json['php']['<CURRENT>']) === true) {
+			$json['php'][PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION] = $json['php']['<CURRENT>'];
+			unset($json['php']['<CURRENT>']);
+		}
+
+		return static::$data[$name] = $json;
+	}
+
+	protected function plugin(string|null $version): Plugin
+	{
+		// ensure a global app object is initialized for message filtering
+		$this->app('88888.8.8');
+
+		return new Plugin(
+			name: 'getkirby/test',
+			info: [
+				'version' => $version
+			]
+		);
 	}
 
 	public function testLoadData(): void
@@ -70,6 +122,65 @@ class UpdateStatusTest extends TestCase
 				'8.1' => '2024-11-25',
 				'8.2' => '2025-12-08',
 				'8.3' => '2026-11-23',
+			],
+			'incidents' => [],
+			'messages' => [],
+			'_version' => '88888.8.5'
+		], $app->cache('updates')->get('security'));
+	}
+
+	public function testLoadDataCacheDisabled(): void
+	{
+		$app = $this->app('88888.8.5')->clone([
+			'options' => [
+				'cache' => [
+					'updates' => false
+				]
+			]
+		]);
+
+		$updateStatus = new UpdateStatus($app);
+		$this->assertNull($updateStatus->targetVersion());
+		$this->assertSame([
+			'Cannot check for updates without a working "updates" cache'
+		], $updateStatus->exceptionMessages());
+	}
+
+	public function testLoadDataCacheInvalid(): void
+	{
+		$app = $this->app('88888.8.5');
+		$app->cache('updates')->set('security', 12345);
+
+		$updateStatus = new UpdateStatus($app);
+		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
+		$this->assertSame([], $updateStatus->exceptionMessages());
+
+		$this->assertSame([
+			'latest' => '99999.9.9',
+			'versions' => [
+				'99999.9.9' => [
+					'description' => 'Latest Kirby release',
+					'status' => 'latest'
+				],
+				'*' => [
+					'description' => 'Actively supported',
+					'latest' => '88888.8.8',
+					'status' => 'active-support',
+					'initialRelease' => '2023-11-28'
+				]
+			],
+			'urls' => [
+				'*' => [
+					'changes' => 'https://getkirby.com/releases/{{ version }}',
+					'download' => 'https://repoofthefuture.com/{{ version }}.zip',
+					'upgrade' => 'https://getkirby.com/releases/99999'
+				]
+			],
+			'php' => [
+				'8.0' => '2023-11-26',
+				'8.1' => '2024-11-25',
+				'8.2' => '2025-12-08',
+				'8.3' => '2026-11-23'
 			],
 			'incidents' => [],
 			'messages' => [],
@@ -164,11 +275,12 @@ class UpdateStatusTest extends TestCase
 			]
 		]);
 
-		$plugin = new Plugin('getkirby/public', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertSame('88888.8.6', $updateStatus->targetVersion());
@@ -182,11 +294,12 @@ class UpdateStatusTest extends TestCase
 		$this->assertSame([], $updateStatus->exceptionMessages());
 
 		// but the plugin version does
-		$plugin = new Plugin('getkirby/public', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/public',
+			info: [
 				'version' => '88888.8.6'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
@@ -218,73 +331,15 @@ class UpdateStatusTest extends TestCase
 		], $app->cache('updates')->get('plugins/getkirby/public'));
 	}
 
-	public function testLoadDataCacheInvalid(): void
-	{
-		$app = $this->app('88888.8.5');
-		$app->cache('updates')->set('security', 12345);
-
-		$updateStatus = new UpdateStatus($app);
-		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
-		$this->assertSame([], $updateStatus->exceptionMessages());
-
-		$this->assertSame([
-			'latest' => '99999.9.9',
-			'versions' => [
-				'99999.9.9' => [
-					'description' => 'Latest Kirby release',
-					'status' => 'latest'
-				],
-				'*' => [
-					'description' => 'Actively supported',
-					'latest' => '88888.8.8',
-					'status' => 'active-support',
-					'initialRelease' => '2023-11-28'
-				]
-			],
-			'urls' => [
-				'*' => [
-					'changes' => 'https://getkirby.com/releases/{{ version }}',
-					'download' => 'https://repoofthefuture.com/{{ version }}.zip',
-					'upgrade' => 'https://getkirby.com/releases/99999'
-				]
-			],
-			'php' => [
-				'8.0' => '2023-11-26',
-				'8.1' => '2024-11-25',
-				'8.2' => '2025-12-08',
-				'8.3' => '2026-11-23'
-			],
-			'incidents' => [],
-			'messages' => [],
-			'_version' => '88888.8.5'
-		], $app->cache('updates')->get('security'));
-	}
-
-	public function testLoadDataCacheDisabled(): void
-	{
-		$app = $this->app('88888.8.5')->clone([
-			'options' => [
-				'cache' => [
-					'updates' => false
-				]
-			]
-		]);
-
-		$updateStatus = new UpdateStatus($app);
-		$this->assertNull($updateStatus->targetVersion());
-		$this->assertSame([
-			'Cannot check for updates without a working "updates" cache'
-		], $updateStatus->exceptionMessages());
-	}
-
 	public function testLoadDataNotFound(): void
 	{
 		$app    = $this->app('88888.8.8');
-		$plugin = new Plugin('getkirby/test', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/test',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		// curl's wording for a missing local file differs between
 		// versions ("Couldn't open file" vs. "Could not open file"),
@@ -320,11 +375,12 @@ class UpdateStatusTest extends TestCase
 	public function testLoadDataNotJson(): void
 	{
 		$app    = $this->app('88888.8.8');
-		$plugin = new Plugin('getkirby/invalid-json', [
-			'info' => [
+		$plugin = new Plugin(
+			name: 'getkirby/invalid-json',
+			info: [
 				'version' => '88888.8.5'
 			]
-		]);
+		);
 
 		$updateStatus = new UpdateStatus($plugin);
 		$this->assertNull($updateStatus->targetVersion());
@@ -343,34 +399,6 @@ class UpdateStatusTest extends TestCase
 		$this->assertSame([
 			'Could not load update data for plugin getkirby/invalid-json: Invalid JSON data'
 		], $updateStatus->exceptionMessages());
-	}
-
-	#[DataProvider('logicProvider')]
-	public function testLogic(
-		string $packageType,
-		array $packageData,
-		bool $securityOnly,
-		array|null $data,
-		array $expected
-	): void {
-		$package      = $this->$packageType(...$packageData);
-		$updateStatus = new UpdateStatus($package, $securityOnly, $data);
-
-		foreach ($expected as $method => $value) {
-			$actual = $updateStatus->$method();
-
-			// curl's wording for a missing local file differs between
-			// versions ("Couldn't open file" vs. "Could not open file")
-			if ($method === 'exceptionMessages') {
-				$actual = str_replace(
-					'Could not open file',
-					'Couldn\'t open file',
-					$actual
-				);
-			}
-
-			$this->assertSame($value, $actual);
-		}
 	}
 
 	public static function logicProvider(): array
@@ -1653,6 +1681,34 @@ class UpdateStatusTest extends TestCase
 		];
 	}
 
+	#[DataProvider('logicProvider')]
+	public function testLogic(
+		string $packageType,
+		array $packageData,
+		bool $securityOnly,
+		array|null $data,
+		array $expected
+	): void {
+		$package      = $this->$packageType(...$packageData);
+		$updateStatus = new UpdateStatus($package, $securityOnly, $data);
+
+		foreach ($expected as $method => $value) {
+			$actual = $updateStatus->$method();
+
+			// curl's wording for a missing local file differs between
+			// versions ("Couldn't open file" vs. "Could not open file")
+			if ($method === 'exceptionMessages') {
+				$actual = str_replace(
+					'Could not open file',
+					'Couldn\'t open file',
+					$actual
+				);
+			}
+
+			$this->assertSame($value, $actual);
+		}
+	}
+
 	public function testMessagesCache(): void
 	{
 		$updateStatus = new UpdateStatus($this->app('77777.6.0'), false, static::data('basic'));
@@ -1669,51 +1725,5 @@ class UpdateStatusTest extends TestCase
 
 		// cached result should be the same
 		$this->assertSame($expected, $updateStatus->messages());
-	}
-
-	protected function app(string $version, string|null $activation = null): MockApp
-	{
-		MockApp::$version = $version;
-		$app = new MockApp([
-			'roots' => [
-				'index' => static::TMP
-			]
-		]);
-
-		$property = new ReflectionProperty($app->system(), 'license');
-		$property->setValue($app->system(), new License(activation: $activation));
-
-		return $app;
-	}
-
-	protected static function data(string $name): array
-	{
-		if (isset(static::$data[$name]) === true) {
-			return static::$data[$name];
-		}
-
-		$path = static::FIXTURES . '/logic/' . $name . '.json';
-		$json = Json::read($path);
-
-		// dynamically insert the current PHP version
-		// because we cannot mock it easily
-		if (isset($json['php']['<CURRENT>']) === true) {
-			$json['php'][PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION] = $json['php']['<CURRENT>'];
-			unset($json['php']['<CURRENT>']);
-		}
-
-		return static::$data[$name] = $json;
-	}
-
-	protected function plugin(string|null $version): Plugin
-	{
-		// ensure a global app object is initialized for message filtering
-		$this->app('88888.8.8');
-
-		return new Plugin('getkirby/test', [
-			'info' => [
-				'version' => $version
-			]
-		]);
 	}
 }

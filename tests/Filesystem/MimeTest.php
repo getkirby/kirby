@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Mime::class)]
 class MimeTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/mime';
+	public const string FIXTURES = __DIR__ . '/fixtures/mime';
 
 	public function testFixCss(): void
 	{
@@ -22,17 +22,17 @@ class MimeTest extends TestCase
 		$this->assertSame('text/javascript', Mime::fix('something.mjs', 'text/plain', 'mjs'));
 	}
 
+	public function testFixNull(): void
+	{
+		$this->assertSame('text/css', Mime::fix('something.css', 'text/css', null));
+		$this->assertSame(null, Mime::fix('something.css', null, null));
+	}
+
 	public function testFixSvg(): void
 	{
 		$this->assertSame('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
 		$this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
 		$this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
-	}
-
-	public function testFixNull(): void
-	{
-		$this->assertSame('text/css', Mime::fix('something.css', 'text/css', null));
-		$this->assertSame(null, Mime::fix('something.css', null, null));
 	}
 
 	public function testFromExtension(): void
@@ -53,6 +53,18 @@ class MimeTest extends TestCase
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
+	public function testFromSvgEmptyFile(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/empty.svg');
+		$this->assertFalse($mime);
+	}
+
+	public function testFromSvgMalformedXml(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/malformed.svg');
+		$this->assertFalse($mime);
+	}
+
 	public function testFromSvgNonExistingFile(): void
 	{
 		$mime = Mime::fromSvg(__DIR__ . '/imaginary.svg');
@@ -65,22 +77,16 @@ class MimeTest extends TestCase
 		$this->assertFalse($mime);
 	}
 
-	public function testFromSvgMalformedXml(): void
-	{
-		$mime = Mime::fromSvg(static::FIXTURES . '/malformed.svg');
-		$this->assertFalse($mime);
-	}
-
-	public function testFromSvgEmptyFile(): void
-	{
-		$mime = Mime::fromSvg(static::FIXTURES . '/empty.svg');
-		$this->assertFalse($mime);
-	}
-
 	public function testFromSvgNotAtRoot(): void
 	{
 		$mime = Mime::fromSvg(static::FIXTURES . '/inline-svg.html');
 		$this->assertFalse($mime);
+	}
+
+	public function testFromSvgSelfClosing(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/self-closing.svg');
+		$this->assertSame('image/svg+xml', $mime);
 	}
 
 	public function testFromSvgWithBom(): void
@@ -107,21 +113,15 @@ class MimeTest extends TestCase
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
-	public function testFromSvgWithXmlDeclaration(): void
-	{
-		$mime = Mime::fromSvg(static::FIXTURES . '/xml-declaration.svg');
-		$this->assertSame('image/svg+xml', $mime);
-	}
-
-	public function testFromSvgSelfClosing(): void
-	{
-		$mime = Mime::fromSvg(static::FIXTURES . '/self-closing.svg');
-		$this->assertSame('image/svg+xml', $mime);
-	}
-
 	public function testFromSvgWithStylesheetProcessingInstruction(): void
 	{
 		$mime = Mime::fromSvg(static::FIXTURES . '/with-stylesheet-pi.svg');
+		$this->assertSame('image/svg+xml', $mime);
+	}
+
+	public function testFromSvgWithXmlDeclaration(): void
+	{
+		$mime = Mime::fromSvg(static::FIXTURES . '/xml-declaration.svg');
 		$this->assertSame('image/svg+xml', $mime);
 	}
 
@@ -205,6 +205,17 @@ class MimeTest extends TestCase
 		$this->assertSame([], Mime::toExtensions(null));
 	}
 
+	public function testTypes(): void
+	{
+		$this->assertSame(Mime::$types, Mime::types());
+	}
+
+	public function testTypeWithJson(): void
+	{
+		$mime = Mime::type(static::FIXTURES . '/something.json');
+		$this->assertSame('application/json', $mime);
+	}
+
 	public function testTypeWithOptimizedSvg(): void
 	{
 		$mime = Mime::type(static::FIXTURES . '/optimized.svg');
@@ -215,16 +226,5 @@ class MimeTest extends TestCase
 	{
 		$mime = Mime::type(static::FIXTURES . '/unoptimized.svg');
 		$this->assertSame('image/svg+xml', $mime);
-	}
-
-	public function testTypeWithJson(): void
-	{
-		$mime = Mime::type(static::FIXTURES . '/something.json');
-		$this->assertSame('application/json', $mime);
-	}
-
-	public function testTypes(): void
-	{
-		$this->assertSame(Mime::$types, Mime::types());
 	}
 }

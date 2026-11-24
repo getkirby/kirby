@@ -2,6 +2,7 @@
 
 namespace Kirby\Filesystem;
 
+use Closure;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -11,9 +12,6 @@ use Kirby\Toolkit\Str;
  * from different criteria like
  * extensions etc.
  *
- * @package   Kirby Filesystem
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -21,123 +19,140 @@ class Mime
 {
 	/**
 	 * Extension to MIME type map
+	 *
+	 * @var array<string, string|list<string>>
 	 */
 	public static array $types = [
-		'ai'    => 'application/postscript',
-		'aif'   => 'audio/x-aiff',
-		'aifc'  => 'audio/x-aiff',
-		'aiff'  => 'audio/x-aiff',
-		'avi'   => 'video/x-msvideo',
-		'avif'  => 'image/avif',
-		'bmp'   => 'image/bmp',
-		'css'   => 'text/css',
-		'csv'   => ['text/csv', 'text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream'],
-		'doc'   => 'application/msword',
-		'docx'  => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'dotx'  => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-		'dvi'   => 'application/x-dvi',
-		'eml'   => 'message/rfc822',
-		'eps'   => 'application/postscript',
-		'exe'   => ['application/octet-stream', 'application/x-msdownload'],
-		'flac'  => 'audio/flac',
-		'flv'   => 'video/x-flv',
-		'gif'   => 'image/gif',
-		'gtar'  => 'application/x-gtar',
-		'gz'    => 'application/x-gzip',
-		'gzip'  => 'application/x-gzip',
-		'heic'  => 'image/heic',
-		'heif'  => 'image/heif',
-		'htm'   => 'text/html',
-		'html'  => 'text/html',
-		'ico'   => 'image/x-icon',
-		'ics'   => 'text/calendar',
-		'indd'  => 'application/x-indesign',
-		'java'  => 'text/x-java-source',
-		'js'    => ['application/javascript', 'application/x-javascript'],
-		'json'  => ['application/json', 'text/json'],
-		'j2k'   => ['image/jp2'],
-		'jp2'   => ['image/jp2'],
-		'jpg'   => ['image/jpeg', 'image/pjpeg'],
-		'jpeg'  => ['image/jpeg', 'image/pjpeg'],
-		'jpe'   => ['image/jpeg', 'image/pjpeg'],
-		'jxl'   => 'image/jxl',
-		'log'   => ['text/plain', 'text/x-log'],
-		'm4a'   => 'audio/mp4',
-		'm4v'   => 'video/mp4',
-		'md'    => 'text/markdown',
-		'mdown' => 'text/markdown',
-		'mid'   => 'audio/midi',
-		'midi'  => 'audio/midi',
-		'mif'   => 'application/vnd.mif',
-		'mjs'   => 'text/javascript',
-		'mkv'   => 'video/x-matroska',
-		'mov'   => 'video/quicktime',
-		'movie' => 'video/x-sgi-movie',
-		'mp2'   => 'audio/mpeg',
-		'mp3'   => ['audio/mpeg', 'audio/mpg', 'audio/mpeg3', 'audio/mp3'],
-		'mp4'   => 'video/mp4',
-		'mpe'   => 'video/mpeg',
-		'mpeg'  => 'video/mpeg',
-		'mpg'   => 'video/mpeg',
-		'mpga'  => 'audio/mpeg',
-		'odc'   => 'application/vnd.oasis.opendocument.chart',
-		'odp'   => 'application/vnd.oasis.opendocument.presentation',
-		'odt'   => 'application/vnd.oasis.opendocument.text',
-		'ogg'   => 'audio/ogg',
-		'ogv'   => 'video/ogg',
-		'opus'  => 'audio/opus',
-		'otf'   => 'font/otf',
-		'pdf'   => ['application/pdf', 'application/x-download'],
-		'php'   => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
-		'php3'  => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
-		'phps'  => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
-		'pht'   => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
-		'phtml' => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
-		'png'   => 'image/png',
-		'ppt'   => ['application/powerpoint', 'application/vnd.ms-powerpoint'],
-		'pptx'  => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-		'potx'  => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-		'ps'    => 'application/postscript',
-		'psd'   => 'application/x-photoshop',
-		'py'    => 'text/x-python',
-		'qt'    => 'video/quicktime',
-		'rb'    => 'text/x-ruby',
-		'rss'   => 'application/rss+xml',
-		'rtf'   => 'text/rtf',
-		'rtx'   => 'text/richtext',
-		'scss'  => 'text/x-scss',
-		'shtml' => 'text/html',
-		'svg'   => 'image/svg+xml',
-		'swf'   => 'application/x-shockwave-flash',
-		'tar'   => 'application/x-tar',
-		'text'  => 'text/plain',
-		'txt'   => 'text/plain',
-		'tgz'   => ['application/x-tar', 'application/x-gzip-compressed'],
-		'tif'   => 'image/tiff',
-		'tiff'  => 'image/tiff',
-		'ttf'   => 'font/ttf',
-		'wav'   => ['audio/wav', 'audio/x-wav', 'audio/vnd.wave', 'audio/wave'],
-		'wbxml' => 'application/wbxml',
-		'webm'  => ['video/webm', 'audio/webm'],
-		'webp'  => 'image/webp',
-		'woff'  => 'font/woff',
-		'woff2' => 'font/woff2',
-		'word'  => ['application/msword', 'application/octet-stream'],
-		'xhtml' => 'application/xhtml+xml',
-		'xht'   => 'application/xhtml+xml',
-		'xml'   => 'text/xml',
-		'xl'    => 'application/excel',
-		'xls'   => ['application/excel', 'application/vnd.ms-excel', 'application/msexcel'],
-		'xlsx'  => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		'xltx'  => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-		'xsl'   => 'text/xml',
-		'yaml'  => ['application/yaml', 'text/yaml'],
-		'yml'   => ['application/yaml', 'text/yaml'],
-		'zip'   => ['application/x-zip', 'application/zip', 'application/x-zip-compressed'],
+		'7z'          => 'application/x-7z-compressed',
+		'aac'         => 'audio/aac',
+		'ai'          => 'application/postscript',
+		'aif'         => 'audio/x-aiff',
+		'aifc'        => 'audio/x-aiff',
+		'aiff'        => 'audio/x-aiff',
+		'apng'        => 'image/apng',
+		'atom'        => 'application/atom+xml',
+		'avi'         => 'video/x-msvideo',
+		'avif'        => 'image/avif',
+		'bmp'         => 'image/bmp',
+		'css'         => 'text/css',
+		'csv'         => ['text/csv', 'text/x-comma-separated-values', 'text/comma-separated-values'],
+		'doc'         => 'application/msword',
+		'docx'        => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'dotx'        => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+		'dvi'         => 'application/x-dvi',
+		'eml'         => 'message/rfc822',
+		'eps'         => 'application/postscript',
+		'epub'        => 'application/epub+zip',
+		'exe'         => ['application/vnd.microsoft.portable-executable', 'application/x-msdownload', 'application/octet-stream'],
+		'flac'        => 'audio/flac',
+		'flv'         => 'video/x-flv',
+		'gif'         => 'image/gif',
+		'gtar'        => 'application/x-gtar',
+		'gz'          => ['application/gzip', 'application/x-gzip'],
+		'gzip'        => ['application/gzip', 'application/x-gzip'],
+		'heic'        => 'image/heic',
+		'heif'        => 'image/heif',
+		'htm'         => 'text/html',
+		'html'        => 'text/html',
+		'ico'         => ['image/x-icon', 'image/vnd.microsoft.icon'],
+		'ics'         => 'text/calendar',
+		'indd'        => 'application/x-indesign',
+		'java'        => 'text/x-java-source',
+		'js'          => ['text/javascript', 'application/javascript', 'application/x-javascript'],
+		'json'        => ['application/json', 'text/json'],
+		'j2k'         => ['image/jp2'],
+		'jp2'         => ['image/jp2'],
+		'jpg'         => ['image/jpeg', 'image/pjpeg'],
+		'jpeg'        => ['image/jpeg', 'image/pjpeg'],
+		'jpe'         => ['image/jpeg', 'image/pjpeg'],
+		'jxl'         => 'image/jxl',
+		'log'         => ['text/plain', 'text/x-log'],
+		'm4a'         => 'audio/mp4',
+		'm4v'         => 'video/mp4',
+		'md'          => 'text/markdown',
+		'mdown'       => 'text/markdown',
+		'mid'         => 'audio/midi',
+		'midi'        => 'audio/midi',
+		'mif'         => 'application/vnd.mif',
+		'mjs'         => 'text/javascript',
+		'mkv'         => 'video/x-matroska',
+		'mov'         => 'video/quicktime',
+		'movie'       => 'video/x-sgi-movie',
+		'mp2'         => 'audio/mpeg',
+		'mp3'         => ['audio/mpeg', 'audio/mpg', 'audio/mpeg3', 'audio/mp3'],
+		'mp4'         => 'video/mp4',
+		'mpe'         => 'video/mpeg',
+		'mpeg'        => 'video/mpeg',
+		'mpg'         => 'video/mpeg',
+		'mpga'        => 'audio/mpeg',
+		'odc'         => 'application/vnd.oasis.opendocument.chart',
+		'odp'         => 'application/vnd.oasis.opendocument.presentation',
+		'ods'         => 'application/vnd.oasis.opendocument.spreadsheet',
+		'odt'         => 'application/vnd.oasis.opendocument.text',
+		'oga'         => 'audio/ogg',
+		'ogg'         => 'audio/ogg',
+		'ogv'         => 'video/ogg',
+		'opus'        => 'audio/opus',
+		'otf'         => 'font/otf',
+		'pdf'         => ['application/pdf', 'application/x-download'],
+		'php'         => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
+		'php3'        => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
+		'phps'        => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
+		'pht'         => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
+		'phtml'       => ['text/php', 'text/x-php', 'application/x-httpd-php', 'application/php', 'application/x-php', 'application/x-httpd-php-source'],
+		'png'         => 'image/png',
+		'ppt'         => ['application/vnd.ms-powerpoint', 'application/powerpoint'],
+		'pptx'        => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		'potx'        => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+		'ps'          => 'application/postscript',
+		'psd'         => ['image/vnd.adobe.photoshop', 'application/x-photoshop'],
+		'py'          => 'text/x-python',
+		'qt'          => 'video/quicktime',
+		'rar'         => ['application/vnd.rar', 'application/x-rar-compressed'],
+		'rb'          => 'text/x-ruby',
+		'rss'         => 'application/rss+xml',
+		'rtf'         => 'text/rtf',
+		'rtx'         => 'text/richtext',
+		'scss'        => 'text/x-scss',
+		'shtml'       => 'text/html',
+		'svg'         => 'image/svg+xml',
+		'svgz'        => 'image/svg+xml',
+		'swf'         => 'application/x-shockwave-flash',
+		'tar'         => 'application/x-tar',
+		'text'        => 'text/plain',
+		'txt'         => 'text/plain',
+		'tgz'         => ['application/gzip', 'application/x-tar'],
+		'tif'         => 'image/tiff',
+		'tiff'        => 'image/tiff',
+		'ttf'         => 'font/ttf',
+		'vtt'         => 'text/vtt',
+		'wasm'        => 'application/wasm',
+		'wav'         => ['audio/wav', 'audio/x-wav', 'audio/vnd.wave', 'audio/wave'],
+		'wbxml'       => ['application/vnd.wap.wbxml', 'application/wbxml'],
+		'weba'        => 'audio/webm',
+		'webm'        => ['video/webm', 'audio/webm'],
+		'webmanifest' => 'application/manifest+json',
+		'webp'        => 'image/webp',
+		'woff'        => 'font/woff',
+		'woff2'       => 'font/woff2',
+		'word'        => ['application/msword', 'application/octet-stream'],
+		'xhtml'       => 'application/xhtml+xml',
+		'xht'         => 'application/xhtml+xml',
+		'xml'         => ['application/xml', 'text/xml'],
+		'xl'          => 'application/vnd.ms-excel',
+		'xls'         => ['application/vnd.ms-excel', 'application/excel', 'application/msexcel'],
+		'xlsx'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'xltx'        => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+		'xsl'         => ['application/xslt+xml', 'application/xml', 'text/xml'],
+		'yaml'        => ['application/yaml', 'text/yaml'],
+		'yml'         => ['application/yaml', 'text/yaml'],
+		'zip'         => ['application/zip', 'application/x-zip', 'application/x-zip-compressed'],
 	];
 
 	/**
 	 * Lazy-built reverse map of $types (MIME type → extensions[])
+	 *
+	 * @var array<string, list<string>>|null
 	 */
 	protected static array|null $mimes = null;
 
@@ -161,7 +176,7 @@ class Mime
 			'text/plain' => [
 				'css'  => 'text/css',
 				'json' => 'application/json',
-				'mjs' => 'text/javascript',
+				'mjs'  => 'text/javascript',
 				'svg'  => Mime::fromSvg(...),
 			],
 			'text/x-asm' => [
@@ -178,14 +193,14 @@ class Mime
 			]
 		];
 
-		if ($mode = $map[$mime][$extension] ?? null) {
-			if (is_callable($mode) === true) {
-				return $mode($file, $mime, $extension);
-			}
+		$mode = $map[$mime][$extension] ?? null;
 
-			if (is_string($mode) === true) {
-				return $mode;
-			}
+		if ($mode instanceof Closure) {
+			return $mode($file) ?: null;
+		}
+
+		if ($mode !== null) {
+			return $mode;
 		}
 
 		return $mime;
@@ -202,7 +217,7 @@ class Mime
 			$mime = array_shift($mime);
 		}
 
-		return  $mime;
+		return $mime;
 	}
 
 	/**
@@ -215,8 +230,7 @@ class Mime
 			file_exists($file) === true
 		) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$mime  = finfo_file($finfo, $file);
-			return $mime;
+			return finfo_file($finfo, $file);
 		}
 
 		return false;
@@ -273,10 +287,8 @@ class Mime
 	 */
 	public static function isAccepted(string $mime, string $pattern): bool
 	{
-		$accepted = Str::accepted($pattern);
-
-		foreach ($accepted as $m) {
-			if (static::matches($mime, $m['value']) === true) {
+		foreach (Str::accepted($pattern) as $accepted) {
+			if (static::matches($mime, $accepted['value']) === true) {
 				return true;
 			}
 		}
@@ -310,6 +322,8 @@ class Mime
 
 	/**
 	 * Returns all available extensions for a given MIME type
+	 *
+	 * @return list<string>
 	 */
 	public static function toExtensions(
 		string|null $mime = null,
@@ -327,9 +341,9 @@ class Mime
 
 		$extensions = [];
 
-		foreach (static::$mimes as $registered => $exts) {
+		foreach (static::$mimes as $registered => $list) {
 			if (static::matches($registered, $mime) === true) {
-				array_push($extensions, ...$exts);
+				array_push($extensions, ...$list);
 			}
 		}
 
@@ -365,6 +379,8 @@ class Mime
 
 	/**
 	 * Returns all detectable MIME types
+	 *
+	 * @return array<string, string|list<string>>
 	 */
 	public static function types(): array
 	{

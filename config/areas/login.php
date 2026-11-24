@@ -1,30 +1,44 @@
 <?php
 
+use Kirby\Panel\Controller\Request\LoginRequestController;
+use Kirby\Panel\Controller\View\LoginViewController;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
 return function ($kirby) {
 	return [
-		'icon'  => 'user',
-		'label' => I18n::translate('login'),
+		'icon'     => 'user',
+		'label'    => I18n::translate('login'),
+		'requests' => [
+			'login' => [
+				'pattern' => 'login/(:any)/(:any)',
+				'method'  => 'POST',
+				'auth'    => false,
+				'action'  => LoginRequestController::class
+			]
+		],
 		'views' => [
 			'login' => [
 				'pattern' => 'login',
 				'auth'    => false,
 				'action'  => function () use ($kirby) {
-					$system = $kirby->system();
-					$status = $kirby->auth()->status();
-					return [
-						'component' => 'k-login-view',
-						'props'     => [
-							'methods' => array_keys($system->loginMethods()),
-							'pending' => [
-								'email'     => $status->email(),
-								'challenge' => $status->challenge()
-							]
-						],
-					];
+					$method = $kirby->auth()->methods()->firstEnabled();
+					$query  = $kirby->request()->query();
+					$path   = 'login/method/' . $method->type();
+
+					// keep the query, e.g. the globals the logout view
+					// requests, as this is only a redirect to the method
+					if ($query->isNotEmpty() === true) {
+						$path .= '?' . $query->toString();
+					}
+
+					Panel::go($path);
 				}
+			],
+			'login.view' => [
+				'pattern' => 'login/(:any)/(:any)',
+				'auth'    => false,
+				'action'  => LoginViewController::class
 			],
 			'login.fallback' => [
 				'pattern' => '(:all)',

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FileUuid::class)]
 class FileUuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.FileUuid';
 
 	public function testFindByCache(): void
 	{
@@ -82,6 +82,12 @@ class FileUuidTest extends TestCase
 		$this->assertNull($uuid->model());
 	}
 
+	public function testFindByIndexWithZeroId(): void
+	{
+		$uuid = new FileUuid('file://0');
+		$this->assertNull($uuid->model());
+	}
+
 	public function testId(): void
 	{
 		$uuid = new FileUuid('file://just-a-file');
@@ -107,34 +113,18 @@ class FileUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $file->content()->get('uuid')->value());
 	}
 
+	public function testIdWithZero(): void
+	{
+		$uuid = new FileUuid('file://0');
+		$this->assertSame('0', $uuid->id());
+	}
+
 	public function testIndex(): void
 	{
 		$index = FileUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
 		$this->assertIsFile($index->current());
 		$this->assertSame(4, iterator_count($index));
-	}
-
-	public function testRetrieveId(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$this->assertSame('my-file', ModelUuid::retrieveId($file));
-	}
-
-	public function testToPermalink(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$url  = 'https://getkirby.com/@/file/my-file';
-		$this->assertSame($url, $file->uuid()->toPermalink());
-		$this->assertSame($url, $file->uuid()->url());
-	}
-
-	public function testValue(): void
-	{
-		$file = $this->app->file('page-a/test.pdf');
-		$uuid = $file->uuid();
-		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
-		$this->assertSame($expected, $uuid->value());
 	}
 
 	public static function multilangProvider(): array
@@ -217,5 +207,26 @@ class FileUuidTest extends TestCase
 
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($file->version()->read('de')['uuid'] ?? null);
+	}
+
+	public function testRetrieveId(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$this->assertSame('my-file', ModelUuid::retrieveId($file));
+	}
+
+	public function testToPermalink(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$url  = 'https://getkirby.com/@/file/my-file';
+		$this->assertSame($url, $file->uuid()->toPermalink());
+	}
+
+	public function testValue(): void
+	{
+		$file = $this->app->file('page-a/test.pdf');
+		$uuid = $file->uuid();
+		$expected = ['parent' => 'page://my-page', 'filename' => 'test.pdf'];
+		$this->assertSame($expected, $uuid->value());
 	}
 }

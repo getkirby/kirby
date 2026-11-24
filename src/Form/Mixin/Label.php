@@ -2,31 +2,29 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\Str;
 
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the `label` prop with translation support
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait Label
 {
 	/**
 	 * The field label can be set as string or associative array with translations
 	 */
-	protected string|null $label;
+	#[Prop(computed: true)]
+	protected array|string|null $label = null;
 
-	public function label(): string|null
+	public function label(): string
 	{
-		return $this->stringTemplate(
-			$this->label ?? Str::ucfirst($this->name())
-		);
-	}
+		if ($this->label === null || $this->label === []) {
+			return Str::label($this->name());
+		}
 
-	protected function setLabel(array|string|null $label = null): void
-	{
-		$this->label = $this->i18n($label);
+		return $this->stringTemplateI18n($this->label);
 	}
 }

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { sanitizeHTML } from "./string";
+import { createExtensionsFromPlugins } from "./writer";
+import Mark from "@/components/Forms/Writer/Mark";
 
 describe("$helper.string.sanitizeHTML", () => {
 	it("should strip script tags", () => {
@@ -89,6 +91,24 @@ describe("$helper.string.sanitizeHTML", () => {
 		const nodes = ["doc", "paragraph", "text"];
 		expect(sanitizeHTML("<p>hello</p>", { nodes })).toBe("<p>hello</p>");
 		expect(sanitizeHTML("hello", { nodes })).toBe("<p>hello</p>");
+	});
+
+	it("should support custom mark instances", () => {
+		const { highlight } = createExtensionsFromPlugins(
+			{
+				highlight: {
+					get schema() {
+						return { parseDOM: [{ tag: "mark" }], toDOM: () => ["mark", 0] };
+					}
+				}
+			},
+			Mark.prototype
+		);
+
+		expect(sanitizeHTML("<mark>text</mark>", { marks: [highlight] })).toBe(
+			"<mark>text</mark>"
+		);
+		expect(sanitizeHTML("<b>bold</b>", { marks: [highlight] })).toBe("bold");
 	});
 
 	it("should combine custom marks and nodes", () => {

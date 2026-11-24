@@ -35,7 +35,7 @@
 
 							<k-text
 								v-if="prop.description?.length"
-								:html="prop.description"
+								:text="prop.description"
 							/>
 
 							<k-text
@@ -87,6 +87,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props]
 };

@@ -15,19 +15,22 @@
 				type,
 				value
 			}"
-			:class="[variant === 'invisible' ? 'sr-only' : null, $attrs.class]"
+			:class="variant === 'invisible' ? 'sr-only' : null"
 			:data-variant="variant"
 			@click="$emit('click', $event)"
 			@input="$emit('input', $event.target.checked)"
 		/>
 
-		<k-icon v-if="icon" :type="icon" class="k-choice-input-icon" />
+		<k-icon
+			v-if="icon"
+			:type="icon"
+			:data-theme="theme"
+			class="k-choice-input-icon"
+		/>
 
 		<span v-if="label || info" class="k-choice-input-label">
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span class="k-choice-input-label-text" v-html="label" />
-			<!-- eslint-disable-next-line vue/no-v-html -->
-			<span v-if="info" class="k-choice-input-label-info" v-html="info" />
+			<span v-safe-html="label" class="k-choice-input-label-text" />
+			<span v-if="info" v-safe-html="info" class="k-choice-input-label-info" />
 		</span>
 	</label>
 </template>
@@ -50,6 +53,13 @@ export const props = {
 		label: {
 			type: String
 		},
+		/**
+		 * Colors the icon with a Panel theme, e.g. `positive`
+		 * @since 5.7.0
+		 */
+		theme: {
+			type: String
+		},
 		type: {
 			default: "checkbox",
 			type: String
@@ -64,8 +74,12 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-choice-input :value="value" @input="value = $event" />
+ * @example
+ * <k-choice-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
@@ -82,6 +96,9 @@ export default {
 .k-choice-input-icon {
 	--icon-size: var(--text-md);
 	position: relative;
+}
+.k-choice-input-icon[data-theme] {
+	--icon-color: var(--theme-color-icon);
 }
 .k-choice-input-icon,
 .k-choice-input input {
@@ -112,20 +129,26 @@ export default {
 }
 
 /* Field context */
-:where(.k-checkboxes-field, .k-radio-field) .k-choice-input {
+:where(.k-checkboxes-field, .k-radio-field, .k-toggle-field) .k-choice-input {
 	min-height: var(--input-height);
 	padding-block: var(--spacing-2);
 	padding-inline: var(--spacing-3);
 	border-radius: var(--input-rounded);
 }
 
-:where(.k-checkboxes-field, .k-radio-field):not([data-disabled="true"])
+:where(.k-checkboxes-field, .k-radio-field, .k-toggle-field):not(
+		[data-disabled="true"]
+	)
 	.k-choice-input {
 	background: var(--item-color-back);
 	box-shadow: var(--shadow);
 }
 
-:where(.k-checkboxes-field, .k-radio-field)[data-disabled="true"]
+:where(
+		.k-checkboxes-field,
+		.k-radio-field,
+		.k-toggle-field
+	)[data-disabled="true"]
 	.k-choice-input {
 	border: 1px solid var(--color-border);
 }

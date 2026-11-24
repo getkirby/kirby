@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+  <file src="src/Auth/Passwords.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string|null]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/App.php">
+    <InvalidOperand>
+      <code><![CDATA[$extensions['collections'] ?? []]]></code>
+      <code><![CDATA[$extensions['models'] ?? []]]></code>
+      <code><![CDATA[$extensions['routes'] ?? []]]></code>
+      <code><![CDATA[$routes]]></code>
+    </InvalidOperand>
+    <InvalidReturnStatement>
+      <code><![CDATA[match ($code ?? 'current') {
+			'default' => $this->defaultLanguage(),
+			'current' => $this->currentLanguage(),
+			default   => $this->languages()->find($code)
+		}]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[Language|null]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/AppErrors.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[[
+			$this->root('kirby') => '{kirby}',
+			$this->root('site')  => '{site}',
+			$this->root('index') => '{index}'
+		]]]></code>
+    </InvalidArrayOffset>
+  </file>
+  <file src="src/Cms/AppPlugins.php">
+    <InvalidOperand>
+      <code><![CDATA[$this->extensions['blueprints']]]></code>
+      <code><![CDATA[$this->extensions['cacheTypes']]]></code>
+      <code><![CDATA[$this->extensions['collections']]]></code>
+      <code><![CDATA[$this->extensions['commands']]]></code>
+      <code><![CDATA[$this->extensions['components']]]></code>
+      <code><![CDATA[$this->extensions['controllers']]]></code>
+      <code><![CDATA[$this->extensions['filePreviews']]]></code>
+      <code><![CDATA[$this->extensions['pages']]]></code>
+      <code><![CDATA[$this->extensions['routes']]]></code>
+      <code><![CDATA[$this->extensions['snippets']]]></code>
+      <code><![CDATA[$this->extensions['templates']]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Cms/AppTranslations.php">
+    <InvalidReturnType>
+      <code><![CDATA[Translation]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Cms/Collection.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/Fieldsets.php">
+    <InvalidOperand>
+      <code><![CDATA[$fieldsets]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Cms/Files.php">
+    <InvalidArgument>
+      <code><![CDATA[$file]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$collection->data]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/LicenseStatus.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[I18n::translate('license.status.' . $this->value . '.label')]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[I18n::translate('license.status.' . $this->value . '.label')]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/LicenseType.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[match ($this) {
+			static::Basic      => 'Kirby Basic',
+			static::Enterprise => 'Kirby Enterprise',
+			static::Free       => I18n::translate('license.free.label'),
+			static::Legacy     => 'Kirby 3',
+			static::Invalid    => I18n::translate('license.unregistered.label'),
+		}]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[match ($this) {
+			static::Basic      => 'Kirby Basic',
+			static::Enterprise => 'Kirby Enterprise',
+			static::Free       => I18n::translate('license.free.label'),
+			static::Legacy     => 'Kirby 3',
+			static::Invalid    => I18n::translate('license.unregistered.label'),
+		}]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Cms/Pages.php">
+    <InvalidArgument>
+      <code><![CDATA[$args[0]]]></code>
+      <code><![CDATA[$page]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$children->data]]></code>
+      <code><![CDATA[$children->data]]></code>
+      <code><![CDATA[$drafts->data]]></code>
+      <code><![CDATA[$files->data]]></code>
+      <code><![CDATA[$index->data]]></code>
+      <code><![CDATA[$index->data]]></code>
+      <code><![CDATA[[...$collection->data, ...$args[0]->data]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/Site.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->errorPage ??= $this->find($this->errorPageId())]]></code>
+      <code><![CDATA[$this->find($path)]]></code>
+      <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Cms/Users.php">
+    <InvalidArgument>
+      <code><![CDATA[$user]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$files->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[[...$this->data, ...$existing]]]></code>
+      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Content/FieldMethods.php">
+    <InvalidReturnType>
+      <code><![CDATA[Pages]]></code>
+      <code><![CDATA[Users]]></code>
+    </InvalidReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[title]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Content/PlainTextStorage.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$directory]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Data/YamlSpyc.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Database/Query.php">
+    <InvalidOperand>
+      <code><![CDATA[$bindings]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Database/Sql.php">
+    <InvalidOperand>
+      <code><![CDATA[$input['bindings']]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Exception/Exception.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->code()]]></code>
+      <code><![CDATA[$this->code()]]></code>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->getCode()]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Form/Field/ColorField.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['options'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Form/Field/TextareaField.php">
+    <UndefinedMethod>
+      <code><![CDATA[is]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Http/Cookie.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Http/Range.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['headers'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Http/Response.php">
+    <InvalidOperand>
+      <code><![CDATA[$props['headers'] ?? []]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Panel/Area.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->i18n($this->breadcrumbLabel ?? $this->label())]]></code>
+      <code><![CDATA[$this->i18n($this->label ?? $this->id)]]></code>
+      <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Panel/Panel.php">
+    <RedundantCondition>
+      <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainNull>
+      <code><![CDATA[[]]]></code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Panel/State.php">
+    <RedundantCondition>
+      <code><![CDATA[$this->user?->role()->permissions()->toArray()]]></code>
+    </RedundantCondition>
+    <TypeDoesNotContainNull>
+      <code><![CDATA[[]]]></code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Panel/Ui/Button/ViewButton.php">
+    <InvalidOperand>
+      <code><![CDATA[$data]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="src/Panel/Ui/Component.php">
+    <FalsableReturnStatement>
+      <code><![CDATA[$this->key ??= Str::random(10, 'alphaNum')]]></code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Session/Session.php">
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->data) === true]]></code>
+    </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="src/Toolkit/Collection.php">
+    <InvalidArgument>
+      <code><![CDATA[$item]]></code>
+      <code><![CDATA[$item]]></code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$collection]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+      <code><![CDATA[$this->data]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Toolkit/Dom.php">
+    <TypeDoesNotContainNull>
+      <code><![CDATA[$childNode->prefix === null]]></code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Toolkit/Str.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[$string]]></code>
+      <code><![CDATA[preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string)]]></code>
+      <code><![CDATA[preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string)]]></code>
+      <code><![CDATA[preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string)]]></code>
+      <code><![CDATA[preg_replace_callback(
+			'!' . $start . '(.*?)' . $end . '!',
+			function (array $match) use ($data, $fallback, $callback) {
+				$query = trim($match[1]);
+
+				// empty placeholders like `{}` are no queries
+				if ($query === '') {
+					return $match[0];
+				}
+
+				try {
+					$result = Query::factory($query)->resolve($data);
+				} catch (Throwable) {
+					$result = null;
+				}
+
+				$result ??= $fallback;
+
+				// callback on result if given, with the raw result
+				// on top, so that values that look the same once
+				// cast to a string can still be told apart
+				if ($callback !== null) {
+					$callback = $callback((string)$result, $query, $data, $result);
+
+					if ($result !== null || $callback !== '') {
+						// the empty string came just from string casting,
+						// keep the null value and ignore the callback result
+						$result = $callback;
+					}
+				}
+
+				// without a result, keep the original placeholder
+				return $result ?? $match[0];
+			},
+			$string
+		)]]></code>
+      <code><![CDATA[preg_replace_callback('|(\s)(?=\S*$)(\S+)|u', function ($matches) {
+			if (static::contains($matches[2], '-')) {
+				$matches[2] = str_replace('-', '&#8209;', $matches[2]);
+			}
+			return '&nbsp;' . $matches[2];
+		}, $string)]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Uuid/FieldUuid.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->uri->host()]]></code>
+    </NullableReturnStatement>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[get]]></code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod>
+      <code><![CDATA[field]]></code>
+      <code><![CDATA[parent]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Uuid/ModelUuid.php">
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$model]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+</files>

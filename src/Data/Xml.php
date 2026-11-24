@@ -8,22 +8,11 @@ use Kirby\Toolkit\Xml as XmlConverter;
 /**
  * Simple Wrapper around the XML parser of the Toolkit
  *
- * @package   Kirby Data
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Xml extends Handler
 {
-	/**
-	 * Converts an array to an encoded XML string
-	 */
-	public static function encode($data): string
-	{
-		return XmlConverter::create($data, 'data');
-	}
-
 	/**
 	 * Parses an encoded XML string and returns a multi-dimensional array
 	 */
@@ -56,5 +45,13 @@ class Xml extends Handler
 		}
 
 		throw new InvalidArgumentException(message: 'XML string is invalid');
+	}
+
+	/**
+	 * Converts an array to an encoded XML string
+	 */
+	public static function encode($data): string
+	{
+		return XmlConverter::create($data, 'data');
 	}
 }

@@ -13,6 +13,39 @@ class ContentConvertToTest extends TestCase
 		$this->setUpSingleLanguage();
 	}
 
+	public function testConvertToForFile(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'test.jpg',
+						'content'  => [
+							'alt'      => 'Test',
+							'template' => 'content-a'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'files/content-a' => [],
+				'files/content-b' => []
+			],
+		]);
+
+		$file    = $app->file('test.jpg');
+		$content = $file->content();
+
+		$new = $content->convertTo('content-b');
+
+		$expected = [
+			'alt'      => 'Test',
+			'template' => 'content-b'
+		];
+
+		$this->assertSame($expected, $new, 'The template should be changed in the new content array');
+	}
+
 	public function testConvertToForPage(): void
 	{
 		$app = $this->app->clone([
@@ -77,36 +110,79 @@ class ContentConvertToTest extends TestCase
 		$this->assertSame('keep this', $new['removed']);
 	}
 
-	public function testConvertToForFile(): void
+	public function testConvertToForPageWithAlias(): void
 	{
+		// a deprecated type name and the type it points
+		// to are the same type and keep the content
 		$app = $this->app->clone([
 			'site' => [
-				'files' => [
+				'children' => [
 					[
-						'filename' => 'test.jpg',
+						'slug'     => 'test',
+						'template' => 'content-a',
 						'content'  => [
-							'alt'      => 'Test',
-							'template' => 'content-a'
+							'related' => '- page://abc'
 						]
 					]
 				]
 			],
 			'blueprints' => [
-				'files/content-a' => [],
-				'files/content-b' => []
+				'pages/content-a' => [
+					'fields' => [
+						'related' => [
+							'type' => 'pages'
+						]
+					]
+				],
+				'pages/content-b' => [
+					'fields' => [
+						'related' => [
+							'type' => 'pagepicker'
+						]
+					]
+				]
 			],
 		]);
 
-		$file    = $app->file('test.jpg');
-		$content = $file->content();
+		$new = $app->page('test')->content()->convertTo('content-b');
 
-		$new = $content->convertTo('content-b');
+		$this->assertSame('- page://abc', $new['related']);
+	}
 
-		$expected = [
-			'alt'      => 'Test',
-			'template' => 'content-b'
-		];
+	public function testConvertToForPageWithSectionOfSameName(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'content-a',
+						'content'  => [
+							'gallery' => '- a.jpg'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/content-a' => [
+					'fields' => [
+						'gallery' => [
+							'type' => 'files'
+						]
+					]
+				],
+				'pages/content-b' => [
+					'sections' => [
+						'gallery' => [
+							'type' => 'files'
+						]
+					]
+				]
+			],
+		]);
 
-		$this->assertSame($expected, $new, 'The template should be changed in the new content array');
+		$new = $app->page('test')->content()->convertTo('content-b');
+
+		$this->assertSame('- a.jpg', $new['gallery'], 'The content must be kept for a section with the same name');
 	}
 }

@@ -1,0 +1,422 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Cms\App;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\UserNotFoundException;
+use Kirby\Session\Session;
+use Kirby\Toolkit\A;
+use SensitiveParameter;
+
+/**
+ * Handler for all auth challenges
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class Challenges
+{
+	/**
+	 * Available auth challenge classes
+	 * from the core and plugins
+	 *
+	 * @var array<string, class-string<Challenge>>
+	 */
+	public static array $challenges = [];
+
+	public function __construct(
+		protected Auth $auth,
+		protected App $kirby
+	) {
+	}
+
+	/**
+	 * Returns the types of all enabled challenges
+	 * that are available for the user and purpose/mode
+	 *
+	 * @return list<string>
+	 */
+	public function available(User $user, string $mode): array
+	{
+		// not caught on purpose: skipping a broken challenge could drop the
+		// user's only second factor, so `PasswordMethod::has2FA()` would skip 2FA
+		$available = array_values(A::filter(
+			$this->enabled(),
+			fn ($type) => $this->get($type, $user, $mode)->isAvailable()
+		));
+
+		// a single-factor flow (e.g. the `code` login method or a
+		// password reset) must not be weaker than the second factor
+		// the user has set up, so it is limited to those challenges
+		if ($mode !== '2fa') {
+			$factors = $this->available($user, '2fa');
+
+			if ($factors !== []) {
+				return array_values(array_intersect($available, $factors));
+			}
+		}
+
+		return $available;
+	}
+
+	/**
+	 * Returns the challenge handler class for the provided type
+	 *
+	 * @return class-string<Challenge>
+	 * @throws NotFoundException If no valid class is registered for the type
+	 */
+	public function class(string $type): string
+	{
+		if (
+			($class = static::$challenges[$type] ?? null) &&
+			is_subclass_of($class, Challenge::class) === true
+		) {
+			/** @var class-string<Challenge> $class */
+			return $class;
+		}
+
+		throw new NotFoundException(
+			message: 'No auth challenge class for: ' . $type
+		);
+	}
+
+	public function clear(Session $session): void
+	{
+		$session->remove('kirby.challenge.data');
+		$session->remove('kirby.challenge.email');
+		$session->remove('kirby.challenge.mode');
+		$session->remove('kirby.challenge.timeout');
+		$session->remove('kirby.challenge.type');
+	}
+
+	/**
+	 * Returns normalized array of configured challenges;
+	 * challenges that are set to `false` are left out
+	 *
+	 * @return array<string, array>
+	 */
+	public function config(): array
+	{
+		$default    = ['webauthn', 'totp', 'email'];
+		$challenges = $this->kirby->option('auth.challenges', $default);
+		$normalized = [];
+
+		foreach (A::wrap($challenges) as $type => $options) {
+			if (is_int($type) === true) {
+				// ['email']
+				$type    = $options;
+				$options = [];
+			} elseif ($options === true) {
+				// ['email' => true]
+				$options = [];
+			} elseif ($options === false) {
+				// ['email' => false]
+				continue;
+			}
+
+			$normalized[$type] = $options;
+		}
+
+		return $normalized;
+	}
+
+	/**
+	 * Creates the first available challenge for the user
+	 * and stores state in the session
+	 */
+	public function create(
+		Session $session,
+		string $email,
+		string $mode,
+	): Challenge {
+		// ensure that we never inherit (partial) state
+		// from a previous challenge
+		$this->clear($session);
+
+		// rate-limit the number of challenges for DoS/DDoS protection
+		$this->auth->limits()->ensure($email);
+
+		// challenge creation is not a login attempt,
+		// do not fire user.login:failed; hook is triggered below
+		// when the user lookup fails
+		$this->auth->limits()->track($email, triggerHook: false);
+
+		// try to find the provided user
+		$user = $this->kirby->users()->findByEmail($email);
+
+		if ($user === null) {
+			$this->kirby->trigger('user.login:failed', ['email' => $email]);
+			throw new UserNotFoundException(name: $email);
+		}
+
+		// try to find a challenge that is available for that user
+		if ($challenge = $this->firstAvailable($user, $mode)) {
+			$this->store($session, $challenge, $email, $mode);
+			return $challenge;
+		}
+
+		throw new LogicException(
+			message: 'Could not find a suitable authentication challenge'
+		);
+	}
+
+	/**
+	 * Returns the types of all enabled challenges
+	 * by the `auth.challenges` config option
+	 *
+	 * @return list<string>
+	 */
+	public function enabled(): array
+	{
+		$enabled = [];
+
+		foreach ($this->config() as $type => $options) {
+			$class = $this->class($type);
+
+			if ($class::isEnabled($this->auth, $type, $options) === true) {
+				$enabled[] = $type;
+			}
+		}
+
+		return $enabled;
+	}
+
+	/**
+	 * Checks if an active challenge exists or fails otherwise
+	 *
+	 * @throws InvalidArgumentException
+	 */
+	protected function ensureActiveChallenge(Session $session): string
+	{
+		$email = $session->get('kirby.challenge.email');
+		$type  = $session->get('kirby.challenge.type');
+
+		if (is_string($email) !== true || is_string($type) !== true) {
+			throw new InvalidArgumentException(
+				fallback: 'No authentication challenge is active'
+			);
+		}
+
+		return $email;
+	}
+
+	protected function ensureNotTimeout(Session $session): void
+	{
+		// time-limiting; check this early so that we can
+		// destroy the session no matter if the user exists
+		// (avoids leaking user information to attackers)
+		$timeout = $session->get('kirby.challenge.timeout');
+
+		// challenge timed out
+		if ($timeout !== null && time() > $timeout) {
+			// clear stale challenge data before throwing
+			// so that even if the exception is swallowed upstream,
+			// the expired challenge cannot be reused
+			$this->clear($session);
+			throw new ChallengeTimeoutException();
+		}
+	}
+
+	/**
+	 * Returns the challenge type for a pending session without
+	 * a challenge: the one a user without secrets would get
+	 */
+	public function fallback(string $email, string $mode): string|null
+	{
+		$user = new User(['email' => $email]);
+		return $this->available($user, $mode)[0] ?? A::last($this->enabled());
+	}
+
+	/**
+	 * Returns the first available auth challenge
+	 * for the user and purpose/mode
+	 */
+	public function firstAvailable(User $user, string $mode): Challenge|null
+	{
+		$available = $this->available($user, $mode);
+		$type      = array_shift($available);
+		return $type !== null ? $this->get($type, $user, $mode) : null;
+	}
+
+	/**
+	 * Returns an instance of the requested auth challenge.
+	 * (This is based on the config. You might need to check
+	 * yourself if the method should be available in your context)
+	 *
+	 * @param $timeout Lifetime in seconds, not an expiry timestamp
+	 */
+	public function get(
+		string $type,
+		User $user,
+		string $mode,
+		int|null $timeout = null
+	): Challenge {
+		$challenge = $this->class($type);
+		$timeout ??= $this->timeout();
+
+		return new $challenge(
+			user:    $user,
+			type:    $type,
+			mode:    $mode,
+			timeout: $timeout,
+			options: $this->config()[$type] ?? []
+		);
+	}
+
+	/**
+	 * Checks whether at least one challenge is available
+	 * for the user and purpose/mode
+	 */
+	public function hasAvailable(User $user, string $mode): bool
+	{
+		return $this->available($user, $mode) !== [];
+	}
+
+	/**
+	 * Puts the session into a generic pending state that is not
+	 * bound to a specific user or challenge type. This is used as the
+	 * anti-enumeration path so that a missing user cannot be observed,
+	 * both when creating and when switching a challenge.
+	 */
+	public function keepPending(
+		Session $session,
+		string $email,
+		string $mode
+	): void {
+		$this->clear($session);
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.mode', $mode);
+		$session->set('kirby.challenge.timeout', time() + $this->timeout());
+	}
+
+	/**
+	 * Writes challenge state into the session
+	 */
+	protected function store(
+		Session $session,
+		Challenge $challenge,
+		string $email,
+		string $mode
+	): void {
+		$data = $challenge->create();
+
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.type', $challenge->type());
+		$session->set('kirby.challenge.mode', $mode);
+		$session->set('kirby.challenge.timeout', time() + $challenge->timeout());
+
+		if ($data !== null) {
+			$session->set('kirby.challenge.data', $data->toArray());
+		}
+	}
+
+	/**
+	 * Switches the active challenge within an existing pending session
+	 */
+	public function switch(Session $session, string $type): Challenge|null
+	{
+		// wrap the whole method so that the response time cannot
+		// reveal whether the user exists or whether the switch
+		// triggered side effects (e.g. an email send in ::store());
+		// mirrors the timing jitter in `Auth::createChallenge()`
+		try {
+			$this->ensureNotTimeout($session);
+
+			$email = $session->get('kirby.challenge.email');
+			$mode  = $session->get('kirby.challenge.mode');
+
+			if (is_string($email) !== true || is_string($mode) !== true) {
+				throw new InvalidArgumentException(
+					fallback: 'No authentication challenge is active'
+				);
+			}
+
+			$user = $this->kirby->users()->findByEmail($email);
+
+			// Rate-limiting:
+			// Each switch can trigger side effects (e.g. email sends),
+			// so it must consume budget just like ::create()
+			$this->auth->limits()->ensure($email);
+			$this->auth->limits()->track($email, triggerHook: false);
+
+			// a missing user or a challenge that is not available
+			// for the user and mode must not be observable (the two
+			// cases would otherwise be distinguishable from each other);
+			// instead keep the session generically pending
+			if (
+				$user === null ||
+				(
+					$session->get('kirby.challenge.type') !== $type &&
+					in_array($type, $this->available($user, $mode)) === false
+				)
+			) {
+				$this->keepPending($session, $email, $mode);
+				return null;
+			}
+
+			// keep existing challenge if the requested type is same
+			if ($session->get('kirby.challenge.type') === $type) {
+				return $this->get($type, $user, $mode);
+			}
+
+			// clear existing challenge
+			$this->clear($session);
+
+			// create new challenge and store in session
+			$challenge = $this->get($type, $user, $mode);
+			$this->store($session, $challenge, $email, $mode);
+
+			return $challenge;
+		} finally {
+			// sleep for a random amount of milliseconds
+			// to make automated attacks harder and to
+			// avoid leaking whether the user exists
+			usleep(random_int(50000, 300000));
+		}
+	}
+
+	/**
+	 * Returns the lifetime of new challenges in seconds
+	 */
+	public function timeout(): int|null
+	{
+		return $this->kirby->option('auth.challenge.timeout', 10 * 60);
+	}
+
+	/**
+	 * Verifies and return the current challenge
+	 */
+	public function verify(
+		Session $session,
+		#[SensitiveParameter]
+		mixed $input
+	): Challenge {
+		// ensure we have an active challenge for a valid user
+		$this->ensureNotTimeout($session);
+		$email = $this->ensureActiveChallenge($session);
+		$user  = $this->kirby->users()->findByEmail($email);
+
+		if ($user === null) {
+			throw new UserNotFoundException(name: $email);
+		}
+
+		$type      = $session->get('kirby.challenge.type');
+		$mode      = $session->get('kirby.challenge.mode');
+		$pending   = Pending::from($session->get('kirby.challenge.data') ?? []);
+		$challenge = $this->get($type, $user, $mode);
+
+		$challenge->attempt(
+			input:      $input,
+			pending:    $pending,
+			invalidate: fn () => $this->clear($session)
+		);
+
+		return $challenge;
+	}
+}

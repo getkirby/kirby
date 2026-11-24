@@ -2,30 +2,17 @@
 
 namespace Kirby\Panel\Ui\Item;
 
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
-use Kirby\Panel\Model;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
+ *
+ * @extends ModelItem<Page, \Kirby\Panel\Page>
  */
 class PageItem extends ModelItem
 {
-	/**
-	 * @var \Kirby\Cms\Page
-	 */
-	protected ModelWithContent $model;
-
-	/**
-	 * @var \Kirby\Panel\Page
-	 */
-	protected Model $panel;
-
 	public function __construct(
 		Page $page,
 		string|array|false|null $image = [],
@@ -47,16 +34,31 @@ class PageItem extends ModelItem
 		return $this->panel->dragText();
 	}
 
-	protected function permissions(): array
+	/**
+	 * Returns the icon, label and theme of the page's
+	 * current status, as defined in its blueprint
+	 */
+	protected function flag(): array
 	{
-		$permissions = $this->model->permissions();
+		$status = $this->model->blueprint()->status()[$this->model->status()] ?? [];
 
 		return [
-			'changeSlug'   => $permissions->can('changeSlug'),
-			'changeStatus' => $permissions->can('changeStatus'),
-			'changeTitle'  => $permissions->can('changeTitle'),
-			'delete'       => $permissions->can('delete'),
-			'sort'         => $permissions->can('sort'),
+			'icon'  => $status['icon'] ?? null,
+			'label' => $status['label'] ?? null,
+			'theme' => $status['theme'] ?? null,
+		];
+	}
+
+	protected function permissions(): array
+	{
+		$guards = $this->model->guards();
+
+		return [
+			'changeSlug'   => $guards->isAvailable('changeSlug'),
+			'changeStatus' => $guards->isAvailable('changeStatus'),
+			'changeTitle'  => $guards->isAvailable('changeTitle'),
+			'delete'       => $guards->isAvailable('delete'),
+			'sort'         => $guards->isAvailable('sort'),
 		];
 	}
 
@@ -64,11 +66,12 @@ class PageItem extends ModelItem
 	{
 		return [
 			...parent::props(),
-			'dragText'    => $this->dragText(),
-			'parent'      => $this->model->parentId(),
-			'status'      => $this->model->status(),
-			'template'    => $this->model->intendedTemplate()->name(),
-			'url'         => $this->model->url(),
+			'dragText' => $this->dragText(),
+			'flag'     => $this->flag(),
+			'parent'   => $this->model->parentId(),
+			'status'   => $this->model->status(),
+			'template' => $this->model->intendedTemplate()->name(),
+			'url'      => $this->model->url(),
 		];
 	}
 }

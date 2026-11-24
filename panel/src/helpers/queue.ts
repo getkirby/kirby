@@ -8,6 +8,9 @@
  *
  * @param tasks - list of async functions
  * @param concurrent - max number of concurrent tasks
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default async function <T>(
 	tasks: (() => Promise<T>)[],

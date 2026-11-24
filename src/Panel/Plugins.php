@@ -3,137 +3,112 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Data\Json;
 use Kirby\Filesystem\F;
+use Kirby\Http\Response;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 
 /**
- * The Plugins class takes care of collecting
- * js and css plugin files for the panel and caches
- * them in the media folder
+ * The Plugins class collects the Panel files of all
+ * plugins: each stylesheet and script is loaded on its own
  *
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Plugins
 {
 	/**
-	 * Cache of all collected plugin files
+	 * Returns the URLs of all plugin stylesheets,
+	 * in the order the plugins are loaded
+	 * @since 6.0.0
 	 */
-	public array|null $files = null;
+	public function css(): array
+	{
+		return $this->urls('css');
+	}
 
 	/**
-	 * Collects and returns the plugin files for all plugins
+	 * Whether the given plugin, or any plugin if none is given,
+	 * is in development, i.e. kirbyup added an `index.dev.js`
+	 * @since 6.0.0
 	 */
-	public function files(): array
+	public function isDev(Plugin|null $plugin = null): bool
 	{
-		if ($this->files !== null) {
-			return $this->files;
+		if ($plugin === null) {
+			return A::some(
+				App::instance()->plugins(),
+				fn (Plugin $plugin) => $this->isDev($plugin)
+			);
 		}
 
-		$this->files = [];
+		return F::size($plugin->root() . '/index.dev.js') > 0;
+	}
+
+	/**
+	 * Returns the URLs of all plugin scripts,
+	 * in the order the plugins are loaded
+	 * @since 6.0.0
+	 */
+	public function js(): array
+	{
+		return $this->urls('js');
+	}
+
+	/**
+	 * Returns the stylesheet or script of a plugin
+	 * as response; its URL path contains the file hash,
+	 * so browsers and CDNs can cache it for good
+	 * @since 6.0.0
+	 *
+	 * @param $extension `css`, `js`, `dev.css` or `dev.js`
+	 */
+	public static function resolve(
+		string $plugin,
+		string $hash,
+		string $extension
+	): Response|null {
+		$plugin = App::instance()->plugin($plugin);
+
+		if ($plugin === null) {
+			return null;
+		}
+
+		$root = $plugin->root() . '/index.' . $extension;
+
+		// only serve the file the URL was created for,
+		// so no cache stores another file under that URL
+		if (is_file($root) === false || hash_file('xxh3', $root) !== $hash) {
+			return null;
+		}
+
+		return Response::file($root, [
+			'headers' => [
+				'Cache-Control' => 'public, max-age=31536000, immutable'
+			]
+		]);
+	}
+
+	/**
+	 * Returns the URL of the non-empty `index.css` or `index.js`
+	 * of each plugin, or of its `index.dev.*` counterpart
+	 * while the plugin is in development
+	 * @since 6.0.0
+	 *
+	 * @param $type `css` or `js`
+	 */
+	protected function urls(string $type): array
+	{
+		$urls = [];
 
 		foreach (App::instance()->plugins() as $plugin) {
-			$this->files[] = $plugin->root() . '/index.css';
-			$this->files[] = $plugin->root() . '/index.js';
-			// During plugin development, kirbyup adds an index.dev.mjs as entry point, which
-			// Kirby will load instead of the regular index.js. Since kirbyup is based on Vite,
-			// it can't use the standard index.js as entry for its development server:
-			// Vite requires an entry of type module so it can use JavaScript imports,
-			// but Kirbyup needs index.js to load as a regular script, synchronously.
-			$this->files[] = $plugin->root() . '/index.dev.mjs';
+			$extension = $this->isDev($plugin) === true ? 'dev.' . $type : $type;
+			$root      = $plugin->root() . '/index.' . $extension;
+
+			if (F::size($root) > 0) {
+				$urls[] = $plugin->mediaUrl() . '.' . hash_file('xxh3', $root) . '.' . $extension;
+			}
 		}
 
-		return $this->files;
-	}
-
-	/**
-	 * Returns the last modification
-	 * of the collected plugin files
-	 */
-	public function modified(): int
-	{
-		$files    = $this->files();
-		$modified = [0];
-
-		foreach ($files as $file) {
-			$modified[] = F::modified($file);
-		}
-
-		return max($modified);
-	}
-
-	/**
-	 * Read the files from all plugins and concatenate them
-	 */
-	public function read(string $type): string
-	{
-		$dist = [];
-
-		foreach ($this->files() as $file) {
-			// filter out files with a different type
-			if (F::extension($file) !== $type) {
-				continue;
-			}
-
-			// filter out empty files and files that don't exist
-			$content = F::read($file);
-			if (!$content) {
-				continue;
-			}
-
-			if ($type === 'mjs') {
-				// index.dev.mjs files are turned into data URIs so they
-				// can be imported without having to copy them to /media
-				// (avoids having to clean the files from /media again)
-				$content = F::uri($file);
-			}
-
-			if ($type === 'js') {
-				// filter out all index.js files that shouldn't be loaded
-				// because an index.dev.mjs exists
-				if (F::exists(preg_replace('/\.js$/', '.dev.mjs', $file)) === true) {
-					continue;
-				}
-
-				$content = trim($content);
-
-				// make sure that each plugin is ended correctly
-				if (Str::endsWith($content, ';') === false) {
-					$content .= ';';
-				}
-			}
-
-			$dist[] = $content;
-		}
-
-		if ($type === 'mjs') {
-			// if no index.dev.mjs modules exist, we MUST return an empty string instead
-			// of loading an empty array; this is because the module loader code uses
-			// top level await, which is not compatible with Kirby's minimum browser
-			// version requirements and therefore must not appear in a default setup
-			if ($dist === []) {
-				return '';
-			}
-
-			$modules = Json::encode($dist);
-			$modulePromise = "Promise.all($modules.map(url => import(url)))";
-			return "try { await $modulePromise } catch (e) { console.error(e) }" . PHP_EOL;
-		}
-
-		return implode(PHP_EOL . PHP_EOL, $dist);
-	}
-
-	/**
-	 * Absolute url to the cache file
-	 * This is used by the panel to link the plugins
-	 */
-	public function url(string $type): string
-	{
-		return App::instance()->url('media') . '/plugins/index.' . $type . '?' . $this->modified();
+		return $urls;
 	}
 }

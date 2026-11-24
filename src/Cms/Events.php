@@ -9,17 +9,16 @@ use Closure;
  * `App::apply()` and `App::trigger()` methods
  * and makes them easier and more predictable to test.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
 class Events
 {
-	protected int $level = 0;
-	protected array $processed = [];
+	/**
+	 * @var array<string, list<Closure>>
+	 */
+	protected array $running = [];
 
 	public function __construct(
 		protected App $app
@@ -51,15 +50,17 @@ class Events
 
 	/**
 	 * Returns all matching hook handlers for the given event
+	 *
+	 * @return list<Closure>
 	 */
 	public function hooks(Event $event): array
 	{
-		// get all hooks for the event name
+		/** @var array<string, list<Closure>> $hooks */
+		$hooks  = $this->app->extensions('hooks');
 		$name   = $event->name();
-		$hooks  = $this->app->extensions('hooks') ?? [];
 		$result = $hooks[$name] ?? [];
 
-		// get all hooks for the event name wildcards
+		// add all hooks for the event name wildcards
 		foreach ($event->nameWildcards() as $wildcard) {
 			$result = [
 				...$result,
@@ -85,34 +86,27 @@ class Events
 		$event = new Event($name, $args);
 		$hooks = $this->hooks($event);
 
-		$this->level++;
-
 		foreach ($hooks as $hook) {
-			// skip hooks that have already been processed
-			if (in_array($hook, $this->processed[$name] ?? []) === true) {
+			// skip hooks that are already running for this event,
+			// to avoid endless loops
+			if (in_array($hook, $this->running[$name] ?? [], true) === true) {
 				continue;
 			}
 
-			// mark the hook as processed, to avoid endless loops
-			$this->processed[$name][] = $hook;
+			$this->running[$name][] = $hook;
 
-			// bind the Kirby instance to the hook and run it
-			$result = $event->call($this->app, $hook);
+			try {
+				// bind the Kirby instance to the hook and run it
+				$result = $event->call($this->app, $hook);
+			} finally {
+				array_pop($this->running[$name]);
+			}
 
-			// run the afterEach callback
 			if ($afterEach !== null) {
 				$afterEach($event, $result);
 			}
 		}
 
-		$this->level--;
-
-		// reset the protection after the last nesting level has been closed
-		if ($this->level === 0) {
-			$this->processed = [];
-		}
-
-		// run the return callback
 		if ($return !== null) {
 			return $return($event);
 		}

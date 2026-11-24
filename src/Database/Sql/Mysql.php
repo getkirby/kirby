@@ -7,9 +7,6 @@ use Kirby\Database\Sql;
 /**
  * MySQL query builder
  *
- * @package   Kirby Database
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -18,8 +15,6 @@ class Mysql extends Sql
 	/**
 	 * Returns a query to list the columns of a specified table;
 	 * the query needs to return rows with a column `name`
-	 *
-	 * @param string $table Table name
 	 */
 	public function columns(string $table): array
 	{

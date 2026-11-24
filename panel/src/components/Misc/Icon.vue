@@ -9,7 +9,7 @@
 		class="k-icon"
 		:style="{ color: $helper.color(color) }"
 	>
-		<use :xlink:href="'#icon-' + type" />
+		<use :href="href" />
 	</svg>
 </template>
 
@@ -36,15 +36,33 @@ export const props = {
 };
 
 /**
- * Display any icon from the Panel's icon set. To combine it with an aspect ratio, background etc. use `<k-icon-frame>`
+ * Display any icon from the Panel's icon set.
+ * To combine it with an aspect ratio, background etc.
+ * use `<k-icon-frame>`
  *
- * @example <k-icon type="edit" />
+ * @example
+ * <k-icon type="edit" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
 	computed: {
+		href() {
+			// plugin icons are inlined into the document by `k-icons`,
+			// all other icons are loaded from the sprite file
+			if (this.isPlugin === true) {
+				return "#icon-" + this.type;
+			}
+
+			return this.$panel.urls.icons + "#icon-" + this.type;
+		},
 		isEmoji() {
 			return this.$helper.string.hasEmoji(this.type);
+		},
+		isPlugin() {
+			return this.$panel.plugins.icons[this.type] !== undefined;
 		}
 	}
 };

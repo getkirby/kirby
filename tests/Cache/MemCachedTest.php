@@ -12,7 +12,6 @@ class MemCachedTest extends TestCase
 	{
 		if (class_exists('Memcached') === false) {
 			$this->markTestSkipped('The Memcached extension is not available.');
-			return;
 		}
 
 		$connection = new \Memcached();
@@ -24,9 +23,32 @@ class MemCachedTest extends TestCase
 
 	protected function tearDown(): void
 	{
+		if (class_exists('Memcached') === false) {
+			return;
+		}
+
 		$connection = new \Memcached();
 		$connection->addServer('localhost', 11211);
 		$connection->flush();
+	}
+
+	public function testConstructServer(): void
+	{
+		$cache = new MemCached([
+			'host' => 'localhost',
+			'port' => 1234
+		]);
+		$this->assertFalse($cache->set('foo', 'A basic value'));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertFalse($cache->remove('foo'));
+
+		$cache = new MemCached([
+			'host' => 'asdfgh.invalid',
+			'port' => 11211
+		]);
+		$this->assertFalse($cache->set('foo', 'A basic value'));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertFalse($cache->remove('foo'));
 	}
 
 	public function testEnabled(): void
@@ -34,6 +56,23 @@ class MemCachedTest extends TestCase
 		$cache = new MemCached();
 
 		$this->assertTrue($cache->enabled());
+	}
+
+	public function testFlush(): void
+	{
+		$cache = new MemCached([]);
+
+		$cache->set('a', 'A basic value');
+		$cache->set('b', 'A basic value');
+		$cache->set('c', 'A basic value');
+		$this->assertTrue($cache->exists('a'));
+		$this->assertTrue($cache->exists('b'));
+		$this->assertTrue($cache->exists('c'));
+
+		$this->assertTrue($cache->flush());
+		$this->assertFalse($cache->exists('a'));
+		$this->assertFalse($cache->exists('b'));
+		$this->assertFalse($cache->exists('c'));
 	}
 
 	public function testOperations(): void
@@ -84,39 +123,17 @@ class MemCachedTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	public function testConstructServer(): void
+	public function testSetInvalidValue(): void
 	{
-		$cache = new MemCached([
-			'host' => 'localhost',
-			'port' => 1234
-		]);
-		$this->assertFalse($cache->set('foo', 'A basic value'));
+		$cache = new MemCached();
+
+		// existing entry gets overwritten with an empty entry
+		// when the new value cannot be encoded
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertTrue($cache->exists('foo'));
+
+		$this->assertTrue($cache->set('foo', "\xC3"));
 		$this->assertNull($cache->retrieve('foo'));
-		$this->assertFalse($cache->remove('foo'));
-
-		$cache = new MemCached([
-			'host' => 'asdfgh.invalid',
-			'port' => 11211
-		]);
-		$this->assertFalse($cache->set('foo', 'A basic value'));
-		$this->assertNull($cache->retrieve('foo'));
-		$this->assertFalse($cache->remove('foo'));
-	}
-
-	public function testFlush(): void
-	{
-		$cache = new MemCached([]);
-
-		$cache->set('a', 'A basic value');
-		$cache->set('b', 'A basic value');
-		$cache->set('c', 'A basic value');
-		$this->assertTrue($cache->exists('a'));
-		$this->assertTrue($cache->exists('b'));
-		$this->assertTrue($cache->exists('c'));
-
-		$this->assertTrue($cache->flush());
-		$this->assertFalse($cache->exists('a'));
-		$this->assertFalse($cache->exists('b'));
-		$this->assertFalse($cache->exists('c'));
+		$this->assertNull($cache->get('foo'));
 	}
 }

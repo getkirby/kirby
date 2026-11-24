@@ -2,25 +2,14 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Toolkit\I18n;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(TimeField::class)]
+#[CoversClass(DateTimeField::class)]
 class TimeFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('time');
-
-		$this->assertSame('time', $field->type());
-		$this->assertSame('time', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('', $field->default());
-		$this->assertSame('HH:mm', $field->display());
-		$this->assertSame('clock', $field->icon());
-		$this->assertSame(24, $field->notation());
-		$this->assertSame(['size' => 5, 'unit' => 'minute'], $field->step());
-		$this->assertTrue($field->save());
-	}
-
 	public function testDisplayFor12HourNotation(): void
 	{
 		$field = $this->field('time', [
@@ -39,6 +28,52 @@ class TimeFieldTest extends TestCase
 		$this->assertSame('HH:mm:ss', $field->display());
 	}
 
+	public function testDisplayWithTranslation(): void
+	{
+		$props = [
+			'display' => [
+				'en' => 'hh:mm a',
+				'de' => 'HH:mm'
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('hh:mm a', $this->field('time', $props)->display());
+
+		I18n::$locale = 'de';
+		$this->assertSame('HH:mm', $this->field('time', $props)->display());
+	}
+
+	public function testMax(): void
+	{
+		// a plain ISO time without a date or timezone offset
+		$field = $this->field('time', [
+			'max' => '11:30:15'
+		]);
+
+		$this->assertSame('11:30:15', $field->max());
+
+		// without a boundary
+		$field = $this->field('time');
+
+		$this->assertNull($field->max());
+	}
+
+	public function testMin(): void
+	{
+		// a plain ISO time without a date or timezone offset
+		$field = $this->field('time', [
+			'min' => '09:00'
+		]);
+
+		$this->assertSame('09:00:00', $field->min());
+
+		// without a boundary
+		$field = $this->field('time');
+
+		$this->assertNull($field->min());
+	}
+
 	public function testMinMax(): void
 	{
 		// no value
@@ -46,7 +81,6 @@ class TimeFieldTest extends TestCase
 			'value' => null
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -55,7 +89,6 @@ class TimeFieldTest extends TestCase
 			'value' => '10:00:00'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -66,7 +99,6 @@ class TimeFieldTest extends TestCase
 			'max'   => '11:00'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -77,7 +109,6 @@ class TimeFieldTest extends TestCase
 			'max'   => '10:00'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -88,7 +119,6 @@ class TimeFieldTest extends TestCase
 			'max'   => '09:00'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 
@@ -98,7 +128,6 @@ class TimeFieldTest extends TestCase
 			'value' => '10:00:00'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 
@@ -108,7 +137,6 @@ class TimeFieldTest extends TestCase
 			'max'   => '09:00'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 
@@ -120,7 +148,6 @@ class TimeFieldTest extends TestCase
 			'step'  => 'second'
 		]);
 
-		$field->validate();
 		$this->assertTrue($field->isValid());
 		$this->assertFalse($field->isInvalid());
 
@@ -131,7 +158,6 @@ class TimeFieldTest extends TestCase
 			'step'  => 'second'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
 
@@ -141,9 +167,53 @@ class TimeFieldTest extends TestCase
 			'step'  => 'second'
 		]);
 
-		$field->validate();
 		$this->assertFalse($field->isValid());
 		$this->assertTrue($field->isInvalid());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('time');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'after'       => null,
+			'autofocus'   => false,
+			'before'      => null,
+			'disabled'    => false,
+			'display'     => 'HH:mm',
+			'format'      => 'H:i:s',
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => 'clock',
+			'label'       => 'Time',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'time',
+			'notation'    => 24,
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => ['size' => 5, 'unit' => 'minute'],
+			'times'       => true,
+			'translate'   => true,
+			'type'        => 'time',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testTimes(): void
+	{
+		$field = $this->field('time', [
+			'times' => false
+		]);
+
+		$this->assertFalse($field->times());
+		$this->assertFalse($field->props()['times']);
 	}
 
 	public static function valueProvider(): array
@@ -163,15 +233,13 @@ class TimeFieldTest extends TestCase
 	}
 
 	#[DataProvider('valueProvider')]
-	public function testValue($input, $expected, $step = 1): void
+	public function testToFormValue($input, $expected, $step = 1): void
 	{
 		$field = $this->field('time', [
-			'default' => $input,
-			'step'    => $step,
-			'value'   => $input,
+			'step'  => $step,
+			'value' => $input,
 		]);
 
-		$this->assertSame($expected, $field->value());
-		$this->assertSame($expected, $field->default());
+		$this->assertSame($expected, $field->toFormValue());
 	}
 }

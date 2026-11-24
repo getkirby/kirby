@@ -1,12 +1,15 @@
 /**
  * Wraps setInterval to manage the start/stop lifecycle
  * of a repeating timer
- * @since 4.0.0
  *
  * @example
  * const timer = new Timer();
  * timer.start(100, () => {});
  * timer.stop();
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ * @since     4.0.0
  */
 export default class Timer {
 	private interval: ReturnType<typeof setInterval> | undefined;

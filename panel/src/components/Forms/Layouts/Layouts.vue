@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="$attrs.class" :style="$attrs.style">
 		<template v-if="hasFieldsets && rows.length">
 			<k-draggable v-bind="draggableOptions" class="k-layouts" @sort="save">
 				<k-layout
@@ -23,8 +23,8 @@
 					@prepend="select(index)"
 					@remove="remove(layout)"
 					@select="selected = layout.id"
-					@updateAttrs="updateAttrs(index, $event)"
-					@updateColumn="updateColumn({ layout, index, ...$event })"
+					@update-attrs="updateAttrs(index, $event)"
+					@update-column="updateColumn({ layout, index, ...$event })"
 				/>
 			</k-draggable>
 		</template>
@@ -37,7 +37,12 @@
 			{{ $t("field.blocks.fieldsets.empty") }}
 		</k-empty>
 
-		<k-empty v-else icon="dashboard" class="k-layout-empty" @click="select(0)">
+		<k-empty
+			v-else
+			icon="dashboard"
+			class="k-layout-empty"
+			v-on="!disabled ? { click: () => select(0) } : {}"
+		>
 			{{ empty ?? $t("field.layout.empty") }}
 		</k-empty>
 	</div>
@@ -62,10 +67,13 @@ export const props = {
 };
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {
 	mixins: [props],
+	inheritAttrs: false,
 	emits: ["input"],
 	data() {
 		return {
@@ -210,10 +218,9 @@ export default {
 						return column;
 					});
 
-					// add row only if any of its columns has any blocks
-					if (copy.columns.filter((column) => column?.blocks?.length).length) {
-						rows.push(copy);
-					}
+					// the chunks only reach as far as the filled columns,
+					// so each row gets at least one of them
+					rows.push(copy);
 				}
 			}
 
@@ -251,7 +258,7 @@ export default {
 			const index = this.rows.findIndex((element) => element.id === layout.id);
 
 			if (index !== -1) {
-				this.$delete(this.rows, index);
+				this.rows.splice(index, 1);
 			}
 
 			this.save();

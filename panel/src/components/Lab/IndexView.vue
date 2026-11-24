@@ -26,7 +26,7 @@
 			]"
 		/>
 
-		<k-box v-if="info" icon="question" theme="info" :text="info" :html="true" />
+		<k-box v-if="info" icon="question" theme="info" :text="info" />
 
 		<k-section
 			v-for="category in filteredCategories"
@@ -45,6 +45,10 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	props: {
 		categories: Array,

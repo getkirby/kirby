@@ -1,4 +1,9 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+/**
  * Returns name of meta key for current OS (`cmd` or `ctrl`)
  */
 export function metaKey(): string {

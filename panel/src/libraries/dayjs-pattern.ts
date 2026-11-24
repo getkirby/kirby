@@ -1,6 +1,31 @@
-import type { Dayjs, PluginFunc } from "dayjs";
+/**
+ * Reads a display pattern such as `DD.MM.YYYY`
+ * and formats and inspects datetimes against it.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
 
-type PatternUnit =
+import type { Dayjs, PluginFunc } from "dayjs";
+import type { DatetimeType } from "./dayjs";
+
+/**
+ * A single span in the pattern with its position,
+ * e.g. the `MM` of `YYYY-MM-DD` as `{ index: 1, start: 5, end: 6 }`.
+ * With a datetime, the position is the one in the string that
+ * datetime renders into instead.
+ */
+export interface PatternPart {
+	index: number;
+	start: number;
+	end: number;
+	unit?: PatternUnit;
+}
+
+/**
+ * Date/time unit the pattern refers to, e.g. `YYYY` to `year`
+ */
+export type PatternUnit =
 	| "year"
 	| "month"
 	| "day"
@@ -9,89 +34,182 @@ type PatternUnit =
 	| "second"
 	| "meridiem";
 
-interface PatternPart {
-	index: number;
-	start: number;
-	end: number;
-	unit?: PatternUnit;
-}
+/**
+ * The unit each supported pattern format refers to
+ */
+const units: Record<string, PatternUnit> = {
+	YY: "year",
+	YYYY: "year",
+	M: "month",
+	MM: "month",
+	MMM: "month",
+	MMMM: "month",
+	D: "day",
+	DD: "day",
+	h: "hour",
+	hh: "hour",
+	H: "hour",
+	HH: "hour",
+	m: "minute",
+	mm: "minute",
+	s: "second",
+	ss: "second",
+	a: "meridiem",
+	A: "meridiem"
+};
 
-class DayjsPattern {
-	pattern: string;
-	parts: PatternPart[];
+/**
+ * Matches what a pattern escapes and prints as it is,
+ * e.g. the `[um]` of `DD.MM.YYYY [um] HH:mm`
+ */
+const escapes = /\[([^\]]*)\]/g;
 
-	constructor(pattern: string) {
-		this.pattern = pattern;
+/**
+ * Matches the supported markers in a format string,
+ * longest first, so that scanning always reads the widest marker.
+ */
+const markers = new RegExp(
+	Object.keys(units)
+		.sort((a, b) => b.length - a.length)
+		.join("|"),
+	"g"
+);
 
-		// unit-tokens map
-		const map: Record<PatternUnit, string[]> = {
-			year: ["YY", "YYYY"],
-			month: ["M", "MM", "MMM", "MMMM"],
-			day: ["D", "DD"],
-			hour: ["h", "hh", "H", "HH"],
-			minute: ["m", "mm"],
-			second: ["s", "ss"],
-			meridiem: ["a"]
-		};
+/**
+ * Matches what the pattern is scanned by: an escaped literal,
+ * which carries no unit, or a sequence of letters, which is a marker
+ */
+const tokens = /\[[^\]]*\]|[a-zA-Z]+/g;
 
-		// get array of parts
-		this.parts = this.pattern.split(/\W/).map((part, index) => {
-			const start = this.pattern.indexOf(part);
-			const key = Object.values(map).findIndex((tokens) =>
-				tokens.includes(part)
-			);
-			const units = Object.keys(map) as PatternUnit[];
-
-			return {
-				index,
-				unit: units[key],
-				start,
-				end: start + (part.length - 1)
-			};
-		});
-	}
+export class DayjsPattern {
+	source: string;
 
 	/**
-	 * Returns information about part at
-	 * provided selection/indexes
+	 * A missing pattern is treated like an empty one,
+	 * so that a display option that isn't set describes
+	 * nothing instead of throwing
 	 */
-	at(start: number, end: number = start): PatternPart | undefined {
-		const matches = this.parts.filter(
+	constructor(source?: string | null) {
+		this.source = source ?? "";
+	}
+
+	at(
+		start: number,
+		end: number = start,
+		dt?: Dayjs | null
+	): PatternPart | undefined {
+		const parts = this.parts(dt);
+
+		// exact selection found
+		const match = parts.find(
 			(part) => part.start <= start && part.end >= end - 1
 		);
 
-		// exact selection found
-		if (matches[0]) {
-			return matches[0];
-		}
-
 		// fallback to part where selection starts
-		return this.parts.filter((part) => part.start <= start).pop();
+		return match ?? parts.findLast((part) => part.start <= start) ?? parts[0];
 	}
 
-	/**
-	 * Returns a string for the dayjs object
-	 * in the format of the pattern.
-	 */
 	format(dt?: Dayjs | null): string | null {
 		if (!dt || dt.isValid() === false) {
 			return null;
 		}
 
-		return dt.format(this.pattern);
+		return dt.format(this.source);
+	}
+
+	static from(source?: string | null): DayjsPattern {
+		return new DayjsPattern(source);
+	}
+
+	/**
+	 * The strings the pattern escapes and prints as they are,
+	 * e.g. `["um"]` for `DD.MM.YYYY [um] HH:mm`
+	 */
+	get literals(): string[] {
+		return [...this.source.matchAll(escapes)].map((match) => match[1]);
+	}
+
+	/**
+	 * The parts of the pattern, scanned by letter sequences.
+	 *
+	 * Without a datetime, the parts are positioned in the pattern
+	 * itself. With one, they are positioned in the string that
+	 * datetime renders into, as a marker and what it prints can
+	 * differ in width, e.g. `D` printing `13` or `MMMM` printing
+	 * `September`.
+	 */
+	parts(dt?: Dayjs | null): PatternPart[] {
+		const value = dt?.isValid() === true ? dt : null;
+		const parts: PatternPart[] = [];
+
+		let offset = 0;
+		let position = 0;
+		let index = 0;
+
+		for (const match of this.source.matchAll(tokens)) {
+			const token = match[0];
+
+			// whatever sits between the tokens prints as it is
+			position += match.index - offset;
+			offset = match.index + token.length;
+
+			if (token.startsWith("[") === true) {
+				position += value === null ? token.length : token.length - 2;
+				continue;
+			}
+
+			const length = value === null ? token.length : value.format(token).length;
+
+			parts.push({
+				index: index++,
+				unit: units[token],
+				start: position,
+				end: position + (length - 1)
+			});
+
+			position += length;
+		}
+
+		return parts;
+	}
+
+	/**
+	 * Whether the pattern describes a time or a date
+	 */
+	get type(): DatetimeType {
+		const calendar: PatternUnit[] = ["year", "month", "day"];
+
+		if (this.units.length === 0) {
+			return "date";
+		}
+
+		return this.units.some((unit) => calendar.includes(unit) === true)
+			? "date"
+			: "time";
+	}
+
+	/**
+	 * The units the pattern is made up of, in the order they
+	 * appear in it, e.g. `MM/DD/YYYY` as `["month", "day", "year"]`.
+	 */
+	get units(): PatternUnit[] {
+		const source = this.source.replace(escapes, "");
+		return [...source.matchAll(markers)].map((match) => units[match[0]]);
 	}
 }
 
 declare module "dayjs" {
-	function pattern(pattern: string): DayjsPattern;
+	/**
+	 * Reads a display pattern such as `DD.MM.YYYY`
+	 * and formats and inspects datetimes against it
+	 */
+	function pattern(pattern?: string | null): DayjsPattern;
 }
-
-export type { DayjsPattern, PatternPart, PatternUnit };
 
 const plugin: PluginFunc = (option, Dayjs, dayjs) => {
 	Object.assign(dayjs, {
-		pattern(pattern: string): DayjsPattern {
-			return new DayjsPattern(pattern);
+		pattern(source?: string | null): DayjsPattern {
+			return new DayjsPattern(source);
 		}
 	});
 };

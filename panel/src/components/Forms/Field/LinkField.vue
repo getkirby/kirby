@@ -20,7 +20,7 @@
 				>
 					{{ currentType.label }}
 				</k-button>
-				<k-dropdown-content ref="types" :options="activeTypesOptions" />
+				<k-dropdown ref="types" :options="activeTypesOptions" />
 
 				<!-- Input -->
 				<div
@@ -29,7 +29,7 @@
 					@click="toggle"
 				>
 					<k-link-field-preview
-						:removable="true"
+						:removable="disabled === false"
 						:type="currentType.id"
 						:value="value"
 						@remove="removeModel"
@@ -78,7 +78,7 @@
 					class="k-link-input-body"
 				>
 					<k-file-browser
-						:opened="$panel.view.props.model.uuid ?? $panel.view.props.model.id"
+						:opened="$panel.view.props.uuid ?? $panel.view.props.id"
 						:selected="$helper.link.getFileUUID(value)"
 						@select="selectModel($event)"
 					/>
@@ -105,12 +105,17 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
+ * @example
+ * <k-link-field :value="link" @input="link = $event" name="link" label="Link" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			/**
@@ -192,7 +197,7 @@ export default {
 	mounted() {
 		this.$events.on("click", this.onOutsideClick);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("click", this.onOutsideClick);
 	},
 	methods: {
@@ -221,10 +226,18 @@ export default {
 			}
 		},
 		removeModel() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.clear();
 			this.expanded = false;
 		},
 		selectModel(model) {
+			if (this.disabled === true) {
+				return;
+			}
+
 			if (model.uuid) {
 				this.onInput(model.uuid);
 				return;
@@ -256,6 +269,10 @@ export default {
 			this.focus();
 		},
 		toggle() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.expanded = !this.expanded;
 		}
 	}
@@ -296,17 +313,19 @@ export default {
 	align-items: center;
 }
 
-.k-link-field .k-link-field-preview {
+.k-link-field .k-tags-field-preview {
 	--tag-height: var(--height-sm);
-	padding-inline: 0;
+	min-width: 0;
+	overflow: visible;
+	padding: 0;
 }
-.k-link-field .k-link-field-preview .k-tag:focus {
+.k-link-field .k-tags-field-preview .k-tag:focus {
 	outline: 0;
 }
-.k-link-field .k-link-field-preview .k-tag:focus-visible {
+.k-link-field .k-tags-field-preview .k-tag:focus-visible {
 	outline: var(--outline);
 }
-.k-link-field .k-link-field-preview .k-tag-text {
+.k-link-field .k-tags-field-preview .k-tag-text {
 	font-size: var(--text-sm);
 }
 

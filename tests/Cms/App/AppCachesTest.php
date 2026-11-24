@@ -9,7 +9,14 @@ use Kirby\Filesystem\Dir;
 
 class AppCachesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.AppCaches';
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+
+		Dir::remove(static::TMP);
+	}
 
 	public function app(array $props = [])
 	{
@@ -21,44 +28,24 @@ class AppCachesTest extends TestCase
 		]);
 	}
 
-	protected function tearDown(): void
+	public function testDefaultCacheTypeClasses(): void
 	{
-		parent::tearDown();
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
 
-		Dir::remove(static::TMP);
+		$types = $app->extensions('cacheTypes');
+
+		foreach ($types as $className) {
+			$this->assertTrue(class_exists($className));
+		}
 	}
 
 	public function testDisabledCache(): void
 	{
 		$this->assertInstanceOf(NullCache::class, $this->app()->cache('pages'));
-	}
-
-	public function testEnabledCacheWithoutOptions(): void
-	{
-		$kirby = $this->app([
-			'options' => [
-				'cache.pages' => true
-			]
-		]);
-
-		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
-		$this->assertSame($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
-	}
-
-	public function testInvalidCacheType(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid cache type "not-exists"');
-
-		$kirby = $this->app([
-			'options' => [
-				'cache.pages' => [
-					'type' => 'not-exists'
-				]
-			]
-		]);
-
-		$kirby->cache('pages');
 	}
 
 	public function testEnabledCacheWithOptions(): void
@@ -103,15 +90,32 @@ class AppCachesTest extends TestCase
 		$this->assertFileExists($root . '/127.0.0.1_8000/pages/home.cache');
 	}
 
-	public function testPluginDefaultCache(): void
+	public function testEnabledCacheWithoutOptions(): void
 	{
-		App::plugin('developer/plugin', [
+		$kirby = $this->app([
 			'options' => [
-				'cache' => true
+				'cache.pages' => true
 			]
 		]);
 
-		$this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin'));
+		$this->assertInstanceOf(FileCache::class, $kirby->cache('pages'));
+		$this->assertSame($kirby->root('cache'), $kirby->cache('pages')->options()['root']);
+	}
+
+	public function testInvalidCacheType(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid cache type "not-exists"');
+
+		$kirby = $this->app([
+			'options' => [
+				'cache.pages' => [
+					'type' => 'not-exists'
+				]
+			]
+		]);
+
+		$kirby->cache('pages');
 	}
 
 	public function testPluginCustomCache(): void
@@ -125,18 +129,14 @@ class AppCachesTest extends TestCase
 		$this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin.api'));
 	}
 
-	public function testDefaultCacheTypeClasses(): void
+	public function testPluginDefaultCache(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
+		App::plugin('developer/plugin', [
+			'options' => [
+				'cache' => true
 			]
 		]);
 
-		$types = $app->extensions('cacheTypes');
-
-		foreach ($types as $className) {
-			$this->assertTrue(class_exists($className));
-		}
+		$this->assertInstanceOf(FileCache::class, $this->app()->cache('developer.plugin'));
 	}
 }

@@ -1,10 +1,11 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-slug-input', $attrs.class]"
 		:spellcheck="false"
+		:style="$attrs.style"
 		:value="slug"
 		autocomplete="off"
-		class="k-slug-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -43,11 +44,16 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
+ * @example
+ * <k-input :value="slug" @input="slug = $event" name="slug" type="slug" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: StringInput,
 	mixins: [props],
+	emits: ["input"],
 	data() {
 		return {
 			slug: this.sluggify(this.value),

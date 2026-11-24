@@ -11,16 +11,17 @@ use Kirby\Uuid\Uuids;
  * adapting page slugs, UUIDs etc.
  * (for single as well as multilang setups)
  *
- * @package   Kirby Cms
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class PageCopy
 {
+	/**
+	 * @param array<string, string> $uuids Tracked UUID changes (old => new)
+	 */
 	public function __construct(
 		public Page $copy,
 		public Page|null $original = null,
@@ -28,6 +29,72 @@ class PageCopy
 		public bool $withChildren = false,
 		public array $uuids = []
 	) {
+	}
+
+	/**
+	 * Re-generate UUIDs for each child recursively
+	 * and merge with the tracked changed UUIDs
+	 */
+	protected function convertChildrenUuids(Language|null $language): void
+	{
+		// re-generate UUIDs and track changes
+		if ($this->withChildren === true) {
+			foreach ($this->copy->childrenAndDrafts() as $child) {
+				// always adapt files of subpages as they are
+				// currently always copied; adapt children recursively
+				$child = new PageCopy(
+					$child,
+					withChildren: true,
+					withFiles: true,
+					uuids: $this->uuids
+				);
+				$child->convertUuids($language);
+				$this->uuids = [...$this->uuids, ...$child->uuids];
+			}
+		} else {
+			// if children have not been copied over,
+			// track all children UUIDs from original page to
+			// remove/replace with empty string
+			foreach ($this->original?->index(drafts: true) ?? [] as $child) {
+				$this->uuids[$child->uuid()->toString()] = '';
+
+				foreach ($child->files() as $file) {
+					$this->uuids[$file->uuid()->toString()] = '';
+				}
+			}
+		}
+	}
+
+	/**
+	 * Re-generate UUID for each file and track the change
+	 */
+	protected function convertFileUuids(Language|null $language): void
+	{
+		// re-generate UUIDs and track changes
+		if ($this->withFiles === true) {
+			foreach ($this->copy->files() as $file) {
+				// store old file UUID
+				$old = ModelUuid::retrieveId($file);
+
+				// re-generate UUID for the file
+				$file = $file->save(
+					['uuid' => Uuid::generate()],
+					$language?->code()
+				);
+
+				// track UUID change
+				if ($old !== null) {
+					$this->uuids['file://' . $old] = $file->uuid()->toString();
+				}
+			}
+		} else {
+			// if files have not been copied over,
+			// track file UUIDs from original page to
+			// remove/replace with empty string
+			foreach ($this->original?->files() ?? [] as $file) {
+				$this->uuids[$file->uuid()->toString()] = '';
+			}
+		}
 	}
 
 	/**
@@ -68,79 +135,11 @@ class PageCopy
 	}
 
 	/**
-	 * Re-generate UUIDs for each child recursively
-	 * and merge with the tracked changed UUIDs
-	 */
-	protected function convertChildrenUuids(Language|null $language): void
-	{
-		// re-generate UUIDs and track changes
-		if ($this->withChildren === true) {
-			foreach ($this->copy->childrenAndDrafts() as $child) {
-				// always adapt files of subpages as they are
-				// currently always copied; adapt children recursively
-				$child = new PageCopy(
-					$child,
-					withChildren: true,
-					withFiles: true,
-					uuids: $this->uuids
-				);
-				$child->convertUuids($language);
-				$this->uuids = [...$this->uuids, ...$child->uuids];
-			}
-		}
-
-		// if children have not been copied over,
-		// track all children UUIDs from original page to
-		// remove/replace with empty string
-		if ($this->withChildren === false) {
-			foreach ($this->original?->index(drafts: true) ?? [] as $child) {
-				$this->uuids[$child->uuid()->toString()] = '';
-
-				foreach ($child->files() as $file) {
-					$this->uuids[$file->uuid()->toString()] = '';
-				}
-			}
-		}
-	}
-
-	/**
-	 * Re-generate UUID for each file and track the change
-	 */
-	protected function convertFileUuids(Language|null $language): void
-	{
-		// re-generate UUIDs and track changes
-		if ($this->withFiles === true) {
-			foreach ($this->copy->files() as $file) {
-				// store old file UUID
-				$old = ModelUuid::retrieveId($file);
-
-				// re-generate UUID for the file
-				$file = $file->save(
-					['uuid' => Uuid::generate()],
-					$language?->code()
-				);
-
-				// track UUID change
-				if ($old !== null) {
-					$this->uuids['file://' . $old] = $file->uuid()->toString();
-				}
-			}
-		}
-
-		// if files have not been copied over,
-		// track file UUIDs from original page to
-		// remove/replace with empty string
-		if ($this->withFiles === false) {
-			foreach ($this->original?->files() ?? [] as $file) {
-				$this->uuids[$file->uuid()->toString()] = '';
-			}
-		}
-	}
-
-	/**
 	 * Returns all languages to adapt
 	 *
-	 * @todo Refactor once singe-lang mode also works with a language object
+	 * @todo Refactor once single-lang mode also works with a language object
+	 *
+	 * @return Languages|array{null}
 	 */
 	public function languages(): Languages|iterable
 	{
@@ -189,10 +188,10 @@ class PageCopy
 	 */
 	public function removeChanges(): void
 	{
-		$pages = [$this->copy, ...$this->copy->index(drafts: true)->values()];
+		$pages = [$this->copy, ...$this->copy->index(drafts: true)];
 
 		foreach ($pages as $page) {
-			foreach ([$page, ...$page->files()->values()] as $model) {
+			foreach ([$page, ...$page->files()] as $model) {
 				$changes = $model->version('changes');
 
 				if ($changes->exists('*') === true) {

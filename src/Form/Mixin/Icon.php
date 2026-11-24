@@ -2,27 +2,24 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the `icon` prop for an optional icon shown alongside the input
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait Icon
 {
 	/**
 	 * Optional icon that will be shown at the end of the field
 	 */
-	protected string|null $icon;
+	#[Prop]
+	protected string|null $icon = null;
 
 	public function icon(): string|null
 	{
 		return $this->icon;
-	}
-
-	protected function setIcon(string|null $icon = null): void
-	{
-		$this->icon = $icon;
 	}
 }

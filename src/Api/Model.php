@@ -4,6 +4,7 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -14,22 +15,26 @@ use Kirby\Toolkit\Str;
  * by GraphQLs architecture and makes it possible to load
  * only the model data that is needed for the current API call.
  *
- * @package   Kirby Api
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Model
 {
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $fields;
 	protected array|null $select;
+
+	/**
+	 * @var array<string, array>
+	 */
 	protected array $views;
 
 	/**
 	 * Model constructor
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function __construct(
 		protected Api $api,
@@ -68,8 +73,10 @@ class Model
 	}
 
 	/**
+	 * @param $keys Comma-separated string or array of keys,
+	 *             `null` for all keys, `false` to keep the selection
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function select($keys = null): static
 	{
@@ -90,7 +97,8 @@ class Model
 	}
 
 	/**
-	 * @throws \Exception
+	 * @return array<string, array{view: string|null, select: array|null}>
+	 * @throws Exception
 	 */
 	public function selection(): array
 	{
@@ -132,8 +140,9 @@ class Model
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @return array<string, mixed>
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toArray(): array
 	{
@@ -160,12 +169,12 @@ class Model
 			) {
 				$selection = $select[$key];
 
-				if ($subview = $selection['view']) {
-					$value->view($subview);
+				if ($selection['view']) {
+					$value->view($selection['view']);
 				}
 
-				if ($subselect = $selection['select']) {
-					$value->select($subselect);
+				if ($selection['select']) {
+					$value->select($selection['select']);
 				}
 
 				$value = $value->toArray();
@@ -180,8 +189,9 @@ class Model
 	}
 
 	/**
-	 * @throws \Kirby\Exception\NotFoundException
-	 * @throws \Exception
+	 * @return array<string, mixed>
+	 * @throws NotFoundException
+	 * @throws Exception
 	 */
 	public function toResponse(): array
 	{
@@ -205,7 +215,7 @@ class Model
 
 	/**
 	 * @return $this
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function view(string $name): static
 	{

@@ -136,8 +136,12 @@ export const props = {
 };
 
 /**
- * @example <k-button icon="check">Save</k-button>
- * @example <k-button icon="check" size="sm" variant="filled">Save</k-button>
+ * @example
+ * <k-button icon="check">Save</k-button>
+ * <k-button icon="check" size="sm" variant="filled">Save</k-button>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
@@ -147,10 +151,7 @@ export default {
 		attrs() {
 			// Shared
 			const attrs = {
-				"aria-current": this.current,
-				"aria-disabled": this.disabled,
 				"aria-label": this.text ?? this.title,
-				"aria-selected": this.selected,
 				"data-responsive": this.responsive,
 				"data-size": this.size,
 				"data-theme": this.theme,
@@ -159,6 +160,25 @@ export default {
 				tabindex: this.tabindex,
 				title: this.title
 			};
+
+			if (this.current) {
+				attrs["aria-current"] = this.current;
+			}
+
+			if (this.disabled) {
+				attrs["aria-disabled"] = this.disabled;
+			}
+
+			if (this.selected) {
+				attrs["aria-selected"] = this.selected;
+			}
+
+			// support all aria- attributes
+			for (const attr of Object.keys(this.$attrs)) {
+				if (attr.startsWith("aria-") && this.$attrs[attr]) {
+					attrs[attr] = this.$attrs[attr];
+				}
+			}
 
 			if (this.component === "k-link") {
 				// For `<a>`/`<k-link>` element:
@@ -251,7 +271,7 @@ export default {
 	display: inline-flex;
 	align-items: center;
 	justify-content: var(--button-align);
-	gap: 0.5rem;
+	gap: var(--spacing-2);
 	padding-inline: var(--button-padding);
 	white-space: nowrap;
 	line-height: 1;

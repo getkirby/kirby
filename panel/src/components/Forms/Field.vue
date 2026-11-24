@@ -4,8 +4,8 @@
 		:data-translate="translate"
 		:class="[
 			'k-field',
-			`k-field-name-${name}`,
-			`k-field-type-${type}`,
+			name ? `k-field-name-${name}` : null,
+			type ? `k-field-type-${type}` : null,
 			$attrs.class
 		]"
 		:style="$attrs.style"
@@ -19,7 +19,10 @@
 			>
 				<slot name="label">
 					<k-label
+						v-if="label"
+						:has-diff="hasDiff"
 						:input="input"
+						:link="link"
 						:required="required"
 						:title="label"
 						type="field"
@@ -42,7 +45,7 @@
 		<slot name="footer">
 			<footer v-if="help || $slots.help" class="k-field-footer">
 				<slot name="help">
-					<k-text v-if="help" class="k-help k-field-help" :html="help" />
+					<k-text v-if="help" class="k-help k-field-help" :text="help" />
 				</slot>
 			</footer>
 		</slot>
@@ -57,15 +60,25 @@ export const props = {
 	props: {
 		counter: [Boolean, Object],
 		endpoints: Object,
+		hasDiff: Boolean,
 		input: {
 			type: [String, Number, Boolean],
 			default: null
 		},
+		/**
+		 * Turns the label into a link
+		 * @since 6.0.0
+		 */
+		link: String,
 		translate: Boolean,
 		type: String
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	inheritAttrs: false,
@@ -77,15 +90,9 @@ export default {
 .k-field[data-disabled="true"] {
 	cursor: not-allowed;
 }
-.k-field[data-disabled="true"] * {
-	pointer-events: none;
-}
-.k-field[data-disabled="true"] .k-text[data-theme="help"] * {
-	pointer-events: initial;
-}
 .k-field-header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-end;
 	align-items: center;
 	gap: var(--spacing-6);
 	position: relative;

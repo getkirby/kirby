@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Collector;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
@@ -11,11 +12,10 @@ use Kirby\Cms\User;
 use Kirby\Cms\Users;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @extends ModelsCollector<Users>
  */
 class UsersCollector extends ModelsCollector
 {
@@ -23,7 +23,7 @@ class UsersCollector extends ModelsCollector
 		protected bool $flip = false,
 		protected int|null $limit = null,
 		protected int $page = 1,
-		protected Site|Page|User|null $parent = null,
+		protected Site|Page|User|File|null $parent = null,
 		protected string|null $query = null,
 		protected string|null $role = null,
 		protected string|null $search = null,
@@ -46,10 +46,6 @@ class UsersCollector extends ModelsCollector
 		$user = App::instance()->user();
 
 		if ($user === null) {
-			return new Users([]);
-		}
-
-		if ($user->role()->permissions()->for('access', 'users') === false) {
 			return new Users([]);
 		}
 

@@ -1,0 +1,523 @@
+<?php
+
+namespace Kirby\Panel;
+
+use Kirby\Exception\Exception;
+use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
+use Kirby\Http\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(Router::class)]
+class RouterTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Panel';
+
+	public bool $submitted = false;
+
+	protected function call(
+		string $path,
+		array $query = [],
+		string $method = 'GET',
+		bool $login = true
+	): Response {
+		$_SERVER['SERVER_SOFTWARE'] = 'php';
+
+		$test = $this;
+
+		$this->app = $this->app->clone([
+			'areas' => [
+				'test' => fn () => [
+					'dialogs' => [
+						'test' => [
+							'load'   => fn () => ['component' => 'k-test-dialog'],
+							'submit' => fn () => $test->submitted = true
+						]
+					],
+					'requests' => [
+						'test' => [
+							'pattern' => 'test/request',
+							'action'  => fn () => ['message' => 'Done']
+						]
+					],
+					'views' => [
+						'test' => [
+							'pattern' => 'test/view',
+							'action'  => fn () => ['component' => 'k-test-view']
+						]
+					]
+				]
+			],
+			'options' => [
+				'api' => ['csrf' => 'test-csrf']
+			],
+			'request' => [
+				'method' => $method,
+				'query'  => $query
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		// a real session login, as impersonation skips the CSRF check
+		if ($login === true) {
+			$this->app->user('test@getkirby.com')->loginPasswordless();
+		}
+
+		return $this->app->panel()->router()->call($path);
+	}
+
+	public function testCallWithCsrf(): void
+	{
+		$response = $this->call('test/request', ['csrf' => 'test-csrf']);
+		$this->assertSame(200, $response->code());
+		$this->assertSame('Done', json_decode($response->body(), true)['message']);
+	}
+
+	public function testCallWithCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertTrue($this->submitted);
+	}
+
+	public function testCallWithCsrfViaPost(): void
+	{
+		$response = $this->call('test/request', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+	}
+
+	public function testCallWithLoginRequestWhenAuthenticated(): void
+	{
+		$response = $this->call('login/method/password', ['csrf' => 'test-csrf'], 'POST');
+		$this->assertSame(200, $response->code());
+		$this->assertSame('/panel/site', json_decode($response->body(), true)['redirect']);
+	}
+
+	public function testCallWithoutCsrf(): void
+	{
+		$response = $this->call('test/request');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+	}
+
+	public function testCallWithoutCsrfForDialogSubmit(): void
+	{
+		$response = $this->call('dialogs/test', [], 'POST');
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+		$this->assertFalse($this->submitted);
+	}
+
+	public function testCallWithoutCsrfForLogin(): void
+	{
+		$response = $this->call('login/method/password', [], 'POST', false);
+		$this->assertSame(400, $response->code());
+		$this->assertSame(
+			'Invalid CSRF token',
+			json_decode($response->body(), true)['message']
+		);
+	}
+
+	public function testCallWithoutCsrfForView(): void
+	{
+		$response = $this->call('test/view', ['_json' => true]);
+		$this->assertSame(200, $response->code());
+	}
+
+	public function testIcons(): void
+	{
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
+
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertSame(
+			'public, max-age=31536000, immutable',
+			$response->header('Cache-Control')
+		);
+		$this->assertStringContainsString('<svg', $response->body());
+	}
+
+	public function testIconsInDevMode(): void
+	{
+		// fake a panel dir with a running Vite dev server
+		$panel = static::TMP . '/panel';
+		F::write($panel . '/public/img/icons.svg', '<svg></svg>');
+		F::write($panel . '/.vite-running', '');
+
+		$this->app = $this->app->clone([
+			'roots' => [
+				'panel' => $panel
+			],
+			'options' => [
+				'panel' => [
+					'dev' => true
+				]
+			]
+		]);
+
+		$router   = new Router($this->app->panel());
+		$response = $router->icons();
+
+		$this->assertSame('image/svg+xml', $response->type());
+		$this->assertSame('no-store', $response->header('Cache-Control'));
+		$this->assertStringContainsString('<svg', $response->body());
+	}
+
+	public function testResponse(): void
+	{
+		$response = new Response('Test');
+		$router   = new Router($this->app->panel());
+
+		// response objects should not be modified
+		$this->assertSame($response, $router->response($response));
+	}
+
+	public function testResponseFromFalse(): void
+	{
+		// fake json request for easier assertions
+		$this->setRequest(['_json' => true]);
+
+		// false is interpreted as 404
+		$router = new Router($this->app->panel());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The data could not be found');
+
+		$router->response(false);
+	}
+
+	public function testResponseFromNull(): void
+	{
+		// fake json request for easier assertions
+		$this->setRequest(['_json' => true]);
+
+		// null is interpreted as 404
+		$router = new Router($this->app->panel());
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The data could not be found');
+
+		$router->response(null);
+	}
+
+	public function testResponseFromString(): void
+	{
+		// fake json request for easier assertions
+		$this->setRequest(['_json' => true]);
+
+		// strings are interpreted as errors
+		$router = new Router($this->app->panel());
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('Test');
+
+		$router->response('Test');
+	}
+
+	public function testRoutes(): void
+	{
+		$areas  = new Areas([]);
+		$panel  = $this->app->panel();
+		$router = new Router($panel);
+		$routes = $router->routes($areas);
+
+		$this->assertSame('assets/(:any)/icons.svg', $routes[0]['pattern']);
+		$this->assertSame('browser', $routes[1]['pattern']);
+		$this->assertSame(['/', 'installation', 'login', 'login/(:all)'], $routes[2]['pattern']);
+		$this->assertSame('login/(:all)', $routes[3]['pattern']);
+		$this->assertSame('POST', $routes[3]['method']);
+		$this->assertSame('(:all)', $routes[4]['pattern']);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('Could not find Panel route: foo');
+
+		$routes[4]['action']('foo');
+	}
+
+	public function testSetLanguage(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			],
+			'options' => [
+				'languages' => true,
+			],
+			'request' => [
+				'query' => [
+					'language' => 'de'
+				]
+			]
+		]);
+
+		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->language()->code());
+
+		// language is now stored in the session after request query
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+	}
+
+	public function testSetLanguageInSingleLanguageSite(): void
+	{
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertNull($language);
+		$this->assertNull($this->app->language());
+	}
+
+	public function testSetLanguageViaGet(): void
+	{
+		// switch via get request
+		// needs to come first before the app is cloned
+		$_GET['language'] = 'de';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaGetOverridesHeader(): void
+	{
+		// the query parameter switches the language, so it has to
+		// win over the language the tab is currently on
+		$_GET['language'] = 'de';
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeader(): void
+	{
+		// switch via the request header of the Panel tab
+		// needs to come first before the app is cloned
+		$_SERVER['HTTP_X_LANGUAGE'] = 'de';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->session()->get('panel.language'));
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaHeaderOverridesSession(): void
+	{
+		// the session is shared between all browser tabs, while the
+		// header is sent by the tab that makes the request
+		$_SERVER['HTTP_X_LANGUAGE'] = 'en';
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// another tab has switched to German before
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->session()->get('panel.language'));
+		$this->assertSame('en', $this->app->language()->code());
+	}
+
+	public function testSetLanguageViaSession(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// the initial document request of a new tab has neither
+		// a query parameter nor a header
+		$this->app->session()->set('panel.language', 'de');
+
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageWithCustomDefault(): void
+	{
+		$this->app = $this->app->clone([
+			'languages' => [
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+					'default' => true
+				],
+				[
+					'code' => 'en',
+					'name' => 'English',
+				],
+			],
+			'options' => [
+				'languages' => true,
+			]
+		]);
+
+		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('de', $language);
+		$this->assertSame('de', $this->app->language()->code());
+	}
+
+	public function testSetLanguageWithoutRequest(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'languages' => true,
+			],
+			'languages' => [
+				[
+					'code' => 'en',
+					'name' => 'English',
+					'default' => true
+				],
+				[
+					'code' => 'de',
+					'name' => 'Deutsch',
+				]
+			]
+		]);
+
+		// set for the first time
+		$language = $this->app->panel()->router()->setLanguage();
+
+		$this->assertSame('en', $language);
+		$this->assertSame('en', $this->app->language()->code());
+
+		// language is not stored in the session yet
+		$this->assertNull($this->app->session()->get('panel.language'));
+	}
+
+	public function testSetTranslation(): void
+	{
+		$translation = $this->app->panel()->router()->setTranslation();
+
+		$this->assertSame('en', $translation);
+		$this->assertSame('en', $this->app->translation()->code());
+	}
+
+	public function testSetTranslationViaUser(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'language' => 'de',
+					'role' => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$translation = $this->app->panel()->router()->setTranslation();
+
+		$this->assertSame('de', $translation);
+		$this->assertSame('de', $this->app->translation()->code());
+	}
+}

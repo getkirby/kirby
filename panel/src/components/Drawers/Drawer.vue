@@ -1,61 +1,77 @@
 <template>
-	<portal v-if="visible" to="drawer">
+	<Teleport v-if="visible" to=".k-drawer-portal">
 		<form
-			:class="$vnode.data.staticClass"
+			:class="$attrs.class"
 			:aria-current="current"
 			:data-size="size"
 			class="k-drawer"
 			method="dialog"
 			@submit.prevent="$emit('submit')"
 		>
-			<k-drawer-notification />
-			<k-drawer-header
-				:breadcrumb="breadcrumb"
-				:tab="tab"
-				:tabs="tabs"
-				@crumb="$emit('crumb', $event)"
-				@tab="$emit('tab', $event)"
-			>
-				<slot name="options">
-					<template v-for="(option, index) in options">
-						<template v-if="option.dropdown">
+			<k-dropzone :disabled="!hasDropzone()" @drop="$emit('drop', $event)">
+				<k-drawer-notification />
+				<k-drawer-header
+					:breadcrumb="breadcrumb"
+					:tab="tab"
+					:tabs="tabs"
+					@crumb="$emit('crumb', $event)"
+					@tab="$emit('tab', $event)"
+				>
+					<slot name="options">
+						<template v-for="(option, index) in options">
+							<template v-if="option.dropdown">
+								<k-button
+									:key="'btn-' + index"
+									v-bind="option"
+									class="k-drawer-option"
+									@click="$refs['dropdown-' + index][0].toggle()"
+								/>
+								<k-dropdown
+									:ref="'dropdown-' + index"
+									:key="'dropdown-' + index"
+									:options="option.dropdown"
+									align-x="end"
+									theme="light"
+								/>
+							</template>
+
 							<k-button
-								:key="'btn-' + index"
+								v-else
+								:key="index"
 								v-bind="option"
 								class="k-drawer-option"
-								@click="$refs['dropdown-' + index][0].toggle()"
-							/>
-							<k-dropdown-content
-								:ref="'dropdown-' + index"
-								:key="'dropdown-' + index"
-								:options="option.dropdown"
-								align-x="end"
-								theme="light"
 							/>
 						</template>
-
-						<k-button
-							v-else
-							:key="index"
-							v-bind="option"
-							class="k-drawer-option"
-						/>
-					</template>
-				</slot>
-			</k-drawer-header>
-			<k-drawer-body>
-				<slot />
-			</k-drawer-body>
+					</slot>
+				</k-drawer-header>
+				<k-drawer-body>
+					<slot />
+				</k-drawer-body>
+			</k-dropzone>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>
 import Drawer from "@/mixins/drawer.js";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Drawer],
-	emits: ["cancel", "crumb", "submit", "tab"]
+	emits: ["cancel", "crumb", "drop", "submit", "tab"],
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the drop listener
+		 * might be added after the first render.
+		 */
+		hasDropzone() {
+			return this.$.vnode.props?.onDrop !== undefined;
+		}
+	}
 };
 </script>
 
@@ -90,12 +106,12 @@ export default {
 	box-shadow: var(--drawer-shadow);
 	container-type: inline-size;
 }
-
 .k-drawer:not([aria-current="true"]) {
 	display: none;
 	pointer-events: none;
 }
 
+/* Sizes */
 .k-drawer[data-size="tiny"] {
 	--drawer-width: 26rem;
 }
@@ -107,5 +123,17 @@ export default {
 }
 .k-drawer[data-size="huge"] {
 	--drawer-width: 85rem;
+}
+
+/* Dropzone */
+.k-drawer > .k-dropzone {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	min-height: 0;
+}
+.k-drawer > .k-dropzone::after {
+	border-radius: 0;
+	outline-offset: -2px;
 }
 </style>

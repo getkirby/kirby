@@ -1,5 +1,5 @@
 <template>
-	<k-box v-bind="attrs" class="k-empty" @click.native="$emit('click', $event)">
+	<k-box v-bind="attrs()" class="k-empty" @click="$emit('click', $event)">
 		<slot>
 			{{ text }}
 		</slot>
@@ -12,7 +12,11 @@ import { layout } from "@/mixins/props.js";
 /**
  * Whenever you have to deal with an "empty" state, such as an empty list or a search without results, you can use the `k-empty` component to make it a bit nicer.
  *
- * @example <k-empty icon="image">No images yet</k-empty>
+ * @example
+ * <k-empty icon="image">No images yet</k-empty>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [layout],
@@ -27,10 +31,15 @@ export default {
 		icon: String
 	},
 	emits: ["click"],
-	computed: {
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the click listener
+		 * might be added after the first render.
+		 */
 		attrs() {
 			const attrs = {
-				button: this.$listeners["click"] !== undefined,
+				button: this.$.vnode.props?.onClick !== undefined,
 				icon: this.icon,
 				theme: "empty"
 			};

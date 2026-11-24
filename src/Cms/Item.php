@@ -8,31 +8,31 @@ use Kirby\Toolkit\Str;
 /**
  * The Item class is the foundation
  * for every object in context with
- * other objects. I.e.
+ * other objects, e.g.
  *
  * - a Block in a collection of Blocks
  * - a Layout in a collection of Layouts
  * - a Column in a collection of Columns
- * @since 3.5.0
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  *
- * @template TCollection of \Kirby\Cms\Items
- * @use \Kirby\Cms\HasSiblings<TCollection>
+ * @template TCollection of Items
+ * @use HasSiblings<TCollection>
  */
 class Item
 {
 	use HasSiblings;
 
-	public const ITEMS_CLASS = Items::class;
+	public const string ITEMS_CLASS = Items::class;
 
 	protected Field|null $field;
-
 	protected string $id;
+
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $params;
 	protected ModelWithContent $parent;
 
@@ -43,6 +43,8 @@ class Item
 
 	/**
 	 * Creates a new item
+	 *
+	 * @param array<string, mixed> $params
 	 */
 	public function __construct(array $params = [])
 	{
@@ -56,6 +58,8 @@ class Item
 
 	/**
 	 * Static Item factory
+	 *
+	 * @param array<string, mixed> $params
 	 */
 	public static function factory(array $params): static
 	{

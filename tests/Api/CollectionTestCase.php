@@ -1,0 +1,28 @@
+<?php
+
+namespace Kirby\Api;
+
+use Kirby\Cms\App;
+use Kirby\Cms\TestCase;
+
+class CollectionTestCase extends TestCase
+{
+	protected Api $api;
+
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'roots' => [
+				'index' => $this->hasTmp() ? static::TMP : '/dev/null',
+			],
+		]);
+
+		$this->api = $this->app->api();
+	}
+
+	protected function tearDown(): void
+	{
+		App::destroy();
+		$this->tearDownTmp();
+	}
+}

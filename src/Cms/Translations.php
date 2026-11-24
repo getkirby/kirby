@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
@@ -11,21 +12,26 @@ use Kirby\Filesystem\F;
  * to a collection of Translation objects and load
  * method to load all translations from disk
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Translation>
+ * @extends Collection<Translation>
  */
 class Translations extends Collection
 {
 	/**
 	 * All registered translations methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
+	/**
+	 * Creates a translations collection
+	 * from an array of translation data
+	 *
+	 * @param array<string, array> $translations Translation strings by locale
+	 */
 	public static function factory(array $translations): static
 	{
 		$collection = new static();
@@ -38,6 +44,11 @@ class Translations extends Collection
 		return $collection;
 	}
 
+	/**
+	 * Loads all translations from the JSON files in the given directory
+	 *
+	 * @param array<string, array> $inject Additional translation strings by locale
+	 */
 	public static function load(string $root, array $inject = []): static
 	{
 		$collection = new static();

@@ -63,11 +63,16 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-string-input :value="value" type="text" @input="value = $event" />
+ * @example
+ * <k-string-input :value="value" type="text" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	mounted() {
 		if (this.$props.autofocus) {
 			this.focus();

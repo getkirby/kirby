@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import {
 	hex2rgb,
 	rgb2hex,
@@ -138,7 +143,7 @@ export function parse(string: string): Color | null | false {
 			color.b = Math.ceil(color.b * 2.55);
 		}
 		if (values[8] === "%") {
-			color.a = (color.a ?? 100) / 100;
+			color.a = color.a! / 100;
 		}
 
 		return color;
@@ -156,7 +161,7 @@ export function parse(string: string): Color | null | false {
 		};
 
 		if (values[6] === "%") {
-			color.a = (color.a ?? 100) / 100;
+			color.a = color.a! / 100;
 		}
 
 		return color;

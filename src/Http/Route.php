@@ -5,16 +5,15 @@ namespace Kirby\Http;
 use Closure;
 
 /**
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Route
 {
 	/**
-	 * Listed of parsed arguments
+	 * List of parsed arguments
+	 *
+	 * @var list<string>
 	 */
 	protected array $arguments = [];
 
@@ -27,6 +26,8 @@ class Route
 	 * Wildcards, which can be used in
 	 * Route patterns to make regular expressions
 	 * a little more human
+	 *
+	 * @var array{required: array<string, string>, optional: array<string, string>}
 	 */
 	protected array $wildcards = [
 		'required' => [
@@ -46,14 +47,6 @@ class Route
 	];
 
 	/**
-	 * Magic getter for route attributes
-	 */
-	public function __call(string $key, array|null $args = null): mixed
-	{
-		return $this->attributes[$key] ?? null;
-	}
-
-	/**
 	 * Creates a new Route object for the given
 	 * pattern(s), method(s) and the callback action
 	 */
@@ -67,6 +60,14 @@ class Route
 	}
 
 	/**
+	 * Magic getter for route attributes
+	 */
+	public function __call(string $key, array|null $args = null): mixed
+	{
+		return $this->attributes[$key] ?? null;
+	}
+
+	/**
 	 * Getter for the action callback
 	 */
 	public function action(): Closure
@@ -76,6 +77,8 @@ class Route
 
 	/**
 	 * Returns all parsed arguments
+	 *
+	 * @return list<string>
 	 */
 	public function arguments(): array
 	{
@@ -117,37 +120,10 @@ class Route
 	}
 
 	/**
-	 * Getter for the pattern
-	 */
-	public function pattern(): string
-	{
-		return $this->pattern;
-	}
-
-	/**
-	 * Converts the pattern into a full regular
-	 * expression by replacing all the wildcards
-	 */
-	public function regex(string $pattern): string
-	{
-		$search   = array_keys($this->wildcards['optional']);
-		$replace  = array_values($this->wildcards['optional']);
-
-		// For optional parameters, first translate the wildcards to their
-		// regex equivalent, sans the ")?" ending. We'll add the endings
-		// back on when we know the replacement count.
-		$pattern = str_replace($search, $replace, $pattern, $count);
-
-		if ($count > 0) {
-			$pattern .= str_repeat(')?', $count);
-		}
-
-		return strtr($pattern, $this->wildcards['required']);
-	}
-
-	/**
 	 * Tries to match the path with the regular expression and
 	 * extracts all arguments for the Route action
+	 *
+	 * @return list<string>|false
 	 */
 	public function parse(string $pattern, string $path): array|false
 	{
@@ -165,10 +141,39 @@ class Route
 
 		// If we have a match we'll return all results
 		// from the preg without the full first match.
-		if (preg_match('#^' . $this->regex($pattern) . '$#u', $path, $parameters)) {
+		if (preg_match('#^' . $this->regex($pattern) . '$#u', $path, $parameters) === 1) {
 			return $this->arguments = array_slice($parameters, 1);
 		}
 
 		return false;
+	}
+
+	/**
+	 * Getter for the pattern
+	 */
+	public function pattern(): string
+	{
+		return $this->pattern;
+	}
+
+	/**
+	 * Converts the pattern into a full regular
+	 * expression by replacing all the wildcards
+	 */
+	public function regex(string $pattern): string
+	{
+		$search  = array_keys($this->wildcards['optional']);
+		$replace = array_values($this->wildcards['optional']);
+
+		// For optional parameters, first translate the wildcards to their
+		// regex equivalent, sans the ")?" ending. We'll add the endings
+		// back on when we know the replacement count.
+		$pattern = str_replace($search, $replace, $pattern, $count);
+
+		if ($count > 0) {
+			$pattern .= str_repeat(')?', $count);
+		}
+
+		return strtr($pattern, $this->wildcards['required']);
 	}
 }

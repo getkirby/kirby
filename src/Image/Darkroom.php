@@ -12,45 +12,27 @@ use Kirby\Image\Darkroom\Imagick;
  * A wrapper around resizing and cropping
  * via GDLib, ImageMagick or other libraries.
  *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Darkroom
 {
-	/**
-	 * Output formats the driver can write with all frames
-	 * of an animated image (others only get the first frame)
-	 */
-	protected static array $animatableTypes = [];
-
 	public static array $types = [
 		'gd'      => GdLib::class,
 		'imagick' => Imagick::class,
 		'im'      => ImageMagick::class
 	];
 
+	/**
+	 * Output formats the driver can write with all frames
+	 * of an animated image (others only get the first frame)
+	 */
+	protected static array $animatableTypes = [];
+
 	public function __construct(
 		protected array $settings = []
 	) {
 		$this->settings = [...$this->defaults(), ...$settings];
-	}
-
-	/**
-	 * Creates a new Darkroom instance
-	 * for the given type/driver
-	 *
-	 * @throws \Exception
-	 */
-	public static function factory(string $type, array $settings = []): static
-	{
-		if (isset(static::$types[$type]) === false) {
-			throw new Exception(message: 'Invalid Darkroom type');
-		}
-
-		return new static::$types[$type]($settings);
 	}
 
 	/**
@@ -79,6 +61,54 @@ class Darkroom
 	protected function defaults(): array
 	{
 		return static::defaultOptions();
+	}
+
+	/**
+	 * Calculates the dimensions to downscale the image to
+	 * before cropping, so that it still covers the thumb size
+	 * without a full-resolution intermediate copy
+	 */
+	protected function downscale(array $options): Dimensions
+	{
+		$dimensions = new Dimensions(
+			$options['sourceWidth'],
+			$options['sourceHeight']
+		);
+
+		$ratioThumb = Focus::ratio($options['width'], $options['height']);
+
+		if ($ratioThumb > $dimensions->ratio()) {
+			return $dimensions->fitWidth($options['width'], true);
+		}
+
+		return $dimensions->fitHeight($options['height'], true);
+	}
+
+	/**
+	 * Creates a new Darkroom instance
+	 * for the given type/driver
+	 *
+	 * @throws Exception
+	 */
+	public static function factory(string $type, array $settings = []): static
+	{
+		if (isset(static::$types[$type]) === false) {
+			throw new Exception(message: 'Invalid Darkroom type');
+		}
+
+		return new static::$types[$type]($settings);
+	}
+
+	/**
+	 * Checks if the output format can keep
+	 * all frames of an animated image
+	 *
+	 * @since 5.6.2
+	 */
+	protected function isAnimatable(string $file, array $options): bool
+	{
+		$format = $options['format'] ?? F::extension($file);
+		return in_array(strtolower($format), static::$animatableTypes, true);
 	}
 
 	/**
@@ -121,39 +151,6 @@ class Darkroom
 		}
 
 		return $options;
-	}
-
-	/**
-	 * Calculates the dimensions to downscale the image to
-	 * before cropping, so that it still covers the thumb size
-	 * without a full-resolution intermediate copy
-	 */
-	protected function downscale(array $options): Dimensions
-	{
-		$dimensions = new Dimensions(
-			$options['sourceWidth'],
-			$options['sourceHeight']
-		);
-
-		$ratioThumb = Focus::ratio($options['width'], $options['height']);
-
-		if ($ratioThumb > $dimensions->ratio()) {
-			return $dimensions->fitWidth($options['width'], true);
-		}
-
-		return $dimensions->fitHeight($options['height'], true);
-	}
-
-	/**
-	 * Checks if the output format can keep
-	 * all frames of an animated image
-	 *
-	 * @since 5.6.2
-	 */
-	protected function isAnimatable(string $file, array $options): bool
-	{
-		$format = $options['format'] ?? F::extension($file);
-		return in_array(strtolower($format), static::$animatableTypes, true);
 	}
 
 	/**

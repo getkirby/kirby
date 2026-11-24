@@ -1,4 +1,11 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+import { isObject } from "@/helpers/object";
+
+/**
  * Returns the base URL from the <base> element
  * @since 4.0.0
  */
@@ -14,20 +21,39 @@ export function base(): URL {
  * @since 4.0.0
  */
 export function buildQuery(
-	query: Record<string, string | null> = {},
+	query: Record<string, unknown> = {},
 	origin: string | Record<string, string> | URL = {}
 ): URLSearchParams {
 	const search = origin instanceof URL ? origin.search : origin;
 	const params = new URLSearchParams(search);
 
-	// add all data params unless they are empty/null
-	for (const [key, value] of Object.entries(query)) {
-		if (value !== null) {
-			params.set(key, value);
-		}
-	}
+	addParams(params, query);
 
 	return params;
+}
+
+/**
+ * Adds all entries of the given object to the params.
+ * Nested objects turn into `parent[child]` keys, `null` removes
+ * a param, `undefined` keeps it.
+ * @since 6.0.0
+ */
+function addParams(
+	params: URLSearchParams,
+	query: Record<string, unknown>,
+	prefix?: string
+): void {
+	for (const [key, value] of Object.entries(query)) {
+		const name = prefix ? `${prefix}[${key}]` : key;
+
+		if (value === null) {
+			params.delete(name);
+		} else if (isObject(value) === true) {
+			addParams(params, value, name);
+		} else if (value !== undefined) {
+			params.set(name, String(value));
+		}
+	}
 }
 
 /**
@@ -37,7 +63,7 @@ export function buildQuery(
  */
 export function buildUrl(
 	url: string | URL = "",
-	query: Record<string, string | null> = {},
+	query: Record<string, unknown> = {},
 	origin?: string | URL
 ): URL {
 	const result = toObject(url, origin);

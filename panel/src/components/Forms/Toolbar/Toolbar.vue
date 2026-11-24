@@ -12,14 +12,14 @@
 				:title="button.label ?? button.title"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
-				@keydown.native="button.key?.($event)"
+				@keydown="button.key?.($event)"
 				@click="
 					button.dropdown?.length
 						? $refs[index + '-dropdown'][0].toggle()
 						: button.click?.($event)
 				"
 			/>
-			<k-dropdown-content
+			<k-dropdown
 				v-if="(button.when ?? true) && button.dropdown?.length"
 				:key="index + '-dropdown'"
 				:ref="index + '-dropdown'"
@@ -53,11 +53,15 @@ export const props = {
 /**
  * Toolbar to display various buttons with/without dropdowns
  * and trigger related actions
- * @since 4.0.0
  *
- * @example <k-toolbar :buttons="[
+ * @example
+ * <k-toolbar :buttons="[
  * 	{ icon: 'heart', click: () => alert('I love you') }
  * ]" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

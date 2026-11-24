@@ -2,12 +2,15 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
 class FileIsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileIs';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileIs';
 
 	protected function setUp(): void
 	{
@@ -24,28 +27,34 @@ class FileIsTest extends ModelTestCase
 		]);
 	}
 
-	public function testIsReadable(): void
+	/**
+	 * Creates a page with a real file on disk,
+	 * so that the file can be compared with an upload
+	 */
+	protected function pageWithFile(string $template): Page
 	{
 		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/foo' => [
-					'options' => ['read' => false]
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'test',
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['template' => $template]
+							]
+						]
+					]
 				]
 			]
 		]);
 
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $this->app->site()
-		]);
-		$this->assertTrue($file->isReadable());
+		$page = $this->app->page('test');
 
-		$file = new File([
-			'filename' => 'test.jpg',
-			'template' => 'foo',
-			'parent'   => $this->app->site()
-		]);
-		$this->assertFalse($file->isReadable());
+		F::copy(static::FIXTURES . '/test.jpg', $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: ' . $template);
+
+		return $page;
 	}
 
 	public function testIsAccessible(): void
@@ -104,6 +113,46 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isListable());
 	}
 
+	public function testIsIdentical(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'test']
+		]);
+
+		$this->assertTrue($file->isIdentical($upload));
+	}
+
+	public function testIsIdenticalWithDifferentTemplate(): void
+	{
+		$page   = $this->pageWithFile(template: 'test');
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'cover']
+		]);
+
+		$this->assertFalse($file->isIdentical($upload));
+	}
+
+	public function testIsIdenticalWithMissingFile(): void
+	{
+		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+
+		$this->assertFalse($file->isIdentical($upload));
+	}
+
 	public function testIsListable(): void
 	{
 		$this->app = $this->app->clone([
@@ -158,5 +207,29 @@ class FileIsTest extends ModelTestCase
 		$this->assertFalse($file->isReadable());
 		$this->assertFalse($file->isAccessible());
 		$this->assertFalse($file->isListable());
+	}
+
+	public function testIsReadable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/foo' => [
+					'options' => ['read' => false]
+				]
+			]
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $this->app->site()
+		]);
+		$this->assertTrue($file->isReadable());
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'template' => 'foo',
+			'parent'   => $this->app->site()
+		]);
+		$this->assertFalse($file->isReadable());
 	}
 }

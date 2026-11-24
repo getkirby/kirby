@@ -2,7 +2,7 @@
 	<k-lab-examples>
 		<k-lab-example label="Default">
 			<k-field input="a" label="Label">
-				<k-input :value="value" id="a" type="text" @input="value = $event" />
+				<k-input id="a" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
 		<k-lab-example label="Required">
@@ -30,9 +30,9 @@
 		</k-lab-example>
 		<k-lab-example label="Options Slot">
 			<k-field input="e" label="Label">
-				<k-button icon="add" size="xs" slot="options" variant="filled">
-					Add
-				</k-button>
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<k-input id="e" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
@@ -41,15 +41,23 @@
 				input="f"
 				label="This is a very very long label that could push the options aside and break stuff"
 			>
-				<k-button icon="add" size="xs" slot="options" variant="filled">
-					Add
-				</k-button>
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<k-input id="f" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
-		<k-lab-example label="Help">
-			<k-field input="g" help="This is some help" label="Label">
+		<k-lab-example label="Options & no label">
+			<k-field input="g">
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<k-input id="g" :value="value" type="text" @input="value = $event" />
+			</k-field>
+		</k-lab-example>
+		<k-lab-example label="Help">
+			<k-field input="h" help="This is some help" label="Label">
+				<k-input id="h" :value="value" type="text" @input="value = $event" />
 			</k-field>
 		</k-lab-example>
 	</k-lab-examples>

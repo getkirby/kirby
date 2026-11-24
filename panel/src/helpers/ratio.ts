@@ -9,6 +9,9 @@
  * @example
  * ratio("3/2") // => "66.67%"
  * ratio("16/9") // => "56.25%"
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default function (
 	fraction: string = "3/2",

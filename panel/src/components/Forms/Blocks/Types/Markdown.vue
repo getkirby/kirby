@@ -18,6 +18,9 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeMarkdown
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,

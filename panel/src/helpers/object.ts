@@ -1,4 +1,11 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+import { isRef, isReactive, isProxy, toRaw } from "vue";
+
+/**
  * Clone provided object or array
  *
  * @example
@@ -12,7 +19,31 @@ export function clone<T>(value?: T): T | undefined {
 		return undefined;
 	}
 
-	return structuredClone(value);
+	// Unwrap reactive objects and refs deeply
+	const unwrapper = (input: unknown): unknown => {
+		if (Array.isArray(input) === true) {
+			return input.map((item) => unwrapper(item));
+		}
+
+		if (
+			isRef(input) === true ||
+			isReactive(input) === true ||
+			isProxy(input) === true
+		) {
+			return unwrapper(toRaw(input));
+		}
+
+		if (isObject(input)) {
+			return Object.keys(input).reduce<Record<string, unknown>>((acc, key) => {
+				acc[key] = unwrapper(input[key]);
+				return acc;
+			}, {});
+		}
+
+		return input;
+	};
+
+	return unwrapper(value) as T;
 }
 
 /**

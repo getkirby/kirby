@@ -1,0 +1,486 @@
+<?php
+
+namespace Kirby\Api;
+
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Cms\App;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\Dir;
+use Kirby\Form\Field;
+use Kirby\Form\Field\InputField;
+use Kirby\TestCase;
+
+class AccountRoutesTest extends TestCase
+{
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.AccountRoutes';
+
+	protected static string $password;
+
+	public static function setUpBeforeClass(): void
+	{
+		self::$password = User::hashPassword('12345678');
+	}
+
+	protected function setUp(): void
+	{
+		$this->app = new App([
+			'options' => [
+				'api.allowImpersonation' => true
+			],
+			'roles' => [
+				[
+					'name' => 'admin'
+				],
+				[
+					'name' => 'editor'
+				]
+			],
+			'roots' => [
+				'index' => static::TMP
+			],
+			'users' => [
+				[
+					'email'    => 'test@getkirby.com',
+					'role'     => 'admin',
+					'password' => self::$password
+				],
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'admin'
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		Dir::make(static::TMP);
+	}
+
+	protected function tearDown(): void
+	{
+		$this->app->session()->destroy();
+		Field::$types = [];
+		Dir::remove(static::TMP);
+		App::destroy();
+	}
+
+	public function testAvatar(): void
+	{
+		// create an avatar for the user
+		$this->app->user()->createFile([
+			'filename' => 'profile.jpg',
+			'source'   => static::FIXTURES . '/avatar.jpg',
+			'template' => 'avatar',
+		]);
+
+		$response = $this->app->api()->call('account/avatar');
+
+		$this->assertSame('profile.jpg', $response['data']['filename']);
+	}
+
+	public function testAvatarDelete(): void
+	{
+		// create an avatar for the user
+		$this->app->user()->createFile([
+			'filename' => 'profile.jpg',
+			'source'   => static::FIXTURES . '/avatar.jpg',
+			'template' => 'avatar',
+		]);
+
+		$response = $this->app->api()->call('account/avatar', 'DELETE');
+
+		$this->assertTrue($response);
+	}
+
+	public function testBlueprint(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'  => 'admin',
+					'title' => 'Test'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/blueprint');
+
+		$this->assertSame(200, $response['code']);
+		$this->assertSame('Test', $response['data']['title']);
+		$this->assertSame('admin', $response['data']['name']);
+	}
+
+	public function testBlueprints(): void
+	{
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'name'   => 'admin',
+					'title'  => 'Admin',
+					'fields' => [
+						'test' => [
+							'type'       => 'pagelist',
+							'parent'     => 'site',
+							'blueprints' => [
+								'foo',
+								'bar'
+							]
+						]
+					]
+				],
+				'users/editor' => [
+					'name'  => 'editor',
+					'title' => 'Editor'
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/blueprints');
+
+		$this->assertCount(2, $response);
+		$this->assertSame('Foo', $response[0]['title']);
+		$this->assertSame('Bar', $response[1]['title']);
+	}
+
+	public function testChangeEmail(): void
+	{
+		$response = $this->app->api()->call('account/email', 'PATCH', [
+			'body' => [
+				'email' => 'admin@getkirby.de'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('admin@getkirby.de', $response['data']['email']);
+	}
+
+	public function testChangeLanguage(): void
+	{
+		$response = $this->app->api()->call('account/language', 'PATCH', [
+			'body' => [
+				'language' => 'de'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('de', $response['data']['language']);
+	}
+
+	public function testChangeName(): void
+	{
+		$response = $this->app->api()->call('account/name', 'PATCH', [
+			'body' => [
+				'name' => 'Test user'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('Test user', $response['data']['name']);
+	}
+
+	public function testChangePassword(): void
+	{
+		$response = $this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => '12345678',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+	}
+
+	public function testChangePasswordMissingCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordRateLimited(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => ['auth' => ['trials' => 1]]
+		]);
+		$this->app->impersonate('test@getkirby.com');
+
+		// exhaust the limit for this visitor
+		$this->app->auth()->limits()->track('test@getkirby.com', triggerHook: false);
+
+		// even the correct password must not be checked any more
+		$this->expectException(RateLimitException::class);
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => '12345678',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordReset(): void
+	{
+		$this->app->session()->set(
+			'kirby.resetPassword',
+			$this->app->user()->id()
+		);
+
+		$response = $this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertTrue($this->app->user()->validatePassword('super-secure-new-password'));
+		$this->assertNull($this->app->session()->get('kirby.resetPassword'));
+	}
+
+	public function testChangePasswordResetForOtherUser(): void
+	{
+		// a reset flag that was issued for a different user must not
+		// take effect for the user that is logged in now
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Please enter a valid password. Passwords must be at least 8 characters long.');
+
+		$this->app->session()->set(
+			'kirby.resetPassword',
+			$this->app->user('editor@getkirby.com')->id()
+		);
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'password' => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPassword(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Wrong password');
+
+		$this->app->api()->call('account/password', 'PATCH', [
+			'body' => [
+				'currentPassword' => 'definitely-not-correct',
+				'password'        => 'super-secure-new-password'
+			]
+		]);
+	}
+
+	public function testChangePasswordWrongCurrentPasswordConsumesRateLimit(): void
+	{
+		try {
+			$this->app->api()->call('account/password', 'PATCH', [
+				'body' => [
+					'currentPassword' => 'definitely-not-correct',
+					'password'        => 'super-secure-new-password'
+				]
+			]);
+
+			$this->fail('Expected InvalidArgumentException');
+		} catch (InvalidArgumentException) {
+			// expected
+		}
+
+		// the guess must count against the shared auth budget, so that a
+		// hijacked session cannot brute-force the current password here
+		$log = $this->app->auth()->limits()->log();
+		$this->assertSame(1, $log['by-email'][$this->app->user()->email()]['trials']);
+	}
+
+	public function testChangeRole(): void
+	{
+		$response = $this->app->api()->call('account/role', 'PATCH', [
+			'body' => [
+				'role' => 'editor'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('editor', $response['data']['role']['name']);
+	}
+
+	public function testDelete(): void
+	{
+		$response = $this->app->api()->call('account', 'DELETE');
+		$this->assertTrue($response);
+	}
+
+	public function testFields(): void
+	{
+		$field = new class () extends InputField {
+			protected mixed $value = null;
+
+			public function api(): array
+			{
+				return [
+					[
+						'pattern' => '/',
+						'action'  => fn () => 'Test home route'
+					],
+					[
+						'pattern' => 'nested',
+						'action'  => fn () => 'Test nested route'
+					],
+				];
+			}
+		};
+
+		$app = $this->app->clone([
+			'blueprints' => [
+				'users/admin' => [
+					'fields' => [
+						'test' => [
+							'type' => 'test'
+						]
+					]
+				]
+			],
+			'fields' => [
+				'test' => $field::class
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/fields/test');
+
+		$this->assertSame('Test home route', $response);
+
+		$response = $app->api()->call('account/fields/test/nested');
+
+		$this->assertSame('Test nested route', $response);
+	}
+
+	public function testFile(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
+					'files' => [
+						[
+							'filename' => 'a.jpg',
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/files/a.jpg');
+
+		$this->assertSame('a.jpg', $response['data']['filename']);
+	}
+
+	public function testFiles(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
+					'files' => [
+						[
+							'filename' => 'c.jpg',
+						],
+						[
+							'filename' => 'a.jpg',
+						],
+						[
+							'filename' => 'b.jpg',
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/files');
+
+		$this->assertCount(3, $response['data']);
+		$this->assertSame('a.jpg', $response['data'][0]['filename']);
+		$this->assertSame('b.jpg', $response['data'][1]['filename']);
+		$this->assertSame('c.jpg', $response['data'][2]['filename']);
+	}
+
+	public function testFilesSorted(): void
+	{
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin',
+					'files' => [
+						[
+							'filename' => 'a.jpg',
+							'content'  => [
+								'sort' => 2
+							]
+						],
+						[
+							'filename' => 'b.jpg',
+							'content'  => [
+								'sort' => 1
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$app->impersonate('test@getkirby.com');
+
+		$response = $app->api()->call('account/files');
+
+		$this->assertSame('b.jpg', $response['data'][0]['filename']);
+		$this->assertSame('a.jpg', $response['data'][1]['filename']);
+	}
+
+	public function testGet(): void
+	{
+		$app = $this->app;
+
+		$response = $app->api()->call('account');
+
+		$this->assertSame('test@getkirby.com', $response['data']['email']);
+	}
+
+	public function testRoles(): void
+	{
+		$response = $this->app->api()->call('account/roles');
+
+		$this->assertSame(200, $response['code']);
+
+		$this->assertCount(2, $response['data']);
+		$this->assertSame('admin', $response['data'][0]['name']);
+		$this->assertSame('editor', $response['data'][1]['name']);
+	}
+
+	public function testUpdate(): void
+	{
+		$response = $this->app->api()->call('account', 'PATCH', [
+			'body' => [
+				'position' => 'Admin'
+			]
+		]);
+
+		$this->assertSame('ok', $response['status']);
+		$this->assertSame('Admin', $response['data']['content']['position']);
+	}
+}

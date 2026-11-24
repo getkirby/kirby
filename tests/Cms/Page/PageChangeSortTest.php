@@ -2,14 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 #[CoversClass(Page::class)]
 class PageChangeSortTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSort';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeSort';
 
 	public function site(): Site
 	{
@@ -102,10 +102,38 @@ class PageChangeSortTest extends ModelTestCase
 			'slug' => 'error',
 		]);
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionMessage('The status of the error page cannot be changed');
 
 		$page->changeSort(1);
+	}
+
+	public function testFreshPageRemainsWritableAfterChangeSort(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$page = $this->site()->find('b')->changeSort(3);
+		$page = $page->update([
+			'headline' => 'Sorted'
+		]);
+
+		$this->assertSame('Sorted', $page->headline()->value());
+		$this->assertSame(3, $page->num());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertFileExists(static::TMP . '/content/3_b/default.txt');
 	}
 
 	public function testMassSorting(): void
@@ -139,33 +167,5 @@ class PageChangeSortTest extends ModelTestCase
 		$this->assertDirectoryExists(static::TMP . '/content/3_b');
 		$this->assertDirectoryExists(static::TMP . '/content/2_c');
 		$this->assertDirectoryExists(static::TMP . '/content/1_d');
-	}
-
-	public function testFreshPageRemainsWritableAfterChangeSort(): void
-	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
-		]);
-
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
-
-		Page::create([
-			'slug' => 'c',
-			'num'  => 3,
-		]);
-
-		$page = $this->site()->find('b')->changeSort(3);
-		$page = $page->update([
-			'headline' => 'Sorted'
-		]);
-
-		$this->assertSame('Sorted', $page->headline()->value());
-		$this->assertSame(3, $page->num());
-		$this->assertDirectoryExists(static::TMP . '/content/3_b');
-		$this->assertFileExists(static::TMP . '/content/3_b/default.txt');
 	}
 }

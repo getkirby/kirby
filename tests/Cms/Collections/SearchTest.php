@@ -2,8 +2,52 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+
 class SearchTest extends TestCase
 {
+	public function app(): App
+	{
+		return new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'categories',
+						'files' => [
+							['filename' => 'phone.jpg'],
+							['filename' => 'cell-phone.jpg'],
+							['filename' => 'computer.jpg']
+						]
+					],
+					[
+						'slug'  => 'products',
+						'files' => [
+							['filename' => 'apple.jpg'],
+							['filename' => 'samsung.jpg']
+						]
+					],
+					[
+						'slug' => 'contact'
+					]
+				],
+				'files' => [
+					['filename' => 'website.jpg']
+				]
+			],
+			'users' => [
+				['email' => 'admin@getkirby.com'],
+				['email' => 'editor@getkirby.com'],
+				['email' => 'user1@getkirby.com'],
+				['email' => 'user2@getkirby.com'],
+				['email' => 'user3@getkirby.com']
+			],
+		]);
+	}
+
 	public function testCollection(): void
 	{
 		$collection = Pages::factory([
@@ -47,40 +91,38 @@ class SearchTest extends TestCase
 		$this->assertCount(0, $search);
 	}
 
-
-	public function testIgnoreFieldCase(): void
+	public static function invalidOptionProvider(): array
 	{
+		return [
+			['minlength', 'The "minlength" search option must be an integer'],
+			['stopwords', 'The "stopwords" search option must be an array'],
+			['words', 'The "words" search option must be a boolean'],
+			['score', 'The "score" search option must be an array'],
+			['fields', 'The "fields" search option must be an array'],
+		];
+	}
+
+	#[DataProvider('invalidOptionProvider')]
+	public function testCollectionInvalid(
+		string $option,
+		string $message
+	): void {
 		$collection = Pages::factory([
-			[
-				'slug'    => 'homer',
-				'content' => ['firstname' => 'Homer']
-			],
-			[
-				'slug'    => 'marge',
-				'content' => ['firstname' => 'Marge']
-			],
-			[
-				'slug'    => 'maggie',
-				'content' => ['firstname' => 'Maggie']
-			],
-			[
-				'slug'    => 'lisa',
-				'content' => ['firstname' => 'Lisa']
-			],
-			[
-				'slug'    => 'snowball',
-				'content' => ['firstname' => 'Šnowball']
-			]
+			['slug' => 'homer', 'content' => ['name' => 'Homer']]
 		]);
 
-		$search = Search::collection($collection, 'ma', ['fields' => ['FirstName']]);
-		$this->assertCount(2, $search);
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage($message);
 
-		$search = Search::collection($collection, 'Ho', ['fields' => ['FirstName']]);
-		$this->assertCount(1, $search);
+		// a string is the wrong type for every typed option
+		Search::collection($collection, 'homer', [$option => 'invalid']);
+	}
 
-		$search = Search::collection($collection, 'm', ['minlength' => 1, 'fields' => ['FirstName']]);
-		$this->assertCount(3, $search);
+	public function testFiles(): void
+	{
+		$this->assertCount(5, $this->app()->site()->index()->files());
+		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
+		$this->assertCount(2, $files);
 	}
 
 	public function testIgnoreCaseI18n(): void
@@ -116,52 +158,39 @@ class SearchTest extends TestCase
 		$this->assertCount(1, $search);
 	}
 
-	public function app(): App
+	public function testIgnoreFieldCase(): void
 	{
-		return new App([
-			'roots' => [
-				'index' => '/dev/null'
+		$collection = Pages::factory([
+			[
+				'slug'    => 'homer',
+				'content' => ['firstname' => 'Homer']
 			],
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'categories',
-						'files' => [
-							['filename' => 'phone.jpg'],
-							['filename' => 'cell-phone.jpg'],
-							['filename' => 'computer.jpg']
-						]
-					],
-					[
-						'slug'  => 'products',
-						'files' => [
-							['filename' => 'apple.jpg'],
-							['filename' => 'samsung.jpg']
-						]
-					],
-					[
-						'slug' => 'contact'
-					]
-				],
-				'files' => [
-					['filename' => 'website.jpg']
-				]
+			[
+				'slug'    => 'marge',
+				'content' => ['firstname' => 'Marge']
 			],
-			'users' => [
-				['email' => 'admin@getkirby.com'],
-				['email' => 'editor@getkirby.com'],
-				['email' => 'user1@getkirby.com'],
-				['email' => 'user2@getkirby.com'],
-				['email' => 'user3@getkirby.com']
+			[
+				'slug'    => 'maggie',
+				'content' => ['firstname' => 'Maggie']
 			],
+			[
+				'slug'    => 'lisa',
+				'content' => ['firstname' => 'Lisa']
+			],
+			[
+				'slug'    => 'snowball',
+				'content' => ['firstname' => 'Šnowball']
+			]
 		]);
-	}
 
-	public function testFiles(): void
-	{
-		$this->assertCount(5, $this->app()->site()->index()->files());
-		$this->assertInstanceOf(Files::class, $files = Search::files('phone'));
-		$this->assertCount(2, $files);
+		$search = Search::collection($collection, 'ma', ['fields' => ['FirstName']]);
+		$this->assertCount(2, $search);
+
+		$search = Search::collection($collection, 'Ho', ['fields' => ['FirstName']]);
+		$this->assertCount(1, $search);
+
+		$search = Search::collection($collection, 'm', ['minlength' => 1, 'fields' => ['FirstName']]);
+		$this->assertCount(3, $search);
 	}
 
 	public function testPages(): void

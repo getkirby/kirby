@@ -9,10 +9,12 @@ import { isObject } from "@/helpers/object";
  * The inheritance cascade is:
  * State -> Feature -> Modal
  *
- * @since 4.0.0
- *
  * @param key - Identifies this state in backend responses
  * @param defaults - Initial values; also defines which keys are tracked
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function State<T extends Record<string, unknown>>(
 	key: string,

@@ -1,0 +1,147 @@
+import { describe, expect, it } from "vitest";
+import { type Node, Fragment, Schema, Slice } from "prosemirror-model";
+import { Plugin } from "prosemirror-state";
+import { createSchemaWithMarks } from "@test/unit/editor";
+import markPasteRule from "./markPasteRule";
+
+const schema = createSchemaWithMarks({
+	bold: {},
+	link: { attrs: { href: { default: "" } } }
+});
+
+const boldType = schema.marks.bold;
+const linkType = schema.marks.link;
+
+// Matches <capture> and captures the inner text as match[1]
+// A fresh instance per test is required to avoid shared lastIndex state
+const regexp = () => /<(.+?)>/g;
+
+function applyRule(plugin: Plugin, slice: Slice): Slice {
+	return (
+		plugin.props as { transformPasted: (s: Slice) => Slice }
+	).transformPasted(slice);
+}
+
+function paragraph(...children: Node[]): Slice {
+	return new Slice(
+		Fragment.from(schema.node("paragraph", null, children)),
+		0,
+		0
+	);
+}
+
+describe("markPasteRule", () => {
+	it("applies the mark to the captured group of a match", () => {
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(plugin, paragraph(schema.text("<hello>")));
+		const para = result.content.firstChild!;
+		expect(para.child(0).text).toBe("hello");
+		expect(para.child(0).marks[0].type).toBe(boldType);
+	});
+
+	it("preserves text before and after a match", () => {
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(
+			plugin,
+			paragraph(schema.text("before <hello> after"))
+		);
+		const para = result.content.firstChild!;
+		expect(para.child(0).text).toBe("before ");
+		expect(para.child(1).text).toBe("hello");
+		expect(para.child(1).marks[0].type).toBe(boldType);
+		expect(para.child(2).text).toBe(" after");
+	});
+
+	it("handles multiple matches in a single text node", () => {
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(plugin, paragraph(schema.text("<foo> and <bar>")));
+		const para = result.content.firstChild!;
+		expect(para.child(0).text).toBe("foo");
+		expect(para.child(0).marks[0].type).toBe(boldType);
+		expect(para.child(1).text).toBe(" and ");
+		expect(para.child(2).text).toBe("bar");
+		expect(para.child(2).marks[0].type).toBe(boldType);
+	});
+
+	it("passes through text with no match unchanged", () => {
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(plugin, paragraph(schema.text("no match here")));
+		const para = result.content.firstChild!;
+		expect(para.child(0).text).toBe("no match here");
+		expect(para.child(0).marks).toHaveLength(0);
+	});
+
+	it("applies the mark to text pasted without a parent node", () => {
+		// pasted HTML with only inline elements (e.g. a <span>)
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(
+			plugin,
+			new Slice(Fragment.from(schema.text("before <hello> after")), 0, 0)
+		);
+		expect(result.content.child(0).text).toBe("before ");
+		expect(result.content.child(1).text).toBe("hello");
+		expect(result.content.child(1).marks[0].type).toBe(boldType);
+		expect(result.content.child(2).text).toBe(" after");
+	});
+
+	it("skips text inside nodes that do not allow the mark", () => {
+		const schema = new Schema({
+			nodes: {
+				doc: { content: "block+" },
+				code: { content: "text*", group: "block", marks: "" },
+				text: {}
+			},
+			marks: { bold: {} }
+		});
+
+		const plugin = markPasteRule(regexp(), schema.marks.bold);
+		const result = applyRule(
+			plugin,
+			new Slice(
+				Fragment.from(schema.node("code", null, [schema.text("<hello>")])),
+				0,
+				0
+			)
+		);
+		const code = result.content.firstChild!;
+		expect(code.child(0).text).toBe("<hello>");
+		expect(code.child(0).marks).toHaveLength(0);
+	});
+
+	it("skips text nodes that already have a link mark", () => {
+		const plugin = markPasteRule(regexp(), boldType);
+		const result = applyRule(
+			plugin,
+			paragraph(
+				schema.text("<hello>", [
+					schema.mark("link", { href: "https://example.com" })
+				])
+			)
+		);
+		const para = result.content.firstChild!;
+		expect(para.child(0).text).toBe("<hello>");
+		expect(para.child(0).marks.some((m) => m.type === boldType)).toBe(false);
+	});
+
+	it("computes attrs from a getAttrs function", () => {
+		const plugin = markPasteRule(
+			regexp(),
+			linkType,
+			(match: RegExpMatchArray) => ({
+				href: `https://${match[1]}.com`
+			})
+		);
+		const result = applyRule(plugin, paragraph(schema.text("<example>")));
+		const para = result.content.firstChild!;
+		expect(para.child(0).marks[0].attrs.href).toBe("https://example.com");
+	});
+
+	it("uses attrs from a getAttrs object", () => {
+		const plugin = markPasteRule(regexp(), linkType, {
+			href: "https://static.com"
+		});
+		const result = applyRule(plugin, paragraph(schema.text("<anything>")));
+		const para = result.content.firstChild!;
+		expect(para.child(0).marks[0].attrs.href).toBe("https://static.com");
+	});
+});

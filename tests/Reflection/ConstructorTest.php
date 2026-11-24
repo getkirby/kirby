@@ -14,12 +14,41 @@ class ReflectableTestClass
 	}
 }
 
+class ReflectableTestChildClass extends ReflectableTestClass
+{
+	public function __construct(
+		protected $c,
+		...$props
+	) {
+		parent::__construct(...$props);
+	}
+}
+
+class ReflectableTestRefinableClass
+{
+	public function __construct(
+		protected mixed $value = null,
+		protected string|null $name = null
+	) {
+	}
+}
+
+class ReflectableTestRefiningClass extends ReflectableTestRefinableClass
+{
+	public function __construct(
+		array|null $value = null,
+		mixed ...$args
+	) {
+		parent::__construct(...$args, value: $value);
+	}
+}
+
 #[CoversClass(Constructor::class)]
 class ConstructorTest extends TestCase
 {
-	public function reflection(): Constructor
+	public function reflection(string $class = ReflectableTestClass::class): Constructor
 	{
-		return new Constructor(ReflectableTestClass::class);
+		return new Constructor($class);
 	}
 
 	public function testClassifyArguments(): void
@@ -40,6 +69,22 @@ class ConstructorTest extends TestCase
 
 		$this->assertSame($accepted, $result['accepted']);
 		$this->assertSame($ignored, $result['ignored']);
+	}
+
+	public function testClassifyArgumentsWithNestedParameters(): void
+	{
+		$accepted = [
+			'a' => 'Test A',
+			'b' => 'Test B',
+			'c' => 'Test C'
+		];
+
+		$result = $this->reflection(ReflectableTestChildClass::class)->classifyArguments([
+			...$accepted,
+		]);
+
+		$this->assertSame($accepted, $result['accepted']);
+		$this->assertSame([], $result['ignored']);
 	}
 
 	public function testGetAcceptedArguments(): void
@@ -73,6 +118,42 @@ class ConstructorTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
+	public function testGetAcceptedArgumentsWithNestedParameters(): void
+	{
+		$accepted = [
+			'a' => 'Test A',
+			'b' => 'Test B',
+			'c' => 'Test C'
+		];
+
+		$result = $this->reflection(ReflectableTestChildClass::class)->getAcceptedArguments($accepted);
+
+		$this->assertSame($accepted, $result);
+	}
+
+	public function testGetAllParameters(): void
+	{
+		$parameters = $this->reflection()->getAllParameters();
+
+		$this->assertCount(2, $parameters);
+
+		$parameters = $this->reflection(ReflectableTestChildClass::class)->getAllParameters();
+
+		$this->assertCount(3, $parameters);
+	}
+
+	public function testGetAllParametersWithRefinedParameter(): void
+	{
+		$parameters = $this->reflection(ReflectableTestRefiningClass::class)->getAllParameters();
+
+		// `value` is declared twice, but must only be returned once
+		$this->assertCount(2, $parameters);
+
+		// the own parameter wins, because it narrows the inherited type
+		$this->assertSame('value', $parameters[0]->getName());
+		$this->assertSame('?array', (string)$parameters[0]->getType());
+	}
+
 	public function testGetIgnoredArguments(): void
 	{
 		$accepted = [
@@ -104,10 +185,52 @@ class ConstructorTest extends TestCase
 		$this->assertSame([], $result);
 	}
 
-	public function testParamsNames(): void
+	public function testGetIgnoredArgumentsWithNestedParameters(): void
+	{
+		$accepted = [
+			'a' => 'Test A',
+			'b' => 'Test B',
+			'c' => 'Test C'
+		];
+
+		$ignored = [
+			'd' => 'Test D'
+		];
+
+		$result = $this->reflection(ReflectableTestChildClass::class)->getIgnoredArguments($ignored);
+
+		$this->assertSame($ignored, $result);
+	}
+
+	public function testGetParameterNames(): void
 	{
 		$result = $this->reflection()->getParameterNames();
 
 		$this->assertSame(['a', 'b'], $result);
+	}
+
+	public function testGetParameterNamesWithNestedParameters(): void
+	{
+		$result = $this->reflection(ReflectableTestChildClass::class)->getParameterNames();
+
+		$this->assertSame(['c', 'a', 'b'], $result);
+	}
+
+	public function testGetParameterNamesWithRefinedParameter(): void
+	{
+		$result = $this->reflection(ReflectableTestRefiningClass::class)->getParameterNames();
+
+		$this->assertSame(['value', 'name'], $result);
+	}
+
+	public function testGetParentParameters(): void
+	{
+		$parameters = $this->reflection()->getParentParameters();
+
+		$this->assertSame([], $parameters);
+
+		$parameters = $this->reflection(ReflectableTestChildClass::class)->getParentParameters();
+
+		$this->assertCount(2, $parameters);
 	}
 }

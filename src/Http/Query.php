@@ -10,9 +10,6 @@ use Stringable;
  * that converts it into a Kirby Obj for easier
  * access of each query attribute.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -25,6 +22,11 @@ class Query extends Obj implements Stringable
 		}
 
 		parent::__construct($query ?? []);
+	}
+
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 
 	public function isEmpty(): bool
@@ -56,7 +58,7 @@ class Query extends Obj implements Stringable
 
 	public function toString(bool $questionMark = false): string
 	{
-		$query = http_build_query($this, '', '&', PHP_QUERY_RFC3986);
+		$query = http_build_query($this->toArray(), '', '&', PHP_QUERY_RFC3986);
 
 		if ($query === '') {
 			return '';
@@ -67,11 +69,5 @@ class Query extends Obj implements Stringable
 		}
 
 		return $query;
-	}
-
-
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

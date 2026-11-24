@@ -1,0 +1,225 @@
+<?php
+
+namespace Kirby\Blueprint;
+
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+
+/**
+ * PageBlueprint
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+class PageBlueprint extends Blueprint
+{
+	/** @var Page */
+	protected ModelWithContent $model;
+
+	/**
+	 * Creates a new page blueprint object
+	 * with the given props
+	 */
+	public function __construct(array $props)
+	{
+		parent::__construct($props);
+
+		// normalize all available page options
+		$this->props['options'] = $this->normalizeOptions(
+			$this->props['options'] ?? true,
+			// defaults
+			[
+				'access'         => null,
+				'changeSlug'     => null,
+				'changeStatus'   => null,
+				'changeTemplate' => null,
+				'changeTitle'    => null,
+				'create'         => null,
+				'delete'         => null,
+				'duplicate'      => null,
+				'list'           => null,
+				'move'           => null,
+				'preview'        => null,
+				'read'           => null,
+				'sort'           => null,
+				'update'         => null,
+			],
+			// aliases (from v2)
+			[
+				'status'   => 'changeStatus',
+				'template' => 'changeTemplate',
+				'title'    => 'changeTitle',
+				'url'      => 'changeSlug',
+			]
+		);
+
+		// normalize the ordering number
+		$this->props['num'] = $this->normalizeNum($this->props['num'] ?? 'default');
+
+		// normalize the available status array
+		$this->props['status'] = $this->normalizeStatus($this->props['status'] ?? null);
+	}
+
+	/**
+	 * Normalizes the ordering number
+	 */
+	protected function normalizeNum($num): string
+	{
+		$aliases = [
+			'0'    => 'zero',
+			'sort' => 'default',
+		];
+
+		return $aliases[$num] ?? $num;
+	}
+
+	/**
+	 * Normalizes the available status options for the page
+	 *
+	 * @return array<'draft'|'listed'|'unlisted', array>
+	 */
+	protected function normalizeStatus($status): array
+	{
+		// the i18n keys are resolved in `status()`
+		$defaults = [
+			'draft'    => [
+				'label' => 'page.status.draft',
+				'text'  => 'page.status.draft.description',
+				'icon'  => 'status-draft',
+				'theme' => 'negative',
+			],
+			'unlisted' => [
+				'label' => 'page.status.unlisted',
+				'text'  => 'page.status.unlisted.description',
+				'icon'  => 'status-unlisted',
+				'theme' => 'info',
+			],
+			'listed' => [
+				'label' => 'page.status.listed',
+				'text'  => 'page.status.listed.description',
+				'icon'  => 'status-listed',
+				'theme' => 'positive',
+			]
+		];
+
+		// use the defaults, when the status is not defined
+		if (empty($status) === true) {
+			$status = $defaults;
+		}
+
+		// extend the status definition
+		$status = $this->extend($status);
+
+		// clean up and translate each status
+		foreach ($status as $key => $options) {
+			// skip invalid status definitions
+			if (in_array($key, ['draft', 'listed', 'unlisted'], true) === false || $options === false) {
+				unset($status[$key]);
+				continue;
+			}
+
+			if ($options === true) {
+				$status[$key] = $defaults[$key];
+				continue;
+			}
+
+			// convert everything to a simple array
+			if (is_array($options) === false) {
+				$status[$key] = [
+					'label' => $options,
+					'text'  => null
+				];
+			}
+
+			// always make sure to have a proper label
+			if (($status[$key]['label'] ?? '') === '') {
+				$status[$key]['label'] = $defaults[$key]['label'];
+
+				// the default description only fits the default label
+				$status[$key]['text'] ??= $defaults[$key]['text'];
+			}
+
+			// also make sure to have the text field set
+			$status[$key]['text'] ??= null;
+
+			// fall back to the default icon and theme of the status
+			$status[$key]['icon']  ??= $defaults[$key]['icon'];
+			$status[$key]['theme'] ??= $defaults[$key]['theme'];
+		}
+
+		// the draft status is required
+		if (isset($status['draft']) === false) {
+			$status = ['draft' => $defaults['draft']] + $status;
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Returns the page numbering mode
+	 */
+	public function num(): string
+	{
+		return $this->props['num'];
+	}
+
+	/**
+	 * Returns the options object
+	 * that handles page options and permissions
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function options(): array
+	{
+		return $this->props['options'];
+	}
+
+	/**
+	 * Returns the preview settings
+	 * The preview setting controls the "Open"
+	 * button in the panel and redirects it to a
+	 * different URL if necessary.
+	 */
+	public function preview(): string|bool
+	{
+		$preview = $this->props['options']['preview'] ?? true;
+
+		if (is_string($preview) === true) {
+			return $this->model->toString($preview);
+		}
+
+		return $this->model->guards()->isAvailable('preview', default: true);
+	}
+
+	/**
+	 * Returns the status array
+	 */
+	public function status(): array
+	{
+		$status = $this->props['status'];
+
+		// the home and error page can never be drafts
+		if ($this->model->isHomeOrErrorPage() === true) {
+			unset($status['draft']);
+		}
+
+		// translate the labels and description texts
+		foreach ($status as $key => $options) {
+			$status[$key]['label'] = $this->i18n($options['label'], $options['label']);
+			$status[$key]['text']  = $this->i18n($options['text'], $options['text']);
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Converts the blueprint object to a plain array
+	 */
+	public function toArray(): array
+	{
+		return [
+			...parent::toArray(),
+			'status' => $this->status()
+		];
+	}
+}

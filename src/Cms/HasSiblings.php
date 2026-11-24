@@ -2,19 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Collection;
-
 /**
  * This trait is used by pages, files and users
  * to handle navigation through parent collections
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @template TCollection of \Kirby\Toolkit\Collection
+ * @template TCollection of Collection
  */
 trait HasSiblings
 {

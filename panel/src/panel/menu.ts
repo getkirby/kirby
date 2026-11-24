@@ -1,19 +1,20 @@
 import { reactive } from "vue";
 import State from "./state";
+import type Panel from "./panel";
 
 // TODO: replace with proper menu entry/button type
-type MenuEntries = Array<Record<string, unknown> | "-">;
-type MenuState = {
-	entries: MenuEntries;
+type MenuItems = Array<Record<string, unknown> | "-">;
+export type MenuState = {
 	hover: boolean;
 	isOpen: boolean;
+	items: MenuItems;
 };
 
 export function defaults(): MenuState {
 	return {
-		entries: [],
 		hover: false,
-		isOpen: false
+		isOpen: false,
+		items: []
 	};
 }
 
@@ -21,11 +22,11 @@ export function defaults(): MenuState {
  * Manages the Panel sidebar navigation menu, including open/close state,
  * mobile vs. desktop behavior, and state persistence via localStorage
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
-export default function Menu(panel: {
-	events: { on: (event: string, handler: EventListener) => void };
-}) {
+export default function Menu(panel: Panel) {
 	const parent = State("menu", defaults());
 	const media = window.matchMedia("(max-width: 60rem)");
 	const menu = reactive({
@@ -35,10 +36,10 @@ export default function Menu(panel: {
 		 * Closes the mobile menu when clicking outside of it
 		 * @internal
 		 */
-		blur(event: Event): void {
+		blur(event?: Event): void {
 			const menu = document.querySelector(".k-panel-menu");
 
-			if (!menu || media.matches === false) {
+			if (!menu || !event || media.matches === false) {
 				return;
 			}
 
@@ -103,10 +104,10 @@ export default function Menu(panel: {
 		},
 
 		/**
-		 * Sets the menu entries and restores the open/closed state
+		 * Sets the menu items and restores the open/closed state
 		 */
-		set(entries: MenuEntries): MenuState {
-			this.entries = entries;
+		set(items: MenuItems): MenuState {
+			this.items = items;
 			this.resize();
 			return this.state();
 		},

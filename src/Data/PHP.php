@@ -9,18 +9,25 @@ use Kirby\Filesystem\F;
 /**
  * Reader and write of PHP files with data in a returned array
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class PHP extends Handler
 {
 	/**
+	 * PHP strings shouldn't be decoded manually
+	 */
+	public static function decode($string): array
+	{
+		throw new BadMethodCallException(
+			message: 'The PHP::decode() method is not implemented'
+		);
+	}
+
+	/**
 	 * Converts data to PHP file content
 	 *
-	 * @param string $indent For internal use only
+	 * @param $indent For internal use only
 	 */
 	public static function encode($data, string $indent = ''): string
 	{
@@ -50,20 +57,10 @@ class PHP extends Handler
 
 			$line .= static::encode($value, "$indent    ");
 
-			$lines[] =  $line;
+			$lines[] = $line;
 		}
 
 		return "[\n" . implode(",\n", $lines) . "\n" . $indent . ']';
-	}
-
-	/**
-	 * PHP strings shouldn't be decoded manually
-	 */
-	public static function decode($string): array
-	{
-		throw new BadMethodCallException(
-			message: 'The PHP::decode() method is not implemented'
-		);
 	}
 
 	/**
@@ -85,8 +82,7 @@ class PHP extends Handler
 	 */
 	public static function write(string $file, $data = []): bool
 	{
-		$php = static::encode($data);
-		$php = "<?php\n\nreturn $php;";
+		$php = "<?php\n\nreturn " . static::encode($data) . ';';
 
 		if (F::write($file, $php) === true) {
 			F::invalidateOpcodeCache($file);

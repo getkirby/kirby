@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 import { DOMParser, DOMSerializer, Schema } from "prosemirror-model";
 
 import "./regex";
@@ -82,7 +87,9 @@ export function hasEmoji(string: unknown): boolean {
 		return false;
 	}
 
-	return /\p{Emoji}/u.test(string);
+	// `\p{Emoji}` also matches the digits, `#` and `*`,
+	// which only form an emoji in a keycap sequence (`\u20E3`)
+	return /(?![#*0-9])\p{Emoji}|\u20E3/u.test(string);
 }
 
 /**
@@ -289,13 +296,18 @@ export function slug(
 
 	let str = String(string).trim().toLowerCase();
 
-	// replace according to language and ascii rules
+	// replace according to language and ascii rules,
+	// whose keys list characters separated by `|` (like `Str::ascii()`)
 	for (const ruleset of rules) {
 		for (const rule in ruleset) {
-			const isTrimmed = rule.slice(0, 1) !== "/";
-			const trimmed = rule.slice(1, rule.length - 1);
-			const regex = isTrimmed ? rule : trimmed;
-			str = str.replace(new RegExp(RegExp.escape(regex), "g"), ruleset[rule]);
+			// remove legacy '/.../' delimiters
+			const group = rule.startsWith("/") === true ? rule.slice(1, -1) : rule;
+
+			for (const char of group.split("|")) {
+				if (char !== "") {
+					str = str.replaceAll(char, ruleset[rule]);
+				}
+			}
 		}
 	}
 
@@ -341,6 +353,14 @@ export type StringTemplateValues = {
 		| null;
 };
 
+// Regexes used by template() for `{ value }` / `{{ value }}` placeholders
+// (optionally with surrounding whitespace).
+//
+// `placeholder` matches and resolves each placeholder. `leftover`
+// then scrubs any brace syntax that survived substitution.
+const placeholder = /[{]{1,2}[\s]?(.*?)[\s]?[}]{1,2}/gi;
+const leftover = /[{]{1,2}[\s]?.*[\s]?[}]{1,2}/gi;
+
 /**
  * Replaces template placeholders in string with provided values
  *
@@ -353,8 +373,15 @@ export function template(
 	string: unknown,
 	values: StringTemplateValues = {}
 ): string {
+	const source = String(string);
+
+	// nothing to resolve if the string has no placeholders
+	if (source.includes("{") === false) {
+		return source;
+	}
+
 	const resolve = (parts: string[], data: StringTemplateValues = {}) => {
-		const part = escapeHTML(parts.shift() ?? "");
+		const part = parts.shift() as string;
 		const value = data[part] ?? "…";
 
 		if (value === "…" || parts.length === 0) {
@@ -364,15 +391,9 @@ export function template(
 		return resolve(parts, value as StringTemplateValues);
 	};
 
-	const opening = "[{]{1,2}[\\s]?";
-	const closing = "[\\s]?[}]{1,2}";
-
-	const str = String(string).replace(
-		new RegExp(`${opening}(.*?)${closing}`, "gi"),
-		($0, $1) => String(resolve($1.split("."), values))
-	);
-
-	return str.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
+	return source
+		.replace(placeholder, ($0, $1) => String(resolve($1.split("."), values)))
+		.replace(leftover, "…");
 }
 
 /**

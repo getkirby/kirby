@@ -1,5 +1,9 @@
 <template>
-	<div :class="['k-multiselect-input', $attrs.class]" :style="$attrs.style">
+	<div
+		:class="['k-multiselect-input', $attrs.class]"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
 		<k-input-validator
 			v-bind="{ min, max, required }"
 			:value="JSON.stringify(value)"
@@ -10,7 +14,7 @@
 				v-bind="$props"
 				:removable="true"
 				@input="$emit('input', $event)"
-				@click.native.stop="open"
+				@click.stop="open"
 			>
 				<k-button
 					v-if="!max || value.length < max"
@@ -21,8 +25,8 @@
 					class="k-multiselect-input-toggle k-tags-navigatable"
 					size="xs"
 					icon="angle-down"
-					@keydown.native.delete="$refs.tags.focus('prev')"
-					@focus.native="open"
+					@keydown.delete="$refs.tags.focus('prev')"
+					@focus="open"
 				/>
 			</k-tags>
 		</k-input-validator>
@@ -58,14 +62,22 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 
 <style>
 .k-multiselect-input {
 	padding: var(--tags-gap);
+}
+
+.k-multiselect-input:not([data-disabled="true"]) {
 	cursor: pointer;
 }
 

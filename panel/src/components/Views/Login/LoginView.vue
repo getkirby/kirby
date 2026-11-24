@@ -1,108 +1,169 @@
 <template>
-	<k-panel-outside
-		:class="form === 'code' ? 'k-login-code-view' : 'k-login-view'"
-	>
-		<!-- <div> as single child for grid layout -->
-		<div class="k-dialog k-login k-login-dialog">
+	<k-panel-outside class="k-login-view">
+		<k-stack class="k-login k-login-stack">
 			<h1 class="sr-only">
 				{{ $t("login") }}
 			</h1>
 
-			<k-login-alert v-if="issue" @click.native="issue = null">
-				{{ issue }}
+			<k-login-alert v-if="error" @click="error = null">
+				{{ error.message }}
 			</k-login-alert>
 
-			<k-dialog-body>
-				<k-login-code-form
-					v-if="form === 'code'"
-					v-bind="{ methods, pending, value: value.code }"
-					@error="onError"
-				/>
-				<component
-					:is="component"
-					v-else
-					v-bind="{ methods, value }"
-					@error="onError"
-				/>
-			</k-dialog-body>
-		</div>
+			<component
+				:is="form.component"
+				v-bind="form.props"
+				@error="onError"
+				@submit="onSubmit"
+			/>
+
+			<k-login-methods
+				v-if="state !== 'pending'"
+				:methods="methods"
+				@change="onChangeMethod"
+			/>
+			<k-login-challenges
+				v-else
+				:challenges="challenges"
+				@change="onChangeChallenge"
+			/>
+		</k-stack>
 	</k-panel-outside>
 </template>
 
 <script>
-import { props as LoginCodeFormProps } from "./LoginCodeForm.vue";
-import { props as LoginFormProps } from "./LoginForm.vue";
-
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {
-	components: {
-		"k-login-plugin-form": window.panel.plugins.login
-	},
-	mixins: [LoginCodeFormProps, LoginFormProps],
 	props: {
 		/**
-		 * Values to prefill the inputs
+		 * Available challenges for the challenge switcher.
+		 * @value [{ type, label, icon, active }]
 		 */
-		value: {
+		challenges: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Form component definition from the backend.
+		 * @value { component: String, props: Object }
+		 */
+		form: {
 			type: Object,
-			default: () => ({
-				code: "",
-				email: "",
-				password: ""
-			})
-		}
+			default: () => ({})
+		},
+		/**
+		 * Available login methods for the method switcher.
+		 * @value [{ type, label, icon, active }]
+		 */
+		methods: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * Current auth state: "inactive" | "pending"
+		 */
+		state: String
 	},
 	data() {
 		return {
-			issue: ""
+			error: null
 		};
 	},
-	computed: {
-		component() {
-			return window.panel.plugins.login
-				? "k-login-plugin-form"
-				: "k-login-form";
-		},
+	watch: {
 		form() {
-			return this.pending.email ? "code" : "login";
+			this.error = null;
 		}
 	},
 	methods: {
-		async onError(error) {
-			if (error === null) {
-				this.issue = null;
-				return;
-			}
+		onChangeMethod(method) {
+			this.$panel.open("login/method/" + method.type);
+		},
+		async onChangeChallenge(challenge) {
+			try {
+				this.error = null;
 
-			if (error.details.challengeDestroyed === true) {
-				// reset from the LoginCode component back to Login
-				await this.$reload({
-					globals: ["$system"]
-				});
-			}
+				// switching the active challenge has side effects
+				// (rate-limit consumption, possibly sending a new code
+				// email), so it must go through a CSRF-protected POST
+				const response = await this.$panel.post(
+					"login/switch/" + challenge.type
+				);
 
-			this.issue = error.message;
+				if (response?.redirect) {
+					await this.$panel.open(response.redirect, { globals: ["system"] });
+				}
+			} catch (error) {
+				this.onError(error);
+			}
+		},
+		onError(error) {
+			this.error = error;
+		},
+		async onSubmit(data) {
+			try {
+				// clear any existing error
+				this.error = null;
+
+				// submit the form data to the backend
+				const response = await this.$panel.post(this.$panel.view.path, data);
+
+				// if login was successful, the user will be redirected…
+				if (response?.redirect) {
+					await this.$panel.open(response.redirect, { globals: ["system"] });
+
+					// …and we show a welcome notification
+					this.$panel.notification.success({
+						message: this.$t("welcome") + "!",
+						icon: "smile"
+					});
+				}
+			} catch (error) {
+				this.onError(error);
+			}
 		}
 	}
 };
 </script>
 
 <style>
-.k-login {
-	--dialog-color-back: light-dark(var(--color-white), var(--color-gray-950));
-	--dialog-shadow: light-dark(var(--shadow), none);
-
-	container-type: inline-size;
+.k-login-stack {
+	max-width: 25rem;
+	margin: 0 auto;
+	gap: var(--spacing-6);
 }
 
-.k-login-buttons {
-	--button-padding: var(--spacing-3);
+.k-login-form {
 	display: flex;
-	gap: 1.5rem;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: var(--spacing-10);
+	flex-direction: column;
+	gap: var(--spacing-6);
+	padding: var(--spacing-6);
+	background: light-dark(var(--color-white), var(--color-gray-950));
+	border-radius: var(--rounded);
+}
+.k-login-form label abbr {
+	visibility: hidden;
+}
+
+.k-login-or {
+	position: relative;
+	text-align: center;
+	color: var(--color-text-dimmed);
+}
+.k-login-or span {
+	background: var(--panel-color-back);
+	padding: 0 0.5rem;
+}
+.k-login-or::before {
+	position: absolute;
+	content: "";
+	top: 50%;
+	left: 0;
+	height: 1px;
+	background: var(--color-border);
+	width: 100%;
+	z-index: -1;
 }
 </style>

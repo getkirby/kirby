@@ -15,14 +15,19 @@
 import { props as Button } from "@/components/Navigation/Button.vue";
 
 /**
- * Item to be used within `<k-dropdown-content>`
- * @example <k-dropdown-item>Option A</k-dropdown-item>
+ * Item to be used within `<k-dropdown>`
+ *
+ * @example
+ * <k-dropdown-item>Option A</k-dropdown-item>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {
 	mixins: [Button],
 	inheritAttrs: false,
-	emit: ["click"],
+	emits: ["click"],
 	methods: {
 		focus() {
 			this.$refs.button.focus();
@@ -44,6 +49,7 @@ export default {
 	display: flex;
 }
 .k-dropdown-item.k-button:focus {
+	z-index: 1;
 	outline: var(--outline);
 }
 .k-dropdown-item.k-button[aria-current="true"] {

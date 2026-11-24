@@ -1,0 +1,85 @@
+<?php
+
+namespace Kirby\Auth\Challenge;
+
+use Kirby\Auth\Challenge;
+use Kirby\Auth\Pending;
+use Kirby\Panel\Ui\Button;
+use Kirby\Panel\Ui\Component;
+use Kirby\Toolkit\Totp;
+use SensitiveParameter;
+
+/**
+ * Verifies one-time time-based auth codes
+ * that are generated with an authenticator app.
+ * Users first have to set up time-based codes
+ * (storing the TOTP secret in their user account).
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class TotpChallenge extends Challenge
+{
+	/**
+	 * The user's app will generate the code, we only verify it
+	 */
+	public function create(): null
+	{
+		return null;
+	}
+
+	public function form(Pending $pending): Component
+	{
+		return new Component(
+			component: 'k-login-totp-challenge-form',
+			submit: $this->submit(),
+			user: $this->user->email(),
+		);
+	}
+
+	public function icon(): string
+	{
+		return 'qr-code';
+	}
+
+	/**
+	 * Checks whether the user has set up TOTP
+	 */
+	public function isAvailable(): bool
+	{
+		return $this->user->secret('totp') !== null;
+	}
+
+	public function settings(): array
+	{
+		return [
+			new Button(
+				icon:   $this->icon(),
+				text:   $this->label(),
+				drawer: $this->user->panel()->url(true) . '/security/challenge/totp'
+			)
+		];
+	}
+
+	/**
+	 * Verifies the input is the current, previous or next TOTP code
+	 */
+	public function verify(
+		#[SensitiveParameter]
+		mixed $input,
+		Pending $data
+	): bool {
+		// codes from JSON requests may be numbers
+		if (is_int($input) === true) {
+			$input = (string)$input;
+		}
+
+		if (is_string($input) !== true) {
+			return false;
+		}
+
+		$secret = $this->user->secret('totp');
+		return (new Totp($secret))->verify($input);
+	}
+}

@@ -1,0 +1,127 @@
+import { describe, expect, it, vi } from "vitest";
+import { applyCommand, createSchemaWithNodes, select } from "@test/unit/editor";
+import toggleList from "./toggleList";
+
+const schema = createSchemaWithNodes({
+	bulletList: { group: "block", content: "listItem+" },
+	orderedList: {
+		group: "block",
+		content: "listItem+",
+		attrs: { order: { default: 1 } }
+	},
+	listItem: { content: "paragraph block*", defining: true },
+	// list of a plugin with its own item type
+	todoList: { group: "block", content: "todoItem+" },
+	todoItem: { content: "paragraph block*", defining: true }
+});
+
+const bulletListType = schema.nodes.bulletList;
+const orderedListType = schema.nodes.orderedList;
+const listItemType = schema.nodes.listItem;
+const paragraphType = schema.nodes.paragraph;
+const todoListType = schema.nodes.todoList;
+const todoItemType = schema.nodes.todoItem;
+
+// doc(paragraph("a"))
+// Positions: 0=before paragraph, 1=inside paragraph, 2=after "a", 3=after paragraph
+const docWithParagraph = schema.node("doc", null, [
+	schema.node("paragraph", null, [schema.text("a")])
+]);
+
+// doc(bulletList(listItem(paragraph("a"))))
+// Positions: 0=before bulletList, 1=before listItem, 2=before paragraph, 3=inside paragraph, 4=after "a"
+const docWithBulletList = schema.node("doc", null, [
+	schema.node("bulletList", null, [
+		schema.node("listItem", null, [
+			schema.node("paragraph", null, [schema.text("a")])
+		])
+	])
+]);
+
+// doc(orderedList(listItem(paragraph("a"))))
+const docWithOrderedList = schema.node("doc", null, [
+	schema.node("orderedList", null, [
+		schema.node("listItem", null, [
+			schema.node("paragraph", null, [schema.text("a")])
+		])
+	])
+]);
+
+describe("toggleList", () => {
+	describe("when the cursor is not in a list", () => {
+		it("returns true", () => {
+			const state = select(docWithParagraph, 1);
+			expect(toggleList(bulletListType, listItemType)(state, undefined)).toBe(
+				true
+			);
+		});
+
+		it("wraps the block in the given list type", () => {
+			const state = select(docWithParagraph, 1);
+			const next = applyCommand(
+				state,
+				toggleList(bulletListType, listItemType)
+			);
+			expect(next?.doc.firstChild?.type).toBe(bulletListType);
+		});
+	});
+
+	describe("when the cursor is in a list of the same type", () => {
+		it("returns true", () => {
+			const state = select(docWithBulletList, 3);
+			expect(toggleList(bulletListType, listItemType)(state, undefined)).toBe(
+				true
+			);
+		});
+
+		it("lifts the list item out of the list", () => {
+			const state = select(docWithBulletList, 3);
+			const next = applyCommand(
+				state,
+				toggleList(bulletListType, listItemType)
+			);
+			expect(next?.doc.firstChild?.type).toBe(paragraphType);
+		});
+	});
+
+	describe("when the cursor is in a list of a different type", () => {
+		it("returns true", () => {
+			const state = select(docWithBulletList, 3);
+			const result = toggleList(orderedListType, listItemType)(state, () => {});
+			expect(result).toBe(true);
+		});
+
+		it("changes the list type from bullet to ordered", () => {
+			const state = select(docWithBulletList, 3);
+			const next = applyCommand(
+				state,
+				toggleList(orderedListType, listItemType)
+			);
+			expect(next?.doc.firstChild?.type).toBe(orderedListType);
+		});
+
+		it("changes the list type from ordered to bullet", () => {
+			const state = select(docWithOrderedList, 3);
+			const next = applyCommand(
+				state,
+				toggleList(bulletListType, listItemType)
+			);
+			expect(next?.doc.firstChild?.type).toBe(bulletListType);
+		});
+
+		it("returns true without dispatching on a dry run", () => {
+			const state = select(docWithBulletList, 3);
+			expect(toggleList(orderedListType, listItemType)(state)).toBe(true);
+		});
+
+		it("keeps the list when its items do not fit the other list type", () => {
+			const state = select(docWithBulletList, 3);
+			const dispatch = vi.fn();
+
+			expect(toggleList(todoListType, todoItemType)(state, dispatch)).toBe(
+				false
+			);
+			expect(dispatch).not.toHaveBeenCalled();
+		});
+	});
+});

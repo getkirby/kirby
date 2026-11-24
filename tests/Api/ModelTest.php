@@ -14,6 +14,7 @@ class ModelTest extends TestCase
 
 		$this->assertInstanceOf(Model::class, $model);
 	}
+
 	public function testConstructInvalidModel(): void
 	{
 		$this->expectException(Exception::class);

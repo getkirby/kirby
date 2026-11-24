@@ -3,40 +3,13 @@
 namespace Kirby\Template;
 
 use Kirby\Cms\App;
+use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Template::class)]
 class TemplateTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-
-	public function testTemplate(): void
-	{
-		$template = new Template('Test', 'foo', 'bar');
-		$this->assertSame('test', $template->name());
-		$this->assertSame('test', $template->__toString());
-		$this->assertSame('foo', $template->type());
-		$this->assertSame('bar', $template->defaultType());
-
-		$this->assertSame('php', $template->extension());
-	}
-
-	public function testSanitizeName(): void
-	{
-		// valid names are kept, dots are allowed for representations
-		$this->assertSame('default', Template::sanitizeName('default'));
-		$this->assertSame('the-template', Template::sanitizeName('the-template'));
-		$this->assertSame('foo.bar', Template::sanitizeName('foo.bar'));
-
-		// path traversal characters are removed
-		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
-		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
-
-		// empty or invalid names result in an empty string
-		$this->assertSame('', Template::sanitizeName(null));
-		$this->assertSame('', Template::sanitizeName(''));
-		$this->assertSame('', Template::sanitizeName('..'));
-	}
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testExists(): void
 	{
@@ -98,19 +71,6 @@ class TemplateTest extends TestCase
 		$this->assertFalse($template->hasDefaultType());
 	}
 
-	public function testRoot(): void
-	{
-		new App([
-			'roots' => [
-				'templates' => $root = static::FIXTURES
-			]
-		]);
-
-		$template = new Template('test');
-		$this->assertSame('templates', $template->store());
-		$this->assertSame($root, $template->root());
-	}
-
 	public function testRender(): void
 	{
 		new App([
@@ -119,8 +79,8 @@ class TemplateTest extends TestCase
 			]
 		]);
 
-		$template = new Template('simple');
-		$this->assertSame('Test', $template->render(['slot' => 'Test']));
+		$template = new Template('template');
+		$this->assertSame('Test', $template->render(['foo' => 'Test']));
 	}
 
 	public function testRenderOpenLayoutSnippet(): void
@@ -133,7 +93,30 @@ class TemplateTest extends TestCase
 		]);
 
 		$template = new Template('with-layout');
-		$this->assertSame("<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n", $template->render());
+		$this->assertSame(
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderOpenLayoutSnippetWithSlots(): void
+	{
+		new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('with-layout-multiple-slots');
+
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Header content</header>\n" .
+			"<main>Body content</main>\n",
+			$template->render()
+		);
 	}
 
 	public function testRenderOpenParentSnippet1(): void
@@ -186,10 +169,126 @@ class TemplateTest extends TestCase
 		$this->assertSame(
 			"Before snippet\n" .
 			"Before rendering\n" .
-			"<h1>Layout</h1>\nMy content\n<footer>with other stuff</footer>\n" .
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n" .
 			"After rendering\n" .
 			"After snippet\n",
 			$template->render()
 		);
+	}
+
+	public function testRenderWithMultipleSlotsLayout(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main>Content for the default slot</main>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithMultipleSlotsLayoutAndSwallowedContent(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-layout-with-multiple-slots-and-swallowed-content');
+		$this->assertSame(
+			"<h1>Layout</h1>\n" .
+			"<header>Content for the header slot</header>\n" .
+			"<main></main>\n",
+			$template->render()
+		);
+	}
+
+	public function testRenderWithNestedSnippets(): void
+	{
+		$app = new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES,
+				'templates' => static::FIXTURES
+			]
+		]);
+
+		$template = new Template('template-with-nested-snippets');
+		$this->assertSame(
+			"<h1>Layout</h1>\n\n" .
+			"Some content from the template.\n\n" .
+			"Simple output\n\n\n" .
+			"Content from the template in the default slot of the snippet.\n\n" .
+			"Content from the template in the footer slot of the snippet.\n\n" .
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n" .
+			"<footer>with other stuff</footer>\n",
+			$template->render()
+		);
+	}
+
+	public function testRoot(): void
+	{
+		new App([
+			'roots' => [
+				'templates' => $root = static::FIXTURES
+			]
+		]);
+
+		$template = new Template('test');
+		$this->assertSame('templates', $template->store());
+		$this->assertSame($root, $template->root());
+	}
+
+	public function testRootInvalid(): void
+	{
+		$template = new class ('test') extends Template {
+			public function store(): string
+			{
+				return 'foo';
+			}
+		};
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Kirby root "foo" does not exist');
+
+		$template->root();
+	}
+
+	public function testSanitizeName(): void
+	{
+		// valid names are kept, dots are allowed for representations
+		$this->assertSame('default', Template::sanitizeName('default'));
+		$this->assertSame('the-template', Template::sanitizeName('the-template'));
+		$this->assertSame('foo.bar', Template::sanitizeName('foo.bar'));
+
+		// path traversal characters are removed
+		$this->assertSame('other-default', Template::sanitizeName('../../other/default'));
+		$this->assertSame('foo-bar', Template::sanitizeName('foo/bar'));
+
+		// empty or invalid names result in an empty string
+		$this->assertSame('', Template::sanitizeName(null));
+		$this->assertSame('', Template::sanitizeName(''));
+		$this->assertSame('', Template::sanitizeName('..'));
+	}
+
+	public function testTemplate(): void
+	{
+		$template = new Template('Test', 'foo', 'bar');
+		$this->assertSame('test', $template->name());
+		$this->assertSame('test', $template->__toString());
+		$this->assertSame('foo', $template->type());
+		$this->assertSame('bar', $template->defaultType());
+
+		$this->assertSame('php', $template->extension());
 	}
 }

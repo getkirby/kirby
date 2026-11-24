@@ -1,12 +1,23 @@
+import { isAbortError } from "@/helpers/error";
+import type Panel from "./panel";
+
 export type SearchResponse = {
 	results: unknown[] | null;
 	pagination: Record<string, unknown>;
 };
 
+export type SearchType = {
+	icon: string;
+	label: string;
+	id: string;
+};
+
 /**
- * @since 4.4.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.4.0
  */
-export default function Search(panel: TODO) {
+export default function Search(panel: Panel) {
 	return {
 		controller: undefined as AbortController | undefined,
 		requests: 0,
@@ -40,7 +51,7 @@ export default function Search(panel: TODO) {
 		async query(
 			type: string,
 			query: string,
-			options: { limit?: number; page?: number }
+			options: { limit?: number; page?: number } = {}
 		): Promise<Prettify<SearchResponse> | undefined> {
 			// abort any previous ongoing search requests
 			this.controller?.abort();
@@ -57,15 +68,18 @@ export default function Search(panel: TODO) {
 			this.requests++;
 
 			try {
-				const { $search } = await panel.get(`/search/${type}`, {
-					query: { query, ...options },
-					signal: this.controller.signal
-				});
-				return $search;
+				const { search } = await panel.get<{ search: SearchResponse }>(
+					`/search/${type}`,
+					{
+						query: { query, ...options },
+						signal: this.controller.signal
+					}
+				);
+				return search;
 			} catch (error) {
 				// if fails and not because request was aborted by subsequent request,
 				// return empty response
-				if (error instanceof Error && error.name !== "AbortError") {
+				if (isAbortError(error) === false) {
 					return {
 						results: [],
 						pagination: {}

@@ -3,6 +3,14 @@
 		<k-lab-example label="Default">
 			<k-table :columns="columns" :options="options" :rows="rows"></k-table>
 		</k-lab-example>
+		<k-lab-example label="Responsive: false">
+			<k-table
+				:columns="columns"
+				:options="options"
+				:responsive="false"
+				:rows="rows"
+			></k-table>
+		</k-lab-example>
 		<k-lab-example label="Sortable">
 			<k-table
 				:columns="columns"
@@ -27,6 +35,9 @@
 				:rows="rows"
 				:sortable="true"
 			></k-table>
+		</k-lab-example>
+		<k-lab-example label="Theme: skeleton">
+			<k-table :columns="columns" :rows="skeleton"></k-table>
 		</k-lab-example>
 	</k-lab-examples>
 </template>
@@ -77,6 +88,12 @@ export default {
 					date: "2020-01-03",
 					selectable: false
 				}
+			];
+		},
+		skeleton() {
+			return [
+				{ id: "skeleton-1", theme: "skeleton" },
+				{ id: "skeleton-2", theme: "skeleton" }
 			];
 		}
 	}

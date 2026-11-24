@@ -7,18 +7,15 @@ use Closure;
 use Kirby\Query\Query;
 
 /**
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 abstract class Runner
 {
 	/**
-	 * @param array $global Allowed global function closures
+	 * @param array<string, Closure> $global Allowed global function closures
 	 */
 	public function __construct(
 		public array $global = [],
@@ -35,7 +32,7 @@ abstract class Runner
 	/**
 	 * Executes a query within a given data context
 	 *
-	 * @param array $context Optional variables to be passed to the query
+	 * @param $context Optional variables to be passed to the query
 	 *
 	 * @throws \Exception when query is invalid or executor not callable
 	 */

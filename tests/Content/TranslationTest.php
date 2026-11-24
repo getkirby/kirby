@@ -4,7 +4,6 @@ namespace Kirby\Content;
 
 use Kirby\Cms\Language;
 use Kirby\Data\Data;
-use Kirby\Exception\Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Translation::class)]
@@ -33,6 +32,32 @@ class TranslationTest extends TestCase
 		$this->assertSame('de', $translationDE->code());
 		$this->assertSame('de', $translationDE->language()->code());
 		$this->assertSame('de', $translationDE->id());
+	}
+
+	public function testContentFileMultiLanguage(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $this->model->version(),
+			language: Language::ensure('en')
+		);
+
+		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
+	}
+
+	public function testContentFileSingleLanguage(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$translation = new Translation(
+			model: $this->model,
+			version: $this->model->version(),
+			language: Language::single()
+		);
+
+		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
 	}
 
 	public function testContentMultiLanguage(): void
@@ -70,32 +95,6 @@ class TranslationTest extends TestCase
 		$expected = $this->createContentSingleLanguage();
 
 		$this->assertSame($expected['content'], $translation->content());
-	}
-
-	public function testContentFileMultiLanguage(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $this->model->version(),
-			language: Language::ensure('en')
-		);
-
-		$this->assertSame($this->model->root() . '/article.en.txt', $translation->version()->contentFile());
-	}
-
-	public function testContentFileSingleLanguage(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $this->model->version(),
-			language: Language::single()
-		);
-
-		$this->assertSame($this->model->root() . '/article.txt', $translation->version()->contentFile());
 	}
 
 	public function testCreate(): void
@@ -233,22 +232,6 @@ class TranslationTest extends TestCase
 		$this->assertSame($this->model, $translation->model());
 	}
 
-	public function testParent(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $version = $this->model->version(),
-			language: Language::ensure('default')
-		);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->parent()` has been deprecated. Please use `$translation->model()` instead');
-
-		$translation->parent();
-	}
-
 	public function testSlugExists(): void
 	{
 		$this->setUpMultiLanguage();
@@ -282,22 +265,6 @@ class TranslationTest extends TestCase
 		]);
 
 		$this->assertNull($translation->slug());
-	}
-
-	public function testUpdate(): void
-	{
-		$this->setUpSingleLanguage();
-
-		$translation = new Translation(
-			model: $this->model,
-			version: $version = $this->model->version(),
-			language: Language::ensure('default')
-		);
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('`$translation->update()` has been deprecated. Please use `$model->version()->update()` instead');
-
-		$translation->update();
 	}
 
 	public function testToArray(): void

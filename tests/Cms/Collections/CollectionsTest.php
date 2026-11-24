@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 class CollectionsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/collections';
+	public const string FIXTURES = __DIR__ . '/fixtures/collections';
 
 	protected function _app()
 	{
@@ -29,21 +29,25 @@ class CollectionsTest extends TestCase
 		$this->assertEquals($collection, $result); // cannot use strict assertion (different object)
 	}
 
+	public function testGetCloned(): void
+	{
+		$app         = $this->_app();
+		$collections = $app->collections();
+
+		$a = $collections->get('test');
+		$this->assertCount(0, $a);
+
+		$a->add('kirby');
+		$this->assertCount(1, $a);
+
+		$b = $collections->get('test');
+		$this->assertCount(0, $b);
+	}
+
 	public function testGetWithData(): void
 	{
 		$app    = $this->_app();
 		$result = $app->collections()->get('string', [
-			'a' => 'a',
-			'b' => 'b'
-		]);
-
-		$this->assertSame('ab', $result);
-	}
-
-	public function testGetWithRearrangedData(): void
-	{
-		$app    = $this->_app();
-		$result = $app->collections()->get('rearranged', [
 			'a' => 'a',
 			'b' => 'b'
 		]);
@@ -68,19 +72,15 @@ class CollectionsTest extends TestCase
 		$this->assertSame('cd', $result);
 	}
 
-	public function testGetCloned(): void
+	public function testGetWithRearrangedData(): void
 	{
-		$app         = $this->_app();
-		$collections = $app->collections();
+		$app    = $this->_app();
+		$result = $app->collections()->get('rearranged', [
+			'a' => 'a',
+			'b' => 'b'
+		]);
 
-		$a = $collections->get('test');
-		$this->assertCount(0, $a);
-
-		$a->add('kirby');
-		$this->assertCount(1, $a);
-
-		$b = $collections->get('test');
-		$this->assertCount(0, $b);
+		$this->assertSame('ab', $result);
 	}
 
 	public function testHas(): void

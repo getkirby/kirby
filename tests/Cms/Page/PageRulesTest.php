@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\AbilityException;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -12,7 +13,40 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PageRules::class)]
 class PageRulesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageRules';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageRules';
+
+	/**
+	 * Creates a page that can be switched between two templates
+	 */
+	protected function pageWithMultipleTemplates(): Page
+	{
+		$this->app = $this->app->clone([
+			'templates' => [
+				'a' => __FILE__,
+				'b' => __FILE__
+			],
+			'blueprints' => [
+				'pages/a' => ['title' => 'a'],
+				'pages/b' => ['title' => 'b'],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		return new Page([
+			'slug'      => 'test',
+			'template'  => 'a',
+			'blueprint' => [
+				'name'    => 'a',
+				'options' => [
+					'template' => [
+						'a',
+						'b'
+					]
+				]
+			]
+		]);
+	}
 
 	public function testChangeNum(): void
 	{
@@ -24,18 +58,6 @@ class PageRulesTest extends ModelTestCase
 
 		PageRules::changeNum($page, 2);
 		PageRules::changeNum($page);
-	}
-
-	public function testInvalidChangeNum(): void
-	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.page.num.invalid');
-
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		PageRules::changeNum($page, -1);
 	}
 
 	public function testChangeSlug(): void
@@ -62,57 +84,6 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeSlug($page, 'test-b');
 	}
 
-	public function testChangeSlugWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeSlug')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the URL appendix for "test"');
-
-		PageRules::changeSlug($page, 'test');
-	}
-
-	public function testChangeSlugWithHomepage(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.changeSlug.permission');
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'home']
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		PageRules::changeSlug($this->app->page('home'), 'test-a');
-	}
-
-	public function testChangeSlugWithErrorPage(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.changeSlug.permission');
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'error']
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		PageRules::changeSlug($this->app->page('error'), 'test-a');
-	}
-
 	public function testChangeSlugReservedPath(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -131,52 +102,28 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeSlug($this->app->page('a'), 'api');
 	}
 
-	public static function statusActionProvider(): array
+	public function testChangeSlugWithErrorPage(): void
 	{
-		return [
-			['draft'],
-			['listed', [1]],
-			['unlisted'],
-		];
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.page.changeSlug.errorPage');
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'error']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		PageRules::changeSlug($this->app->page('error'), 'test-a');
 	}
 
-	#[DataProvider('statusActionProvider')]
-	public function testChangeStatusWithoutPermission(
-		string $status,
-		array $args = []
-	): void {
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeStatus')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
-
-		PageRules::{'changeStatusTo' . $status}($page, ...$args);
-	}
-
-	public function testChangeStatusToListedWithoutPermissions(): void
+	public function testChangeSlugWithHomepage(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeStatus')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
-
-		PageRules::changeStatusToDraft($page);
-	}
-
-	public function testChangeStatusInvalid(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.changeStatus.toDraft.invalid');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.page.changeSlug.homePage');
 
 		$this->app = $this->app->clone([
 			'site' => [
@@ -188,7 +135,28 @@ class PageRulesTest extends ModelTestCase
 
 		$this->app->impersonate('kirby');
 
-		PageRules::changeStatusToDraft($this->app->page('home'));
+		PageRules::changeSlug($this->app->page('home'), 'test-a');
+	}
+
+	public function testChangeSlugWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the URL appendix for "test"');
+
+		PageRules::changeSlug($page, 'test');
+	}
+
+	public static function statusActionProvider(): array
+	{
+		return [
+			['draft'],
+			['listed', [1]],
+			['unlisted'],
+		];
 	}
 
 	#[DataProvider('statusActionProvider')]
@@ -213,6 +181,63 @@ class PageRulesTest extends ModelTestCase
 		]);
 
 		PageRules::changeStatus($page, $status, ...$args);
+	}
+
+	public function testChangeStatusInvalid(): void
+	{
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.page.changeStatus.toDraft.homePage');
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		PageRules::changeStatusToDraft($this->app->page('home'));
+	}
+
+	public function testChangeStatusToListedWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The status for this page cannot be changed');
+
+		PageRules::changeStatusToDraft($page);
+	}
+
+	public function testChangeStatusToListedWithoutPosition(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectNotToPerformAssertions();
+
+		$page = new Page(['slug' => 'test']);
+
+		PageRules::changeStatus($page, 'listed');
+		PageRules::changeStatusToListed($page);
+	}
+
+	#[DataProvider('statusActionProvider')]
+	public function testChangeStatusWithoutPermission(
+		string $status,
+		array $args = []
+	): void {
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The status for this page cannot be changed');
+
+		PageRules::{'changeStatusTo' . $status}($page, ...$args);
 	}
 
 	public function testChangeTemplate(): void
@@ -249,30 +274,11 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeTemplate($page, 'b');
 	}
 
-	public function testChangeTemplateWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for "test"');
-
-		PageRules::changeTemplate($page, 'test');
-	}
-
 	public function testChangeTemplateTooFewTemplates(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$page = new Page(['slug' => 'test']);
 
-		$page = $this->createMock(Page::class);
-		$page->method('blueprints')->willReturn([[]]);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
+		$this->assertCount(1, $page->blueprints());
 
 		$this->expectException(LogicException::class);
 		$this->expectExceptionMessage('The template for the page "test" cannot be changed');
@@ -282,20 +288,24 @@ class PageRulesTest extends ModelTestCase
 
 	public function testChangeTemplateWithInvalidTemplateName(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeTemplate')->willReturn(true);
+		$page = $this->pageWithMultipleTemplates();
 
-		$page = $this->createMock(Page::class);
-		$page->method('blueprints')->willReturn([
-			['name' => 'a'], ['name' => 'b']
-		]);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The template for the page "test" cannot be changed');
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeTemplate.invalid');
 
 		PageRules::changeTemplate($page, 'c');
+	}
+
+	public function testChangeTemplateWithoutPermissions(): void
+	{
+		$page = $this->pageWithMultipleTemplates();
+
+		$this->app->impersonate('nobody');
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change the template for "test"');
+
+		PageRules::changeTemplate($page, 'b');
 	}
 
 	public function testChangeTitleWithEmptyValue(): void
@@ -312,12 +322,9 @@ class PageRulesTest extends ModelTestCase
 
 	public function testChangeTitleWithoutPermissions(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('changeTitle')->willReturn(false);
+		$this->app->impersonate('nobody');
 
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
+		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to change the title for "test"');
@@ -325,33 +332,23 @@ class PageRulesTest extends ModelTestCase
 		PageRules::changeTitle($page, 'test');
 	}
 
-	public function testCreateWithoutPermissions(): void
+	public function testCreateDraftWithIncompleteContent(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(false);
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => true,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
 
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to create "test"');
-
-		PageRules::create($page);
-	}
-
-	public function testCreateInvalidSlug(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(true);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('');
-		$page->method('isDraft')->willReturn(true);
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.page.slug.invalid');
+		$this->expectNotToPerformAssertions();
 
 		PageRules::create($page);
 	}
@@ -378,6 +375,57 @@ class PageRulesTest extends ModelTestCase
 		PageRules::create($page);
 	}
 
+	public function testCreateNonDraftWithIncompleteContent(): void
+	{
+		$page = new Page([
+			'slug'      => 'test',
+			'isDraft'   => false,
+			'blueprint' => [
+				'name'   => 'test',
+				'fields' => [
+					'headline' => [
+						'type'     => 'text',
+						'required' => true
+					]
+				]
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The page has errors and cannot be published');
+
+		PageRules::create($page);
+	}
+
+	public function testCreateNonDraftWithoutChangeStatusPermission(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => ['changeStatus' => false]
+					]
+				]
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$page = new Page([
+			'slug'    => 'test',
+			'isDraft' => false
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('The status for this page cannot be changed');
+
+		PageRules::create($page);
+	}
+
 	public function testCreateSlugReservedPath(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -391,33 +439,24 @@ class PageRulesTest extends ModelTestCase
 			]
 		]);
 
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('create')->willReturn(true);
+		$this->app->impersonate('kirby');
 
-		$page = $this->createMock(Page::class);
-		$page->method('kirby')->willReturn($this->app);
-		$page->method('isDraft')->willReturn(true);
-		$page->method('permissions')->willReturn($permissions);
-		$page->method('slug')->willReturn('api');
+		$page = new Page([
+			'slug'    => 'api',
+			'isDraft' => true
+		]);
 
 		PageRules::create($page);
 	}
 
-	public function testCreateNonDraftWithoutChangeStatusPermission(): void
+	public function testCreateWithoutPermissions(): void
 	{
-		$permissions = $this->createStub(PagePermissions::class);
-		$permissions->method('can')->willReturnMap([
-			['create', true],
-			['changeStatus', false],
-		]);
+		$this->app->impersonate('nobody');
 
-		$page = $this->createStub(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('isDraft')->willReturn(false);
-		$page->method('permissions')->willReturn($permissions);
+		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('The status for this page cannot be changed');
+		$this->expectExceptionMessage('You are not allowed to create "test"');
 
 		PageRules::create($page);
 	}
@@ -433,36 +472,28 @@ class PageRulesTest extends ModelTestCase
 		PageRules::delete($page);
 	}
 
-	public function testDeleteWithoutPermissions(): void
+	public function testDeleteErrorPage(): void
 	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('delete')->willReturn(false);
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.page.delete.errorPage');
 
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to delete "test"');
-
-		PageRules::delete($page);
-	}
-
-	public function testDeleteNotExists(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'error']
+				]
+			]
 		]);
 
-		$this->expectNotToPerformAssertions();
+		$this->app->impersonate('kirby');
 
-		PageRules::delete($page);
+		PageRules::delete($this->app->page('error'));
 	}
 
 	public function testDeleteHomepage(): void
 	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.delete.permission');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionCode('error.page.delete.homePage');
 
 		$this->app = $this->app->clone([
 			'site' => [
@@ -477,22 +508,15 @@ class PageRulesTest extends ModelTestCase
 		PageRules::delete($this->app->page('home'));
 	}
 
-	public function testDeleteErrorPage(): void
+	public function testDeleteNotExists(): void
 	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionCode('error.page.delete.permission');
-
-		$this->app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'error']
-				]
-			]
+		$page = new Page([
+			'slug' => 'test',
 		]);
 
-		$this->app->impersonate('kirby');
+		$this->expectNotToPerformAssertions();
 
-		PageRules::delete($this->app->page('error'));
+		PageRules::delete($page);
 	}
 
 	public function testDeleteWithChildren(): void
@@ -524,6 +548,18 @@ class PageRulesTest extends ModelTestCase
 		$this->expectNotToPerformAssertions();
 
 		PageRules::delete($page, true);
+	}
+
+	public function testDeleteWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to delete "test"');
+
+		PageRules::delete($page);
 	}
 
 	public function testDeleteWithUndeletableChild(): void
@@ -616,21 +652,6 @@ class PageRulesTest extends ModelTestCase
 		PageRules::duplicate($page, '');
 	}
 
-	public function testDuplicateWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('duplicate')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to duplicate "test"');
-
-		PageRules::duplicate($page, 'something');
-	}
-
 	public function testDuplicateReservedPath(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -669,90 +690,28 @@ class PageRulesTest extends ModelTestCase
 		PageRules::duplicate($child, 'panel');
 	}
 
-	public function testUpdate(): void
+	public function testDuplicateWithoutPermissions(): void
 	{
-		$page = new Page([
-			'slug'  => 'test',
-		]);
+		$this->app->impersonate('nobody');
 
-		$this->expectNotToPerformAssertions();
-
-		PageRules::update($page, [
-			'color' => 'red'
-		]);
-	}
-
-	public function testUpdateWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('update')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
+		$page = new Page(['slug' => 'test']);
 
 		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update "test"');
+		$this->expectExceptionMessage('You are not allowed to duplicate "test"');
 
-		PageRules::update($page, []);
+		PageRules::duplicate($page, 'something');
 	}
 
-	public function testValidateSlugMaxlength(): void
+	public function testInvalidChangeNum(): void
 	{
-		$this->app = $this->app->clone([
-			'user' => 'test@getkirby.com',
-			'users' => [
-				[
-					'email' => 'test@getkirby.com',
-					'role'  => 'admin'
-				]
-			],
-			'options' => [
-				'slugs.maxlength' => 10
-			]
-		]);
-
-		// valid
-		$page = new Page([
-			'slug'  => 'a-ten-slug',
-		]);
-
-		PageRules::create($page);
-
-		$this->assertSame('a-ten-slug', $page->slug());
-		$this->assertSame(10, strlen($page->slug()));
-
-		// disabled with long slug that 273 characters
-		// default slug maxlength is 255 characters
-		$this->app->clone([
-			'options' => [
-				'slugs.maxlength' => false
-			]
-		]);
-
-		$page = new Page([
-			'slug' => 'lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-integer-metus-neque-molestie-ut-sagittis-eget-venenatis-quis-ipsum-ut-ultricies-hendrerit-magna-eu-molestie-enim-vestibulum-ante-ipsum-primis-in-faucibus-orci-luctus-et-ultrices-posuere-cubilia-curae-cras-nec-elementum',
-		]);
-
-		PageRules::create($page);
-
-		$this->assertSame(273, strlen($page->slug()));
-
-		// invalid
-		$this->app->clone([
-			'options' => [
-				'slugs.maxlength' => 10
-			]
-		]);
-
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionCode('error.page.slug.maxlength');
+		$this->expectExceptionCode('error.page.num.invalid');
 
 		$page = new Page([
-			'slug'  => 'very-very-long-slug',
+			'slug' => 'test',
 		]);
 
-		PageRules::create($page);
+		PageRules::changeNum($page, -1);
 	}
 
 	public function testMove(): void
@@ -778,10 +737,10 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -795,21 +754,6 @@ class PageRulesTest extends ModelTestCase
 		$parentB = $this->app->page('parent-b');
 		$child   = $this->app->page('parent-a/child');
 		PageRules::move($child, $parentB);
-	}
-
-	public function testMoveWithoutPermissions(): void
-	{
-		$permissions = $this->createMock(PagePermissions::class);
-		$permissions->method('can')->with('move')->willReturn(false);
-
-		$page = $this->createMock(Page::class);
-		$page->method('slug')->willReturn('test');
-		$page->method('permissions')->willReturn($permissions);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to move "test"');
-
-		PageRules::move($page, new Page(['slug' => 'test']));
 	}
 
 	public function testMoveToReservedPath(): void
@@ -862,10 +806,10 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/parent' => [
-					'sections' => [
+					'fields' => [
 						'subpages' => [
-							'type'     => 'pages',
-							'template' => 'child'
+							'type'       => 'pagelist',
+							'blueprints' => 'child'
 						]
 					]
 				]
@@ -941,16 +885,16 @@ class PageRulesTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
-							'type'      => 'pages',
-							'templates' => ['album']
+							'type'       => 'pagelist',
+							'blueprints' => ['album']
 						],
 						'related' => [
-							'type'      => 'pages',
-							'parent'    => 'site.find("parent-a")',
-							'create'    => 'album',
-							'templates' => ['article']
+							'type'       => 'pagelist',
+							'parent'     => 'site.find("parent-a")',
+							'create'     => 'album',
+							'blueprints' => ['article']
 						]
 					]
 				]
@@ -968,7 +912,19 @@ class PageRulesTest extends ModelTestCase
 		PageRules::move($child, $parentB);
 	}
 
-	public function testMoveWithParentWithNoPagesSections(): void
+	public function testMoveWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to move "test"');
+
+		PageRules::move($page, new Page(['slug' => 'parent']));
+	}
+
+	public function testMoveWithParentWithNoPagesFields(): void
 	{
 		$this->app = $this->app->clone([
 			'site' => [
@@ -992,7 +948,7 @@ class PageRulesTest extends ModelTestCase
 			'blueprints' => [
 				'pages/article' => [],
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
 							'type' => 'info',
 						]
@@ -1007,7 +963,7 @@ class PageRulesTest extends ModelTestCase
 		$child   = $this->app->page('parent-a/child');
 
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages sections in its blueprint');
+		$this->expectExceptionMessage('The page "parent-b" cannot be a parent of any page because it lacks any pages fields in its blueprint');
 
 		PageRules::move($child, $parentB);
 	}
@@ -1037,9 +993,9 @@ class PageRulesTest extends ModelTestCase
 			'blueprints' => [
 				'pages/article' => [],
 				'pages/photography' => [
-					'sections' => [
+					'fields' => [
 						'albums' => [
-							'type' => 'pages'
+							'type' => 'pagelist'
 						]
 					]
 				]
@@ -1054,5 +1010,88 @@ class PageRulesTest extends ModelTestCase
 		$this->expectNotToPerformAssertions();
 
 		PageRules::move($child, $parentB);
+	}
+
+	public function testUpdate(): void
+	{
+		$page = new Page([
+			'slug'  => 'test',
+		]);
+
+		$this->expectNotToPerformAssertions();
+
+		PageRules::update($page, [
+			'color' => 'red'
+		]);
+	}
+
+	public function testUpdateWithoutPermissions(): void
+	{
+		$this->app->impersonate('nobody');
+
+		$page = new Page(['slug' => 'test']);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update "test"');
+
+		PageRules::update($page, []);
+	}
+
+	public function testValidateSlugMaxlength(): void
+	{
+		$this->app = $this->app->clone([
+			'user' => 'test@getkirby.com',
+			'users' => [
+				[
+					'email' => 'test@getkirby.com',
+					'role'  => 'admin'
+				]
+			],
+			'options' => [
+				'slugs.maxlength' => 10
+			]
+		]);
+
+		// valid
+		$page = new Page([
+			'slug'  => 'a-ten-slug',
+		]);
+
+		PageRules::create($page);
+
+		$this->assertSame('a-ten-slug', $page->slug());
+		$this->assertSame(10, strlen($page->slug()));
+
+		// disabled with long slug that 273 characters
+		// default slug maxlength is 255 characters
+		$this->app->clone([
+			'options' => [
+				'slugs.maxlength' => false
+			]
+		]);
+
+		$page = new Page([
+			'slug' => 'lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-integer-metus-neque-molestie-ut-sagittis-eget-venenatis-quis-ipsum-ut-ultricies-hendrerit-magna-eu-molestie-enim-vestibulum-ante-ipsum-primis-in-faucibus-orci-luctus-et-ultrices-posuere-cubilia-curae-cras-nec-elementum',
+		]);
+
+		PageRules::create($page);
+
+		$this->assertSame(273, strlen($page->slug()));
+
+		// invalid
+		$this->app->clone([
+			'options' => [
+				'slugs.maxlength' => 10
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.slug.maxlength');
+
+		$page = new Page([
+			'slug'  => 'very-very-long-slug',
+		]);
+
+		PageRules::create($page);
 	}
 }

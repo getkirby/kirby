@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Site Routes
  */
@@ -51,7 +50,7 @@ return [
 		'pattern' => 'site/blueprints',
 		'method'  => 'GET',
 		'action'  => function () {
-			return $this->site()->blueprints($this->requestQuery('section'));
+			return $this->site()->blueprints($this->requestQuery('field'));
 		}
 	],
 	[
@@ -94,20 +93,6 @@ return [
 		'method'  => 'ALL',
 		'action'  => function (string $fieldName, string|null $path = null) {
 			return $this->fieldApi($this->site(), $fieldName, $path);
-		}
-	],
-	[
-		'pattern' => 'site/sections/(:any)',
-		'method'  => 'GET',
-		'action'  => function (string $sectionName) {
-			return $this->site()->blueprint()->section($sectionName)?->toResponse();
-		}
-	],
-	[
-		'pattern' => 'site/sections/(:any)/(:all?)',
-		'method'  => 'ALL',
-		'action'  => function (string $sectionName, string|null $path = null) {
-			return $this->sectionApi($this->site(), $sectionName, $path);
 		}
 	],
 	// @codeCoverageIgnoreEnd

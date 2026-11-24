@@ -5,22 +5,28 @@
 		:style="$attrs.style"
 	>
 		<input
+			:id="id"
 			ref="range"
 			v-bind="{
 				autofocus,
 				disabled,
-				id,
 				max,
 				min,
 				name,
 				required,
 				step
 			}"
+			:aria-valuetext="valuetext"
 			:value="position"
 			type="range"
 			@input="$emit('input', $event.target.valueAsNumber)"
 		/>
-		<output v-if="tooltip" :for="id" class="k-range-input-tooltip">
+		<output
+			v-if="tooltip"
+			:for="id"
+			aria-hidden="true"
+			class="k-range-input-tooltip"
+		>
 			<span v-if="tooltip.before" class="k-range-input-tooltip-before">{{
 				tooltip.before
 			}}</span>
@@ -82,10 +88,15 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="range" @input="range = $event" name="range" type="range" />
+ * @example
+ * <k-input :value="range" @input="range = $event" name="range" type="range" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		baseline() {
 			// If the minimum is below 0, the baseline should be placed at .
@@ -112,17 +123,29 @@ export default {
 			return this.value || this.value === 0
 				? this.value
 				: (this.default ?? this.baseline);
+		},
+		/**
+		 * aria-valuetext that can be announced while
+		 * hiding <output> from a11y tree
+		 */
+		valuetext() {
+			if (!this.tooltip) {
+				return null;
+			}
+
+			return [this.tooltip.before, this.label, this.tooltip.after]
+				.filter(Boolean)
+				.join(" ");
 		}
 	},
 	watch: {
-		value: {
-			handler() {
-				this.validate();
-			},
-			immediate: true
+		value() {
+			this.validate();
 		}
 	},
 	mounted() {
+		this.validate();
+
 		if (this.$props.autofocus) {
 			this.focus();
 		}

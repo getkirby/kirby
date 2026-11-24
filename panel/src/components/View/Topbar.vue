@@ -1,14 +1,13 @@
 <template>
 	<div class="k-topbar">
-		<!-- mobile menu opener -->
 		<k-button
 			icon="bars"
 			class="k-panel-menu-proxy"
 			@click="$panel.menu.toggle()"
 		/>
-		<!-- breadcrumb -->
+
 		<k-breadcrumb :crumbs="crumbs" class="k-topbar-breadcrumb" />
-		<div class="k-topbar-spacer" />
+
 		<div class="k-topbar-signals">
 			<slot />
 		</div>
@@ -17,12 +16,19 @@
 
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {
 	props: {
 		breadcrumb: Array,
 		view: Object
+	},
+	data() {
+		return {
+			isLoading: false
+		};
 	},
 	computed: {
 		crumbs() {
@@ -31,11 +37,28 @@ export default {
 					link: this.view.link,
 					label: this.view.label ?? this.view.breadcrumbLabel,
 					icon: this.view.icon,
-					loading: this.$panel.isLoading
+					loading: this.isLoading
 				},
 				...this.breadcrumb
 			];
 		}
+	},
+	watch: {
+		// only show the loader once loading takes a noticeable
+		// moment, to avoid a flicker on fast responses
+		"$panel.isLoading"(isLoading) {
+			clearTimeout(this.timer);
+
+			if (isLoading === false) {
+				this.isLoading = false;
+				return;
+			}
+
+			this.timer = setTimeout(() => (this.isLoading = true), 300);
+		}
+	},
+	unmounted() {
+		clearTimeout(this.timer);
 	}
 };
 </script>
@@ -49,17 +72,12 @@ export default {
 	align-items: center;
 	gap: var(--spacing-1);
 }
-
 .k-topbar-breadcrumb {
 	margin-inline-start: -2px;
-	flex-shrink: 1;
+	flex: 1;
+	/* shrinks below all crumbs so `k-collapsible` can hide some */
 	min-width: 0;
 }
-
-.k-topbar-spacer {
-	flex-grow: 1;
-}
-
 .k-topbar-signals {
 	display: flex;
 	align-items: center;

@@ -8,9 +8,6 @@ use InvalidArgumentException;
 use Kirby\Toolkit\A;
 
 /**
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -37,6 +34,8 @@ class Router
 	 * their request method. This makes
 	 * it faster to find the right route
 	 * later.
+	 *
+	 * @var array<string, list<Route>>
 	 */
 	protected array $routes = [
 		'GET'     => [],
@@ -54,7 +53,7 @@ class Router
 	 * Creates a new router object and
 	 * registers all the given routes
 	 *
-	 * @param array<string, \Closure> $hooks Optional `beforeEach` and `afterEach` hooks
+	 * @param array<string, Closure> $hooks Optional `beforeEach` and `afterEach` hooks
 	 */
 	public function __construct(array $routes = [], array $hooks = [])
 	{
@@ -71,7 +70,7 @@ class Router
 			$patterns = A::wrap($props['pattern']);
 			$methods  = A::map(
 				explode('|', strtoupper($props['method'] ?? 'GET')),
-				'trim'
+				trim(...)
 			);
 
 			if ($methods === ['ALL']) {
@@ -116,7 +115,7 @@ class Router
 			}
 
 			try {
-				if ($callback) {
+				if ($callback !== null) {
 					$result = $callback($route);
 				} else {
 					$result = $route->action()->call(
@@ -159,13 +158,12 @@ class Router
 	 * find matches and return all the found
 	 * arguments in the path.
 	 *
-	 * @param array|null $ignore (Passing null has been deprecated)
-	 * @todo Remove support for `$ignore = null` in v6
+	 * @param array<Route> $ignore Routes to skip
 	 */
 	public function find(
 		string $path,
 		string $method,
-		array|null $ignore = null
+		array $ignore = []
 	): Route {
 		if (isset($this->routes[$method]) === false) {
 			throw new InvalidArgumentException(
@@ -175,16 +173,16 @@ class Router
 		}
 
 		// remove leading and trailing slashes
-		$path     = trim($path, '/');
-		$ignore ??= [];
+		$path = trim($path, '/');
 
 		foreach ($this->routes[$method] as $route) {
 			$arguments = $route->parse($route->pattern(), $path);
 
-			if ($arguments !== false) {
-				if (in_array($route, $ignore, true) === false) {
-					return $this->route = $route;
-				}
+			if (
+				$arguments !== false &&
+				in_array($route, $ignore, true) === false
+			) {
+				return $this->route = $route;
 			}
 		}
 

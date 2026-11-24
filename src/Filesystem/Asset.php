@@ -14,23 +14,19 @@ use Kirby\Toolkit\Str;
  * methods as for any other Kirby files. Pass a
  * relative path to the class to create the asset.
  *
- * @package   Kirby Filesystem
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Asset
 {
-	use IsFile;
 	use FileModifications;
 	use HasMethods;
+	use IsFile;
 
 	/**
 	 * Relative file path
 	 */
 	protected string $path;
-
 
 	/**
 	 * Creates a new Asset object for the given path.
@@ -42,9 +38,11 @@ class Asset
 		// may not actually exist; we also cannot make the check depend on the
 		// existence of the file because that would leak information about
 		// whether the requested file exists on the server;
-		// `../` and `..\` sequences are fishy enough to to prevent them entirely
+		// `../` and `..\` sequences are fishy enough to prevent them entirely
 		if (Str::contains(Str::replace($path, '\\', '/'), '../') === true) {
-			throw new InvalidArgumentException('Received unexpected asset path');
+			throw new InvalidArgumentException(
+				message: 'Received unexpected asset path'
+			);
 		}
 
 		$this->root = $this->kirby()->root('index') . '/' . $path;
@@ -61,7 +59,7 @@ class Asset
 	/**
 	 * Magic caller for asset methods
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{
@@ -71,12 +69,12 @@ class Asset
 		}
 
 		// asset method proxy
-		if (method_exists($this->asset(), $method)) {
+		if (method_exists($this->asset(), $method) === true) {
 			return $this->asset()->$method(...$arguments);
 		}
 
 		// asset methods
-		if ($this->hasMethod($method)) {
+		if ($this->hasMethod($method) === true) {
 			return $this->callMethod($method, $arguments);
 		}
 
@@ -90,6 +88,7 @@ class Asset
 	 */
 	public function id(): string
 	{
+		/** @var string */
 		return $this->root();
 	}
 

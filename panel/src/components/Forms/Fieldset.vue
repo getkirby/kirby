@@ -19,7 +19,7 @@
 						:disabled="disabled || field.disabled"
 						:form-data="value"
 						:name="fieldName"
-						:value="value[fieldName]"
+						:value="value[fieldName] ?? undefined"
 						@input="onInput($event, field, fieldName)"
 						@focus="$emit('focus', $event, field, fieldName)"
 						@submit="$emit('submit', $event, field, fieldName)"
@@ -42,14 +42,17 @@
 
 <script>
 /**
- * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
+ * The Fieldset component is a wrapper around manual field component creation.
+ * You simply pass it an fields object and all field components will
+ * automatically be created including a nice field grid. This is the ideal
+ * starting point if you want an easy way to create fields without having
+ * to deal with a full form element.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
-		/**
-		 * @internal
-		 */
-		config: Object,
 		/**
 		 * If `true`, all fields in the fieldset are disabled
 		 */
@@ -75,7 +78,7 @@ export default {
 		/**
 		 * Focus a specific field in the fieldset or the first one if no name is given
 		 * @public
-		 * @param  {string} name field name to focus
+		 * @param  {string} [name] field name to focus
 		 */
 		focus(name) {
 			if (name) {
@@ -109,7 +112,7 @@ export default {
 		},
 		onInput(value, field, name) {
 			const values = this.value;
-			this.$set(values, name, value);
+			values[name] = value;
 			this.$emit("input", values, field, name);
 		}
 	}

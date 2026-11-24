@@ -6,12 +6,13 @@
 		element="figure"
 	>
 		<img
-			v-if="src"
-			:key="src"
-			:alt="alt ?? ''"
-			:src="src"
-			:srcset="srcset"
-			:sizes="sizes"
+			v-if="src || resolvedSrc"
+			:alt="alt ?? resolvedAlt ?? ''"
+			:src="src ?? resolvedSrc"
+			:srcset="srcset ?? resolvedSrcset"
+			:sizes="resolvedSizes"
+			:loading="lazy === true ? 'lazy' : 'eager'"
+			decoding="async"
 			@dragstart.prevent
 		/>
 	</k-frame>
@@ -28,7 +29,22 @@ export const props = {
 		 */
 		alt: String,
 		/**
-		 * For responsive images, pass the `sizes` attribute
+		 * File ID/UUID (can be used instead of `url`)
+		 * @since 6.0.0
+		 */
+		file: String,
+		/**
+		 * Whether the image is only loaded once it comes into view.
+		 * Disable for images that are visible right away.
+		 * @since 6.0.0
+		 */
+		lazy: {
+			type: Boolean,
+			default: true
+		},
+		/**
+		 * For responsive images, pass the `sizes` attribute.
+		 * Lazy images default to `auto`.
 		 */
 		sizes: String,
 		/**
@@ -43,14 +59,69 @@ export const props = {
 };
 
 /**
- * Use <k-image-frame> to display an image in a fixed ratio with background etc.
- * @since 4.0.0
+ * Use <k-image-frame> to display an image from an external URL
+ * or internal file UUID in a fixed ratio with background etc.
  *
- * @example <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
+ * @example
+ * <k-image-frame src="https://getkirby.com/image.jpg" ratio="16/9" back="pattern" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],
-	inheritAttrs: false
+	inheritAttrs: false,
+	data() {
+		return {
+			resolvedAlt: null,
+			resolvedSrc: null,
+			resolvedSrcset: null
+		};
+	},
+	computed: {
+		resolvedSizes() {
+			return this.sizes ?? (this.lazy === true ? "auto" : undefined);
+		}
+	},
+	watch: {
+		file: {
+			handler: "fetch",
+			immediate: true
+		}
+	},
+	methods: {
+		async fetch() {
+			const file = this.file;
+			let alt,
+				src,
+				srcset = null;
+
+			// if internal file, load data for file UUID from request endpoint
+			if (file) {
+				const item = await this.$helper.items("items/files", file, {
+					layout: "auto",
+					image: JSON.stringify({
+						ratio: this.ratio,
+						cover: this.cover
+					})
+				});
+
+				// the file might have changed while the request was in flight
+				if (this.file !== file) {
+					return;
+				}
+
+				alt = item?.alt;
+				src = item?.image?.src;
+				srcset = item?.image?.srcset;
+			}
+
+			this.resolvedAlt = alt;
+			this.resolvedSrc = src;
+			this.resolvedSrcset = srcset;
+		}
+	}
 };
 </script>
 

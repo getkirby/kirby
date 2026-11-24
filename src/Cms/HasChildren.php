@@ -7,9 +7,6 @@ use Kirby\Toolkit\Str;
 /**
  * HasChildren
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -21,22 +18,22 @@ trait HasChildren
 	public Pages|null $children = null;
 
 	/**
-	 * The list of available draft children
-	 */
-	public Pages|null $drafts = null;
-
-	/**
 	 * The combined list of available published
 	 * and draft children
 	 */
 	public Pages|null $childrenAndDrafts = null;
 
 	/**
+	 * The list of available draft children
+	 */
+	public Pages|null $drafts = null;
+
+	/**
 	 * Returns all published children
 	 */
 	public function children(): Pages
 	{
-		return $this->children ??= Pages::factory($this->inventory()['children'], $this);
+		return $this->children ??= Pages::factory($this->inventory()->children(), $this);
 	}
 
 	/**
@@ -90,14 +87,14 @@ trait HasChildren
 		$kirby = $this->kirby();
 
 		// create the inventory for all drafts
-		$inventory = Inventory::for(
+		$inventory = new Inventory(
 			$this->root() . '/_drafts',
 			$kirby->contentExtension(),
 			$kirby->contentIgnore(),
 			$kirby->multilang()
 		);
 
-		return $this->drafts = Pages::factory($inventory['children'], $this, true);
+		return $this->drafts = Pages::factory($inventory->children(), $this, true);
 	}
 
 	/**
@@ -159,7 +156,7 @@ trait HasChildren
 	/**
 	 * Creates a flat child index
 	 *
-	 * @param bool $drafts If set to `true`, draft children are included
+	 * @param $drafts If set to `true`, draft children are included
 	 */
 	public function index(bool $drafts = false): Pages
 	{

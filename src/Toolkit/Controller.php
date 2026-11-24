@@ -12,25 +12,31 @@ use ReflectionFunction;
  * magic dependency injection based on the
  * defined variable names.
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ *
+ * @template TReturn
  */
 class Controller
 {
 	/**
-	 * Cached parameter list of the wrapped closure;
-	 * @var \ReflectionParameter[]|null
+	 * Cached parameter list of the wrapped closure
+	 * @var list<\ReflectionParameter>|null
 	 */
 	protected array|null $params = null;
 
+	/**
+	 * @param Closure(mixed...):TReturn $function
+	 */
 	public function __construct(
 		protected Closure $function
 	) {
 	}
 
+	/**
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
+	 */
 	public function arguments(array $data = []): array
 	{
 		$this->params ??= (new ReflectionFunction($this->function))->getParameters();
@@ -44,7 +50,6 @@ class Controller
 				// variadic ... argument collects all remaining values
 				$args += $data;
 			} elseif (isset($data[$name]) === true) {
-				// use provided argument value if available
 				$args[$name] = $data[$name];
 			} elseif ($param->isDefaultValueAvailable() === false) {
 				// use null for any other arguments that don't define
@@ -56,9 +61,12 @@ class Controller
 		return $args;
 	}
 
+	/**
+	 * @param array<string, mixed> $data
+	 * @return TReturn
+	 */
 	public function call($bind = null, $data = [])
 	{
-		// unwrap lazy values in arguments
 		$args = $this->arguments($data);
 		$args = LazyValue::unwrap($args);
 
@@ -69,8 +77,10 @@ class Controller
 		return $this->function->call($bind, ...$args);
 	}
 
-	public static function load(string $file, string|null $in = null): static|null
-	{
+	public static function load(
+		string $file,
+		string|null $in = null
+	): static|null {
 		if (is_file($file) === false) {
 			return null;
 		}

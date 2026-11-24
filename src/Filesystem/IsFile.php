@@ -11,16 +11,18 @@ use Kirby\Image\Image;
  * Adds `::asset()` method which returns either a
  * `Kirby\Filesystem\File` or `Kirby\Image\Image` object.
  * Proxies method calls to this object.
- * @since 3.6.0
  *
- * @package   Kirby Filesystem
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 trait IsFile
 {
+	/**
+	 * Marker constant for detecting use of this trait
+	 */
+	public const IS_FILE_TRAIT = true;
+
 	/**
 	 * File asset object
 	 */
@@ -48,7 +50,7 @@ trait IsFile
 	/**
 	 * Magic caller for asset methods
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{
@@ -58,7 +60,7 @@ trait IsFile
 		}
 
 		// asset method proxy
-		if (method_exists($this->asset(), $method)) {
+		if (method_exists($this->asset(), $method) === true) {
 			return $this->asset()->$method(...$arguments);
 		}
 
@@ -111,17 +113,6 @@ trait IsFile
 		// to avoid infinite loops when trying
 		// to proxy the method from the asset object
 		return file_exists($this->root()) === true;
-	}
-
-	/**
-	 * To check the existence of the IsFile trait
-	 *
-	 * @todo Switch to class constant in traits when min PHP version 8.2 required
-	 * @codeCoverageIgnore
-	 */
-	protected function hasIsFileTrait(): bool
-	{
-		return true;
 	}
 
 	/**

@@ -3,22 +3,22 @@
 namespace Kirby\Session;
 
 use Exception;
+use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\SymmetricCrypto;
 
-class InvalidSessionStore
+class InvalidStore
 {
 }
 
-class TestSessionStore extends SessionStore
+class TestStore extends Store
 {
-	public string $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
-	public string $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
-
-	public array $sessions = [];
-	public array $hmacs    = [];
-	public array $isLocked = [];
 	public bool $collectedGarbage = false;
+	public array $hmacs    = [];
+	public string $invalidKey = '616e64207965702c2074686174277320616e2065617374657220656767e280a6';
+	public array $isLocked = [];
+	public array $sessions = [];
+	public string $validKey   = '74686973206973207468652076616c6964206b657920696e2068657821203a29';
 
 	public function __construct()
 	{
@@ -210,6 +210,11 @@ class TestSessionStore extends SessionStore
 		}
 	}
 
+	public function collectGarbage(): void
+	{
+		$this->collectedGarbage = true;
+	}
+
 	public function createId(int $expiryTime): string
 	{
 		do {
@@ -222,19 +227,14 @@ class TestSessionStore extends SessionStore
 		return $id;
 	}
 
+	public function destroy(int $expiryTime, string $id): void
+	{
+		unset($this->sessions[$expiryTime . '.' . $id]);
+	}
+
 	public function exists(int $expiryTime, string $id): bool
 	{
 		return isset($this->sessions[$expiryTime . '.' . $id]);
-	}
-
-	public function lock(int $expiryTime, string $id): void
-	{
-		$this->isLocked[$expiryTime . '.' . $id] = true;
-	}
-
-	public function unlock(int $expiryTime, string $id): void
-	{
-		unset($this->isLocked[$expiryTime . '.' . $id]);
 	}
 
 	public function get(int $expiryTime, string $id): string
@@ -269,6 +269,11 @@ class TestSessionStore extends SessionStore
 		throw new Exception('Session does not exist');
 	}
 
+	public function lock(int $expiryTime, string $id): void
+	{
+		$this->isLocked[$expiryTime . '.' . $id] = true;
+	}
+
 	public function set(int $expiryTime, string $id, string $data): void
 	{
 		$name = $expiryTime . '.' . $id;
@@ -291,14 +296,9 @@ class TestSessionStore extends SessionStore
 		$this->sessions[$name] = $data;
 	}
 
-	public function destroy(int $expiryTime, string $id): void
+	public function unlock(int $expiryTime, string $id): void
 	{
-		unset($this->sessions[$expiryTime . '.' . $id]);
-	}
-
-	public function collectGarbage(): void
-	{
-		$this->collectedGarbage = true;
+		unset($this->isLocked[$expiryTime . '.' . $id]);
 	}
 }
 
@@ -323,21 +323,7 @@ class MockSession extends Session
 	}
 }
 
-/**
- * Mock for the PHP time() function to ensure reliable testing
- *
- * @return int A fake timestamp
- */
 function time(): int
 {
-	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-		throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
-	}
-
-	return MockTime::$time;
-}
-
-class MockTime
-{
-	public static int $time = 1337000000;
+	return \Kirby\Tests\time(MockTime::$time);
 }

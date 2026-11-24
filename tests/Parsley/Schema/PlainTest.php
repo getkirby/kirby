@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Plain::class)]
 class PlainTest extends TestCase
 {
-	/** @var \Kirby\Parsley\Schema\Plain */
+	/** @var Plain */
 	protected Schema $schema;
 
 	protected function setUp(): void
@@ -30,11 +30,6 @@ class PlainTest extends TestCase
 		$this->assertSame($expected, $this->schema->fallback('Test'));
 	}
 
-	public function testFallbackForEmptyContent(): void
-	{
-		$this->assertNull($this->schema->fallback(''));
-	}
-
 	public function testFallbackForDomElement(): void
 	{
 		$dom      = new Dom('<p>Test</p>');
@@ -50,6 +45,11 @@ class PlainTest extends TestCase
 		];
 
 		$this->assertSame($expected, $fallback);
+	}
+
+	public function testFallbackForEmptyContent(): void
+	{
+		$this->assertNull($this->schema->fallback(''));
 	}
 
 	public function testFallbackForInvalidContent(): void

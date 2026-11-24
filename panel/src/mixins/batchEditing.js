@@ -3,21 +3,27 @@
  * that want to introduce batch editing capabilities. It provides the
  * necessary methods and computed properties to handle item selection,
  * batch mode buttons and delete action.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	data: () => ({
+		isProcessing: false,
 		isSelecting: false,
 		selected: []
 	}),
 	created() {
 		this.$events.on(this.batchEditingEvent, this.stopSelectingCollision);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off(this.batchEditingEvent, this.stopSelectingCollision);
 	},
 	computed: {
 		batchDeleteConfirmMessage() {
-			return this.$t(`${this.type}.delete.confirm.selected`, {
+			const type = this.$options.type ?? this.type;
+
+			return this.$t(`${type}.delete.confirm.selected`, {
 				count: this.selected.length
 			});
 		},
@@ -25,7 +31,7 @@ export default {
 			const buttons = [];
 
 			buttons.push({
-				disabled: this.selected.length === 0,
+				disabled: this.selected.length === 0 || this.isProcessing,
 				icon: "trash",
 				text: this.$t("delete") + ` (${this.selected.length})`,
 				theme: "negative",
@@ -55,7 +61,7 @@ export default {
 			buttons.push({
 				icon: "cancel",
 				text: this.$t("cancel"),
-				click: this.onSelectToggle,
+				click: () => this.onSelectToggle(),
 				responsive: true
 			});
 
@@ -64,13 +70,10 @@ export default {
 		batchEditingEvent() {
 			return "selecting";
 		},
-		batchEditingIdentifier() {
-			return "id";
-		},
 		batchEditingToggle() {
 			return {
 				icon: "checklist",
-				click: this.onSelectToggle,
+				click: () => this.onSelectToggle(),
 				title: this.$t("select"),
 				responsive: true
 			};
@@ -83,16 +86,8 @@ export default {
 		onBatchDelete() {
 			throw new Error("Not implemented");
 		},
-		onSelect(item) {
-			if (this.selected.includes(item)) {
-				this.selected = this.selected.filter(
-					(selected) =>
-						selected[this.batchEditingIdentifier] !==
-						item[this.batchEditingIdentifier]
-				);
-			} else {
-				this.selected.push(item);
-			}
+		onSelect(ids) {
+			this.selected = ids;
 		},
 		onSelectToggle() {
 			this.isSelecting ? this.stopSelecting() : this.startSelecting();

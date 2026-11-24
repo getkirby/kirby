@@ -1,0 +1,512 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "@test/unit";
+import { flushPromises, mount as vueMount } from "@vue/test-utils";
+import { nextTick, reactive } from "vue";
+import preserveListeners from "@/mixins/preserveListeners";
+import ModelListField from "./ModelListField.vue";
+
+const listeners: Record<string, (payload?: object) => void> = {};
+
+const events = {
+	emit: vi.fn(),
+	off: vi.fn(),
+	on: vi.fn((event: string, handler: (payload?: object) => void) => {
+		listeners[event] = handler;
+	})
+};
+const api = { get: vi.fn() };
+const panel = { error: vi.fn() };
+
+// registered globally in the Panel
+const Collection = {
+	props: ["empty", "items"],
+	template: "<div />"
+};
+
+const state = {
+	columns: { title: { label: "Title", type: "url" } },
+	models: [],
+	pagination: { limit: 20, offset: 0, page: 1, total: 0 },
+	sortable: true
+};
+
+function model(id: string, permissions = {}) {
+	return {
+		id,
+		link: `pages/${id}`,
+		permissions: { delete: true, sort: true, ...permissions },
+		template: "default",
+		text: id
+	};
+}
+
+/**
+ * Lets the field load the given entries
+ */
+function entries(models: object[], merge = {}) {
+	api.get.mockResolvedValue({
+		...state,
+		models,
+		pagination: { ...state.pagination, total: models.length },
+		...merge
+	});
+}
+
+function mount(props = {}, attrs = {}, $panel: object = panel) {
+	return vueMount(ModelListField, {
+		props: {
+			endpoints: { field: "pages/test/fields/drafts" },
+			name: "drafts",
+			...props
+		},
+		attrs,
+		global: {
+			components: { "k-collection": Collection },
+			mocks: {
+				$api: api,
+				// returns its arguments to check the dropdown of each entry
+				$dropdown: (link: string, options: object) => ({ link, ...options }),
+				$events: events,
+				$panel
+			},
+			mixins: [preserveListeners]
+		}
+	});
+}
+
+/**
+ * The entries passed to the collection
+ */
+function items(wrapper: ReturnType<typeof mount>) {
+	return wrapper.findComponent(Collection).props("items");
+}
+
+/**
+ * The arguments of the last emitted event. The instance
+ * is compared by identity, as enumerating its keys warns.
+ */
+function lastEmit() {
+	return events.emit.mock.calls.at(-1) ?? [];
+}
+
+describe("k-model-list-field", () => {
+	beforeEach(() => {
+		api.get.mockReset();
+		api.get.mockResolvedValue(state);
+	});
+
+	// $el
+	describe("element", () => {
+		it.rendersAs(mount, "K-FIELD", "k-modellist-field");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
+		it.inheritsNoAttrs(mount);
+	});
+
+	// computed
+	describe("items computed", () => {
+		it("passes the entries with their dropdown to the collection", async () => {
+			entries([model("a")]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)).toStrictEqual([
+				{
+					...model("a"),
+					data: { "data-id": "a", "data-template": "default" },
+					options: {
+						link: "pages/a",
+						query: { delete: true, sort: true, view: "list" }
+					},
+					selectable: false,
+					sortable: true
+				}
+			]);
+		});
+
+		it("keeps entries from being deleted at the min", async () => {
+			entries([model("a"), model("b")]);
+			const wrapper = mount({ min: 2 });
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("keeps entries without permission from being deleted", async () => {
+			entries([model("a", { delete: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].options.query.delete).toBe(false);
+		});
+
+		it("makes deletable entries selectable while selecting", async () => {
+			entries([model("a"), model("b", { delete: false })]);
+			const wrapper = mount({ batch: true });
+			await flushPromises();
+
+			expect(items(wrapper)[0].selectable).toBe(false);
+
+			wrapper.vm.startSelecting();
+			await nextTick();
+
+			expect(items(wrapper)[0].selectable).toBe(true);
+			expect(items(wrapper)[1].selectable).toBe(false);
+		});
+
+		it("makes entries with permission sortable", async () => {
+			entries([model("a"), model("b", { sort: false })]);
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(true);
+			expect(items(wrapper)[1].sortable).toBe(false);
+			expect(items(wrapper)[1].options.query.sort).toBe(false);
+		});
+
+		it("makes no entry sortable while the list is not sortable", async () => {
+			entries([model("a")], { sortable: false });
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(items(wrapper)[0].sortable).toBe(false);
+			expect(items(wrapper)[0].options.query.sort).toBe(false);
+		});
+	});
+
+	// watch
+	describe("$panel.language.code watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("reloads the entries", async () => {
+			const $panel = reactive({ language: { code: "en" } });
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			$panel.language.code = "de";
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+	});
+
+	describe("$panel.view.timestamp watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("reloads the entries", async () => {
+			const $panel = reactive({ view: { timestamp: 1 } });
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			// e.g. after `$panel.view.reload()`
+			$panel.view.timestamp = 2;
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+
+		it("triggers a single reload together with a new language", async () => {
+			const $panel = reactive({
+				language: { code: "en" },
+				view: { timestamp: 1 }
+			});
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			// a new view state for another language
+			$panel.language.code = "de";
+			$panel.view.timestamp = 2;
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+	});
+
+	describe("endpoints.field watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("reloads the entries from the new endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			// the slug of the parent page changed
+			await wrapper.setProps({
+				endpoints: { field: "pages/new-slug/fields/drafts" }
+			});
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+			expect(api.get).toHaveBeenLastCalledWith("pages/new-slug/fields/drafts", {
+				page: 1,
+				searchterm: null
+			});
+		});
+
+		it("does not reload for the same endpoint", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			await wrapper.setProps({
+				endpoints: { field: "pages/test/fields/drafts" }
+			});
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledOnce();
+		});
+	});
+
+	// lifecycle
+	describe("mounted hook", () => {
+		it("fetches its entries once it is mounted", async () => {
+			const wrapper = mount();
+
+			// no page, so the server can start on the `page` prop
+			expect(api.get).toHaveBeenCalledWith("pages/test/fields/drafts", {
+				page: null,
+				searchterm: null
+			});
+
+			await flushPromises();
+
+			expect(wrapper.vm.state).toStrictEqual(state);
+			expect(wrapper.vm.isLoading).toBe(false);
+		});
+
+		it("shows a loading empty state until the entries arrive", async () => {
+			const wrapper = mount({ max: 3, min: 1 });
+			const collection = wrapper.findComponent(Collection);
+			const validator = wrapper.find("k-validator");
+
+			expect(collection.props("items")).toStrictEqual([]);
+			expect(collection.props("empty")).toStrictEqual({
+				icon: "loader",
+				text: "loading"
+			});
+
+			// the entries are unknown, so the list cannot be validated yet
+			expect(validator.attributes()).toStrictEqual({ count: "0" });
+
+			await flushPromises();
+
+			expect(collection.props("empty")).toStrictEqual({
+				icon: "box",
+				text: "models.empty"
+			});
+			expect(validator.attributes()).toStrictEqual({
+				count: "0",
+				max: "3",
+				min: "1"
+			});
+		});
+
+		it("keeps the columns from the props while loading", async () => {
+			const columns = { title: { label: "Title" } };
+			const wrapper = mount({ columns });
+
+			expect(wrapper.vm.state.columns).toStrictEqual(columns);
+
+			await flushPromises();
+
+			// the loaded columns carry the resolved types
+			expect(wrapper.vm.state.columns).toStrictEqual(state.columns);
+		});
+
+		it("reports a failing load", async () => {
+			const error = new Error("Nope");
+			api.get.mockRejectedValue(error);
+
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(panel.error).toHaveBeenCalledWith(error);
+			expect(wrapper.vm.isLoading).toBe(false);
+			expect(wrapper.vm.isProcessing).toBe(false);
+
+			// the list must not look empty when it could not be loaded
+			expect(wrapper.vm.emptyProps).toStrictEqual({
+				icon: "alert",
+				text: "Nope"
+			});
+		});
+	});
+
+	// methods
+	describe("reload()", () => {
+		it("keeps the page of the current state", async () => {
+			api.get.mockResolvedValue({
+				...state,
+				pagination: { ...state.pagination, page: 3 }
+			});
+
+			const wrapper = mount();
+			await flushPromises();
+			await wrapper.vm.reload();
+
+			expect(api.get).toHaveBeenLastCalledWith("pages/test/fields/drafts", {
+				page: 3,
+				searchterm: null
+			});
+		});
+
+		it("replaces the state with a fresh one", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			const reloaded = { ...state, pagination: { page: 2, total: 25 } };
+			api.get.mockResolvedValue(reloaded);
+
+			await wrapper.vm.reload({ page: 2 });
+
+			expect(api.get).toHaveBeenLastCalledWith("pages/test/fields/drafts", {
+				page: 2,
+				searchterm: null
+			});
+			expect(wrapper.vm.state).toStrictEqual(reloaded);
+		});
+	});
+
+	// events
+	describe("field.loaded event", () => {
+		it("is emitted once the entries have arrived", async () => {
+			const wrapper = mount();
+
+			expect(events.emit).not.toHaveBeenCalled();
+
+			await flushPromises();
+
+			expect(events.emit).toHaveBeenCalledTimes(1);
+			expect(lastEmit()[0]).toBe("field.loaded");
+			expect(lastEmit()[1]).toBe(wrapper.vm);
+		});
+
+		it("is emitted again after a reload", async () => {
+			const wrapper = mount();
+			await flushPromises();
+			await wrapper.vm.reload();
+
+			// once after the initial load, once after the reload
+			expect(events.emit).toHaveBeenCalledTimes(2);
+			expect(lastEmit()[0]).toBe("field.loaded");
+			expect(lastEmit()[1]).toBe(wrapper.vm);
+		});
+
+		it("is emitted even when the load fails", async () => {
+			api.get.mockRejectedValue(new Error("Nope"));
+
+			const wrapper = mount();
+			await flushPromises();
+
+			expect(events.emit).toHaveBeenCalledOnce();
+			expect(lastEmit()[0]).toBe("field.loaded");
+			expect(lastEmit()[1]).toBe(wrapper.vm);
+		});
+	});
+
+	describe("model.update event", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("is listened to while mounted", async () => {
+			const wrapper = mount();
+			await flushPromises();
+
+			const handler = listeners["model.update"];
+			expect(events.on).toHaveBeenCalledWith("model.update", handler);
+			expect(events.off).not.toHaveBeenCalled();
+
+			wrapper.unmount();
+
+			// any other handler would leave the registered one listening
+			expect(events.off).toHaveBeenCalledWith("model.update", handler);
+		});
+
+		it("triggers a single reload when fired in quick succession", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// a dialog that answers with two events is worth one reload
+			listeners["model.update"]();
+			listeners["model.update"]();
+
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledOnce();
+		});
+
+		it("does not reload when the view redirects", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// the new view hands the field its new endpoint
+			listeners["model.update"]({ redirect: "/pages/new-slug" });
+
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).not.toHaveBeenCalled();
+		});
+
+		it("does not reload when the view reloads", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// the reloaded view refreshes the field with its new timestamp
+			listeners["model.update"]({ reload: true });
+
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).not.toHaveBeenCalled();
+		});
+	});
+
+	describe("native click event", () => {
+		it("calls the listener once", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { onClick: handler });
+			await wrapper.trigger("click");
+
+			expect(handler).toHaveBeenCalledOnce();
+		});
+	});
+
+	describe.each([
+		["focus", "onFocus"],
+		["input", "onInput"],
+		["submit", "onSubmit"]
+	])("native %s event", (event, listener) => {
+		it("does not call the listener of the form", async () => {
+			const handler = vi.fn();
+			const wrapper = mount({}, { [listener]: handler });
+			await wrapper.trigger(event);
+
+			expect(handler).not.toHaveBeenCalled();
+		});
+	});
+});

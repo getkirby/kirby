@@ -23,6 +23,9 @@
  *   <li>Or me.</li>
  *   <li>Drop it!</li>
  * </k-draggable>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -92,6 +95,10 @@ export default {
 	watch: {
 		dragOptions: {
 			handler(newOptions, oldOptions) {
+				if (this.sortable === null) {
+					return;
+				}
+
 				for (const option in newOptions) {
 					if (newOptions[option] !== oldOptions[option]) {
 						this.sortable.option(option, newOptions[option]);
@@ -123,11 +130,14 @@ export default {
 					this.$emit("end", event);
 				},
 				// Item is dropped into the list from another list
+				// (uses `oldIndex` and `newIndex` instead of the draggable
+				// indexes, as those skip children that are not draggable,
+				// e.g. unsortable items, but still are part of `list`)
 				onAdd: (evt) => {
 					if (this.list) {
 						const source = this.getInstance(evt.from);
-						const oldIndex = evt.oldDraggableIndex;
-						const newIndex = evt.newDraggableIndex;
+						const oldIndex = evt.oldIndex;
+						const newIndex = evt.newIndex;
 						const element = source.list[oldIndex];
 						this.list.splice(newIndex, 0, element);
 						this.$emit("change", { added: { element, newIndex } });
@@ -136,8 +146,8 @@ export default {
 				// Changed sorting within list
 				onUpdate: (evt) => {
 					if (this.list) {
-						const oldIndex = evt.oldDraggableIndex;
-						const newIndex = evt.newDraggableIndex;
+						const oldIndex = evt.oldIndex;
+						const newIndex = evt.newIndex;
 						const element = this.list[oldIndex];
 						this.list.splice(oldIndex, 1);
 						this.list.splice(newIndex, 0, element);
@@ -147,7 +157,7 @@ export default {
 				// Item is removed from the list into another list
 				onRemove: (evt) => {
 					if (this.list) {
-						const oldIndex = evt.oldDraggableIndex;
+						const oldIndex = evt.oldIndex;
 						const element = this.list[oldIndex];
 						this.list.splice(oldIndex, 1);
 						this.$emit("change", { removed: { element, oldIndex } });
@@ -190,7 +200,7 @@ export default {
 				// get as many nodes from the back of the list
 				// as footer elements are present
 				const nodes = [...this.$el.childNodes].slice(
-					-1 * this.$slots.footer.length
+					-1 * this.$slots.footer().length
 				);
 
 				// add class to any node in the footer slot

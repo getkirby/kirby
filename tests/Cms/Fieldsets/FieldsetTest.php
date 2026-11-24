@@ -102,6 +102,77 @@ class FieldsetTest extends TestCase
 		$this->assertSame('text', $fieldset->fields()['text']['type']);
 	}
 
+	public function testFieldsInTabsWithDuplicateName(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'one' => [
+					'fields' => [
+						'shared' => ['type' => 'text']
+					]
+				],
+				'two' => [
+					'fields' => [
+						'shared' => ['type' => 'number']
+					]
+				]
+			]
+		]);
+
+		// the fields of all tabs end up in a single flat map, so the
+		// second tab must not overwrite the field of the first one
+		$fields = $fieldset->fields();
+
+		$this->assertSame('text', $fields['shared']['type']);
+		$this->assertSame('info', $fields['shared-duplicate-1']['type']);
+
+		$tabs = $fieldset->tabs();
+
+		$this->assertSame(['shared'], array_keys($tabs['one']['fields']));
+		$this->assertSame(['shared-duplicate-1'], array_keys($tabs['two']['fields']));
+	}
+
+	public function testFieldsWithDisabledTabs(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+			'tabs' => [
+				'content' => false
+			]
+		]);
+
+		$this->assertSame([], $fieldset->tabs());
+		$this->assertSame([], $fieldset->fields());
+		$this->assertFalse($fieldset->editable());
+	}
+
+	public function testFieldsWithQueryOptions(): void
+	{
+		$app = new App([
+			'roots' => ['index' => '/dev/null'],
+			'site'  => ['children' => [['slug' => 'a']]]
+		]);
+
+		$app->impersonate('kirby');
+
+		$fieldset = new Fieldset([
+			'type'   => 'test',
+			'fields' => [
+				'page' => [
+					'type'    => 'select',
+					'options' => 'site.children'
+				]
+			]
+		]);
+
+		// forms resolve the options for their own values,
+		// only the Panel gets them rendered
+		$this->assertSame('site.children', $fieldset->fields()['page']['options']);
+		$this->assertSame('site.children', $fieldset->tabs()['content']['fields']['page']['options']);
+		$this->assertSame(['a'], array_column($fieldset->toArray()['tabs']['content']['fields']['page']['options'], 'value'));
+	}
+
 	public function testForm(): void
 	{
 		$fieldset = new Fieldset([
@@ -170,17 +241,14 @@ class FieldsetTest extends TestCase
 		$this->assertSame('test', $fieldset->name());
 	}
 
-	public function testNameTranslated(): void
+	public function testNameFallbackType(): void
 	{
 		$fieldset = new Fieldset([
-			'type'  => 'test',
-			'name'  => [
-				'en' => 'English name',
-				'de' => 'Deutscher Name',
-			]
+			'type'  => 'my-type',
+			'name'  => []
 		]);
 
-		$this->assertSame('English name', $fieldset->name());
+		$this->assertSame('My type', $fieldset->name());
 	}
 
 	public function testNameFromTitle(): void
@@ -213,6 +281,19 @@ class FieldsetTest extends TestCase
 		]);
 
 		$this->assertSame('Test fieldset', $fieldset->name());
+	}
+
+	public function testNameTranslated(): void
+	{
+		$fieldset = new Fieldset([
+			'type'  => 'test',
+			'name'  => [
+				'en' => 'English name',
+				'de' => 'Deutscher Name',
+			]
+		]);
+
+		$this->assertSame('English name', $fieldset->name());
 	}
 
 	public function testPreview(): void
@@ -256,25 +337,6 @@ class FieldsetTest extends TestCase
 		$this->assertSame('Settings tab', $fieldset->tabs()['settingsTab']['label']);
 	}
 
-	public function testTranslate(): void
-	{
-		$fieldset = new Fieldset([
-			'type'      => 'test',
-			'translate' => false
-		]);
-
-		$this->assertFalse($fieldset->translate());
-	}
-
-	public function testType(): void
-	{
-		$fieldset = new Fieldset([
-			'type' => 'test',
-		]);
-
-		$this->assertSame('test', $fieldset->type());
-	}
-
 	public function testToArray(): void
 	{
 		$fieldset = new Fieldset([
@@ -300,6 +362,25 @@ class FieldsetTest extends TestCase
 		];
 
 		$this->assertSame($expected, $fieldset->toArray());
+	}
+
+	public function testTranslate(): void
+	{
+		$fieldset = new Fieldset([
+			'type'      => 'test',
+			'translate' => false
+		]);
+
+		$this->assertFalse($fieldset->translate());
+	}
+
+	public function testType(): void
+	{
+		$fieldset = new Fieldset([
+			'type' => 'test',
+		]);
+
+		$this->assertSame('test', $fieldset->type());
 	}
 
 	public function testUnset(): void

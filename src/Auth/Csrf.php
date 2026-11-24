@@ -1,0 +1,63 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Cms\App;
+use Kirby\Session\Session;
+
+/**
+ * Handler for the auth CSRF token
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class Csrf
+{
+	public function __construct(
+		protected App $kirby
+	) {
+	}
+
+	/**
+	 * Removes the token from the session;
+	 * a new token is generated on next use
+	 */
+	public function clear(Session $session): void
+	{
+		$session->remove('kirby.csrf');
+	}
+
+	/**
+	 * Returns csrf from the header
+	 */
+	public function fromHeader(): string|null
+	{
+		return $this->kirby->request()->csrf();
+	}
+
+	/**
+	 * Returns either predefined csrf or the one from session
+	 */
+	public function fromSession(): string
+	{
+		$dev      = $this->kirby->option('panel.dev', false) !== false;
+		$fallback = $dev === true ? 'dev' : $this->kirby->csrf();
+		return $this->kirby->option('api.csrf', $fallback);
+	}
+
+	/**
+	 * Returns the csrf token if it exists and if it is valid
+	 */
+	public function get(): string|false
+	{
+		$header  = $this->fromHeader();
+		$session = $this->fromSession();
+
+		if (hash_equals($session, (string)$header) !== true) {
+			return false;
+		}
+
+		return $session;
+	}
+}

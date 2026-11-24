@@ -9,7 +9,7 @@ use TypeError;
 #[CoversClass(User::class)]
 class UserContentTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserContent';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserContent';
 
 	public function testContent(): void
 	{
@@ -21,6 +21,13 @@ class UserContentTest extends ModelTestCase
 		$this->assertSame($content, $user->content()->toArray());
 	}
 
+	public function testContentDefault(): void
+	{
+		$user = new User(['email' => 'user@domain.com']);
+		$this->assertInstanceOf(Content::class, $user->content());
+		$this->assertSame([], $user->content()->toArray());
+	}
+
 	public function testContentInvalid(): void
 	{
 		$this->expectException(TypeError::class);
@@ -29,12 +36,5 @@ class UserContentTest extends ModelTestCase
 			'email'   => 'user@domain.com',
 			'content' => 'something'
 		]);
-	}
-
-	public function testContentDefault(): void
-	{
-		$user = new User(['email' => 'user@domain.com']);
-		$this->assertInstanceOf(Content::class, $user->content());
-		$this->assertSame([], $user->content()->toArray());
 	}
 }

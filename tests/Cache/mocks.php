@@ -2,36 +2,24 @@
 
 namespace Kirby\Cache;
 
-use Exception;
-
-/**
- * Mock for the PHP time() function to ensure reliable testing
- *
- * @return int A fake timestamp
- */
 function time(): int
 {
-	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-		throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
-	}
-
-	return 1337;
+	return \Kirby\Tests\time(1337);
 }
 
 class TestCache extends Cache
 {
 	public array $store = [];
 
-	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
+	public function enabled(): bool
 	{
-		$value = new Value($value, $minutes, $created);
-		$this->store[$key] = $value;
 		return true;
 	}
 
-	public function retrieve(string $key): Value|null
+	public function flush(): bool
 	{
-		return $this->store[$key] ?? null;
+		$this->store = [];
+		return true;
 	}
 
 	public function remove(string $key): bool
@@ -40,9 +28,15 @@ class TestCache extends Cache
 		return true;
 	}
 
-	public function flush(): bool
+	public function retrieve(string $key): Value|null
 	{
-		$this->store = [];
+		return $this->store[$key] ?? null;
+	}
+
+	public function set(string $key, $value, int $minutes = 0, int|null $created = null): bool
+	{
+		$value = new Value($value, $minutes, $created);
+		$this->store[$key] = $value;
 		return true;
 	}
 }

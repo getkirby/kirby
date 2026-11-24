@@ -2,33 +2,31 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\HtmlString;
+
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the `help` prop for optional help text below the field
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait Help
 {
 	/**
 	 * Optional help text below the field
 	 */
-	protected string|null $help;
+	#[Prop]
+	protected array|string|null $help = null;
 
-	public function help(): string|null
+	public function help(): HtmlString|null
 	{
-		if (empty($this->help) === false) {
-			$help = $this->stringTemplate($this->help);
+		if ($this->help !== null && $this->help !== [] && $this->help !== '') {
+			$help = $this->stringTemplateI18n($this->help);
 			$help = $this->kirby()->kirbytext($help);
-			return $help;
+			return new HtmlString($help);
 		}
 
 		return null;
-	}
-
-	protected function setHelp(array|string|null $help = null): void
-	{
-		$this->help = $this->i18n($help);
 	}
 }

@@ -7,31 +7,32 @@ use Kirby\Toolkit\Str;
 
 /**
  * Uri protocol for UUIDs
- * @since 3.8.0
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
  */
 class Uri extends BaseUri
 {
 	/**
 	 * Supported schemes
+	 *
+	 * @var list<string>
 	 */
 	public static array $schemes = [
 		'site',
 		'page',
 		'file',
 		'user',
-		// TODO: acitivate for uuid-block-structure-support
+		// TODO: activate for uuid-block-structure-support
 		// 'block',
 		// 'struct'
 	];
 
-	public function __construct(array|string $props = [], array $inject = [])
-	{
+	public function __construct(
+		array|string $props = [],
+		array $inject = []
+	) {
 		// treat `site://` differently:
 		// there is no host for site type, rest is always the path
 		if (
@@ -41,7 +42,7 @@ class Uri extends BaseUri
 			parent::__construct([
 				'scheme' => 'site',
 				'host'   => '',
-				'path' 	 => Str::after($props, 'site://')
+				'path'   => Str::after($props, 'site://')
 			]);
 		} else {
 			parent::__construct($props, $inject);
@@ -75,13 +76,9 @@ class Uri extends BaseUri
 	 */
 	public function toString(): string
 	{
-		$url = parent::toString();
-
 		// correction for protocols without host,
 		// e.g. mainly `site://`
-		$url = Str::replace($url, ':///', '://');
-
-		return $url;
+		return Str::replace(parent::toString(), ':///', '://');
 	}
 
 	/**
@@ -89,6 +86,7 @@ class Uri extends BaseUri
 	 */
 	public function type(): string
 	{
+		/** @var string - scheme is always passed for any UUID Uri */
 		return $this->scheme;
 	}
 }

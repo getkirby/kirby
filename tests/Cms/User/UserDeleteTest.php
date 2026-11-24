@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class UserDeleteTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserDelete';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserDelete';
 
 	protected function setUp(): void
 	{
@@ -31,20 +31,6 @@ class UserDeleteTest extends ModelTestCase
 		$this->assertFileExists($user->root() . '/user.txt');
 		$user->delete();
 		$this->assertFileDoesNotExist($user->root() . '/user.txt');
-	}
-
-	public function testDeleteWithFiles(): void
-	{
-		$user = User::create(['email' => 'editor@domain.com']);
-
-		touch($user->root() . '/test.jpg');
-
-		$this->assertCount(1, $user->files());
-
-		$user->delete();
-
-		$this->assertFileDoesNotExist($user->root() . '/test.jpg');
-		$this->assertDirectoryDoesNotExist($user->root());
 	}
 
 	public function testDeleteHooks(): void
@@ -97,5 +83,19 @@ class UserDeleteTest extends ModelTestCase
 		$user->delete();
 
 		$this->assertFileDoesNotExist($contentFile);
+	}
+
+	public function testDeleteWithFiles(): void
+	{
+		$user = User::create(['email' => 'editor@domain.com']);
+
+		touch($user->root() . '/test.jpg');
+
+		$this->assertCount(1, $user->files());
+
+		$user->delete();
+
+		$this->assertFileDoesNotExist($user->root() . '/test.jpg');
+		$this->assertDirectoryDoesNotExist($user->root());
 	}
 }

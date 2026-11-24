@@ -2,7 +2,7 @@
 	<k-frame
 		v-bind="$props"
 		:class="['k-color-frame', $attrs.class]"
-		:style="{ '--color-frame-back': color, ...$attrs.style }"
+		:style="[{ '--color-frame-back': color }, $attrs.style]"
 	>
 		<slot />
 	</k-frame>
@@ -20,9 +20,13 @@ export const props = {
 
 /**
  * Use <k-color-frame> to display a color preview.
- * @since 4.0.0
  *
- * @example <k-color-frame color="#efefef" ratio="1/1" />
+ * @example
+ * <k-color-frame color="#efefef" ratio="1/1" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

@@ -9,72 +9,32 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(EntriesField::class)]
 class EntriesFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testDefault(): void
 	{
-		$field = $this->field('entries');
+		$field = $this->field('entries', [
+			'default' => $defaults = [
+				'Some text 1',
+				'Some text 2',
+				'Some text 3',
+			]
+		]);
 
-		$this->assertSame('entries', $field->type());
-		$this->assertSame('entries', $field->name());
-		$this->assertNull($field->max());
-		$this->assertTrue($field->sortable());
-		$this->assertSame([], $field->value());
+		$this->assertSame($defaults, $field->default());
 	}
 
-	public function testProps(): void
+	public function testEmpty(): void
 	{
-		$field = $this->field('entries');
-		$props = $field->props();
+		$field = $this->field('entries', [
+			'empty' => $value = 'Custom empty text'
+		]);
 
-		$this->assertIsArray($props);
-		$this->assertNull($props['empty']);
-		$this->assertNull($props['max']);
-		$this->assertNull($props['min']);
-		$this->assertNull($props['after']);
-		$this->assertFalse($props['autofocus']);
-		$this->assertNull($props['before']);
-		$this->assertNull($props['default']);
-		$this->assertFalse($props['disabled']);
-		$this->assertNull($props['help']);
-		$this->assertNull($props['icon']);
-		$this->assertSame('Entries', $props['label']);
-		$this->assertSame('entries', $props['name']);
-		$this->assertNull($props['placeholder']);
-		$this->assertFalse($props['required']);
-		$this->assertTrue($props['saveable']);
-		$this->assertTrue($props['sortable']);
-		$this->assertTrue($props['translate']);
-		$this->assertSame('entries', $props['type']);
-		$this->assertSame('1/1', $props['width']);
-
-		$fieldProps = $props['field'];
-		$this->assertIsArray($fieldProps);
-		$this->assertFalse($fieldProps['autofocus']);
-		$this->assertTrue($fieldProps['counter']);
-		$this->assertFalse($fieldProps['disabled']);
-		$this->assertSame('sans-serif', $fieldProps['font']);
-		$this->assertFalse($fieldProps['hidden']);
-		$this->assertSame('0', $fieldProps['name']);
-		$this->assertFalse($fieldProps['required']);
-		$this->assertTrue($fieldProps['saveable']);
-		$this->assertFalse($fieldProps['spellcheck']);
-		$this->assertTrue($fieldProps['translate']);
-		$this->assertSame('text', $fieldProps['type']);
-		$this->assertSame('1/1', $fieldProps['width']);
+		$this->assertSame($value, $field->empty());
 	}
 
 	public function testField(): void
 	{
 		$field = $this->field('entries');
 		$this->assertSame(['type' => 'text'], $field->field());
-	}
-
-	public function testFieldString(): void
-	{
-		$field = $this->field('entries', [
-			'field' => 'url'
-		]);
-
-		$this->assertSame(['type' => 'url'], $field->field());
 	}
 
 	public function testFieldArrayOne(): void
@@ -102,18 +62,6 @@ class EntriesFieldTest extends TestCase
 		$this->assertSame($props, $field->field());
 	}
 
-	public function testFieldLabel(): void
-	{
-		$field = $this->field('entries', [
-			'field' => [
-				'type'  => 'text',
-				'label' => 'Test'
-			]
-		]);
-
-		$this->assertArrayNotHasKey('label', $field->field());
-	}
-
 	public function testFieldCounter(): void
 	{
 		$field = $this->field('entries', [
@@ -126,153 +74,47 @@ class EntriesFieldTest extends TestCase
 		$this->assertArrayNotHasKey('counter', $field->field());
 	}
 
-	public function testDefaultValue(): void
+	public function testFieldLabel(): void
 	{
 		$field = $this->field('entries', [
-			'default' => $defaults = [
-				'Some text 1',
-				'Some text 2',
-				'Some text 3',
+			'field' => [
+				'type'  => 'text',
+				'label' => 'Test'
 			]
 		]);
 
-		$this->assertSame($defaults, $field->default());
+		$this->assertArrayNotHasKey('label', $field->field());
 	}
 
-	public function testSortable(): void
+	public function testFieldPropsDefault(): void
 	{
 		$field = $this->field('entries', [
-			'sortable' => false
-		]);
-
-		$this->assertFalse($field->sortable());
-	}
-
-	public function testMax(): void
-	{
-		$field = $this->field('entries', [
-			'max'   => 3,
-			'value' => [],
-		]);
-
-		$this->assertSame(3, $field->max());
-		$this->assertTrue($field->isValid());
-	}
-
-	public function testMaxValid(): void
-	{
-		$field = $this->field('entries', [
-			'max'   => 3,
-			'value' => [
-				'https://getkirby.com',
-				'https://forum.getkirby.com',
-				'https://plugins.getkirby.com',
-			],
-		]);
-
-		$this->assertSame(3, $field->max());
-		$this->assertTrue($field->isValid());
-	}
-
-	public function testMaxInvalid(): void
-	{
-		$field = $this->field('entries', [
-			'max'   => 1,
-			'value' => [
-				'https://getkirby.com',
-				'https://forum.getkirby.com',
-				'https://plugins.getkirby.com',
-			],
-		]);
-
-		$this->assertSame(1, $field->max());
-		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['entries'], 'You must not add more than one entry');
-	}
-
-	public function testMin(): void
-	{
-		$field = $this->field('entries', [
-			'min'   => 3,
-			'value' => '[]'
-		]);
-
-		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->isRequired());
-		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
-	}
-
-	public function testMinValid(): void
-	{
-		$field = $this->field('entries', [
-			'min'   => 2,
-			'value' => [
-				'https://getkirby.com',
-				'https://forum.getkirby.com'
+			'field' => [
+				'type'    => 'text',
+				'default' => 'Some default text'
 			]
 		]);
 
-		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->isRequired());
-		$this->assertTrue($field->isValid());
+		$this->assertSame('Some default text', $field->fieldProps()['default']);
+		$this->assertSame('Some default text', $field->props()['field']['default']);
 	}
 
-	public function testMinInvalid(): void
+	public function testFieldPropsWithoutDefault(): void
 	{
 		$field = $this->field('entries', [
-			'min'   => 3,
-			'value' => [
-				'https://getkirby.com'
-			]
+			'field' => 'text'
 		]);
 
-		$this->assertSame(3, $field->min());
-		$this->assertTrue($field->isRequired());
-		$this->assertFalse($field->isValid());
-		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
+		$this->assertSame('', $field->fieldProps()['default']);
 	}
 
-	public function testRequiredValid(): void
+	public function testFieldString(): void
 	{
 		$field = $this->field('entries', [
-			'value'    => [
-				'https://getkirby.com'
-			],
-			'required' => true
+			'field' => 'url'
 		]);
 
-		$this->assertTrue($field->isValid());
-		$this->assertSame(1, $field->min());
-	}
-
-	public function testRequiredInvalid(): void
-	{
-		$field = $this->field('entries', [
-			'required' => true
-		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame(1, $field->min());
-	}
-
-	public function testReset(): void
-	{
-		$value = [
-			'https://getkirby.com',
-			'https://forum.getkirby.com',
-			'https://plugins.getkirby.com',
-		];
-
-		$field = $this->field('entries');
-
-		$field->fill($value);
-
-		$this->assertSame($value, $field->toFormValue());
-
-		$field->reset();
-
-		$this->assertSame([], $field->toFormValue());
+		$this->assertSame(['type' => 'url'], $field->field());
 	}
 
 	public static function supportsProvider(): array
@@ -315,19 +157,19 @@ class EntriesFieldTest extends TestCase
 	}
 
 	#[DataProvider('supportsProvider')]
-	public function testSupportedFields($type, $expected): void
+	public function testFieldSupportedFields($type, $expected): void
 	{
-		if ($expected === false) {
-			$this->expectException(InvalidArgumentException::class);
-			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
-		}
-
 		$field = $this->field('entries', [
 			'field' => $type,
 		]);
 
 		if ($expected === true) {
+			$this->assertSame($type, $field->field()['type']);
 			$this->assertTrue($field->isValid());
+		} else {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('"' . $type . '" field type is not supported for the entries field');
+			$field->field();
 		}
 	}
 
@@ -344,7 +186,16 @@ class EntriesFieldTest extends TestCase
 
 			['number', 1, true],
 
-			['select', 'web', true],
+			['select', 'web', false],
+
+			[
+				[
+					'type'    => 'select',
+					'options' => ['web', 'print'],
+				],
+				'web',
+				true
+			],
 
 			['slug', 'page-slug', true],
 
@@ -360,17 +211,14 @@ class EntriesFieldTest extends TestCase
 	}
 
 	#[DataProvider('validationsProvider')]
-	public function testValidations($type, $value, $expected): void
+	public function testIsValid($type, $value, $expected): void
 	{
 		$field = $this->field('entries', [
-			'value'    => [
-				$value
-			],
+			'value'    => [$value],
 			'field'    => $type,
 			'required' => true
 		]);
 
-		$field->validate();
 		$this->assertSame($expected, $field->isValid());
 
 		if ($expected === false) {
@@ -380,13 +228,176 @@ class EntriesFieldTest extends TestCase
 		}
 	}
 
-	public function testEmpty(): void
+	public function testMax(): void
 	{
 		$field = $this->field('entries', [
-			'empty' => $value = 'Custom empty text'
+			'max'   => 3,
+			'value' => [],
 		]);
 
-		$this->assertSame($value, $field->empty());
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMaxInvalid(): void
+	{
+		$field = $this->field('entries', [
+			'max'   => 1,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com',
+				'https://plugins.getkirby.com',
+			],
+		]);
+
+		$this->assertSame(1, $field->max());
+		$this->assertFalse($field->isValid());
+		$this->assertSame($field->errors()['entries'], 'You must not add more than one entry');
+	}
+
+	public function testMaxValid(): void
+	{
+		$field = $this->field('entries', [
+			'max'   => 3,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com',
+				'https://plugins.getkirby.com',
+			],
+		]);
+
+		$this->assertSame(3, $field->max());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('entries', [
+			'min'   => 3,
+			'value' => '[]'
+		]);
+
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertFalse($field->isValid());
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
+	}
+
+	public function testMinInvalid(): void
+	{
+		$field = $this->field('entries', [
+			'min'   => 3,
+			'value' => [
+				'https://getkirby.com'
+			]
+		]);
+
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertFalse($field->isValid());
+		$this->assertSame($field->errors()['entries'], 'You must add at least 3 entries');
+	}
+
+	public function testMinValid(): void
+	{
+		$field = $this->field('entries', [
+			'min'   => 2,
+			'value' => [
+				'https://getkirby.com',
+				'https://forum.getkirby.com'
+			]
+		]);
+
+		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('entries');
+		$props = $field->props();
+
+		$this->assertIsArray($props);
+		$this->assertNull($props['empty']);
+		$this->assertNull($props['max']);
+		$this->assertNull($props['min']);
+		$this->assertFalse($props['autofocus']);
+		$this->assertFalse($props['disabled']);
+		$this->assertNull($props['help']);
+		$this->assertSame('Entries', $props['label']);
+		$this->assertSame('entries', $props['name']);
+		$this->assertFalse($props['required']);
+		$this->assertTrue($props['saveable']);
+		$this->assertTrue($props['sortable']);
+		$this->assertTrue($props['translate']);
+		$this->assertSame('entries', $props['type']);
+		$this->assertSame('1/1', $props['width']);
+
+		$fieldProps = $props['field'];
+		$this->assertIsArray($fieldProps);
+		$this->assertFalse($fieldProps['autofocus']);
+		$this->assertTrue($fieldProps['counter']);
+		$this->assertFalse($fieldProps['disabled']);
+		$this->assertSame('sans-serif', $fieldProps['font']);
+		$this->assertFalse($fieldProps['hidden']);
+		$this->assertSame('0', $fieldProps['name']);
+		$this->assertFalse($fieldProps['required']);
+		$this->assertTrue($fieldProps['saveable']);
+		$this->assertTrue($fieldProps['translate']);
+		$this->assertSame('text', $fieldProps['type']);
+		$this->assertSame('1/1', $fieldProps['width']);
+	}
+
+	public function testRequiredInvalid(): void
+	{
+		$field = $this->field('entries', [
+			'required' => true
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testRequiredValid(): void
+	{
+		$field = $this->field('entries', [
+			'value'    => [
+				'https://getkirby.com'
+			],
+			'required' => true
+		]);
+
+		$this->assertTrue($field->isValid());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testReset(): void
+	{
+		$value = [
+			'https://getkirby.com',
+			'https://forum.getkirby.com',
+			'https://plugins.getkirby.com',
+		];
+
+		$field = $this->field('entries');
+
+		$field->fill($value);
+
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->reset();
+
+		$this->assertSame([], $field->toFormValue());
+	}
+
+	public function testSortable(): void
+	{
+		$field = $this->field('entries', [
+			'sortable' => false
+		]);
+
+		$this->assertFalse($field->sortable());
 	}
 
 	public function testToStoredValue(): void

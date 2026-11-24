@@ -4,12 +4,16 @@ namespace Kirby\Cms;
 
 use Exception;
 use IntlDateFormatter;
+use Kirby\Blueprint\FileBlueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as BaseFile;
 use Kirby\Filesystem\IsFile;
+use Kirby\Guards\FileGuards;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
+use Kirby\Uuid\FileUuid;
 
 /**
  * The `$file` object provides a set
@@ -23,16 +27,13 @@ use Kirby\Toolkit\Str;
  * or `Kirby\Image\Image` class, which
  * is used to handle all asset file methods.
  * In addition the File class handles
- * meta data via `Kirby\Cms\Content`.
+ * meta data via `Kirby\Content\Content`.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @use \Kirby\Cms\HasSiblings<\Kirby\Cms\Files>
- * @method \Kirby\Uuid\FileUuid uuid()
+ * @use HasSiblings<Files>
+ * @method FileUuid uuid()
  */
 class File extends ModelWithContent
 {
@@ -42,22 +43,14 @@ class File extends ModelWithContent
 	use HasSiblings;
 	use IsFile;
 
-	public const CLASS_ALIAS = 'file';
-
-	/**
-	 * All registered file methods
-	 * @todo Remove when support for PHP 8.2 is dropped
-	 */
-	public static array $methods = [];
+	public const string CLASS_ALIAS = 'file';
 
 	/**
 	 * Cache for the initialized blueprint object
 	 */
 	protected FileBlueprint|null $blueprint = null;
-
 	protected string $filename;
-
-	protected string $id;
+	protected string|null $id = null;
 
 	/**
 	 * The parent object
@@ -68,7 +61,6 @@ class File extends ModelWithContent
 	 * The absolute path to the file
 	 */
 	protected string|null $root;
-
 	protected string|null $template;
 
 	/**
@@ -78,6 +70,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Creates a new File object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function __construct(array $props)
 	{
@@ -117,7 +111,7 @@ class File extends ModelWithContent
 		}
 
 		// asset method proxy
-		if (method_exists($this->asset(), $method)) {
+		if (method_exists($this->asset(), $method) === true) {
 			return $this->asset()->$method(...$arguments);
 		}
 
@@ -157,29 +151,32 @@ class File extends ModelWithContent
 	 */
 	public function blueprint(): FileBlueprint
 	{
+		/** @var FileBlueprint */
 		return $this->blueprint ??= FileBlueprint::factory(
+			$this,
 			'files/' . $this->template(),
-			'files/default',
-			$this
+			'files/default'
 		);
 	}
 
 	/**
 	 * Returns an array with all blueprints that are available for the file
-	 * by comparing files sections and files fields of the parent model
+	 * by comparing the file list fields of the parent model
+	 *
+	 * @return list<array{name: string, title: string}>
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
 		// get cached results for the current file model
-		// (except when collecting for a specific section)
-		if ($inSection === null && $this->blueprints !== null) {
+		// (except when collecting for a specific field)
+		if ($inField === null && $this->blueprints !== null) {
 			return $this->blueprints; // @codeCoverageIgnore
 		}
 
 		// always include the current template as option
 		$templates = [
 			$this->template() ?? 'default',
-			...$this->parent()->blueprint()->acceptedFileTemplates($inSection)
+			...$this->parent()->blueprint()->acceptRules()->fileBlueprints($inField)
 		];
 
 		// make sure every template is only included once
@@ -199,7 +196,7 @@ class File extends ModelWithContent
 				continue;
 			}
 
-			if ($blueprint = FileBlueprint::factory('files/' . $template, null, $this)) {
+			if ($blueprint = FileBlueprint::factory($this, 'files/' . $template)) {
 				try {
 					// ensure that file matches `accept` option,
 					// if not remove template from available list
@@ -225,8 +222,8 @@ class File extends ModelWithContent
 			default => strnatcmp($a['title'], $b['title'])
 		});
 
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
+		// no caching for when collecting for a specific field
+		if ($inField !== null) {
 			return $blueprints; // @codeCoverageIgnore
 		}
 
@@ -260,7 +257,6 @@ class File extends ModelWithContent
 		// default language
 		if ($language->isDefault() === false) {
 			unset($data['template'], $data['sort']);
-			return $data;
 		}
 
 		return $data;
@@ -268,6 +264,8 @@ class File extends ModelWithContent
 
 	/**
 	 * Constructs a File object
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public static function factory(array $props): static
 	{
@@ -291,7 +289,17 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the guards object for this file
+	 */
+	public function guards(): FileGuards
+	{
+		return FileGuards::for($this);
+	}
+
+	/**
 	 * Converts the file to html
+	 *
+	 * @param array<string, mixed> $attr
 	 */
 	public function html(array $attr = []): string
 	{
@@ -326,50 +334,62 @@ class File extends ModelWithContent
 
 	/**
 	 * Checks if the file is accessible to the current user
-	 * This permission depends on the `read` option until v6
+	 * This permission depends on the `read` option until v7
 	 */
 	public function isAccessible(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v6
+		// TODO: remove this check when `read` option deprecated in v7
 		if ($this->isReadable() === false) {
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'access');
+		return $this->guards()->isAvailable('access');
+	}
+
+	/**
+	 * Checks if the given file is the exact same file as the
+	 * one that already exists under the same name, template
+	 * included
+	 */
+	public function isIdentical(BaseFile $file): bool
+	{
+		if ($this->exists() === false) {
+			return false;
+		}
+
+		// the model is based on the props of the new file,
+		// to compare templates, we need to get the props of
+		// the already existing file from meta content file
+		$existing = $this->parent()->file($this->filename());
+
+		return
+			$this->sha1() === $file->sha1() &&
+			$this->template() === $existing->template();
 	}
 
 	/**
 	 * Check if the file can be listable by the current user
-	 * This permission depends on the `read` option until v6
+	 * This permission depends on the `read` option until v7
 	 */
 	public function isListable(): bool
 	{
-		// TODO: remove this check when `read` option deprecated in v6
-		if ($this->isReadable() === false) {
-			return false;
-		}
-
 		// not accessible also means not listable
+		// (which covers the `read` check as well)
 		if ($this->isAccessible() === false) {
 			return false;
 		}
 
-		return FilePermissions::canFromCache($this, 'list');
+		return $this->guards()->isAvailable('list');
 	}
 
 	/**
 	 * Check if the file can be read by the current user
 	 *
-	 * @todo Deprecate `read` option in v6 and make the necessary changes for `access` and `list` options.
+	 * @todo Deprecate `read` option in v7 and make the necessary changes for `access` and `list` options.
 	 */
 	public function isReadable(): bool
 	{
-		static $readable   = [];
-		$role              = $this->kirby()->role()?->id() ?? '__none__';
-		$template          = $this->template() ?? '__none__';
-		$readable[$role] ??= [];
-
-		return $readable[$role][$template] ??= $this->permissions()->can('read');
+		return $this->guards()->isAvailable('read');
 	}
 
 	/**
@@ -395,7 +415,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the absolute path to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	#[BlockCollectionAccess]
 	public function mediaRoot(string|null $filename = null): string
@@ -411,27 +431,26 @@ class File extends ModelWithContent
 	#[BlockCollectionAccess]
 	public function mediaToken(): string
 	{
-		$token = $this->kirby()->contentToken($this, $this->id());
-		return substr($token, 0, 10);
+		return substr($this->kirby()->contentToken($this, $this->id()), 0, 10);
 	}
 
 	/**
 	 * Returns the absolute Url to the file in the public media folder
 	 *
-	 * @param string|null $filename Optional override for the filename
+	 * @param $filename Optional override for the filename
 	 */
 	public function mediaUrl(string|null $filename = null): string
 	{
-		$url        = $this->parent()->mediaUrl() . '/' . $this->mediaHash();
 		$filename ??= $this->filename();
 
-		return $url . '/' . $filename;
+		return $this->parent()->mediaUrl() . '/' . $this->mediaHash() . '/' . $filename;
 	}
 
 	/**
 	 * Get the file's last modification time.
 	 *
-	 * @param string|null $handler date, intl or strftime
+	 * @param 'date'|'intl'|'strftime'|null $handler Date handler, `null` for the configured one
+	 * @return ($format is null ? int : string|false)
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
@@ -460,7 +479,7 @@ class File extends ModelWithContent
 	 */
 	protected function modifiedFile(): int
 	{
-		return F::modified($this->root());
+		return F::modified($this->root()) ?: 0;
 	}
 
 	/**
@@ -468,8 +487,10 @@ class File extends ModelWithContent
 	 */
 	public function page(): Page|null
 	{
-		if ($this->parent() instanceof Page) {
-			return $this->parent();
+		$parent = $this->parent();
+
+		if ($parent instanceof Page) {
+			return $parent;
 		}
 
 		return null;
@@ -494,7 +515,7 @@ class File extends ModelWithContent
 	/**
 	 * Returns the parent id if a parent exists
 	 */
-	public function parentId(): string
+	public function parentId(): string|null
 	{
 		return $this->parent()->id();
 	}
@@ -529,99 +550,6 @@ class File extends ModelWithContent
 	public function permissions(): FilePermissions
 	{
 		return new FilePermissions($this);
-	}
-
-	/**
-	 * Returns the absolute root to the file
-	 */
-	#[BlockCollectionAccess]
-	public function root(): string|null
-	{
-		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
-	}
-
-	/**
-	 * Returns the FileRules class to
-	 * validate any important action.
-	 */
-	protected function rules(): FileRules
-	{
-		return new FileRules();
-	}
-
-	/**
-	 * Sets the Blueprint object
-	 *
-	 * @return $this
-	 */
-	protected function setBlueprint(array|null $blueprint = null): static
-	{
-		if ($blueprint !== null) {
-			$blueprint['model'] = $this;
-			$this->blueprint = new FileBlueprint($blueprint);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Returns the parent Files collection
-	 */
-	protected function siblingsCollection(): Files
-	{
-		return $this->parent()->files();
-	}
-
-	/**
-	 * Returns the parent Site object
-	 */
-	public function site(): Site
-	{
-		if ($this->parent() instanceof Site) {
-			return $this->parent();
-		}
-
-		return $this->kirby()->site();
-	}
-
-	/**
-	 * Returns the final template
-	 */
-	public function template(): string|null
-	{
-		return $this->template ??= $this->content('default')->get('template')->value();
-	}
-
-	/**
-	 * Returns siblings with the same template
-	 */
-	public function templateSiblings(bool $self = true): Files
-	{
-		return $this->siblings($self)->filter('template', $this->template());
-	}
-
-	/**
-	 * Extended info for the array export
-	 * by injecting the information from
-	 * the asset.
-	 */
-	#[BlockCollectionAccess]
-	public function toArray(): array
-	{
-		return [
-			...parent::toArray(),
-			...$this->asset()->toArray(),
-			'id'       => $this->id(),
-			'template' => $this->template(),
-		];
-	}
-
-	/**
-	 * Returns the Url
-	 */
-	public function url(): string
-	{
-		return $this->url ??= ($this->kirby()->component('file::url'))($this->kirby(), $this);
 	}
 
 	/**
@@ -673,5 +601,102 @@ class File extends ModelWithContent
 			default:
 				return $url;
 		}
+	}
+
+	/**
+	 * Returns the absolute root to the file
+	 */
+	#[BlockCollectionAccess]
+	public function root(): string|null
+	{
+		return $this->root ??= $this->parent()->root() . '/' . $this->filename();
+	}
+
+	/**
+	 * Returns the FileRules class to
+	 * validate any important action.
+	 *
+	 * @deprecated 6.0.0 Use `$file->guards()` instead
+	 */
+	protected function rules(): FileRules
+	{
+		return new FileRules();
+	}
+
+	/**
+	 * Sets the Blueprint object
+	 *
+	 * @return $this
+	 */
+	protected function setBlueprint(array|null $blueprint = null): static
+	{
+		if ($blueprint !== null) {
+			$blueprint['model'] = $this;
+			$this->blueprint = new FileBlueprint($blueprint);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Returns the parent Files collection
+	 */
+	protected function siblingsCollection(): Files
+	{
+		return $this->parent()->files();
+	}
+
+	/**
+	 * Returns the parent Site object
+	 */
+	public function site(): Site
+	{
+		$parent = $this->parent();
+
+		if ($parent instanceof Site) {
+			return $parent;
+		}
+
+		return $this->kirby()->site();
+	}
+
+	/**
+	 * Returns the final template
+	 */
+	public function template(): string|null
+	{
+		return $this->template ??= $this->content('default')->get('template')->value();
+	}
+
+	/**
+	 * Returns siblings with the same template
+	 */
+	public function templateSiblings(bool $self = true): Files
+	{
+		return $this->siblings($self)->filter('template', $this->template());
+	}
+
+	/**
+	 * Extended info for the array export
+	 * by injecting the information from
+	 * the asset.
+	 */
+	#[BlockCollectionAccess]
+	public function toArray(): array
+	{
+		return [
+			...parent::toArray(),
+			...$this->asset()->toArray(),
+			'id'       => $this->id(),
+			'template' => $this->template(),
+		];
+	}
+
+	/**
+	 * Returns the Url
+	 */
+	public function url(): string
+	{
+		return $this->url ??= ($this->kirby()->component('file::url'))($this->kirby(), $this);
 	}
 }

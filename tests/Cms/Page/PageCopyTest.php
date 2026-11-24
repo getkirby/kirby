@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PageCopy::class)]
 class PageCopyTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageCopy';
 
 	public function testConvertUuids(): void
 	{
@@ -286,8 +286,8 @@ class PageCopyTest extends ModelTestCase
 		$page->duplicate('test-copy', ['files' => true]);
 
 		$this->assertNotSame('test-copy', Uuids::cache()->get($pageKey));
-		$this->assertSame('test', Uuid::for('page://a')->model()->id());
-		$this->assertSame('test/test.md', Uuid::for('file://file-a')->model()->id());
+		$this->assertSame('test', Uuid::from('page://a')->model()->id());
+		$this->assertSame('test/test.md', Uuid::from('file://file-a')->model()->id());
 	}
 
 	public function testRemoveChanges(): void

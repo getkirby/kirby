@@ -1,12 +1,15 @@
 import { isObject } from "@/helpers/object";
 
-export type Listener = (...args: unknown[]) => unknown;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Listener = (...args: any[]) => unknown;
 
 /**
  * Provides an event-listener system for Panel modules.
  * Each event can have at most one registered callback.
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Listeners() {
 	return {
@@ -20,6 +23,11 @@ export default function Listeners() {
 		 */
 		addEventListener(event: string, callback: unknown): void {
 			if (typeof callback !== "function") {
+				return;
+			}
+
+			// re-registering the same callback is a no-op
+			if (this.on[event] === callback) {
 				return;
 			}
 

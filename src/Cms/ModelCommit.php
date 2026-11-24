@@ -11,9 +11,6 @@ use Kirby\Exception\Exception;
  * the `before` and `after` hooks and updating the state
  * of the given model.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -35,7 +32,6 @@ class ModelCommit
 	 */
 	public function after(mixed $state): mixed
 	{
-		// run the `after` hook
 		$arguments = $this->afterHookArguments($state);
 		$hook      = $this->hook('after', $arguments);
 
@@ -49,6 +45,8 @@ class ModelCommit
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given model action. It's a wrapper around the
 	 * more specific `afterHookArgumentsFor*Actions` methods.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function afterHookArguments(mixed $state): array
 	{
@@ -68,7 +66,35 @@ class ModelCommit
 
 	/**
 	 * Returns the appropriate arguments for the `after` hook
+	 * for the given file action.
+	 *
+	 * @return array<string, mixed>
+	 */
+	protected function afterHookArgumentsForFileActions(
+		File $model,
+		string $action,
+		mixed $state
+	): array {
+		return match ($action) {
+			'create' => [
+				'file' => $state
+			],
+			'delete' => [
+				'status' => $state,
+				'file'   => $model
+			],
+			default  => [
+				'newFile' => $state,
+				'oldFile' => $model
+			]
+		};
+	}
+
+	/**
+	 * Returns the appropriate arguments for the `after` hook
 	 * for the given page action.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function afterHookArgumentsForPageActions(
 		Page $model,
@@ -96,31 +122,9 @@ class ModelCommit
 
 	/**
 	 * Returns the appropriate arguments for the `after` hook
-	 * for the given file action.
-	 */
-	protected function afterHookArgumentsForFileActions(
-		File $model,
-		string $action,
-		mixed $state
-	): array {
-		return match ($action) {
-			'create' => [
-				'file' => $state
-			],
-			'delete' => [
-				'status' => $state,
-				'file'   => $model
-			],
-			default  => [
-				'newFile' => $state,
-				'oldFile' => $model
-			]
-		};
-	}
-
-	/**
-	 * Returns the appropriate arguments for the `after` hook
 	 * for the given site action.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function afterHookArgumentsForSiteActions(
 		Site $model,
@@ -135,6 +139,8 @@ class ModelCommit
 	/**
 	 * Returns the appropriate arguments for the `after` hook
 	 * for the given user action.
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function afterHookArgumentsForUserActions(
 		User $model,
@@ -142,22 +148,15 @@ class ModelCommit
 		mixed $state
 	): array {
 		return match ($action) {
-			'create' =>	[
+			'create',
+			'createAvatar',
+			'replaceAvatar' => [
 				'user' => $state
 			],
-			'createAvatar' => [
-				'user' => $state
-			],
-			'delete' => [
-				'status' => $state,
-				'user'   => $model
-			],
+			'delete',
 			'deleteAvatar' => [
 				'status' => $state,
 				'user'   => $model
-			],
-			'replaceAvatar' => [
-				'user' => $state
 			],
 			default  => [
 				'newUser' => $state,
@@ -168,13 +167,14 @@ class ModelCommit
 
 	/**
 	 * Runs the `before` hook and modifies the arguments
+	 *
+	 * @param array<string, mixed> $arguments
+	 * @return array<string, mixed>
 	 */
 	public function before(array $arguments): array
 	{
-		// check model rules
 		$this->validate($arguments);
 
-		// run the `before` hook
 		$hook = $this->hook('before', $arguments);
 
 		// check model rules again, after the hook got applied
@@ -187,14 +187,13 @@ class ModelCommit
 	 * Handles the full call of the given action,
 	 * runs the `before` and `after` hooks and updates
 	 * the state of the given model.
+	 *
+	 * @param array<string, mixed> $arguments
 	 */
 	public function call(array $arguments, Closure $callback): mixed
 	{
-		// run the before hook
 		$arguments = $this->before($arguments);
-
-		// run the commit action
-		$state = $callback(...array_values($arguments));
+		$state     = $callback(...array_values($arguments));
 
 		// update the state for the after hook
 		ModelState::update(
@@ -203,7 +202,6 @@ class ModelCommit
 			next: $state
 		);
 
-		// run the after hook and return the result
 		return $this->after($state);
 	}
 
@@ -211,6 +209,10 @@ class ModelCommit
 	 * Runs the given hook and modifies the first argument
 	 * of the given arguments array. It returns an array with
 	 * `arguments` and `result` keys.
+	 *
+	 * @param 'after'|'before' $hook
+	 * @param array<string, mixed> $arguments
+	 * @return array{arguments: array<string, mixed>, result: mixed}
 	 */
 	public function hook(string $hook, array $arguments): array
 	{
@@ -218,13 +220,23 @@ class ModelCommit
 		// is modified by the return value from the hook (if any returned)
 		$appliedTo = array_key_first($arguments);
 
-		// run the hook and modify the first argument
-		$arguments[$appliedTo] = $this->kirby->apply(
-			// e.g. page.create:before
-			$this->prefix . '.' . $this->action . ':' . $hook,
-			$arguments,
-			$appliedTo
-		);
+		$auth = $this->kirby->auth();
+		$user = $auth->currentUserFromImpersonation();
+
+		try {
+			$arguments[$appliedTo] = $this->kirby->apply(
+				// e.g. page.create:before
+				$this->prefix . '.' . $this->action . ':' . $hook,
+				$arguments,
+				$appliedTo
+			);
+		} finally {
+			// don't leak an impersonation from the hook
+			// into the rest of the model action
+			if ($auth->currentUserFromImpersonation() !== $user) {
+				$auth->impersonate($user?->id());
+			}
+		}
 
 		return [
 			'arguments' => $arguments,
@@ -233,21 +245,28 @@ class ModelCommit
 	}
 
 	/**
-	 * Checks the model rules for the given action
-	 * if there's a matching rule method.
+	 * Runs the guards of the model for the given action
+	 *
+	 * @param array<string, mixed> $arguments
 	 */
 	public function validate(array $arguments): void
 	{
-		$rules = match (true) {
-			$this->model instanceof File => FileRules::class,
-			$this->model instanceof Page => PageRules::class,
-			$this->model instanceof Site => SiteRules::class,
-			$this->model instanceof User => UserRules::class,
+		// the model is always the first argument. It is taken from
+		// the arguments and not from this class, because the `before`
+		// hook might have replaced it with a modified model.
+		$model = array_shift($arguments);
+
+		$guards = match (true) {
+			$model instanceof File,
+			$model instanceof Page,
+			$model instanceof Site,
+			$model instanceof User => $model->guards(),
 			default => throw new Exception('Invalid model class') // @codeCoverageIgnore
 		};
 
-		if (method_exists($rules, $this->action) === true) {
-			$rules::{$this->action}(...array_values($arguments));
-		}
+		$guards->ensureExecutable(
+			$this->action,
+			...array_values($arguments)
+		);
 	}
 }

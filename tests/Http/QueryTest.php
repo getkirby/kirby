@@ -19,20 +19,20 @@ class QueryTest extends TestCase
 		$this->assertSame('value-b', $query->b);
 	}
 
-	public function testConstructWithString(): void
-	{
-		$query = new Query('?a=value-a&b=value-b');
-
-		$this->assertSame('value-a', $query->a);
-		$this->assertSame('value-b', $query->b);
-	}
-
 	public function testConstructWithEmptyValue(): void
 	{
 		$query = new Query('?a=&b=');
 
 		$this->assertSame('', $query->a);
 		$this->assertSame('', $query->b);
+	}
+
+	public function testConstructWithString(): void
+	{
+		$query = new Query('?a=value-a&b=value-b');
+
+		$this->assertSame('value-a', $query->a);
+		$this->assertSame('value-b', $query->b);
 	}
 
 	public function testIsEmpty(): void

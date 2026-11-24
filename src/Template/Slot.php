@@ -11,9 +11,6 @@ use Stringable;
  * a slot. Slot content is then stored
  * in the Slots collection.
  *
- * @package   Kirby Template
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -54,7 +51,8 @@ class Slot implements Stringable
 	}
 
 	/**
-	 * Used in the slot helper
+	 * Opens a slot in the current snippet;
+	 * used by the `slot()` helper
 	 */
 	public static function begin(string $name = 'default'): static|null
 	{
@@ -77,7 +75,8 @@ class Slot implements Stringable
 	}
 
 	/**
-	 * Used in the endslot() helper
+	 * Closes the last opened slot of the current
+	 * snippet; used by the `endslot()` helper
 	 */
 	public static function end(): void
 	{
@@ -114,7 +113,6 @@ class Slot implements Stringable
 
 		$this->open = true;
 
-		// capture the output
 		ob_start();
 	}
 

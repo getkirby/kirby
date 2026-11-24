@@ -9,9 +9,6 @@ use Stringable;
  * Represents the license status of a plugin.
  * Used to display the status in the Panel system view
  *
- * @package   Kirby Plugin
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
@@ -66,8 +63,7 @@ class LicenseStatus implements Stringable
 			return new static(...$status);
 		}
 
-		$status   = SystemLicenseStatus::from($status ?? 'unknown');
-		$status ??= SystemLicenseStatus::Unknown;
+		$status = SystemLicenseStatus::from($status ?? 'unknown');
 
 		return new static(
 			value: $status->value,
@@ -111,6 +107,8 @@ class LicenseStatus implements Stringable
 
 	/**
 	 * Returns the status information as an array
+	 *
+	 * @return array<string, string|null>
 	 */
 	public function toArray(): array
 	{

@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(PageUuid::class)]
 class PageUuidTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
+	public const string TMP = KIRBY_TMP_DIR . '/Uuid.PageUuid';
 
 	public function testClearRecursiveIncludesDrafts(): void
 	{
@@ -94,6 +94,23 @@ class PageUuidTest extends TestCase
 		$this->assertSame('page-a', Uuids::cache()->get($uuid->key()));
 	}
 
+	public function testFindByCacheWithZeroId(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => '0', 'content' => ['uuid' => 'zero']]
+				]
+			]
+		]);
+
+		$page = $this->app->page('0');
+		$page->uuid()->populate();
+
+		$uuid = new PageUuid('page://zero');
+		$this->assertSame($page, $uuid->model(true));
+	}
+
 	public function testFindByIndex(): void
 	{
 		$page = $this->app->page('page-a');
@@ -105,6 +122,12 @@ class PageUuidTest extends TestCase
 
 		// not found
 		$uuid = new PageUuid('page://does-not-exist');
+		$this->assertNull($uuid->model());
+	}
+
+	public function testFindByIndexWithZeroId(): void
+	{
+		$uuid = new PageUuid('page://0');
 		$this->assertNull($uuid->model());
 	}
 
@@ -133,90 +156,18 @@ class PageUuidTest extends TestCase
 		$this->assertSame($uuid->id(), $page->content()->get('uuid')->value());
 	}
 
+	public function testIdWithZero(): void
+	{
+		$uuid = new PageUuid('page://0');
+		$this->assertSame('0', $uuid->id());
+	}
+
 	public function testIndex(): void
 	{
 		$index = PageUuid::index();
 		$this->assertInstanceOf(Generator::class, $index);
 		$this->assertIsPage($index->current());
 		$this->assertSame(3, iterator_count($index));
-	}
-
-	public function testPopulateRecursiveIncludesDrafts(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'    => 'parent',
-						'content' => ['uuid' => 'my-parent'],
-						'drafts'  => [
-							[
-								'slug'    => 'draft',
-								'content' => ['uuid' => 'my-draft']
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$parent = $app->page('parent');
-		$draft  = $parent->drafts()->first();
-
-		$this->assertFalse($draft->uuid()->isCached());
-
-		$parent->uuid()->populate(recursive: true);
-
-		$this->assertTrue($parent->uuid()->isCached());
-		$this->assertTrue($draft->uuid()->isCached());
-	}
-
-	public function testRetrieveId(): void
-	{
-		$page = $this->app->page('page-a');
-		$this->assertSame('my-page', ModelUuid::retrieveId($page));
-	}
-
-	public function testToPermalink(): void
-	{
-		$page = $this->app->page('page-a');
-		$url  = 'https://getkirby.com/@/page/my-page';
-		$this->assertSame($url, $page->uuid()->toPermalink());
-		$this->assertSame($url, $page->uuid()->url());
-	}
-
-	public function testUrlWithLanguageWithCustomUrl(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'options' => [
-				'languages' => true
-			],
-			'languages' => [
-				[
-					'code'    => 'en',
-					'default' => true,
-					'url'     => '/'
-				],
-				[
-					'code'    => 'de',
-				]
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'foo', 'content' => ['uuid' => 'my-page']]
-				]
-			]
-		]);
-
-		$page = $app->page('foo');
-		$url  = 'https://getkirby.com/@/page/my-page';
-		$this->assertSame($url, $page->uuid()->url());
 	}
 
 	public static function multilangProvider(): array
@@ -295,6 +246,83 @@ class PageUuidTest extends TestCase
 		// the secondary language must not have the uuid in the content file
 		$this->assertNull($page->version()->read('de')['uuid'] ?? null);
 
-		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->url());
+		$this->assertStringStartsWith('https://getkirby.com/' . $language . '/@/page/', $page->uuid()->toPermalink());
+	}
+
+	public function testPopulateRecursiveIncludesDrafts(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'parent',
+						'content' => ['uuid' => 'my-parent'],
+						'drafts'  => [
+							[
+								'slug'    => 'draft',
+								'content' => ['uuid' => 'my-draft']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$parent = $app->page('parent');
+		$draft  = $parent->drafts()->first();
+
+		$this->assertFalse($draft->uuid()->isCached());
+
+		$parent->uuid()->populate(recursive: true);
+
+		$this->assertTrue($parent->uuid()->isCached());
+		$this->assertTrue($draft->uuid()->isCached());
+	}
+
+	public function testRetrieveId(): void
+	{
+		$page = $this->app->page('page-a');
+		$this->assertSame('my-page', ModelUuid::retrieveId($page));
+	}
+
+	public function testToPermalink(): void
+	{
+		$page = $this->app->page('page-a');
+		$url  = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $page->uuid()->toPermalink());
+	}
+
+	public function testUrlWithLanguageWithCustomUrl(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'en',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code'    => 'de',
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'foo', 'content' => ['uuid' => 'my-page']]
+				]
+			]
+		]);
+
+		$page = $app->page('foo');
+		$url  = 'https://getkirby.com/@/page/my-page';
+		$this->assertSame($url, $page->uuid()->toPermalink());
 	}
 }

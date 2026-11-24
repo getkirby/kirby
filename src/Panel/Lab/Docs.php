@@ -12,12 +12,10 @@ use Kirby\Toolkit\Str;
 /**
  * Docs for Vue components
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     4.0.0
+ *
  * @internal
  * @codeCoverageIgnore
  */
@@ -34,7 +32,7 @@ class Docs
 		$tmp   = static::root(true);
 		$files = Inventory::for($dist)['files'];
 
-		if (Dir::exists($tmp) === true) {
+		if (static::isDev() === true && Dir::exists($tmp) === true) {
 			$files = [...$files, ...Inventory::for($tmp)['files']];
 		}
 
@@ -50,6 +48,20 @@ class Docs
 		usort($docs, fn ($a, $b) => $a['text'] <=> $b['text']);
 
 		return $docs;
+	}
+
+	/**
+	 * Whether the Panel runs in dev mode, where the
+	 * Vite dev server writes fresh docs to `tmp`
+	 * @since 6.0.0
+	 */
+	public static function isDev(): bool
+	{
+		$kirby = App::instance();
+
+		return
+			$kirby->option('panel.dev', false) !== false &&
+			is_file($kirby->root('panel') . '/.vite-running') === true;
 	}
 
 	/**

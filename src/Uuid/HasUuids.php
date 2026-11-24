@@ -5,9 +5,6 @@ namespace Kirby\Uuid;
 /**
  * Adds UUID lookup to collections
  *
- * @package   Kirby Cms
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -26,12 +23,8 @@ trait HasUuids
 			$uuid = $scheme . '://' . substr($uuid, 1);
 		}
 
-		if (Uuid::is($uuid, $scheme) === true) {
-			// look up model by UUID while prioritizing
-			// $this collection when searching
-			return Uuid::for($uuid, $this)->model();
-		}
-
-		return null;
+		// look up model by UUID while prioritizing
+		// $this collection when searching
+		return Uuid::from($uuid, $scheme, $this)?->model();
 	}
 }

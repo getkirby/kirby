@@ -8,9 +8,6 @@ use Stringable;
  * Returns the latitude and longitude values
  * for exif location data if available
  *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -22,7 +19,7 @@ class Location implements Stringable
 	/**
 	 * Constructor
 	 *
-	 * @param array $exif The entire exif array
+	 * @param $exif The entire exif array
 	 */
 	public function __construct(array $exif)
 	{
@@ -44,19 +41,20 @@ class Location implements Stringable
 	}
 
 	/**
-	 * Returns the latitude
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
-	public function lat(): float|null
+	public function __debugInfo(): array
 	{
-		return $this->lat;
+		return $this->toArray();
 	}
 
 	/**
-	 * Returns the longitude
+	 * Echos the entire location as lat, lng
 	 */
-	public function lng(): float|null
+	public function __toString(): string
 	{
-		return $this->lng;
+		return trim($this->lat() . ', ' . $this->lng(), ', ');
 	}
 
 	/**
@@ -72,6 +70,22 @@ class Location implements Stringable
 		$flip = ($hemi === 'W' || $hemi === 'S') ? -1 : 1;
 
 		return $flip * ($degrees + $minutes / 60 + $seconds / 3600);
+	}
+
+	/**
+	 * Returns the latitude
+	 */
+	public function lat(): float|null
+	{
+		return $this->lat;
+	}
+
+	/**
+	 * Returns the longitude
+	 */
+	public function lng(): float|null
+	{
+		return $this->lng;
 	}
 
 	/**
@@ -102,22 +116,5 @@ class Location implements Stringable
 			'lat' => $this->lat(),
 			'lng' => $this->lng()
 		];
-	}
-
-	/**
-	 * Echos the entire location as lat, lng
-	 */
-	public function __toString(): string
-	{
-		return trim($this->lat() . ', ' . $this->lng(), ', ');
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
 	}
 }

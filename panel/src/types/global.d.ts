@@ -1,13 +1,18 @@
-/**
- * Forces TypeScript to expand a named type alias into its full shape.
- * This makes IDE hover cards show the actual properties instead of
- * the opaque type name (e.g. `{ email: string }` instead of `UserState`).
- */
-type Prettify<T> = { [K in keyof T]: T[K] } & {};
+import type Panel from "@/panel/panel";
 
-/**
- * Temporary stand-in for types not yet defined during the TypeScript migration.
- * Search for `TODO` to find all spots that still need proper types.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type TODO = any;
+declare global {
+	interface Window {
+		panel: Panel;
+		panelPlugins?: string[];
+		panelState: Record<string, unknown>;
+	}
+
+	/**
+	 * Forces TypeScript to expand a named type alias into its full shape.
+	 * This makes IDE hover cards show the actual properties instead of
+	 * the opaque type name (e.g. `{ email: string }` instead of `UserState`).
+	 */
+	type Prettify<T> = { [K in keyof T]: T[K] } & {};
+}
+
+export {};

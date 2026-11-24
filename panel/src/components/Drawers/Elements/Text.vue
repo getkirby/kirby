@@ -1,5 +1,5 @@
 <template>
-	<k-text v-if="text" :html="text" />
+	<k-text v-if="text" :text="text" />
 	<k-box v-else theme="info">{{ empty }}</k-box>
 </template>
 
@@ -26,6 +26,9 @@ export const props = {
 
 /**
  * @displayName DrawerText
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props]

@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * Extension of the Collection class that
  * introduces `Roles::factory()` to convert an
@@ -10,18 +12,17 @@ namespace Kirby\Cms;
  * a `Roles::load()` method that handles loading
  * role definitions from disk.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Role>
+ * @extends Collection<Role>
  */
 class Roles extends Collection
 {
 	/**
 	 * All registered roles methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
@@ -35,18 +36,17 @@ class Roles extends Collection
 	 * use `$user->roles()` without additional filters.
 	 *
 	 * @return $this|static
-	 * @throws \Exception
 	 */
 	public function canBeChanged(): static
 	{
 		if (App::instance()->user()?->isAdmin() !== true) {
 			return $this->filter('isAccessible', true)->filter(function ($role) {
-				$newUser = new User([
+				$user = new User([
 					'email' => 'test@getkirby.com',
 					'role'  => $role->id()
 				]);
 
-				return $newUser->permissions()->can('changeRole');
+				return $user->guards()->isAvailable('changeRole');
 			});
 		}
 
@@ -61,24 +61,30 @@ class Roles extends Collection
 	 * Use with `$kirby->roles()`.
 	 *
 	 * @return $this|static
-	 * @throws \Exception
 	 */
 	public function canBeCreated(): static
 	{
 		if (App::instance()->user()?->isAdmin() !== true) {
 			return $this->filter('isAccessible', true)->filter(function ($role) {
-				$newUser = new User([
+				$user = new User([
 					'email' => 'test@getkirby.com',
 					'role'  => $role->id()
 				]);
 
-				return $newUser->permissions()->can('create');
+				return $user->guards()->isAvailable('create');
 			});
 		}
 
 		return $this;
 	}
 
+	/**
+	 * Creates a roles collection from the given role definitions
+	 * and always includes the admin role
+	 *
+	 * @param array<array<string, mixed>> $roles
+	 * @param array<string, mixed> $inject Props to add to each role if not defined
+	 */
 	public static function factory(array $roles, array $inject = []): static
 	{
 		$collection = new static();
@@ -98,6 +104,12 @@ class Roles extends Collection
 		return $collection->sort('name', 'asc');
 	}
 
+	/**
+	 * Loads all roles from plugins and the given blueprints
+	 * directory and always includes the admin role
+	 *
+	 * @param array<string, mixed> $inject Props to add to each role if not defined
+	 */
 	public static function load(string|null $root = null, array $inject = []): static
 	{
 		$kirby = App::instance();
@@ -109,7 +121,7 @@ class Roles extends Collection
 				continue;
 			}
 
-			// callback option can be return array or blueprint file path
+			// the callback can return an array or a blueprint file path
 			if (is_callable($blueprint) === true) {
 				$blueprint = $blueprint($kirby);
 			}
@@ -125,9 +137,7 @@ class Roles extends Collection
 		// load roles from directory
 		if ($root !== null) {
 			foreach (glob($root . '/*.yml') as $file) {
-				$filename = basename($file);
-
-				if ($filename === 'default.yml') {
+				if (basename($file) === 'default.yml') {
 					continue;
 				}
 
