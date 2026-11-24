@@ -27,10 +27,14 @@ import { props as RadioInput } from "../Input/RadioInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-radio-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, RadioInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		/**
 		 * The options with an `[unknown]` option for each value without one

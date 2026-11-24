@@ -6,15 +6,15 @@ use Exception;
 use Kirby\Content\PlainTextStorage;
 use Kirby\Content\VersionId;
 use Kirby\Data\Data;
-use Kirby\Exception\LogicException;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
 class FileChangeTemplateTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileChangeTemplate';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileChangeTemplate';
 
 	public function testChangeTemplate(): void
 	{
@@ -27,14 +27,14 @@ class FileChangeTemplateTest extends ModelTestCase
 			],
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'a'
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'a'
 						],
-						[
-							'type' => 'files',
-							'template' => 'b'
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'b'
 						]
 					]
 				],
@@ -108,9 +108,233 @@ class FileChangeTemplateTest extends ModelTestCase
 		// changing to another template
 		$modified = $file->changeTemplate('b');
 		$this->assertSame('b', $modified->template());
-		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Caption', $modified->caption()->value(), 'The caption should be kept because the info field has no value');
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
+	}
+
+	public function testChangeTemplateDefault(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'fields' => [
+						'files-a' => [
+							'type' => 'filelist'
+						],
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-b'
+						]
+					]
+				],
+				'files/for-default-b' => [
+					'title' => 'Alternative B'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'for-default-a']
+		]);
+
+		$this->assertSame('for-default-a', $file->template());
+		$this->assertSame('for-default-a', $file->content()->get('template')->value());
+
+		$modified = $file->changeTemplate('default');
+		$this->assertSame('default', $modified->template());
+		$this->assertNull($modified->content()->get('template')->value());
+
+		$back = $modified->changeTemplate('for-default-b');
+		$this->assertSame('for-default-b', $back->template());
+		$this->assertSame('for-default-b', $back->content()->get('template')->value());
+
+		$modified = $back->changeTemplate(null);
+		$this->assertSame('default', $modified->template());
+		$this->assertNull($modified->content()->get('template')->value());
+	}
+
+	public function testChangeTemplateInvalidAccept(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-b'
+						],
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-c'
+						],
+						'files-c' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-default-d'
+						]
+					]
+				],
+				'files/for-default-b' => [
+					'title'  => 'Alternative B',
+					'accept' => 'image'
+				],
+				'files/for-default-c' => [
+					'title'  => 'Alternative C'
+				],
+				'files/for-default-d' => [
+					'title'  => 'Alternative D'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $page,
+			'content'  => ['template' => 'for-default-a']
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
+
+		$file->changeTemplate('for-default-b');
+	}
+
+	public function testChangeTemplateManipulate(): void
+	{
+		$testImage = static::FIXTURES . '/test.jpg';
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-a'
+						],
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['template' => 'manipulate-a']
+		]);
+
+		F::copy($testImage, $page->root() . '/test.jpg');
+		F::write($page->root() . '/test.jpg.txt', 'Template: manipulate-a');
+
+		$file = $page->file('test.jpg');
+		$this->assertSame('jpg', $file->extension());
+		$this->assertSame(128, $file->width());
+		$this->assertSame(128, $file->height());
+
+		$file = $file->changeTemplate('manipulate-b');
+		$this->assertSame('webp', $file->extension());
+		$this->assertSame(100, $file->width());
+		$this->assertSame(100, $file->height());
+	}
+
+	public function testChangeTemplateManipulateNonImage(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test-default' => [
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-a'
+						],
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'manipulate-b'
+						]
+					]
+				],
+				'files/manipulate-a' => [
+					'title'  => 'Manipulate A',
+				],
+				'files/manipulate-b' => [
+					'title'  => 'Manipulate B',
+					'create' => [
+						'width'  => 100,
+						'height' => 100,
+						'format' => 'webp'
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test-default',
+						'files' => [
+							[
+								'filename' => 'test.pdf',
+								'content'  => ['template' => 'manipulate-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug'     => 'test',
+			'template' => 'test-default',
+		]);
+
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $page,
+			'content'  => ['template' => 'manipulate-a']
+		]);
+
+		$newFile = $file->changeTemplate('manipulate-b');
+
+		$this->assertSame('pdf', $file->extension());
+		$this->assertSame('pdf', $newFile->extension());
 	}
 
 	public function testChangeTemplateMultilang(): void
@@ -121,14 +345,14 @@ class FileChangeTemplateTest extends ModelTestCase
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'a'
+					'fields' => [
+						'files-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'a'
 						],
-						[
-							'type' => 'files',
-							'template' => 'b'
+						'files-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'b'
 						]
 					]
 				],
@@ -256,237 +480,13 @@ class FileChangeTemplateTest extends ModelTestCase
 		$contentFR = $modified->content('fr');
 
 		$this->assertSame('This is the text', $contentEN->text()->value());
-		$this->assertNull($contentEN->caption()->value(), 'The caption should be null because it turned into an info field');
+		$this->assertSame('This is the caption', $contentEN->caption()->value(), 'The caption should be kept because the info field has no value');
 
 		$this->assertSame('Das ist der Text', $contentDE->text()->value());
-		$this->assertNull($contentDE->caption()->value(), 'The caption should be null because it turned into an info field');
+		$this->assertSame('Das ist die Caption', $contentDE->caption()->value(), 'The caption should be kept because the info field has no value');
 
 		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
-		$this->assertNull($contentFR->caption()->value(), 'should fall back to the default language');
-	}
-
-	public function testChangeTemplateDefault(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
-						],
-						[
-							'type' => 'files',
-							'template' => 'for-default-b'
-						]
-					]
-				],
-				'files/for-default-b' => [
-					'title' => 'Alternative B'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test-default',
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'content'  => ['template' => 'for-default-a']
-		]);
-
-		$this->assertSame('for-default-a', $file->template());
-		$this->assertSame('for-default-a', $file->content()->get('template')->value());
-
-		$modified = $file->changeTemplate('default');
-		$this->assertSame('default', $modified->template());
-		$this->assertNull($modified->content()->get('template')->value());
-
-		$back = $modified->changeTemplate('for-default-b');
-		$this->assertSame('for-default-b', $back->template());
-		$this->assertSame('for-default-b', $back->content()->get('template')->value());
-
-		$modified = $back->changeTemplate(null);
-		$this->assertSame('default', $modified->template());
-		$this->assertNull($modified->content()->get('template')->value());
-	}
-
-	public function testChangeTemplateInvalidAccept(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'for-default-b'
-						],
-						[
-							'type' => 'files',
-							'template' => 'for-default-c'
-						],
-						[
-							'type' => 'files',
-							'template' => 'for-default-d'
-						]
-					]
-				],
-				'files/for-default-b' => [
-					'title'  => 'Alternative B',
-					'accept' => 'image'
-				],
-				'files/for-default-c' => [
-					'title'  => 'Alternative C'
-				],
-				'files/for-default-d' => [
-					'title'  => 'Alternative D'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test-default',
-		]);
-
-		$file = new File([
-			'filename' => 'test.pdf',
-			'parent'   => $page,
-			'content'  => ['template' => 'for-default-a']
-		]);
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The template for the file "test/test.pdf" cannot be changed to "for-default-b" (valid: "for-default-c, for-default-d")');
-
-		$file->changeTemplate('for-default-b');
-	}
-
-	public function testChangeTemplateManipulate(): void
-	{
-		$testImage = static::FIXTURES . '/test.jpg';
-
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'manipulate-a'
-						],
-						[
-							'type' => 'files',
-							'template' => 'manipulate-b'
-						]
-					]
-				],
-				'files/manipulate-a' => [
-					'title'  => 'Manipulate A',
-				],
-				'files/manipulate-b' => [
-					'title'  => 'Manipulate B',
-					'create' => [
-						'width'  => 100,
-						'height' => 100,
-						'format' => 'webp'
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test-default',
-		]);
-
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'content'  => ['template' => 'manipulate-a']
-		]);
-
-		F::copy($testImage, $page->root() . '/test.jpg');
-		F::write($page->root() . '/test.jpg.txt', 'Template: manipulate-a');
-
-		$file = $page->file('test.jpg');
-		$this->assertSame('jpg', $file->extension());
-		$this->assertSame(128, $file->width());
-		$this->assertSame(128, $file->height());
-
-		$file = $file->changeTemplate('manipulate-b');
-		$this->assertSame('webp', $file->extension());
-		$this->assertSame(100, $file->width());
-		$this->assertSame(100, $file->height());
-	}
-
-	public function testChangeTemplateManipulateNonImage(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test-default' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'manipulate-a'
-						],
-						[
-							'type' => 'files',
-							'template' => 'manipulate-b'
-						]
-					]
-				],
-				'files/manipulate-a' => [
-					'title'  => 'Manipulate A',
-				],
-				'files/manipulate-b' => [
-					'title'  => 'Manipulate B',
-					'create' => [
-						'width'  => 100,
-						'height' => 100,
-						'format' => 'webp'
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test-default',
-						'files' => [
-							[
-								'filename' => 'test.pdf',
-								'content'  => ['template' => 'manipulate-a']
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'template' => 'test-default',
-		]);
-
-		$file = new File([
-			'filename' => 'test.pdf',
-			'parent'   => $page,
-			'content'  => ['template' => 'manipulate-a']
-		]);
-
-		$newFile = $file->changeTemplate('manipulate-b');
-
-		$this->assertSame('pdf', $file->extension());
-		$this->assertSame('pdf', $newFile->extension());
+		$this->assertSame('This is the caption', $contentFR->caption()->value(), 'should fall back to the default language');
 	}
 
 	public function testChangeTemplateWhenStorageFails(): void
@@ -500,11 +500,11 @@ class FileChangeTemplateTest extends ModelTestCase
 					'sections' => [
 						[
 							'type' => 'files',
-							'template' => 'a'
+							'blueprint' => 'a'
 						],
 						[
 							'type' => 'files',
-							'template' => 'b'
+							'blueprint' => 'b'
 						]
 					]
 				],

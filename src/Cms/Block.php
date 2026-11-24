@@ -14,44 +14,29 @@ use Throwable;
  * Represents a single block
  * which can be inspected further or
  * converted to HTML
- * @since 3.5.0
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  *
- * @extends \Kirby\Cms\Item<\Kirby\Cms\Blocks>
+ * @extends Item<Blocks>
  */
 class Block extends Item implements Stringable
 {
 	use HasMethods;
 	use HasModels;
 
-	public const ITEMS_CLASS = Blocks::class;
+	public const string ITEMS_CLASS = Blocks::class;
 
 	protected Content $content;
 	protected bool $isHidden;
 	protected string $type;
 
 	/**
-	 * Proxy for content fields
-	 */
-	public function __call(string $method, array $args = []): mixed
-	{
-		// block methods
-		if ($this->hasMethod($method)) {
-			return $this->callMethod($method, $args);
-		}
-
-		return $this->content()->get($method);
-	}
-
-	/**
 	 * Creates a new block object
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @param array<string, mixed> $params
+	 * @throws InvalidArgumentException If the block type is missing
 	 */
 	public function __construct(array $params)
 	{
@@ -84,6 +69,19 @@ class Block extends Item implements Stringable
 	}
 
 	/**
+	 * Proxy for content fields
+	 */
+	public function __call(string $method, array $args = []): mixed
+	{
+		// block methods
+		if ($this->hasMethod($method) === true) {
+			return $this->callMethod($method, $args);
+		}
+
+		return $this->content()->get($method);
+	}
+
+	/**
 	 * Converts the object to a string
 	 */
 	public function __toString(): string
@@ -101,6 +99,8 @@ class Block extends Item implements Stringable
 
 	/**
 	 * Controller for the block snippet
+	 *
+	 * @return array{block: static, content: Content, data: static, id: string, prev: Block|null, next: Block|null}
 	 */
 	#[BlockCollectionAccess]
 	public function controller(): array
@@ -129,7 +129,8 @@ class Block extends Item implements Stringable
 	/**
 	 * Constructs a block object with registering blocks models
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @param array<string, mixed> $params
+	 * @throws InvalidArgumentException If the block type is missing
 	 */
 	public static function factory(array $params): static
 	{
@@ -141,7 +142,7 @@ class Block extends Item implements Stringable
 	 */
 	public function isEmpty(): bool
 	{
-		return empty($this->content()->toArray());
+		return $this->content()->toArray() === [];
 	}
 
 	/**
@@ -162,24 +163,22 @@ class Block extends Item implements Stringable
 	}
 
 	/**
-	 * Returns the sibling collection that filtered by block status
+	 * Returns the sibling collection filtered by block status
 	 */
 	protected function siblingsCollection(): Blocks
 	{
-		return $this->siblings->filter('isHidden', $this->isHidden());
-	}
+		$isHidden = $this->isHidden();
 
-	/**
-	 * Returns the block type
-	 */
-	public function type(): string
-	{
-		return $this->type;
+		return $this->siblings->filter(
+			fn ($block) => $block->isHidden() === $isHidden
+		);
 	}
 
 	/**
 	 * The result is being sent to the editor
 	 * via the API in the panel
+	 *
+	 * @return array{content: array<string, mixed>, id: string, isHidden: bool, type: string}
 	 */
 	public function toArray(): array
 	{
@@ -209,8 +208,9 @@ class Block extends Item implements Stringable
 	#[BlockCollectionAccess]
 	public function toHtml(): string
 	{
+		$kirby = $this->parent()->kirby();
+
 		try {
-			$kirby = $this->parent()->kirby();
 			return (string)$kirby->snippet(
 				'blocks/' . $this->type(),
 				$this->controller(),
@@ -225,5 +225,13 @@ class Block extends Item implements Stringable
 
 			return '';
 		}
+	}
+
+	/**
+	 * Returns the block type
+	 */
+	public function type(): string
+	{
+		return $this->type;
 	}
 }

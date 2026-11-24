@@ -5,16 +5,22 @@ namespace Kirby\Form\Mixin;
 use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 
+/**
+ * Provides access to the content model and the Kirby instance
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Model
 {
-	protected ModelWithContent $model;
+	protected ModelWithContent|null $model = null;
 
 	/**
 	 * Returns the Kirby instance
 	 */
 	public function kirby(): App
 	{
-		return $this->model->kirby();
+		return $this->model()->kirby();
 	}
 
 	/**
@@ -22,14 +28,6 @@ trait Model
 	 */
 	public function model(): ModelWithContent
 	{
-		return $this->model;
-	}
-
-	/**
-	 * Sets the parent model
-	 */
-	protected function setModel(ModelWithContent|null $model = null): void
-	{
-		$this->model = $model ?? App::instance()->site();
+		return $this->model ?? App::instance()->site();
 	}
 }

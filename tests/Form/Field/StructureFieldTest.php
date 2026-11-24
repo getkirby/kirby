@@ -4,81 +4,12 @@ namespace Kirby\Form\Field;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Cms\Structure;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(StructureField::class)]
 class StructureFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'text' => [
-					'type' => 'text'
-				]
-			]
-		]);
-
-		$this->assertSame('structure', $field->type());
-		$this->assertSame('structure', $field->name());
-		$this->assertNull($field->limit());
-		$this->assertIsArray($field->fields());
-		$this->assertSame([], $field->value());
-		$this->assertTrue($field->save());
-	}
-
-	public function testFillWithEmptyValue(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'test' => [
-					'type' => 'text'
-				],
-			],
-		]);
-
-		$field->fill($value = [
-			[
-				'test' => 'Test A'
-			],
-			[
-				'test' => 'Test B'
-			]
-		]);
-
-		$this->assertSame($value, $field->toFormValue());
-
-		$field->fillWithEmptyValue();
-
-		$this->assertSame([], $field->toFormValue());
-	}
-
-
-	public function testTagsFieldInStructure(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'tags' => [
-					'label' => 'Tags',
-					'type'  => 'tags'
-				]
-			],
-			'value' => [
-				[
-					'tags' => 'a, b'
-				]
-			]
-		]);
-
-		$expected = [
-			[
-				'tags' => 'a, b'
-			]
-		];
-
-		$this->assertSame($expected, $field->data());
-		$this->assertSame('a, b', $field->data()[0]['tags']);
-		$this->assertSame(['a', 'b'], $field->value()[0]['tags']);
-	}
-
 	public function testColumnsFromFields(): void
 	{
 		$field = $this->field('structure', [
@@ -95,16 +26,56 @@ class StructureFieldTest extends TestCase
 		$expected = [
 			'a' => [
 				'type' => 'text',
-				'label' => 'a',
+				'label' => 'A',
 				'mobile' => true // the first column should be automatically kept on mobile
 			],
 			'b' => [
 				'type' => 'text',
-				'label' => 'b',
+				'label' => 'B',
 			],
 		];
 
 		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsFromUnsaveableFields(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'info'
+				]
+			],
+		]);
+
+		$expected = [
+			'a' => [
+				'type' => 'text',
+				'label' => 'A',
+				'mobile' => true // the first column should be automatically kept on mobile
+			],
+		];
+
+		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsLowerCaseNames(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'camelCase' => true
+			],
+			'fields' => [
+				'camelCase' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame(['camelcase'], array_keys($field->columns()));
 	}
 
 	public function testColumnsWithCustomMobileSetup(): void
@@ -129,11 +100,31 @@ class StructureFieldTest extends TestCase
 			'b' => [
 				'mobile' => true,
 				'type'   => 'text',
-				'label'  => 'b',
+				'label'  => 'B',
 			],
 		];
 
 		$this->assertSame($expected, $field->columns());
+	}
+
+	public function testColumnsWithFalse(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'a' => true,
+				'b' => false
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame(['a'], array_keys($field->columns()));
 	}
 
 	public function testColumnsWithI18nLabel(): void
@@ -165,26 +156,194 @@ class StructureFieldTest extends TestCase
 		$this->assertSame($expected, $field->columns());
 	}
 
-	public function testLowerCaseColumnsNames(): void
+	public function testColumnsWithLabel(): void
 	{
 		$field = $this->field('structure', [
 			'columns' => [
-				'camelCase' => true
+				'a' => 'Headline'
 			],
 			'fields' => [
-				'camelCase' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
 					'type' => 'text'
 				]
 			],
 		]);
 
-		$this->assertSame(['camelcase'], array_keys($field->columns()));
+		$this->assertSame('Headline', $field->columns()['a']['label']);
 	}
 
-	public function testMin(): void
+	public function testColumnsWithNull(): void
+	{
+		$field = $this->field('structure', [
+			'columns' => [
+				'a' => null
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame('A', $field->columns()['a']['label']);
+	}
+
+	public function testColumnsWithOnlyFalse(): void
+	{
+		// only hidden columns show all other fields
+		$field = $this->field('structure', [
+			'columns' => [
+				'b' => false
+			],
+			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$this->assertSame(['a'], array_keys($field->columns()));
+	}
+
+	public function testDefault(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
+				'a' => [
+					'type' => 'text'
+				],
+				'b' => [
+					'type' => 'text',
+				]
+			],
+			'default' => [
+				[
+					'a' => 'A',
+					'b' => 'B'
+				]
+			]
+		]);
+
+		$this->assertSame('A', $field->default()[0]['a']);
+		$this->assertSame('B', $field->default()[0]['b']);
+	}
+
+	public function testDuplicate(): void
+	{
+		$field = $this->field('structure');
+		$this->assertTrue($field->duplicate());
+
+		$field = $this->field('structure', [
+			'duplicate' => false
+		]);
+		$this->assertFalse($field->duplicate());
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			],
+			'empty' => 'Test'
+		]);
+		$this->assertSame('Test', $field->empty());
+
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			],
+			'empty' => ['en' => 'Test', 'de' => 'Töst']
+		]);
+		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFillWithInvalidRows(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$field->fill("- text: A\n- B\n- text: C");
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'C']
+		], $field->toFormValue());
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'C']
+		], $field->toStoredValue());
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('A only');
+
+		$this->assertSame([], $field->toFormValue());
+		$this->assertSame([], $field->toStoredValue());
+	}
+
+	public function testFillWithStructure(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'text' => [
+					'type' => 'text'
+				]
+			]
+		]);
+
+		$structure = Structure::factory([
+			['text' => 'A'],
+			['text' => 'B']
+		]);
+
+		$field->fill($structure);
+
+		$this->assertSame([
+			['text' => 'A'],
+			['text' => 'B']
+		], $field->toStoredValue());
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
+				'title' => [
+					'type' => 'text'
+				]
+			],
+			'required' => true
+		]);
+		$this->assertFalse($field->isValid());
+
+		$field = $this->field('structure', [
+			'fields' => [
+				'notice' => [
+					'type' => 'info'
+				],
 				'title' => [
 					'type' => 'text'
 				]
@@ -192,13 +351,9 @@ class StructureFieldTest extends TestCase
 			'value' => [
 				['title' => 'a'],
 			],
-			'min' => 2
+			'required' => true
 		]);
-
-		$this->assertFalse($field->isValid());
-		$this->assertSame(2, $field->min());
-		$this->assertTrue($field->required());
-		$this->assertArrayHasKey('min', $field->errors());
+		$this->assertTrue($field->isValid());
 	}
 
 	public function testMax(): void
@@ -221,12 +376,157 @@ class StructureFieldTest extends TestCase
 		$this->assertArrayHasKey('max', $field->errors());
 	}
 
-	public function testNestedStructures(): void
+	public function testMin(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'title' => [
+					'type' => 'text'
+				]
+			],
+			'value' => [
+				['title' => 'a'],
+			],
+			'min' => 2
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(2, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('structure', []);
+		$props = $field->props();
+
+		// makes it easier to compare the arrays
+		ksort($props);
+
+		$expected = [
+			'autofocus' => false,
+			'batch'     => false,
+			'columns'   => [],
+			'disabled'  => false,
+			'duplicate' => true,
+			'empty'     => null,
+			'fields'    => [],
+			'help'      => null,
+			'hidden'    => false,
+			'label'     => 'Structure',
+			'limit'     => null,
+			'max'       => null,
+			'min'       => null,
+			'name'      => 'structure',
+			'prepend'   => false,
+			'required'  => false,
+			'saveable'  => true,
+			'sortBy'    => null,
+			'sortable'  => true,
+			'translate' => true,
+			'type'      => 'structure',
+			'when'      => null,
+			'width'     => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testRequired(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'title' => [
+					'type' => 'text'
+				]
+			],
+			'required' => true
+		]);
+
+		$this->assertTrue($field->required());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testReset(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'test' => [
+					'type' => 'text'
+				],
+			],
+		]);
+
+		$field->fill($value = [
+			[
+				'test' => 'Test A'
+			],
+			[
+				'test' => 'Test B'
+			]
+		]);
+		$this->assertSame($value, $field->toFormValue());
+
+		$field->reset();
+		$this->assertSame([], $field->toFormValue());
+	}
+
+	public function testSubmitWithDisabledFieldAndDefaultValue(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'a' => [
+					'type'     => 'text',
+					'default'  => 'Default Title',
+					'disabled' => true
+				],
+				'b' => [
+					'type' => 'text'
+				]
+			],
+		]);
+
+		$field->submit([
+			[
+				'a' => 'A',
+				'b' => 'B'
+			]
+		]);
+
+		$value = $field->toStoredValue();
+
+		$this->assertSame('A', $value[0]['a']);
+		$this->assertSame('B', $value[0]['b']);
+	}
+
+	public function testToFormValueFloatsWithNonUsLocale(): void
+	{
+		$field = $this->field('structure', [
+			'fields' => [
+				'number' => [
+					'type' => 'number'
+				]
+			],
+			'value' => [
+				[
+					'number' => 3.2
+				]
+			]
+		]);
+
+		$this->assertIsFloat($field->toFormValue()[0]['number']);
+	}
+
+	public function testToFormValueNestedStructures(): void
 	{
 		$model = new Page([
 			'slug' => 'test'
 		]);
 
+		/**
+		 * @var StructureField $field
+		 */
 		$field = $this->field('structure', [
 			'name'   => 'mothers',
 			'model'  => $model,
@@ -265,12 +565,12 @@ class StructureFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertEquals($value, $field->value()); // cannot use strict assertion (array order)
-		$this->assertEquals($value, $field->data()); // cannot use strict assertion (array order)
+		$this->assertEquals($value, $field->toFormValue()); // cannot use strict assertion (array order)
+		$this->assertEquals($value, $field->toStoredValue()); // cannot use strict assertion (array order)
 
 		// empty mother form
 		$motherForm = $field->form();
-		$data       = $motherForm->data();
+		$data       = $motherForm->toStoredValues();
 
 		$expected = [
 			'name'     => '',
@@ -285,75 +585,106 @@ class StructureFieldTest extends TestCase
 		$motherForm = $field->form()->fill(input: $value[0], passthrough: true);
 		$expected   = $value[0];
 
-		$this->assertEquals($expected, $motherForm->data()); // cannot use strict assertion (array order)
+		$this->assertEquals($expected, $motherForm->toStoredValues()); // cannot use strict assertion (array order)
 
-		$childrenField = $motherForm->fields()->children();
-
+		/**
+		 * @var StructureField $childrenField
+		 */
+		$childrenField = $motherForm->field('children');
 		$this->assertSame('structure', $childrenField->type());
 		$this->assertSame($model, $childrenField->model());
 
 		// empty children form
 		$childrenForm = $childrenField->form();
-
-		$this->assertSame('', $childrenForm->data()['name']);
+		$this->assertSame('', $childrenForm->toStoredValues()['name']);
 
 		// filled children form
 		$childrenForm = $childrenField->form()->fill(input: ['name' => 'Test'], passthrough: true);
 
-		$this->assertSame('Test', $childrenForm->data()['name']);
+		$this->assertSame('Test', $childrenForm->toStoredValues()['name']);
 
-		// children name field
+		/**
+		 * @var StructureField $childrenNameField
+		 */
 		$childrenNameField = $childrenField->form()->fields()->name();
-
 		$this->assertSame('text', $childrenNameField->type());
 		$this->assertSame($model, $childrenNameField->model());
-		$this->assertSame('', $childrenNameField->data());
+		$this->assertSame('', $childrenNameField->toStoredValue());
 	}
 
-	public function testFloatsWithNonUsLocale(): void
+	public function testToFormValueTagsFieldInStructure(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
-				'number' => [
-					'type' => 'number'
+				'tags' => [
+					'label' => 'Tags',
+					'type'  => 'tags'
 				]
 			],
 			'value' => [
 				[
-					'number' => 3.2
+					'tags' => 'a, b'
 				]
 			]
 		]);
 
-		$this->assertIsFloat($field->data()[0]['number']);
+		$expected = [
+			[
+				'tags' => 'a, b'
+			]
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
+		$this->assertSame('a, b', $field->toStoredValue()[0]['tags']);
+		$this->assertSame(['a', 'b'], $field->toFormValue()[0]['tags']);
 	}
 
-	public function testEmpty(): void
+	public function testToStoredValueToggleFieldInStructure(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
-				'text' => [
-					'type' => 'text'
+				'featured' => [
+					'type' => 'toggle'
 				]
 			],
-			'empty' => 'Test'
+			'value' => [
+				['featured' => true],
+				['featured' => 'false']
+			]
 		]);
 
-		$this->assertSame('Test', $field->empty());
+		$expected = [
+			['featured' => 'true'],
+			['featured' => 'false']
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
+		$this->assertTrue($field->toFormValue()[0]['featured']);
 	}
 
-	public function testTranslatedEmpty(): void
+	public function testToStoredValueWithNonValueField(): void
 	{
 		$field = $this->field('structure', [
 			'fields' => [
-				'text' => [
+				'name' => [
 					'type' => 'text'
+				],
+				'note' => [
+					'type' => 'info'
 				]
 			],
-			'empty' => ['en' => 'Test', 'de' => 'Töst']
+			'value' => [
+				['name' => 'A'],
+				['name' => 'B']
+			]
 		]);
 
-		$this->assertSame('Test', $field->empty());
+		$expected = [
+			['name' => 'A'],
+			['name' => 'B']
+		];
+
+		$this->assertSame($expected, $field->toStoredValue());
 	}
 
 	public function testTranslate(): void
@@ -413,101 +744,19 @@ class StructureFieldTest extends TestCase
 		$this->assertTrue($props['b']['disabled']);
 	}
 
-	public function testDefault(): void
+	public function testValidationsInSubclass(): void
 	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'a' => [
-					'type' => 'text'
-				],
-				'b' => [
-					'type' => 'text',
-				]
+		$field = new class (
+			model: new Page(['slug' => 'test']),
+			fields: [
+				'text' => ['type' => 'text']
 			],
-			'default' => [
-				[
-					'a' => 'A',
-					'b' => 'B'
-				]
+			value: [
+				['text' => 'foo']
 			]
-		]);
+		) extends StructureField {};
 
-		$this->assertSame('A', $field->data(true)[0]['a']);
-		$this->assertSame('B', $field->data(true)[0]['b']);
-	}
-
-	public function testRequiredProps(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'title' => [
-					'type' => 'text'
-				]
-			],
-			'required' => true
-		]);
-
-		$this->assertTrue($field->required());
-		$this->assertSame(1, $field->min());
-	}
-
-	public function testRequiredInvalid(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'title' => [
-					'type' => 'text'
-				]
-			],
-			'required' => true
-		]);
-
-		$this->assertFalse($field->isValid());
-	}
-
-	public function testRequiredValid(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'title' => [
-					'type' => 'text'
-				]
-			],
-			'value' => [
-				['title' => 'a'],
-			],
-			'required' => true
-		]);
-
-		$this->assertTrue($field->isValid());
-	}
-
-	public function testSubmitWithDisabledFieldAndDefaultValue(): void
-	{
-		$field = $this->field('structure', [
-			'fields' => [
-				'a' => [
-					'type'     => 'text',
-					'default'  => 'Default Title',
-					'disabled' => true
-				],
-				'b' => [
-					'type' => 'text'
-				]
-			],
-		]);
-
-		$field->submit([
-			[
-				'a' => 'A',
-				'b' => 'B'
-			]
-		]);
-
-		$value = $field->toStoredValue();
-
-		$this->assertSame('A', $value[0]['a']);
-		$this->assertSame('B', $value[0]['b']);
+		$this->assertSame([], $field->errors());
 	}
 
 	public function testValidationsInvalid(): void

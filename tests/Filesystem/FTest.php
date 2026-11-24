@@ -14,8 +14,8 @@ use stdClass;
 #[CoversClass(F::class)]
 class FTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/f';
-	public const TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
+	public const string FIXTURES = __DIR__ . '/fixtures/f';
+	public const string TMP      = KIRBY_TMP_DIR . '/Filesystem.F';
 
 	protected bool $hasErrorHandler = false;
 	protected string $sample;
@@ -95,10 +95,11 @@ class FTest extends TestCase
 		$this->assertSame('test.jpg', F::extension($this->sample, 'jpg'));
 	}
 
-	public function testExtensionWithoutFile(): void
+	public function testExtensions(): void
 	{
-		$this->assertSame('', F::extension());
-		$this->assertSame('.jpg', F::extension(null, 'jpg'));
+		$this->assertSame(array_keys(Mime::types()), F::extensions());
+		$this->assertSame(F::$types['image'], F::extensions('image'));
+		$this->assertSame([], F::extensions('unknown-type'));
 	}
 
 	public function testExtensionToType(): void
@@ -107,11 +108,10 @@ class FTest extends TestCase
 		$this->assertFalse(F::extensionToType('something'));
 	}
 
-	public function testExtensions(): void
+	public function testExtensionWithoutFile(): void
 	{
-		$this->assertSame(array_keys(Mime::types()), F::extensions());
-		$this->assertSame(F::$types['image'], F::extensions('image'));
-		$this->assertSame([], F::extensions('unknown-type'));
+		$this->assertSame('', F::extension());
+		$this->assertSame('.jpg', F::extension(null, 'jpg'));
 	}
 
 	public function testFilename(): void
@@ -152,119 +152,15 @@ class FTest extends TestCase
 		$this->assertFileExists($link);
 	}
 
-	public function testRealpath(): void
+	public function testLinkExistingLink(): void
 	{
-		$path = F::realpath(__DIR__ . '/../Filesystem/FTest.php');
-		$this->assertSame(__FILE__, $path);
-	}
+		$src  = static::TMP . '/a.txt';
+		$link = static::TMP . '/b.txt';
 
-	public function testRealpathToMissingFile(): void
-	{
-		$path = __DIR__ . '/../does-not-exist.php';
+		F::write($src, 'test');
+		F::link($src, $link);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file does not exist at the given path: "' . $path . '"');
-
-		F::realpath($path);
-	}
-
-	public function testRealpathToParent(): void
-	{
-		$parent = __DIR__ . '/..';
-		$file   = $parent . '/Filesystem/FTest.php';
-		$path   = F::realpath($file, $parent);
-
-		$this->assertSame(__FILE__, $path);
-	}
-
-	public function testRealpathToNonExistingParent(): void
-	{
-		$parent = __DIR__ . '/../does-not-exist';
-		$file   = __DIR__ . '/../Filesystem/FTest.php';
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
-
-		F::realpath($file, $parent);
-	}
-
-	public function testRealpathToInvalidParent(): void
-	{
-		$parent = __DIR__ . '/../Cms';
-		$file   = __DIR__ . '/../Filesystem/FTest.php';
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file is not within the parent directory');
-
-		F::realpath($file, $parent);
-	}
-
-	public function testRealpathToSiblingWithSharedPrefix(): void
-	{
-		// a sibling directory whose name starts with
-		// the parent's name (`site2` vs `site`) must not
-		// pass the containment check
-		Dir::make(static::TMP . '/site');
-		F::write($file = static::TMP . '/site2/secret.txt', 'secret');
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file is not within the parent directory');
-
-		F::realpath($file, static::TMP . '/site');
-	}
-
-	public function testRelativePath(): void
-	{
-		$path = F::relativepath(__FILE__, __DIR__);
-		$this->assertSame('/' . basename(__FILE__), $path);
-
-		$path = F::relativepath(__FILE__, __DIR__ . '/');
-		$this->assertSame('/' . basename(__FILE__), $path);
-	}
-
-	public function testRelativePathWithEmptyBase(): void
-	{
-		$path = F::relativepath(__FILE__, '');
-		$this->assertSame(basename(__FILE__), $path);
-
-		$path = F::relativepath(__FILE__, null);
-		$this->assertSame(basename(__FILE__), $path);
-	}
-
-	public function testRelativePathWithUnrelatedBase(): void
-	{
-		$path = F::relativepath(__DIR__ . '/fruits/apples/fuji.txt', __DIR__ . '/fruits/pineapples');
-		$this->assertSame('../apples/fuji.txt', $path);
-
-		$path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
-		$this->assertSame('../fruits/apples/gala.txt', $path);
-
-		$path = F::relativepath(__DIR__ . '/fruits/apples/granny-smith.txt', __DIR__ . '/vegetables/');
-		$this->assertSame('../fruits/apples/granny-smith.txt', $path);
-
-		$path = F::relativepath(__DIR__ . '/fruits/apples/', __DIR__ . '/vegetables/');
-		$this->assertSame('../fruits/apples', $path);
-
-		$path = F::relativepath(__DIR__ . '/fruits/oranges/', __DIR__ . '/vegetables');
-		$this->assertSame('../fruits/oranges', $path);
-
-		$path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
-		$this->assertSame('../../fruits/apples/honeycrisp.txt', $path);
-
-		$path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
-		$this->assertSame('../../../test.txt', $path);
-
-		$path = F::relativepath('foo/path-extra/file.txt', 'foo/path');
-		$this->assertSame('../path-extra/file.txt', $path);
-	}
-
-	public function testRelativePathOnWindows(): void
-	{
-		$file = 'C:\xampp\htdocs\index.php';
-		$in   = 'C:/xampp/htdocs';
-
-		$path = F::relativepath($file, $in);
-		$this->assertSame('/index.php', $path);
+		$this->assertTrue(F::link($src, $link));
 	}
 
 	public function testLinkSymlink(): void
@@ -276,17 +172,6 @@ class FTest extends TestCase
 
 		$this->assertTrue(F::link($src, $link, 'symlink'));
 		$this->assertTrue(is_link($link));
-	}
-
-	public function testLinkExistingLink(): void
-	{
-		$src  = static::TMP . '/a.txt';
-		$link = static::TMP . '/b.txt';
-
-		F::write($src, 'test');
-		F::link($src, $link);
-
-		$this->assertTrue(F::link($src, $link));
 	}
 
 	public function testLinkWithMissingSource(): void
@@ -344,6 +229,17 @@ class FTest extends TestCase
 		$this->expectExceptionMessage('Disallowed output from file file.php:123, possible accidental whitespace?');
 
 		F::write($file = static::TMP . '/test.php', '<?php Kirby\Http\HeadersSent::$value = true; return "foo";');
+
+		F::load($file, allowOutput: false);
+	}
+
+	public function testLoadAccidentalWhitespace(): void
+	{
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('Disallowed output, possible accidental whitespace?');
+		$this->expectOutputString(' ');
+
+		F::write($file = static::TMP . '/test.php', ' <?php return "foo";');
 
 		F::load($file, allowOutput: false);
 	}
@@ -425,6 +321,32 @@ class FTest extends TestCase
 		F::loadOnce($file, allowOutput: false);
 	}
 
+	public function testMime(): void
+	{
+		F::write($this->test, 'test');
+		$this->assertSame('text/plain', F::mime($this->test));
+	}
+
+	public function testMimeToExtension(): void
+	{
+		$this->assertSame('jpg', F::mimeToExtension('image/jpeg'));
+		$this->assertFalse(F::mimeToExtension('image/something'));
+	}
+
+	public function testMimeToType(): void
+	{
+		$this->assertSame('image', F::mimeToType('image/jpeg'));
+		$this->assertSame('audio', F::mimeToType('audio/ogg'));
+		$this->assertSame('audio', F::mimeToType('audio/webm'));
+		$this->assertFalse(F::mimeToType('image/something'));
+	}
+
+	public function testModified(): void
+	{
+		F::write($this->test, 'test');
+		$this->assertSame(filemtime($this->test), F::modified($this->test));
+	}
+
 	public function testMove(): void
 	{
 		F::write($origin = static::TMP . '/a.txt', 'test');
@@ -497,30 +419,6 @@ class FTest extends TestCase
 		$this->assertSame('test', file_get_contents($origin));
 	}
 
-	public function testMime(): void
-	{
-		F::write($this->test, 'test');
-		$this->assertSame('text/plain', F::mime($this->test));
-	}
-
-	public function testMimeToExtension(): void
-	{
-		$this->assertSame('jpg', F::mimeToExtension('image/jpeg'));
-		$this->assertFalse(F::mimeToExtension('image/something'));
-	}
-
-	public function testMimeToType(): void
-	{
-		$this->assertSame('image', F::mimeToType('image/jpeg'));
-		$this->assertFalse(F::mimeToType('image/something'));
-	}
-
-	public function testModified(): void
-	{
-		F::write($this->test, 'test');
-		$this->assertSame(filemtime($this->test), F::modified($this->test));
-	}
-
 	public function testName(): void
 	{
 		$this->assertSame('test', F::name($this->sample));
@@ -563,7 +461,6 @@ class FTest extends TestCase
 		I18n::$locale = $locale;
 	}
 
-
 	public function testRange(): void
 	{
 		file_put_contents($this->test, 'my content is awesome');
@@ -596,11 +493,58 @@ class FTest extends TestCase
 		$this->assertFalse(F::range(''));
 	}
 
+	public function testRangeWithoutContent(): void
+	{
+		file_put_contents($this->test, '');
+		$this->assertSame('', F::range($this->test));
+
+		file_put_contents($this->test, 'my content');
+		$this->assertSame('', F::range($this->test, offset: 10));
+		$this->assertSame('', F::range($this->test, offset: 20));
+		$this->assertSame('', F::range($this->test, length: 0));
+		$this->assertSame('', F::range($this->test, length: -1));
+	}
+
 	public function testRead(): void
 	{
 		file_put_contents($this->test, $content = 'my content is awesome');
 
 		$this->assertSame($content, F::read($this->test));
+	}
+
+	public function testReadDoesNotRetryOtherErrors(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test an unreadable file as root');
+		}
+
+		F::write($this->test, 'content');
+
+		// e.g. a permission problem does not go away by waiting
+		chmod($this->test, 0o000);
+
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			return \file_get_contents($file);
+		};
+
+		$warnings = [];
+		set_error_handler(function (int $errno, string $errstr) use (&$warnings): bool {
+			$warnings[] = $errstr;
+			return true;
+		});
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(1, $calls);
+			$this->assertCount(1, $warnings);
+			$this->assertStringContainsString('Permission denied', $warnings[0]);
+		} finally {
+			restore_error_handler();
+			chmod($this->test, 0o644);
+			FileTest::$mocks = [];
+		}
 	}
 
 	public function testReadInvalidFile(): void
@@ -611,6 +555,185 @@ class FTest extends TestCase
 	public function testReadRemoteFile(): void
 	{
 		$this->assertFalse(F::read('https://example.com/some-file.jpg'));
+	}
+
+	public function testReadRetriesWhenFileCannotBeOpened(): void
+	{
+		F::write($this->test, 'content');
+
+		// e.g. a file that was just replaced via `rename()` on a Docker
+		// Desktop bind mount: the first attempts fail, the file stays listed
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			if (++$calls < 3) {
+				trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+				return false;
+			}
+
+			return \file_get_contents($file);
+		};
+
+		try {
+			$this->assertSame('content', F::read($this->test));
+			$this->assertSame(3, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testReadReturnsFalseWhenRetriesAreExhausted(): void
+	{
+		F::write($this->test, 'content');
+
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+			return false;
+		};
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(15, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testReadStopsRetryingWhenFileIsGone(): void
+	{
+		F::write($this->test, 'content');
+
+		// a parallel request removed the file after it was found
+		$calls = 0;
+		FileTest::$mocks['file_get_contents'] = function ($file) use (&$calls) {
+			$calls++;
+			\unlink($file);
+			trigger_error('file_get_contents(' . $file . '): Failed to open stream: No such file or directory', E_USER_WARNING);
+			return false;
+		};
+
+		try {
+			$this->assertFalse(F::read($this->test));
+			$this->assertSame(1, $calls);
+		} finally {
+			FileTest::$mocks = [];
+		}
+	}
+
+	public function testRealpath(): void
+	{
+		$path = F::realpath(__DIR__ . '/../Filesystem/FTest.php');
+		$this->assertSame(__FILE__, $path);
+	}
+
+	public function testRealpathToInvalidParent(): void
+	{
+		$parent = __DIR__ . '/../Cms';
+		$file   = __DIR__ . '/../Filesystem/FTest.php';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file is not within the parent directory');
+
+		F::realpath($file, $parent);
+	}
+
+	public function testRealpathToMissingFile(): void
+	{
+		$path = __DIR__ . '/../does-not-exist.php';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file does not exist at the given path: "' . $path . '"');
+
+		F::realpath($path);
+	}
+
+	public function testRealpathToNonExistingParent(): void
+	{
+		$parent = __DIR__ . '/../does-not-exist';
+		$file   = __DIR__ . '/../Filesystem/FTest.php';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
+
+		F::realpath($file, $parent);
+	}
+
+	public function testRealpathToParent(): void
+	{
+		$parent = __DIR__ . '/..';
+		$file   = $parent . '/Filesystem/FTest.php';
+		$path   = F::realpath($file, $parent);
+
+		$this->assertSame(__FILE__, $path);
+	}
+
+	public function testRealpathToSiblingWithSharedPrefix(): void
+	{
+		// a sibling directory whose name starts with
+		// the parent's name (`site2` vs `site`) must not
+		// pass the containment check
+		Dir::make(static::TMP . '/site');
+		F::write($file = static::TMP . '/site2/secret.txt', 'secret');
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file is not within the parent directory');
+
+		F::realpath($file, static::TMP . '/site');
+	}
+
+	public function testRelativePath(): void
+	{
+		$path = F::relativepath(__FILE__, __DIR__);
+		$this->assertSame('/' . basename(__FILE__), $path);
+
+		$path = F::relativepath(__FILE__, __DIR__ . '/');
+		$this->assertSame('/' . basename(__FILE__), $path);
+	}
+
+	public function testRelativePathOnWindows(): void
+	{
+		$file = 'C:\xampp\htdocs\index.php';
+		$in   = 'C:/xampp/htdocs';
+
+		$path = F::relativepath($file, $in);
+		$this->assertSame('/index.php', $path);
+	}
+
+	public function testRelativePathWithEmptyBase(): void
+	{
+		$path = F::relativepath(__FILE__, '');
+		$this->assertSame(basename(__FILE__), $path);
+
+		$path = F::relativepath(__FILE__, null);
+		$this->assertSame(basename(__FILE__), $path);
+	}
+
+	public function testRelativePathWithUnrelatedBase(): void
+	{
+		$path = F::relativepath(__DIR__ . '/fruits/apples/fuji.txt', __DIR__ . '/fruits/pineapples');
+		$this->assertSame('../apples/fuji.txt', $path);
+
+		$path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
+		$this->assertSame('../fruits/apples/gala.txt', $path);
+
+		$path = F::relativepath(__DIR__ . '/fruits/apples/granny-smith.txt', __DIR__ . '/vegetables/');
+		$this->assertSame('../fruits/apples/granny-smith.txt', $path);
+
+		$path = F::relativepath(__DIR__ . '/fruits/apples/', __DIR__ . '/vegetables/');
+		$this->assertSame('../fruits/apples', $path);
+
+		$path = F::relativepath(__DIR__ . '/fruits/oranges/', __DIR__ . '/vegetables');
+		$this->assertSame('../fruits/oranges', $path);
+
+		$path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
+		$this->assertSame('../../fruits/apples/honeycrisp.txt', $path);
+
+		$path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
+		$this->assertSame('../../../test.txt', $path);
+
+		$path = F::relativepath('foo/path-extra/file.txt', 'foo/path');
+		$this->assertSame('../path-extra/file.txt', $path);
 	}
 
 	public function testRemove(): void
@@ -644,20 +767,6 @@ class FTest extends TestCase
 		$this->assertDirectoryExists($a);
 	}
 
-	public function testRemoveLink(): void
-	{
-		F::write($a = static::TMP . '/a.jpg', '');
-		symlink($a, $b = static::TMP . '/b.jpg');
-
-		$this->assertFileExists($a);
-		$this->assertTrue(is_link($b));
-
-		$this->assertTrue(F::remove($b));
-
-		$this->assertFileDoesNotExist($a);
-		$this->assertTrue(is_link($b));
-	}
-
 	public function testRemoveGlob(): void
 	{
 		F::write($a = static::TMP . '/a.jpg', '');
@@ -673,6 +782,20 @@ class FTest extends TestCase
 		$this->assertFileDoesNotExist($a);
 		$this->assertFileDoesNotExist($b);
 		$this->assertFileDoesNotExist($c);
+	}
+
+	public function testRemoveLink(): void
+	{
+		F::write($a = static::TMP . '/a.jpg', '');
+		symlink($a, $b = static::TMP . '/b.jpg');
+
+		$this->assertFileExists($a);
+		$this->assertTrue(is_link($b));
+
+		$this->assertTrue(F::remove($b));
+
+		$this->assertFileDoesNotExist($a);
+		$this->assertTrue(is_link($b));
 	}
 
 	public function testRename(): void
@@ -712,33 +835,6 @@ class FTest extends TestCase
 		$this->assertFileExists($origin);
 	}
 
-	public function testSafeName(): void
-	{
-		// make sure no language rules are still set
-		Str::$language = [];
-
-		// with extension
-		$this->assertSame('uber-genious.txt', F::safeName('über genious.txt'));
-
-		// with unsafe extension
-		$this->assertSame('uber-genious.taxt', F::safeName('über genious.täxt'));
-
-		// without extension
-		$this->assertSame('uber-genious', F::safeName('über genious'));
-
-		// with leading and trailing dash
-		$this->assertSame('super.jpg', F::safeName('-super.jpg-'));
-
-		// with leading and trailing underscore
-		$this->assertSame('super.jpg', F::safeName('_super.jpg_'));
-
-		// with leading and trailing dot
-		$this->assertSame('super.jpg', F::safeName('.super.jpg.'));
-
-		// leave allowed characters untouched
-		$this->assertSame('file.a@b_c-d.jpg', F::safeName('file.a@b_c-d.jpg'));
-	}
-
 	public function testSafeBasename(): void
 	{
 		// make sure no language rules are still set
@@ -768,6 +864,48 @@ class FTest extends TestCase
 		$this->assertSame('jpg', F::safeExtension('-super.jpg'));
 	}
 
+	public function testSafeName(): void
+	{
+		// make sure no language rules are still set
+		Str::$language = [];
+
+		// with extension
+		$this->assertSame('uber-genious.txt', F::safeName('über genious.txt'));
+
+		// with unsafe extension
+		$this->assertSame('uber-genious.taxt', F::safeName('über genious.täxt'));
+
+		// without extension
+		$this->assertSame('uber-genious', F::safeName('über genious'));
+
+		// with leading and trailing dash
+		$this->assertSame('super.jpg', F::safeName('-super.jpg-'));
+
+		// with leading and trailing underscore
+		$this->assertSame('super.jpg', F::safeName('_super.jpg_'));
+
+		// with leading and trailing dot
+		$this->assertSame('super.jpg', F::safeName('.super.jpg.'));
+
+		// leave allowed characters untouched
+		$this->assertSame('file.a@b_c-d.jpg', F::safeName('file.a@b_c-d.jpg'));
+	}
+
+	public function testSimilar(): void
+	{
+		F::write($a = static::TMP . '/a.jpg', '');
+		F::write($b = static::TMP . '/a.1234.jpg', '');
+		F::write($c = static::TMP . '/a.3456.jpg', '');
+
+		$expected = [
+			$b,
+			$c,
+			$a
+		];
+
+		$this->assertSame($expected, F::similar($a));
+	}
+
 	public function testSize(): void
 	{
 		F::write($a = static::TMP . '/a.txt', 'test');
@@ -787,8 +925,19 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type('content.php'));
 		$this->assertSame('code', F::type('py'));
 		$this->assertSame('code', F::type('java'));
+		$this->assertSame('document', F::type('mdown'));
+		$this->assertSame('image', F::type('JPG'));
+		$this->assertSame('audio', F::type('oga'));
+		$this->assertSame('audio', F::type('weba'));
 		$this->assertNull(F::type('foo'));
 		$this->assertNull(F::type('tmp'));
+	}
+
+	public function testTypeToExtensions(): void
+	{
+		$this->assertSame(F::$types['audio'], F::typeToExtensions('audio'));
+		$this->assertSame(F::$types['document'], F::typeToExtensions('document'));
+		$this->assertNull(F::typeToExtensions('invalid'));
 	}
 
 	public function testTypeWithoutExtension(): void
@@ -799,19 +948,22 @@ class FTest extends TestCase
 		$this->assertSame('code', F::type($file));
 	}
 
+	public function testTypeWithShortFilename(): void
+	{
+		$this->assertSame('code', F::type('a.js'));
+		$this->assertSame('document', F::type('a.md'));
+	}
+
 	public function testTypeWithTmpExtension(): void
 	{
 		F::write($file = static::TMP . '/test.tmp', '<?php echo "foo"; ?>');
 
 		$this->assertSame('text/x-php', F::mime($file));
 		$this->assertSame('code', F::type($file));
-	}
 
-	public function testTypeToExtensions(): void
-	{
-		$this->assertSame(F::$types['audio'], F::typeToExtensions('audio'));
-		$this->assertSame(F::$types['document'], F::typeToExtensions('document'));
-		$this->assertNull(F::typeToExtensions('invalid'));
+		F::write($file = static::TMP . '/test.TMP', '<?php echo "foo"; ?>');
+
+		$this->assertSame('code', F::type($file));
 	}
 
 	public function testUnlink(): void
@@ -844,13 +996,12 @@ class FTest extends TestCase
 
 			$this->assertSame(E_WARNING, $errno);
 
-			$expectedPrefix = 'unlink(' . static::TMP . '/folder): ';
-			$expected = [
-				$expectedPrefix . 'Is a directory',
-				$expectedPrefix . 'Operation not permitted'
-			];
-
-			$this->assertTrue(in_array($errstr, $expected, true));
+			// PHP 8.6+ omits the arguments unless `error_include_args` is on
+			$path = preg_quote(static::TMP . '/folder', '/');
+			$this->assertMatchesRegularExpression(
+				'/^unlink\((' . $path . ')?\): (Is a directory|Operation not permitted)$/',
+				$errstr
+			);
 		});
 
 		mkdir(static::TMP . '/folder');
@@ -858,6 +1009,28 @@ class FTest extends TestCase
 		$this->assertFalse(F::unlink(static::TMP . '/folder'));
 
 		$this->assertTrue($called);
+	}
+
+	public function testUpdateAbortsWhenModifierReturnsNonString(): void
+	{
+		F::write($this->test, 'untouched');
+
+		// only a string is written; any other return value
+		// (here an int) aborts the write like `null` does
+		$result = F::update($this->test, fn () => 123);
+
+		$this->assertFalse($result);
+		$this->assertSame('untouched', file_get_contents($this->test));
+	}
+
+	public function testUpdateAbortsWhenModifierReturnsNull(): void
+	{
+		F::write($this->test, 'untouched');
+
+		$result = F::update($this->test, fn () => null);
+
+		$this->assertFalse($result);
+		$this->assertSame('untouched', file_get_contents($this->test));
 	}
 
 	public function testUpdateCreatesFileAndParentDir(): void
@@ -889,54 +1062,6 @@ class FTest extends TestCase
 		$this->assertSame('A LONG ORIGINAL CONTENT!', file_get_contents($this->test));
 	}
 
-	public function testUpdateShorterReplacementIsNotPaddedFromOldContents(): void
-	{
-		F::write($this->test, 'the original is much longer than the replacement');
-
-		F::update($this->test, fn () => 'short');
-
-		// must not contain trailing bytes from the original
-		$this->assertSame('short', file_get_contents($this->test));
-	}
-
-	public function testUpdateAbortsWhenModifierReturnsNull(): void
-	{
-		F::write($this->test, 'untouched');
-
-		$result = F::update($this->test, fn () => null);
-
-		$this->assertFalse($result);
-		$this->assertSame('untouched', file_get_contents($this->test));
-	}
-
-	public function testUpdateAbortsWhenModifierReturnsNonString(): void
-	{
-		F::write($this->test, 'untouched');
-
-		// only a string is written; any other return value
-		// (here an int) aborts the write like `null` does
-		$result = F::update($this->test, fn () => 123);
-
-		$this->assertFalse($result);
-		$this->assertSame('untouched', file_get_contents($this->test));
-	}
-
-	public function testUpdateReturnsFalseWhenFileCannotBeOpened(): void
-	{
-		// a directory cannot be opened with `fopen()` in `c+` mode,
-		// so `modify()` returns false without invoking the modifier
-		Dir::make($dir = static::TMP . '/a-directory');
-
-		$called = false;
-		$result = F::update($dir, function () use (&$called) {
-			$called = true;
-			return 'nope';
-		});
-
-		$this->assertFalse($result);
-		$this->assertFalse($called);
-	}
-
 	public function testUpdatePropagatesModifierException(): void
 	{
 		F::write($this->test, 'before');
@@ -959,6 +1084,22 @@ class FTest extends TestCase
 		$this->assertSame('after', file_get_contents($this->test));
 	}
 
+	public function testUpdateReturnsFalseWhenFileCannotBeOpened(): void
+	{
+		// a directory cannot be opened with `fopen()` in `c+` mode,
+		// so `modify()` returns false without invoking the modifier
+		Dir::make($dir = static::TMP . '/a-directory');
+
+		$called = false;
+		$result = F::update($dir, function () use (&$called) {
+			$called = true;
+			return 'nope';
+		});
+
+		$this->assertFalse($result);
+		$this->assertFalse($called);
+	}
+
 	public function testUpdateSerializesSequentialReadModifyWrites(): void
 	{
 		F::write($this->test, '0');
@@ -971,6 +1112,16 @@ class FTest extends TestCase
 		}
 
 		$this->assertSame('50', file_get_contents($this->test));
+	}
+
+	public function testUpdateShorterReplacementIsNotPaddedFromOldContents(): void
+	{
+		F::write($this->test, 'the original is much longer than the replacement');
+
+		F::update($this->test, fn () => 'short');
+
+		// must not contain trailing bytes from the original
+		$this->assertSame('short', file_get_contents($this->test));
 	}
 
 	public function testURI(): void
@@ -1004,6 +1155,14 @@ class FTest extends TestCase
 		$this->assertSame($input, $result);
 	}
 
+	public function testWriteCreatesParentDirectory(): void
+	{
+		$file = static::TMP . '/a/b/test.txt';
+
+		$this->assertTrue(F::write($file, 'my content'));
+		$this->assertSame('my content', F::read($file));
+	}
+
 	public function testWriteObject(): void
 	{
 		$input = new stdClass([
@@ -1016,18 +1175,29 @@ class FTest extends TestCase
 		$this->assertEquals($input, $result); // cannot use strict assertion (serialization)
 	}
 
-	public function testSimilar(): void
+	public function testWriteWithEmptyPath(): void
 	{
-		F::write($a = static::TMP . '/a.jpg', '');
-		F::write($b = static::TMP . '/a.1234.jpg', '');
-		F::write($c = static::TMP . '/a.3456.jpg', '');
+		$this->assertFalse(F::write('', 'my content'));
+	}
 
-		$expected = [
-			$b,
-			$c,
-			$a
-		];
+	public function testWriteWithReadOnlyFile(): void
+	{
+		if (posix_getuid() === 0) {
+			$this->markTestSkipped('Cannot test a read-only file as root');
+		}
 
-		$this->assertSame($expected, F::similar($a));
+		F::write($this->test, 'old content');
+		chmod($this->test, 0o444);
+
+		try {
+			F::write($this->test, 'new content');
+			$this->fail('Expected an exception');
+		} catch (Exception $e) {
+			$this->assertSame('The file "' . $this->test . '" is not writable', $e->getMessage());
+		} finally {
+			chmod($this->test, 0o644);
+		}
+
+		$this->assertSame('old content', F::read($this->test));
 	}
 }

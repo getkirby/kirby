@@ -6,10 +6,11 @@ use Kirby\Exception\Exception;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use ReflectionMethod;
+use WeakReference;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\PlainTextHandler;
 
-#[CoversClass(AppErrors::class)]
+#[CoversClass(App::class)]
 class AppErrorsTest extends TestCase
 {
 	protected App|null $originalApp;
@@ -44,6 +45,24 @@ class AppErrorsTest extends TestCase
 
 		// reset to the value set by tests/bootstrap.php
 		App::$enableWhoops = false;
+	}
+
+	/**
+	 * Convert output to returned variable
+	 */
+	protected function _getBufferedContent(string|CallbackHandler $path): false|string
+	{
+		ob_start();
+
+		if ($path instanceof CallbackHandler) {
+			$path->handle();
+		} else {
+			F::load($path);
+		}
+
+		$response = ob_get_clean();
+
+		return $response;
 	}
 
 	public function testExceptionHook(): void
@@ -181,6 +200,40 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 		$this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
+
+	public function testHandleErrorsDoesNotRetainReplacedApp(): void
+	{
+		$whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+		$testMethod   = new ReflectionMethod(App::class, 'handleErrors');
+
+		$app       = new App(['options' => ['whoops' => true]]);
+		$reference = WeakReference::create($app);
+
+		// keep the `Run` instance around, exactly like the shutdown
+		// function does in production, and install the handlers
+		$whoops = $whoopsMethod->invoke($app);
+		$testMethod->invoke($app);
+		unset($app);
+
+		// replacing the app is what a long-running server, the Kirby CLI
+		// and this test suite do over and over again; it also releases the
+		// static closures from `AppTranslations::i18n()`, which always keep
+		// the most recent app alive on purpose
+		$next = new App(['options' => ['whoops' => true]]);
+		$testMethod->invoke($next);
+
+		gc_collect_cycles();
+
+		// Whoops registers every `Run` instance via `register_shutdown_function()`
+		// and never releases it again, not even on `unregister()`. A handler that
+		// referenced its app strongly would therefore keep it – and its entire
+		// page tree – alive for the rest of the process.
+		$this->assertNull($reference->get());
+
+		// the handlers had to stay installed for the assertion above,
+		// so unregister them now to not leak them into other tests
+		$whoops->unregister();
 	}
 
 	public function testHandleErrorsGlobalSetting(): void
@@ -336,18 +389,56 @@ class AppErrorsTest extends TestCase
 		$this->assertCount(2, $handlers);
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
 
+		// expose the trace method to make it testable in the output below
+		$tracer = new class () extends App {
+			public function publicTrace(Exception $exception, string|false $editor): array
+			{
+				return $this->trace($exception, $editor);
+			}
+		};
+
 		$this->assertSame(json_encode([
-			'status' => 'error',
+			'status'    => 'error',
 			'exception' => Exception::class,
-			'code' => 'error.general',
-			'message' => 'An error occurred',
-			'details' => [
+			'code'      => 'error.general',
+			'message'   => 'An error occurred',
+			'details'   => [
 				'Some error message'
 			],
-			'file' => '{kirby}/tests/Cms/App/AppErrorsTest.php',
-			'line' => $exception->getLine()
+			'file'   => '{kirby}/tests/Cms/App/AppErrorsTest.php',
+			'line'   => $exception->getLine(),
+			'editor' => null,
+			'trace'  => $tracer->publicTrace($exception, false),
 		]), $this->_getBufferedContent($handlers[0]));
 		$this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
+	}
+
+	public function testHandleJsonErrorsWithInvalidUtf8(): void
+	{
+		$whoopsMethod  = new ReflectionMethod(App::class, 'whoops');
+		$optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
+		$testMethod    = new ReflectionMethod(App::class, 'handleJsonErrors');
+
+		$app    = App::instance();
+		$whoops = $whoopsMethod->invoke($app);
+
+		$testMethod->invoke($app);
+		$handler = $whoops->getHandlers()[0];
+		$handler->setException(new Exception(
+			message: "Message \xC3\x28",
+			details: ["Detail \xC3\x28"]
+		));
+
+		$json = json_decode($this->_getBufferedContent($handler), true);
+		$this->assertSame(["Detail \u{FFFD}("], $json['details']);
+
+		// with debugging enabled
+		$optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
+		$handler = $whoops->getHandlers()[0];
+
+		$json = json_decode($this->_getBufferedContent($handler), true);
+		$this->assertSame("Message \u{FFFD}(", $json['message']);
+		$this->assertSame(["Detail \u{FFFD}("], $json['details']);
 	}
 
 	public function testSetUnsetWhoopsHandler(): void
@@ -390,23 +481,5 @@ class AppErrorsTest extends TestCase
 		$whoops2 = $whoopsMethod->invoke($app);
 		$this->assertInstanceOf('Whoops\Run', $whoops2);
 		$this->assertSame($whoops1, $whoops2);
-	}
-
-	/**
-	 * Convert output to returned variable
-	 */
-	protected function _getBufferedContent(string|CallbackHandler $path): false|string
-	{
-		ob_start();
-
-		if ($path instanceof CallbackHandler) {
-			$path->handle();
-		} else {
-			F::load($path);
-		}
-
-		$response = ob_get_clean();
-
-		return $response;
 	}
 }

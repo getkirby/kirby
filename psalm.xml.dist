@@ -1,11 +1,89 @@
 <?xml version="1.0"?>
 <psalm
-	errorLevel="7"
+	errorBaseline="psalm-baseline.xml"
+	errorLevel="4"
+	findUnusedPsalmSuppress="true"
 	resolveFromConfigFile="true"
+	strictBinaryOperands="false"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="https://getpsalm.org/schema/config"
 	xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
+	<forbiddenFunctions>
+		<function name="var_dump" />
+		<function name="dd" />
+		<function name="ray" />
+		<function name="phpinfo" />
+		<function name="eval" />
+		<function name="create_function" />
+		<function name="exec" />
+		<function name="shell_exec" />
+		<function name="system" />
+		<function name="passthru" />
+		<function name="proc_open" />
+		<function name="popen" />
+	</forbiddenFunctions>
+
+	<issueHandlers>
+		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
+		<DuplicateArrayKey errorLevel="suppress" />
+
+		<!-- Allow ImageMagick to run exec() call -->
+		<ForbiddenCode>
+			<errorLevel type="suppress">
+				<file name="src/Image/Darkroom/ImageMagick.php" />
+			</errorLevel>
+		</ForbiddenCode>
+
+		<!-- Kirby is built on Stringable objects that are meant to be used directly in string contexts -->
+		<ImplicitToStringCast errorLevel="suppress" />
+
+		<!-- Don't warn about access to @internal symbols as Kirby uses @internal to document API that is not meant for site/plugin developers, not to restrict access within core itself -->
+		<InternalClass errorLevel="suppress" />
+		<InternalMethod errorLevel="suppress" />
+		<InternalProperty errorLevel="suppress" />
+
+		<!-- Don't warn about "$this in a non-class context" in the config dir -->
+		<InvalidScope>
+			<errorLevel type="suppress">
+				<directory name="config" />
+			</errorLevel>
+		</InvalidScope>
+
+		<!-- Don't warn about missing overrides attributes - we do not want to use them so far -->
+		<MissingOverrideAttribute errorLevel="suppress" />
+
+		<!-- Don't warn about missing template params as Psalm does not recognize this correctly when using `@uses` for traits in class docblock -->
+		<MissingTemplateParam errorLevel="suppress" />
+
+		<!-- Don't warn about unused code as Psalm does not know whether code will be used by developers using Kirby or not -->
+		<PossiblyUnusedMethod errorLevel="suppress" />
+		<PossiblyUnusedParam errorLevel="suppress" />
+		<PossiblyUnusedProperty errorLevel="suppress" />
+		<PossiblyUnusedReturnValue errorLevel="suppress" />
+		<UnusedClass errorLevel="suppress" />
+		<UnusedClosureParam errorLevel="suppress" />
+		<UnusedForeachValue errorLevel="suppress" />
+		<UnusedFunctionCall errorLevel="suppress" />
+		<UnusedVariable errorLevel="suppress" />
+
+		<!-- Don't warn about undefined magic methods/properties as Kirby resolves much of its API dynamically through __call/__callStatic/__get/__set, which Psalm cannot follow statically -->
+		<UndefinedMagicMethod errorLevel="suppress" />
+		<UndefinedMagicPropertyFetch errorLevel="suppress" />
+		<UndefinedMagicPropertyAssignment errorLevel="suppress" />
+	</issueHandlers>
+
+	<!-- Load Psalm's bundled stubs for optional extensions Kirby uses, so that analysis does not depend on which extensions the local PHP happens to have -->
+	<enableExtensions>
+		<extension name="apcu" />
+		<extension name="pdo" />
+		<extension name="redis" />
+	</enableExtensions>
+
+	<plugins>
+		<plugin filename="etc/psalm-plugins/HelperFunctionUsePlugin.php" />
+	</plugins>
+
 	<projectFiles>
 		<directory name="config" />
 		<directory name="src" />
@@ -16,37 +94,4 @@
 			<directory name="vendor" />
 		</ignoreFiles>
 	</projectFiles>
-
-	<issueHandlers>
-		<!-- Don't warn about "$this in a non-class context" in the config dir -->
-		<InvalidScope>
-			<errorLevel type="suppress">
-				<directory name="config" />
-			</errorLevel>
-		</InvalidScope>
-
-		<!-- Don't warn about duplicate array keys as Psalm will throw false positive when unpacking arrays -->
-		<DuplicateArrayKey errorLevel="suppress" />
-
-		<!-- Don't warn about missing template params as Psalm does not recognize this correctly when using `@uses` for traits in class docblock -->
-		<MissingTemplateParam errorLevel="suppress" />
-
-		<!-- Don't warn about missing override attribute -->
-		<MissingOverrideAttribute errorLevel="suppress" />
-
-		<!-- Don't warn about possibly unused parts, Psalm cannot know what Kirby parts are used by developers -->
-		<PossiblyUnusedMethod errorLevel="suppress" />
-		<PossiblyUnusedParam errorLevel="suppress" />
-		<PossiblyUnusedProperty errorLevel="suppress" />
-		<PossiblyUnusedReturnValue errorLevel="suppress" />
-		<UnusedClass errorLevel="suppress" />
-		<UnusedClosureParam errorLevel="suppress" />
-		<UnusedForeachValue errorLevel="suppress" />
-		<UnusedVariable errorLevel="suppress" />
-		<UndefinedClass errorLevel="suppress" />
-	</issueHandlers>
-
-	<plugins>
-		<plugin filename="etc/psalm-plugins/HelperFunctionUsePlugin.php" />
-	</plugins>
 </psalm>

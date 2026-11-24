@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Challenges;
+use Kirby\Auth\Methods;
 use Kirby\Content\Field;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\Asset;
@@ -11,7 +13,6 @@ use Kirby\Filesystem\F;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
-use Kirby\Plugin\License;
 use Kirby\Plugin\Plugin;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
@@ -22,9 +23,6 @@ use Kirby\Toolkit\V;
 /**
  * AppPlugins
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -32,6 +30,8 @@ trait AppPlugins
 {
 	/**
 	 * A list of all registered plugins
+	 *
+	 * @var array<string, Plugin>
 	 */
 	protected static array $plugins = [];
 
@@ -47,6 +47,7 @@ trait AppPlugins
 		'areas' => [],
 		'assetMethods' => [],
 		'authChallenges' => [],
+		'authMethods' => [],
 		'blockMethods' => [],
 		'blockModels' => [],
 		'blocksMethods' => [],
@@ -74,7 +75,6 @@ trait AppPlugins
 		'pageModels' => [],
 		'permissions' => [],
 		'routes' => [],
-		'sections' => [],
 		'siteMethods' => [],
 		'snippets' => [],
 		'structureMethods' => [],
@@ -98,13 +98,13 @@ trait AppPlugins
 	/**
 	 * Register all given extensions
 	 *
-	 * @param \Kirby\Plugin\Plugin|null $plugin The plugin which defined those extensions
+	 * @param $plugin The plugin which defined those extensions
 	 */
 	public function extend(
 		array $extensions,
 		Plugin|null $plugin = null
 	): array {
-		foreach ($this->extensions as $type => $registered) {
+		foreach (array_keys($this->extensions) as $type) {
 			if (isset($extensions[$type]) === true) {
 				$this->{'extend' . $type}($extensions[$type], $plugin);
 			}
@@ -166,9 +166,21 @@ trait AppPlugins
 	 */
 	protected function extendAuthChallenges(array $challenges): array
 	{
-		return $this->extensions['authChallenges'] = Auth::$challenges = [
-			...Auth::$challenges,
+		return $this->extensions['authChallenges'] = Challenges::$challenges = [
+			...Challenges::$challenges,
 			...$challenges
+		];
+	}
+
+	/**
+	 * Registers additional authentication methods
+	 * @since 6.0.0
+	 */
+	protected function extendAuthMethods(array $methods): array
+	{
+		return $this->extensions['authMethods'] = Methods::$methods = [
+			...Methods::$methods,
+			...$methods
 		];
 	}
 
@@ -196,7 +208,7 @@ trait AppPlugins
 	 */
 	protected function extendBlocksMethods(array $methods): array
 	{
-		return $this->extensions['blockMethods'] = Blocks::$methods = [
+		return $this->extensions['blocksMethods'] = Blocks::$methods = [
 			...Blocks::$methods,
 			...$methods
 		];
@@ -221,17 +233,6 @@ trait AppPlugins
 		return $this->extensions['cacheTypes'] = [
 			...$this->extensions['cacheTypes'],
 			...$cacheTypes
-		];
-	}
-
-	/**
-	 * Registers additional CLI commands
-	 */
-	protected function extendCommands(array $commands): array
-	{
-		return $this->extensions['commands'] = [
-			...$this->extensions['commands'],
-			...$commands
 		];
 	}
 
@@ -269,6 +270,17 @@ trait AppPlugins
 	}
 
 	/**
+	 * Registers additional CLI commands
+	 */
+	protected function extendCommands(array $commands): array
+	{
+		return $this->extensions['commands'] = [
+			...$this->extensions['commands'],
+			...$commands
+		];
+	}
+
+	/**
 	 * Registers core components
 	 */
 	protected function extendComponents(array $components): array
@@ -287,6 +299,28 @@ trait AppPlugins
 		return $this->extensions['controllers'] = [
 			...$this->extensions['controllers'],
 			...$controllers
+		];
+	}
+
+	/**
+	 * Registers additional field methods
+	 */
+	protected function extendFieldMethods(array $methods): array
+	{
+		return $this->extensions['fieldMethods'] = Field::$methods = [
+			...Field::$methods,
+			...array_change_key_case($methods)
+		];
+	}
+
+	/**
+	 * Registers Panel fields
+	 */
+	protected function extendFields(array $fields): array
+	{
+		return $this->extensions['fields'] = FormField::$types = [
+			...FormField::$types,
+			...$fields
 		];
 	}
 
@@ -316,17 +350,27 @@ trait AppPlugins
 	}
 
 	/**
+	 * Registers additional files methods
+	 */
+	protected function extendFilesMethods(array $methods): array
+	{
+		return $this->extensions['filesMethods'] = Files::$methods = [
+			...Files::$methods,
+			...$methods
+		];
+	}
+
+	/**
 	 * Registers additional custom file types and mimes
 	 */
 	protected function extendFileTypes(array $fileTypes): array
 	{
-		// normalize array
-		foreach ($fileTypes as $ext => $file) {
-			$extension = $file['extension'] ?? $ext;
-			$type      = $file['type'] ?? null;
-			$mime      = $file['mime'] ?? null;
-			$resizable = $file['resizable'] ?? false;
-			$viewable  = $file['viewable'] ?? false;
+		foreach ($fileTypes as $key => $definition) {
+			$extension = $definition['extension'] ?? $key;
+			$type      = $definition['type'] ?? null;
+			$mime      = $definition['mime'] ?? null;
+			$resizable = $definition['resizable'] ?? false;
+			$viewable  = $definition['viewable'] ?? false;
 
 			if (is_string($type) === true) {
 				if (isset(F::$types[$type]) === false) {
@@ -376,39 +420,6 @@ trait AppPlugins
 	}
 
 	/**
-	 * Registers additional files methods
-	 */
-	protected function extendFilesMethods(array $methods): array
-	{
-		return $this->extensions['filesMethods'] = Files::$methods = [
-			...Files::$methods,
-			...$methods
-		];
-	}
-
-	/**
-	 * Registers additional field methods
-	 */
-	protected function extendFieldMethods(array $methods): array
-	{
-		return $this->extensions['fieldMethods'] = Field::$methods = [
-			...Field::$methods,
-			...array_change_key_case($methods)
-		];
-	}
-
-	/**
-	 * Registers Panel fields
-	 */
-	protected function extendFields(array $fields): array
-	{
-		return $this->extensions['fields'] = FormField::$types = [
-			...FormField::$types,
-			...$fields
-		];
-	}
-
-	/**
 	 * Registers hooks
 	 */
 	protected function extendHooks(array $hooks): array
@@ -429,11 +440,14 @@ trait AppPlugins
 	}
 
 	/**
-	 * Registers markdown component
+	 * Registers additional layout column methods
 	 */
-	protected function extendMarkdown(Closure $markdown): Closure
+	protected function extendLayoutColumnMethods(array $methods): array
 	{
-		return $this->extensions['markdown'] = $markdown;
+		return $this->extensions['layoutColumnMethods'] = LayoutColumn::$methods = [
+			...LayoutColumn::$methods,
+			...$methods
+		];
 	}
 
 	/**
@@ -448,17 +462,6 @@ trait AppPlugins
 	}
 
 	/**
-	 * Registers additional layout column methods
-	 */
-	protected function extendLayoutColumnMethods(array $methods): array
-	{
-		return $this->extensions['layoutColumnMethods'] = LayoutColumn::$methods = [
-			...LayoutColumn::$methods,
-			...$methods
-		];
-	}
-
-	/**
 	 * Registers additional layouts methods
 	 */
 	protected function extendLayoutsMethods(array $methods): array
@@ -467,6 +470,14 @@ trait AppPlugins
 			...Layouts::$methods,
 			...$methods
 		];
+	}
+
+	/**
+	 * Registers markdown component
+	 */
+	protected function extendMarkdown(Closure $markdown): Closure
+	{
+		return $this->extensions['markdown'] = $markdown;
 	}
 
 	/**
@@ -499,17 +510,6 @@ trait AppPlugins
 	}
 
 	/**
-	 * Registers additional pages methods
-	 */
-	protected function extendPagesMethods(array $methods): array
-	{
-		return $this->extensions['pagesMethods'] = Pages::$methods = [
-			...Pages::$methods,
-			...$methods
-		];
-	}
-
-	/**
 	 * Registers additional page models
 	 */
 	protected function extendPageModels(array $models): array
@@ -525,6 +525,17 @@ trait AppPlugins
 		return $this->extensions['pages'] = [
 			...$this->extensions['pages'],
 			...$pages
+		];
+	}
+
+	/**
+	 * Registers additional pages methods
+	 */
+	protected function extendPagesMethods(array $methods): array
+	{
+		return $this->extensions['pagesMethods'] = Pages::$methods = [
+			...Pages::$methods,
+			...$methods
 		];
 	}
 
@@ -551,23 +562,12 @@ trait AppPlugins
 	protected function extendRoutes(array|Closure $routes): array
 	{
 		if ($routes instanceof Closure) {
-			$routes = $routes($this);
+			$routes = (array)$routes($this);
 		}
 
 		return $this->extensions['routes'] = [
 			...$this->extensions['routes'],
 			...$routes
-		];
-	}
-
-	/**
-	 * Registers Panel sections
-	 */
-	protected function extendSections(array $sections): array
-	{
-		return $this->extensions['sections'] = Section::$types = [
-			...Section::$types,
-			...$sections
 		];
 	}
 
@@ -646,6 +646,19 @@ trait AppPlugins
 	}
 
 	/**
+	 * Add third party extensions to the registry
+	 * so they can be used as plugins for plugins
+	 * for example.
+	 */
+	protected function extendThirdParty(array $extensions): array
+	{
+		return $this->extensions['thirdParty'] = array_replace_recursive(
+			$this->extensions['thirdParty'],
+			$extensions
+		);
+	}
+
+	/**
 	 * Registers translations
 	 */
 	protected function extendTranslations(array $translations): array
@@ -658,19 +671,6 @@ trait AppPlugins
 		return $this->extensions['translations'] = array_replace_recursive(
 			$this->extensions['translations'],
 			$translations
-		);
-	}
-
-	/**
-	 * Add third party extensions to the registry
-	 * so they can be used as plugins for plugins
-	 * for example.
-	 */
-	protected function extendThirdParty(array $extensions): array
-	{
-		return $this->extensions['thirdParty'] = array_replace_recursive(
-			$this->extensions['thirdParty'],
-			$extensions
 		);
 	}
 
@@ -718,8 +718,8 @@ trait AppPlugins
 	/**
 	 * Returns a given extension by type and name
 	 *
-	 * @param string $type i.e. `'hooks'`
-	 * @param string $name i.e. `'page.delete:before'`
+	 * @param $type e.g. `'hooks'`
+	 * @param $name e.g. `'page.delete:before'`
 	 */
 	public function extension(
 		string $type,
@@ -767,8 +767,8 @@ trait AppPlugins
 
 	/**
 	 * Register extensions that could be located in
-	 * the options array. I.e. hooks and routes can be
-	 * setup from the config.
+	 * the options array, e.g. hooks and routes can be
+	 * set up from the config.
 	 */
 	protected function extensionsFromOptions(): void
 	{
@@ -811,30 +811,20 @@ trait AppPlugins
 	 */
 	protected function extensionsFromSystem(): void
 	{
-		// Always start with fresh fields and sections
+		// Always start with fresh fields
 		// from the core and add plugins on top of that
 		FormField::$types = [];
-		Section::$types   = [];
-
-		// mixins
-		FormField::$mixins = $this->core->fieldMixins();
-		Section::$mixins   = $this->core->sectionMixins();
 
 		// aliases
 		KirbyTag::$aliases = $this->core->kirbyTagAliases();
-		Field::$aliases    = $this->core->fieldMethodAliases();
-
-		// blueprint presets
-		PageBlueprint::$presets = $this->core->blueprintPresets();
 
 		$this->extendAuthChallenges($this->core->authChallenges());
+		$this->extendAuthMethods($this->core->authMethods());
 		$this->extendCacheTypes($this->core->cacheTypes());
 		$this->extendComponents($this->core->components());
 		$this->extendBlueprints($this->core->blueprints());
-		$this->extendFieldMethods($this->core->fieldMethods());
 		$this->extendFields($this->core->fields());
 		$this->extendFilePreviews($this->core->filePreviews());
-		$this->extendSections($this->core->sections());
 		$this->extendSnippets($this->core->snippets());
 		$this->extendTags($this->core->kirbyTags());
 		$this->extendTemplates($this->core->templates());
@@ -861,8 +851,8 @@ trait AppPlugins
 	/**
 	 * Kirby plugin factory and getter
 	 *
-	 * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
-	 * @throws \Kirby\Exception\DuplicateException
+	 * @param $extends If null is passed it will be used as getter. Otherwise as factory.
+	 * @throws DuplicateException
 	 */
 	public static function plugin(
 		string $name,
@@ -901,7 +891,8 @@ trait AppPlugins
 	 * Loads and returns all plugins in the site/plugins directory
 	 * Loading only happens on the first call.
 	 *
-	 * @param array|null $plugins Can be used to overwrite the plugins registry
+	 * @param array<string, Plugin>|null $plugins Can be used to overwrite the plugins registry
+	 * @return array<string, Plugin>
 	 */
 	public function plugins(array|null $plugins = null): array
 	{
@@ -927,7 +918,7 @@ trait AppPlugins
 	/**
 	 * Loads all plugins from site/plugins
 	 *
-	 * @return array Array of loaded directories
+	 * @return list<string> Loaded directories
 	 */
 	protected function pluginsLoader(): array
 	{

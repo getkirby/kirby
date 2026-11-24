@@ -38,6 +38,8 @@
 import Dialog from "@/mixins/dialog.js";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {
@@ -49,9 +51,7 @@ export default {
 			default: false
 		},
 		label: {
-			default() {
-				return this.$t("field.layout.select");
-			},
+			default: () => window.panel.t("field.layout.select"),
 			type: String
 		},
 		layouts: {

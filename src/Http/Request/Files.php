@@ -9,9 +9,6 @@ namespace Kirby\Http\Request;
  * for the same key, it will produce a more
  * usable array.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -21,6 +18,8 @@ class Files
 
 	/**
 	 * Sanitized array of all received files
+	 *
+	 * @var array<string, array>
 	 */
 	protected array $files = [];
 
@@ -37,7 +36,7 @@ class Files
 			if (is_array($file['name']) === true) {
 				foreach ($file['name'] as $i => $name) {
 					$this->files[$key][] = [
-						'name'     => $file['name'][$i]      ?? null,
+						'name'     => $name,
 						'type'     => $file['type'][$i]      ?? null,
 						'tmp_name' => $file['tmp_name'][$i]  ?? null,
 						'error'    => $file['error'][$i]     ?? null,

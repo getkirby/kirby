@@ -4,17 +4,16 @@ namespace Kirby\Panel\Lab\Doc;
 
 use Kirby\Panel\Lab\Doc;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 
 /**
  * Documentation for a single Vue component prop
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @internal
  * @codeCoverageIgnore
  */
@@ -23,9 +22,9 @@ class Prop
 	public function __construct(
 		public string $name,
 		public string|null $type = null,
-		public string|null $description = null,
+		public string|HtmlString|null $description = null,
 		public string|null $default = null,
-		public string|null $deprecated = null,
+		public string|HtmlString|null $deprecated = null,
 		public string|null $example = null,
 		public bool $required = false,
 		public string|null $since = null,

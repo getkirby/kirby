@@ -1,8 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import url from "./url";
 
 describe("$helper.url.isSameOrigin", () => {
-	vi.stubGlobal("location", new URL("https://test.com"));
+	beforeEach(() => {
+		vi.stubGlobal("location", new URL("https://test.com"));
+	});
 
 	it("should detect same origin", () => {
 		const input = "https://test.com";

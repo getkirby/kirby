@@ -7,6 +7,7 @@ return [
 	'docs' => 'k-items',
 	'items' => A::map(range(0, 10), function ($item) {
 		return [
+			'id'   => $item,
 			'text' => 'This is item ' . $item,
 			'info' => 'Some info text',
 			'image' => [

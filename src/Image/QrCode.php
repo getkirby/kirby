@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Closure;
+use Exception;
 use GdImage;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -12,14 +13,10 @@ use Stringable;
 
 /**
  * Creates a QR code
- * @since 4.0.0
  *
- * @package   Kirby Image
- * @author    Nico Hoffmann <nico@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     4.0.0
  *
  * QR Code® is a registered trademark of DENSO WAVE INCORPORATED.
  *
@@ -51,1018 +48,54 @@ use Stringable;
  */
 class QrCode implements Stringable
 {
-	public function __construct(public string $data)
-	{
-	}
-
-	/**
-	 * Returns the QR code as a PNG data URI
-	 *
-	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
-	 * @param string $color Foreground color in hex format
-	 * @param string $back Background color in hex format
-	 * @param int $border Border size in number of modules
-	 */
-	public function toDataUri(
-		int|null $size = null,
-		string $color = '#000000',
-		string $back = '#ffffff',
-		int $border = 4
-	): string {
-		$image = $this->toImage($size, $color, $back, $border);
-
-		ob_start();
-		imagepng($image);
-		$data = ob_get_contents();
-		ob_end_clean();
-
-		return 'data:image/png;base64,' . base64_encode($data);
-	}
-
-	/**
-	 * Returns the QR code as a GdImage object
-	 *
-	 * @param int|null $size Image width/height in pixels, defaults to a size per module of 4x4
-	 * @param string $color Foreground color in hex format
-	 * @param string $back Background color in hex format
-	 * @param int $border Border size in number of modules
-	 */
-	public function toImage(
-		int|null $size = null,
-		string $color = '#000000',
-		string $back = '#ffffff',
-		int $border = 4
-	): GdImage {
-		// get code and size measurements
-		$code   = $this->encode($border);
-		[$width, $height] = $this->measure($code);
-		$size ??= ceil($width * 4);
-		$ws     = $size / $width;
-		$hs     = $size / $height;
-
-		// create image baseplate
-		$image = imagecreatetruecolor($size, $size);
-
-		$allocateColor = static function (string $hex) use ($image) {
-			$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
-			$r   = hexdec(substr($hex, 0, 2));
-			$g   = hexdec(substr($hex, 2, 2));
-			$b   = hexdec(substr($hex, 4, 2));
-			return imagecolorallocate($image, $r, $g, $b);
-		};
-
-		$back  = $allocateColor($back);
-		$color = $allocateColor($color);
-		imagefill($image, 0, 0, $back);
-
-		// paint square for each module
-		$this->eachModuleGroup(
-			$code,
-			fn ($x, $y, $width, $height) => imagefilledrectangle(
-				$image,
-				floor($x * $ws),
-				floor($y * $hs),
-				floor($x * $ws + $ws * $width) - 1,
-				floor($y * $hs + $hs * $height) - 1,
-				$color
-			)
-		);
-
-		return $image;
-	}
-
-	/**
-	 * Returns the QR code as `<svg>` element
-	 *
-	 * @param int|string|null $size Optional CSS width of the `<svg>` element
-	 * @param string $color Foreground color in hex format
-	 * @param string $back Background color in hex format
-	 * @param int $border Border size in number of modules
-	 */
-	public function toSvg(
-		int|string|null $size = null,
-		string $color = '#000000',
-		string $back = '#ffffff',
-		int $border = 4
-	): string {
-		$code = $this->encode($border);
-		[$vbw, $vbh] = $this->measure($code);
-
-		$modules = $this->eachModuleGroup(
-			$code,
-			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height . 'h-' . $width . 'z'
-		);
-
-		// escape the values that end up in SVG (XML) attributes
-		$color = Escape::xml($color);
-		$back  = Escape::xml($back);
-		$size  = $size ? ' style="width: ' . Escape::xml((string)$size) . '"' : '';
-
-		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
-			'<rect width="100%" height="100%" fill="' . $back . '"/>' .
-			'<path d="' . implode(' ', $modules) . '" fill="' . $color . '"/>' .
-			'</svg>';
-	}
-
-	public function __toString(): string
-	{
-		return $this->toSvg();
-	}
-
-	/**
-	 * Saves the QR code to a file.
-	 * Supported formats: gif, jpg, jpeg, png, svg, webp
-	 *
-	 * @param string $file Path to the output file with one of the supported file extensions
-	 * @param int|string|null $size Optional image width/height in pixels (defaults to a size per module of 4x4) or CSS width of the `<svg>` element
-	 * @param string $color Foreground color in hex format
-	 * @param string $back Background color in hex format
-	 * @param int $border Border size in number of modules
-	 */
-	public function write(
-		string $file,
-		int|string|null $size = null,
-		string $color = '#000000',
-		string $back = '#ffffff',
-		int $border = 4
-	): void {
-		$format = F::extension($file);
-		$args    = [$size, $color, $back, $border];
-
-		match ($format) {
-			'gif'   => imagegif($this->toImage(...$args), $file),
-			'jpg',
-			'jpeg'  => imagejpeg($this->toImage(...$args), $file),
-			'png'   => imagepng($this->toImage(...$args), $file),
-			'svg'   => F::write($file, $this->toSvg(...$args)),
-			'webp'  => imagewebp($this->toImage(...$args), $file),
-			default => throw new InvalidArgumentException(
-				message: 'Cannot write QR code as ' . $format
-			)
-		};
-	}
-
-	protected function applyMask(array $matrix, int $size, int $mask): array
-	{
-		for ($i = 0; $i < $size; $i++) {
-			for ($j = 0; $j < $size; $j++) {
-				if ($matrix[$i][$j] >= 4 && $this->mask($mask, $i, $j)) {
-					$matrix[$i][$j] ^= 1;
-				}
-			}
-		}
-
-		return $matrix;
-	}
-
-	protected function applyBestMask(array $matrix, int $size): array
-	{
-		$mask     = 0;
-		$mmatrix  = $this->applyMask($matrix, $size, $mask);
-		$penalty  = $this->penalty($mmatrix, $size);
-
-		for ($tmask = 1; $tmask < 8; $tmask++) {
-			$tmatrix  = $this->applyMask($matrix, $size, $tmask);
-			$tpenalty = $this->penalty($tmatrix, $size);
-
-			if ($tpenalty < $penalty) {
-				$mask    = $tmask;
-				$mmatrix = $tmatrix;
-				$penalty = $tpenalty;
-			}
-		}
-
-		return [$mask, $mmatrix];
-	}
-
-	protected function createMatrix(int $version, array $data): array
-	{
-		$size   = $version * 4 + 17;
-		$matrix = [];
-		$row    = array_fill(0, $size, 0);
-
-		for ($i = 0; $i < $size; $i++) {
-			$matrix[] = $row;
-		}
-
-		// finder patterns
-		for ($i = 0; $i < 8; $i++) {
-			for ($j = 0; $j < 8; $j++) {
-				$m = (($i == 7 || $j == 7) ? 2 :
-					 (($i == 0 || $j == 0 || $i == 6 || $j == 6) ? 3 :
-					 (($i == 1 || $j == 1 || $i == 5 || $j == 5) ? 2 : 3)));
-				$matrix[$i][$j] = $m;
-				$matrix[$size - $i - 1][$j] = $m;
-				$matrix[$i][$size - $j - 1] = $m;
-			}
-		}
-
-		// alignment patterns
-		if ($version >= 2) {
-			$alignment = static::ALIGNMENT_PATTERNS[$version - 2];
-
-			foreach ($alignment as $i) {
-				foreach ($alignment as $j) {
-					if (!$matrix[$i][$j]) {
-						for ($ii = -2; $ii <= 2; $ii++) {
-							for ($jj = -2; $jj <= 2; $jj++) {
-								$m = (max(abs($ii), abs($jj)) & 1) ^ 3;
-								$matrix[$i + $ii][$j + $jj] = $m;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		// timing patterns
-		for ($i = $size - 9; $i >= 8; $i--) {
-			$matrix[$i][6] = ($i & 1) ^ 3;
-			$matrix[6][$i] = ($i & 1) ^ 3;
-		}
-
-		// dark module – such an ominous name for such an innocuous thing
-		$matrix[$size - 8][8] = 3;
-
-		// format information area
-		for ($i = 0; $i <= 8; $i++) {
-			if (!$matrix[$i][8]) {
-				$matrix[$i][8] = 1;
-			}
-			if (!$matrix[8][$i]) {
-				$matrix[8][$i] = 1;
-			}
-			if ($i && !$matrix[$size - $i][8]) {
-				$matrix[$size - $i][8] = 1;
-			}
-			if ($i && !$matrix[8][$size - $i]) {
-				$matrix[8][$size - $i] = 1;
-			}
-		}
-
-		// version information area
-		if ($version >= 7) {
-			for ($i = 9; $i < 12; $i++) {
-				for ($j = 0; $j < 6; $j++) {
-					$matrix[$size - $i][$j] = 1;
-					$matrix[$j][$size - $i] = 1;
-				}
-			}
-		}
-
-		// data
-		$col    = $size - 1;
-		$row    = $size - 1;
-		$dir    = -1;
-		$offset = 0;
-		$length = count($data);
-
-		while ($col > 0 && $offset < $length) {
-			if (!$matrix[$row][$col]) {
-				$matrix[$row][$col] = $data[$offset] ? 5 : 4;
-				$offset++;
-			}
-			if (!$matrix[$row][$col - 1]) {
-				$matrix[$row][$col - 1] = $data[$offset] ? 5 : 4;
-				$offset++;
-			}
-			$row += $dir;
-			if ($row < 0 || $row >= $size) {
-				$dir = -$dir;
-				$row += $dir;
-				$col -= 2;
-
-				if ($col == 6) {
-					$col--;
-				}
-			}
-		}
-
-		return [$size, $matrix];
-	}
-
-	/**
-	 * Loops over every row and column, finds all modules that can
-	 * be grouped as rectangle (starting at the top left corner)
-	 * and applies the given action to each active module group
-	 */
-	protected function eachModuleGroup(array $code, Closure $action): array
-	{
-		$result = [];
-		$xStart = $code['q'][3];
-		$yStart = $code['q'][0];
-
-		// generate empty matrix to track what modules have been covered
-		$covered = array_fill(0, count($code['bits']), array_fill(0, count($code['bits'][0]), 0));
-
-		foreach ($code['bits'] as $by => $row) {
-			foreach ($row as $bx => $module) {
-				// skip if module is inactive or already covered
-				if ($module === 0 || $covered[$by][$bx] === 1) {
-					continue;
-				}
-
-				$width  = 0;
-				$height = 0;
-
-				$rowLength = count($row);
-				$colLength = count($code['bits']);
-
-				// extend to the right as long as the modules are active
-				// and use this to determine the width of the group
-				for ($x = $bx; $x < $rowLength; $x++) {
-					if ($row[$x] === 0) {
-						break;
-					}
-					$width++;
-					$covered[$by][$x] = 1;
-				}
-
-				// extend downwards as long as all the modules
-				// at the same width range are active;
-				// use this to determine the height of the group
-				for ($y = $by; $y < $colLength; $y++) {
-					$below = array_slice($code['bits'][$y], $bx, $width);
-
-					// if the sum is less than the width,
-					// there is at least one inactive module
-					if (array_sum($below) < $width) {
-						break;
-					}
-
-					$height++;
-
-					for ($x = $bx; $x < $bx + $width; $x++) {
-						$covered[$y][$x] = 1;
-					}
-				}
-
-				$result[] = $action(
-					$xStart + $bx,
-					$yStart + $by,
-					$width,
-					$height
-				);
-			}
-		}
-
-		return $result;
-	}
-
-	protected function encode(int $q = 4): array
-	{
-		[$data, $version, $ecl, $ec] = $this->encodeData();
-		$data = $this->encodeErrorCorrection($data, $ec, $version);
-		[$size, $mtx] = $this->createMatrix($version, $data);
-		[$mask, $mtx] = $this->applyBestMask($mtx, $size);
-		$mtx = $this->finalizeMatrix($mtx, $size, $ecl, $mask, $version);
-
-		return [
-			'q'    => [$q, $q, $q, $q],
-			'size' => [$size, $size],
-			'bits' => $mtx
-		];
-	}
-
-	protected function encodeData(): array
-	{
-		$mode = $this->mode();
-		[$version, $ecl] = $this->version($mode);
-
-		$group = match (true) {
-			$version >= 27 => 2,
-			$version >= 10 => 1,
-			default        => 0
-		};
-
-		$ec = static::EC_PARAMS[($version - 1) * 4 + $ecl];
-
-		// don't cut off mid-character if exceeding capacity
-		$max_chars = static::CAPACITY[$version - 1][$ecl][$mode];
-
-		if ($mode == 3) {
-			$max_chars <<= 1;
-		}
-
-		$data = substr($this->data, 0, $max_chars);
-
-		// convert from character level to bit level
-		$code = match ($mode) {
-			0 => $this->encodeNumeric($data, $group),
-			1 => $this->encodeAlphanum($data, $group),
-			2 => $this->encodeBinary($data, $group),
-			default => throw new LogicException(message: 'Invalid QR mode') // @codeCoverageIgnore
-		};
-
-		$code = [...$code, ...array_fill(0, 4, 0)];
-
-		if ($remainder = count($code) % 8) {
-			$code = [...$code, ...array_fill(0, 8 - $remainder, 0)];
-		}
-
-		// convert from bit level to byte level
-		$data = [];
-
-		for ($i = 0, $n = count($code); $i < $n; $i += 8) {
-			$byte = 0;
-
-			if ($code[$i + 0]) {
-				$byte |= 0x80;
-			}
-			if ($code[$i + 1]) {
-				$byte |= 0x40;
-			}
-			if ($code[$i + 2]) {
-				$byte |= 0x20;
-			}
-			if ($code[$i + 3]) {
-				$byte |= 0x10;
-			}
-			if ($code[$i + 4]) {
-				$byte |= 0x08;
-			}
-			if ($code[$i + 5]) {
-				$byte |= 0x04;
-			}
-			if ($code[$i + 6]) {
-				$byte |= 0x02;
-			}
-			if ($code[$i + 7]) {
-				$byte |= 0x01;
-			}
-
-			$data[] = $byte;
-		}
-
-		for (
-			$i = count($data),
-			$a = 1,
-			$n = $ec[0];
-			$i < $n;
-			$i++,
-			$a ^= 1
-		) {
-			$data[] = $a ? 236 : 17;
-		}
-
-		return [
-			$data,
-			$version,
-			$ecl,
-			$ec
-		];
-	}
-
-	protected function encodeNumeric($data, $version_group): array
-	{
-		$code   = [0, 0, 0, 1];
-		$length = strlen($data);
-
-		switch ($version_group) {
-			case 2: // 27 - 40
-				$code[] = $length & 0x2000;
-				$code[] = $length & 0x1000;
-				// no break
-			case 1: // 10 - 26
-				$code[] = $length & 0x0800;
-				$code[] = $length & 0x0400;
-				// no break
-			case 0: // 1 - 9
-				$code[] = $length & 0x0200;
-				$code[] = $length & 0x0100;
-				$code[] = $length & 0x0080;
-				$code[] = $length & 0x0040;
-				$code[] = $length & 0x0020;
-				$code[] = $length & 0x0010;
-				$code[] = $length & 0x0008;
-				$code[] = $length & 0x0004;
-				$code[] = $length & 0x0002;
-				$code[] = $length & 0x0001;
-		}
-		for ($i = 0; $i < $length; $i += 3) {
-			$group = substr($data, $i, 3);
-			switch (strlen($group)) {
-				case 3:
-					$code[] = $group & 0x200;
-					$code[] = $group & 0x100;
-					$code[] = $group & 0x080;
-					// no break
-				case 2:
-					$code[] = $group & 0x040;
-					$code[] = $group & 0x020;
-					$code[] = $group & 0x010;
-					// no break
-				case 1:
-					$code[] = $group & 0x008;
-					$code[] = $group & 0x004;
-					$code[] = $group & 0x002;
-					$code[] = $group & 0x001;
-			}
-		}
-		return $code;
-	}
-
-	protected function encodeAlphanum($data, $version_group): array
-	{
-		$alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
-		$code = [0, 0, 1, 0];
-		$length = strlen($data);
-		switch ($version_group) {
-			case 2: // 27 - 40
-				$code[] = $length & 0x1000;
-				$code[] = $length & 0x0800;
-				// no break
-			case 1: // 10 - 26
-				$code[] = $length & 0x0400;
-				$code[] = $length & 0x0200;
-				// no break
-			case 0: // 1 - 9
-				$code[] = $length & 0x0100;
-				$code[] = $length & 0x0080;
-				$code[] = $length & 0x0040;
-				$code[] = $length & 0x0020;
-				$code[] = $length & 0x0010;
-				$code[] = $length & 0x0008;
-				$code[] = $length & 0x0004;
-				$code[] = $length & 0x0002;
-				$code[] = $length & 0x0001;
-		}
-		for ($i = 0; $i < $length; $i += 2) {
-			$group = substr($data, $i, 2);
-			if (strlen($group) > 1) {
-				$c1 = strpos($alphabet, substr($group, 0, 1));
-				$c2 = strpos($alphabet, substr($group, 1, 1));
-				$ch = $c1 * 45 + $c2;
-				$code[] = $ch & 0x400;
-				$code[] = $ch & 0x200;
-				$code[] = $ch & 0x100;
-				$code[] = $ch & 0x080;
-				$code[] = $ch & 0x040;
-				$code[] = $ch & 0x020;
-				$code[] = $ch & 0x010;
-				$code[] = $ch & 0x008;
-				$code[] = $ch & 0x004;
-				$code[] = $ch & 0x002;
-				$code[] = $ch & 0x001;
-			} else {
-				$ch = strpos($alphabet, $group);
-				$code[] = $ch & 0x020;
-				$code[] = $ch & 0x010;
-				$code[] = $ch & 0x008;
-				$code[] = $ch & 0x004;
-				$code[] = $ch & 0x002;
-				$code[] = $ch & 0x001;
-			}
-		}
-		return $code;
-	}
-
-	protected function encodeBinary(string $data, int $version_group): array
-	{
-		$code   = [0, 1, 0, 0];
-		$length = strlen($data);
-
-		switch ($version_group) {
-			case 2:  // 27 - 40
-			case 1:  // 10 - 26
-				$code[] = $length & 0x8000;
-				$code[] = $length & 0x4000;
-				$code[] = $length & 0x2000;
-				$code[] = $length & 0x1000;
-				$code[] = $length & 0x0800;
-				$code[] = $length & 0x0400;
-				$code[] = $length & 0x0200;
-				$code[] = $length & 0x0100;
-				// no break
-			case 0:  // 1 - 9
-				$code[] = $length & 0x0080;
-				$code[] = $length & 0x0040;
-				$code[] = $length & 0x0020;
-				$code[] = $length & 0x0010;
-				$code[] = $length & 0x0008;
-				$code[] = $length & 0x0004;
-				$code[] = $length & 0x0002;
-				$code[] = $length & 0x0001;
-		}
-
-		for ($i = 0; $i < $length; $i++) {
-			$ch = ord(substr($data, $i, 1));
-			$code[] = $ch & 0x80;
-			$code[] = $ch & 0x40;
-			$code[] = $ch & 0x20;
-			$code[] = $ch & 0x10;
-			$code[] = $ch & 0x08;
-			$code[] = $ch & 0x04;
-			$code[] = $ch & 0x02;
-			$code[] = $ch & 0x01;
-		}
-
-		return $code;
-	}
-
-	protected function encodeErrorCorrection(
-		array $data,
-		array $ec_params,
-		int $version
-	): array {
-		$blocks    = $this->errorCorrectionSplit($data, $ec_params);
-		$ec_blocks = [];
-
-		for ($i = 0, $n = count($blocks); $i < $n; $i++) {
-			$ec_blocks[] = $this->errorCorrectionDivide($blocks[$i], $ec_params);
-		}
-
-		$data    = $this->errorCorrectionInterleave($blocks);
-		$ec_data = $this->errorCorrectionInterleave($ec_blocks);
-		$code    = [];
-
-		foreach ($data as $ch) {
-			$code[] = $ch & 0x80;
-			$code[] = $ch & 0x40;
-			$code[] = $ch & 0x20;
-			$code[] = $ch & 0x10;
-			$code[] = $ch & 0x08;
-			$code[] = $ch & 0x04;
-			$code[] = $ch & 0x02;
-			$code[] = $ch & 0x01;
-		}
-		foreach ($ec_data as $ch) {
-			$code[] = $ch & 0x80;
-			$code[] = $ch & 0x40;
-			$code[] = $ch & 0x20;
-			$code[] = $ch & 0x10;
-			$code[] = $ch & 0x08;
-			$code[] = $ch & 0x04;
-			$code[] = $ch & 0x02;
-			$code[] = $ch & 0x01;
-		}
-		for ($n = static::REMAINER_BITS[$version - 1]; $n > 0; $n--) {
-			$code[] = 0;
-		}
-
-		return $code;
-	}
-
-	protected function errorCorrectionSplit(array $data, array $ec): array
-	{
-		$blocks = [];
-		$offset = 0;
-
-		for ($i = $ec[2], $length = $ec[3]; $i > 0; $i--) {
-			$blocks[] = array_slice($data, $offset, $length);
-			$offset += $length;
-		}
-		for ($i = $ec[4], $length = $ec[5]; $i > 0; $i--) {
-			$blocks[] = array_slice($data, $offset, $length);
-			$offset += $length;
-		}
-
-		return $blocks;
-	}
-
-	protected function errorCorrectionDivide(array $data, array $ec): array
-	{
-		$num_data  = count($data);
-		$num_error = $ec[1];
-		$generator = static::EC_POLYNOMIALS[$num_error];
-		$message   = $data;
-
-		for ($i = 0; $i < $num_error; $i++) {
-			$message[] = 0;
-		}
-
-		for ($i = 0; $i < $num_data; $i++) {
-			if ($message[$i]) {
-				$leadterm = static::LOG[$message[$i]];
-
-				for ($j = 0; $j <= $num_error; $j++) {
-					$term = ($generator[$j] + $leadterm) % 255;
-					$message[$i + $j] ^= static::EXP[$term];
-				}
-			}
-		}
-
-		return array_slice($message, $num_data, $num_error);
-	}
-
-	protected function errorCorrectionInterleave(array $blocks): array
-	{
-		$data       = [];
-		$num_blocks = count($blocks);
-
-		for ($offset = 0; true; $offset++) {
-			$break = true;
-
-			for ($i = 0; $i < $num_blocks; $i++) {
-				if (isset($blocks[$i][$offset]) === true) {
-					$data[] = $blocks[$i][$offset];
-					$break = false;
-				}
-			}
-
-			if ($break) {
-				break;
-			}
-		}
-
-		return $data;
-	}
-
-	protected function finalizeMatrix(
-		array $matrix,
-		int $size,
-		int $ecl,
-		int $mask,
-		int $version
-	): array {
-		// Format info
-		$format = static::FORMAT_INFO[$ecl * 8 + $mask];
-		$matrix[8][0] = $format[0];
-		$matrix[8][1] = $format[1];
-		$matrix[8][2] = $format[2];
-		$matrix[8][3] = $format[3];
-		$matrix[8][4] = $format[4];
-		$matrix[8][5] = $format[5];
-		$matrix[8][7] = $format[6];
-		$matrix[8][8] = $format[7];
-		$matrix[7][8] = $format[8];
-		$matrix[5][8] = $format[9];
-		$matrix[4][8] = $format[10];
-		$matrix[3][8] = $format[11];
-		$matrix[2][8] = $format[12];
-		$matrix[1][8] = $format[13];
-		$matrix[0][8] = $format[14];
-		$matrix[$size - 1][8] = $format[0];
-		$matrix[$size - 2][8] = $format[1];
-		$matrix[$size - 3][8] = $format[2];
-		$matrix[$size - 4][8] = $format[3];
-		$matrix[$size - 5][8] = $format[4];
-		$matrix[$size - 6][8] = $format[5];
-		$matrix[$size - 7][8] = $format[6];
-		$matrix[8][$size - 8] = $format[7];
-		$matrix[8][$size - 7] = $format[8];
-		$matrix[8][$size - 6] = $format[9];
-		$matrix[8][$size - 5] = $format[10];
-		$matrix[8][$size - 4] = $format[11];
-		$matrix[8][$size - 3] = $format[12];
-		$matrix[8][$size - 2] = $format[13];
-		$matrix[8][$size - 1] = $format[14];
-
-		// version info
-		if ($version >= 7) {
-			$version = static::VERSION_INFO[$version - 7];
-
-			for ($i = 0; $i < 18; $i++) {
-				$r = $size - 9 - ($i % 3);
-				$c = 5 - floor($i / 3);
-				$matrix[$r][$c] = $version[$i];
-				$matrix[$c][$r] = $version[$i];
-			}
-		}
-
-		// patterns and data
-		for ($i = 0; $i < $size; $i++) {
-			for ($j = 0; $j < $size; $j++) {
-				$matrix[$i][$j] &= 1;
-			}
-		}
-
-		return $matrix;
-	}
-
-	protected function mask(int $mask, int $row, int $column): int
-	{
-		return match ($mask) {
-			0 => !(($row + $column) % 2),
-			1 => !($row % 2),
-			2 => !($column % 3),
-			3 => !(($row + $column) % 3),
-			4 => !((floor($row / 2) + floor($column / 3)) % 2),
-			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
-			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
-			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
-			default => throw new LogicException(message: 'Invalid QR mask') // @codeCoverageIgnore
-		};
-	}
-
-	/**
-	 * Returns width and height based on the
-	 * generated modules and quiet zone
-	 */
-	protected function measure($code): array
-	{
-		return [
-			$code['q'][3] + $code['size'][0] + $code['q'][1],
-			$code['q'][0] + $code['size'][1] + $code['q'][2]
-		];
-	}
-
-	/**
-	 * Detect what encoding mode (numeric, alphanumeric, binary)
-	 * can be used
-	 */
-	protected function mode(): int
-	{
-		// numeric
-		if (preg_match('/^[0-9]*$/', $this->data)) {
-			return 0;
-		}
-
-		// alphanumeric
-		if (preg_match('/^[0-9A-Z .\/:$%*+-]*$/', $this->data)) {
-			return 1;
-		}
-
-		return 2;
-	}
-
-	protected function penalty(array &$matrix, int $size): int
-	{
-		$score  = $this->penalty1($matrix, $size);
-		$score += $this->penalty2($matrix, $size);
-		$score += $this->penalty3($matrix, $size);
-		$score += $this->penalty4($matrix, $size);
-		return $score;
-	}
-
-	protected function penalty1(array &$matrix, int $size): int
-	{
-		$score = 0;
-
-		for ($i = 0; $i < $size; $i++) {
-			$rowvalue = 0;
-			$rowcount = 0;
-			$colvalue = 0;
-			$colcount = 0;
-
-			for ($j = 0; $j < $size; $j++) {
-				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
-				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
-
-				if ($rv == $rowvalue) {
-					$rowcount++;
-				} else {
-					if ($rowcount >= 5) {
-						$score += $rowcount - 2;
-					}
-					$rowvalue = $rv;
-					$rowcount = 1;
-				}
-
-				if ($cv == $colvalue) {
-					$colcount++;
-				} else {
-					if ($colcount >= 5) {
-						$score += $colcount - 2;
-					}
-					$colvalue = $cv;
-					$colcount = 1;
-				}
-			}
-
-			if ($rowcount >= 5) {
-				$score += $rowcount - 2;
-			}
-			if ($colcount >= 5) {
-				$score += $colcount - 2;
-			}
-		}
-
-		return $score;
-	}
-
-	protected function penalty2(array &$matrix, int $size): int
-	{
-		$score = 0;
-
-		for ($i = 1; $i < $size; $i++) {
-			for ($j = 1; $j < $size; $j++) {
-				$v1 = $matrix[$i - 1][$j - 1];
-				$v2 = $matrix[$i - 1][$j    ];
-				$v3 = $matrix[$i    ][$j - 1];
-				$v4 = $matrix[$i    ][$j    ];
-				$v1 = ($v1 == 5 || $v1 == 3) ? 1 : 0;
-				$v2 = ($v2 == 5 || $v2 == 3) ? 1 : 0;
-				$v3 = ($v3 == 5 || $v3 == 3) ? 1 : 0;
-				$v4 = ($v4 == 5 || $v4 == 3) ? 1 : 0;
-
-				if ($v1 == $v2 && $v2 == $v3 && $v3 == $v4) {
-					$score += 3;
-				}
-			}
-		}
-
-		return $score;
-	}
-
-	protected function penalty3(array &$matrix, int $size): int
-	{
-		$score = 0;
-
-		for ($i = 0; $i < $size; $i++) {
-			$rowvalue = 0;
-			$colvalue = 0;
-
-			for ($j = 0; $j < 11; $j++) {
-				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
-				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
-				$rowvalue = (($rowvalue << 1) & 0x7FF) | $rv;
-				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
-			}
-
-			if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
-				$score += 40;
-			}
-			if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
-				$score += 40;
-			}
-
-			for ($j = 11; $j < $size; $j++) {
-				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
-				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
-				$rowvalue = (($rowvalue << 1) & 0x7FF) | $rv;
-				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
-
-				if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
-					$score += 40;
-				}
-
-				if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
-					$score += 40;
-				}
-			}
-		}
-
-		return $score;
-	}
-
-	protected function penalty4(array &$matrix, int $size): int
-	{
-		$dark = 0;
-
-		for ($i = 0; $i < $size; $i++) {
-			for ($j = 0; $j < $size; $j++) {
-				if ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) {
-					$dark++;
-				}
-			}
-		}
-
-		$dark *= 20;
-		$dark /= $size * $size;
-		$a     = abs(floor($dark) - 10);
-		$b     = abs(ceil($dark) - 10);
-		return min($a, $b) * 10;
-	}
-
-	/**
-	 * Detect what version needs to be used by
-	 * trying to maximize the error correction level
-	 */
-	protected function version(int $mode): array
-	{
-		$length = strlen($this->data);
-
-		if ($mode == 3) {
-			$length >>= 1;
-		}
-
-		$ecl = 0;
-
-		// first try to find the minimum version
-		// that can contain the data
-		for ($version = 1; $version <= 40; $version++) {
-			if ($length <= static::CAPACITY[$version - 1][$ecl][$mode]) {
-				break;
-			}
-		}
-
-		// reject data that does not fit into the largest QR version
-		// instead of overflowing into undefined version/capacity
-		if ($version > 40) {
-			throw new InvalidArgumentException(
-				message: 'The provided data exceeds the maximum capacity of a QR code'
-			);
-		}
-
-		// with the version in place, try to raise
-		// the error correction level as long as
-		// the data still fits
-		for ($newEcl = 1; $newEcl <= 3; $newEcl++) {
-			if ($length <= static::CAPACITY[$version - 1][$newEcl][$mode]) {
-				$ecl = $newEcl;
-			}
-		}
-
-		return [$version, $ecl];
-	}
+	protected const array ALIGNMENT_PATTERNS = [
+		[6, 18],
+		[6, 22],
+		[6, 26],
+		[6, 30],
+		[6, 34],
+		[6, 22, 38],
+		[6, 24, 42],
+		[6, 26, 46],
+		[6, 28, 50],
+		[6, 30, 54],
+		[6, 32, 58],
+		[6, 34, 62],
+		[6, 26, 46, 66],
+		[6, 26, 48, 70],
+		[6, 26, 50, 74],
+		[6, 30, 54, 78],
+		[6, 30, 56, 82],
+		[6, 30, 58, 86],
+		[6, 34, 62, 90],
+		[6, 28, 50, 72,  94],
+		[6, 26, 50, 74,  98],
+		[6, 30, 54, 78, 102],
+		[6, 28, 54, 80, 106],
+		[6, 32, 58, 84, 110],
+		[6, 30, 58, 86, 114],
+		[6, 34, 62, 90, 118],
+		[6, 26, 50, 74,  98, 122],
+		[6, 30, 54, 78, 102, 126],
+		[6, 26, 52, 78, 104, 130],
+		[6, 30, 56, 82, 108, 134],
+		[6, 34, 60, 86, 112, 138],
+		[6, 30, 58, 86, 114, 142],
+		[6, 34, 62, 90, 118, 146],
+		[6, 30, 54, 78, 102, 126, 150],
+		[6, 24, 50, 76, 102, 128, 154],
+		[6, 28, 54, 80, 106, 132, 158],
+		[6, 32, 58, 84, 110, 136, 162],
+		[6, 26, 54, 82, 110, 138, 166],
+		[6, 30, 58, 86, 114, 142, 170],
+	];
 
 	/**
 	 * maximum encodable characters = $qr_capacity [ (version - 1) ]
 	 * [ (0 for L, 1 for M, 2 for Q, 3 for H) ]
 	 * [ (0 for numeric, 1 for alpha, 2 for binary) ]
 	 */
-	protected const CAPACITY = [
+	protected const array CAPACITY = [
 		[
 			[41, 25, 17],
 			[34, 20, 14],
@@ -1316,7 +349,7 @@ class QrCode implements Stringable
 	 *   number of data codewords per block in second group
 	 * );
 	 */
-	protected const EC_PARAMS = [
+	protected const array EC_PARAMS = [
 		[19, 7, 1, 19, 0, 0],
 		[16, 10, 1, 16, 0, 0],
 		[13, 13, 1, 13, 0, 0],
@@ -1478,8 +511,7 @@ class QrCode implements Stringable
 		[1666, 30, 34, 24, 34, 25],
 		[1276, 30, 20, 15, 61, 16],
 	];
-
-	protected const EC_POLYNOMIALS = [
+	protected const array EC_POLYNOMIALS = [
 		7  => [0, 87, 229, 146, 149, 238, 102, 21],
 		10 => [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45],
 		13 => [0, 74, 152, 176, 100, 86, 100, 106, 104, 130, 218, 206, 140, 78],
@@ -1494,61 +526,14 @@ class QrCode implements Stringable
 		28 => [0, 168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123],
 		30 => [0, 41, 173, 145, 152, 216, 31, 179, 182, 50, 48, 110, 86, 239, 96, 222, 125, 42, 173, 226, 193, 224, 130, 156, 37, 251, 216, 238, 40, 192, 180],
 	];
-
-	protected const LOG = [0, 0, 1, 25, 2, 50, 26, 198, 3, 223, 51, 238, 27, 104, 199, 75, 4, 100, 224, 14, 52, 141, 239, 129, 28, 193, 105, 248, 200, 8, 76, 113, 5, 138, 101, 47, 225, 36, 15, 33, 53, 147, 142, 218, 240, 18, 130, 69, 29, 181, 194, 125, 106, 39, 249, 185, 201, 154, 9, 120, 77, 228, 114, 166, 6, 191, 139, 98, 102, 221, 48, 253, 226, 152, 37, 179, 16, 145, 34, 136, 54, 208, 148, 206, 143, 150, 219, 189, 241, 210, 19, 92, 131, 56, 70, 64, 30, 66, 182, 163, 195, 72, 126, 110, 107, 58, 40, 84, 250, 133, 186, 61, 202, 94, 155, 159, 10, 21, 121, 43, 78, 212, 229, 172, 115, 243, 167, 87, 7, 112, 192, 247, 140, 128, 99, 13, 103, 74, 222, 237, 49, 197, 254, 24, 227, 165, 153, 119, 38, 184, 180, 124, 17, 68, 146, 217, 35, 32, 137, 46, 55, 63, 209, 91, 149, 188, 207, 205, 144, 135, 151, 178, 220, 252, 190, 97, 242, 86, 211, 171, 20, 42, 93, 158, 132, 60, 57, 83, 71, 109, 65, 162, 31, 45, 67, 216, 183, 123, 164, 118, 196, 23, 73, 236, 127, 12, 111, 246, 108, 161, 59, 82, 41, 157, 85, 170, 251, 96, 134, 177, 187, 204, 62, 90, 203, 89, 95, 176, 156, 169, 160, 81, 11, 245, 22, 235, 122, 117, 44, 215, 79, 174, 213, 233, 230, 231, 173, 232, 116, 214, 244, 234, 168, 80, 88, 175];
-
-	protected const EXP = [1, 2, 4, 8, 16, 32, 64, 128, 29, 58, 116, 232, 205, 135, 19, 38, 76, 152, 45, 90, 180, 117, 234, 201, 143, 3, 6, 12, 24, 48, 96, 192, 157, 39, 78, 156, 37, 74, 148, 53, 106, 212, 181, 119, 238, 193, 159, 35, 70, 140, 5, 10, 20, 40, 80, 160, 93, 186, 105, 210, 185, 111, 222, 161, 95, 190, 97, 194, 153, 47, 94, 188, 101, 202, 137, 15, 30, 60, 120, 240, 253, 231, 211, 187, 107, 214, 177, 127, 254, 225, 223, 163, 91, 182, 113, 226, 217, 175, 67, 134, 17, 34, 68, 136, 13, 26, 52, 104, 208, 189, 103, 206, 129, 31, 62, 124, 248, 237, 199, 147, 59, 118, 236, 197, 151, 51, 102, 204, 133, 23, 46, 92, 184, 109, 218, 169, 79, 158, 33, 66, 132, 21, 42, 84, 168, 77, 154, 41, 82, 164, 85, 170, 73, 146, 57, 114, 228, 213, 183, 115, 230, 209, 191, 99, 198, 145, 63, 126, 252, 229, 215, 179, 123, 246, 241, 255, 227, 219, 171, 75, 150, 49, 98, 196, 149, 55, 110, 220, 165, 87, 174, 65, 130, 25, 50, 100, 200, 141, 7, 14, 28, 56, 112, 224, 221, 167, 83, 166, 81, 162, 89, 178, 121, 242, 249, 239, 195, 155, 43, 86, 172, 69, 138, 9, 18, 36, 72, 144, 61, 122, 244, 245, 247, 243, 251, 235, 203, 139, 11, 22, 44, 88, 176, 125, 250, 233, 207, 131, 27, 54, 108, 216, 173, 71, 142, 1];
-
-	protected const REMAINER_BITS = [0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0];
-
-	protected const ALIGNMENT_PATTERNS = [
-		[6, 18],
-		[6, 22],
-		[6, 26],
-		[6, 30],
-		[6, 34],
-		[6, 22, 38],
-		[6, 24, 42],
-		[6, 26, 46],
-		[6, 28, 50],
-		[6, 30, 54],
-		[6, 32, 58],
-		[6, 34, 62],
-		[6, 26, 46, 66],
-		[6, 26, 48, 70],
-		[6, 26, 50, 74],
-		[6, 30, 54, 78],
-		[6, 30, 56, 82],
-		[6, 30, 58, 86],
-		[6, 34, 62, 90],
-		[6, 28, 50, 72,  94],
-		[6, 26, 50, 74,  98],
-		[6, 30, 54, 78, 102],
-		[6, 28, 54, 80, 106],
-		[6, 32, 58, 84, 110],
-		[6, 30, 58, 86, 114],
-		[6, 34, 62, 90, 118],
-		[6, 26, 50, 74,  98, 122],
-		[6, 30, 54, 78, 102, 126],
-		[6, 26, 52, 78, 104, 130],
-		[6, 30, 56, 82, 108, 134],
-		[6, 34, 60, 86, 112, 138],
-		[6, 30, 58, 86, 114, 142],
-		[6, 34, 62, 90, 118, 146],
-		[6, 30, 54, 78, 102, 126, 150],
-		[6, 24, 50, 76, 102, 128, 154],
-		[6, 28, 54, 80, 106, 132, 158],
-		[6, 32, 58, 84, 110, 136, 162],
-		[6, 26, 54, 82, 110, 138, 166],
-		[6, 30, 58, 86, 114, 142, 170],
-	];
+	protected const array EXP = [1, 2, 4, 8, 16, 32, 64, 128, 29, 58, 116, 232, 205, 135, 19, 38, 76, 152, 45, 90, 180, 117, 234, 201, 143, 3, 6, 12, 24, 48, 96, 192, 157, 39, 78, 156, 37, 74, 148, 53, 106, 212, 181, 119, 238, 193, 159, 35, 70, 140, 5, 10, 20, 40, 80, 160, 93, 186, 105, 210, 185, 111, 222, 161, 95, 190, 97, 194, 153, 47, 94, 188, 101, 202, 137, 15, 30, 60, 120, 240, 253, 231, 211, 187, 107, 214, 177, 127, 254, 225, 223, 163, 91, 182, 113, 226, 217, 175, 67, 134, 17, 34, 68, 136, 13, 26, 52, 104, 208, 189, 103, 206, 129, 31, 62, 124, 248, 237, 199, 147, 59, 118, 236, 197, 151, 51, 102, 204, 133, 23, 46, 92, 184, 109, 218, 169, 79, 158, 33, 66, 132, 21, 42, 84, 168, 77, 154, 41, 82, 164, 85, 170, 73, 146, 57, 114, 228, 213, 183, 115, 230, 209, 191, 99, 198, 145, 63, 126, 252, 229, 215, 179, 123, 246, 241, 255, 227, 219, 171, 75, 150, 49, 98, 196, 149, 55, 110, 220, 165, 87, 174, 65, 130, 25, 50, 100, 200, 141, 7, 14, 28, 56, 112, 224, 221, 167, 83, 166, 81, 162, 89, 178, 121, 242, 249, 239, 195, 155, 43, 86, 172, 69, 138, 9, 18, 36, 72, 144, 61, 122, 244, 245, 247, 243, 251, 235, 203, 139, 11, 22, 44, 88, 176, 125, 250, 233, 207, 131, 27, 54, 108, 216, 173, 71, 142, 1];
 
 	/**
 	 * format info string = $qr_format_info[
 	 *   (0 for L, 8 for M, 16 for Q, 24 for H) + mask
 	 *];
 	 */
-	protected const FORMAT_INFO = [
+	protected const array FORMAT_INFO = [
 		[1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0],
 		[1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1],
 		[1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0],
@@ -1582,11 +567,13 @@ class QrCode implements Stringable
 		[0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0],
 		[0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]
 	];
+	protected const array LOG = [0, 0, 1, 25, 2, 50, 26, 198, 3, 223, 51, 238, 27, 104, 199, 75, 4, 100, 224, 14, 52, 141, 239, 129, 28, 193, 105, 248, 200, 8, 76, 113, 5, 138, 101, 47, 225, 36, 15, 33, 53, 147, 142, 218, 240, 18, 130, 69, 29, 181, 194, 125, 106, 39, 249, 185, 201, 154, 9, 120, 77, 228, 114, 166, 6, 191, 139, 98, 102, 221, 48, 253, 226, 152, 37, 179, 16, 145, 34, 136, 54, 208, 148, 206, 143, 150, 219, 189, 241, 210, 19, 92, 131, 56, 70, 64, 30, 66, 182, 163, 195, 72, 126, 110, 107, 58, 40, 84, 250, 133, 186, 61, 202, 94, 155, 159, 10, 21, 121, 43, 78, 212, 229, 172, 115, 243, 167, 87, 7, 112, 192, 247, 140, 128, 99, 13, 103, 74, 222, 237, 49, 197, 254, 24, 227, 165, 153, 119, 38, 184, 180, 124, 17, 68, 146, 217, 35, 32, 137, 46, 55, 63, 209, 91, 149, 188, 207, 205, 144, 135, 151, 178, 220, 252, 190, 97, 242, 86, 211, 171, 20, 42, 93, 158, 132, 60, 57, 83, 71, 109, 65, 162, 31, 45, 67, 216, 183, 123, 164, 118, 196, 23, 73, 236, 127, 12, 111, 246, 108, 161, 59, 82, 41, 157, 85, 170, 251, 96, 134, 177, 187, 204, 62, 90, 203, 89, 95, 176, 156, 169, 160, 81, 11, 245, 22, 235, 122, 117, 44, 215, 79, 174, 213, 233, 230, 231, 173, 232, 116, 214, 244, 234, 168, 80, 88, 175];
+	protected const array REMAINER_BITS = [0, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0];
 
 	/**
 	 * version info string = $qr_version_info[ (version - 7) ]
 	 */
-	protected const VERSION_INFO = [
+	protected const array VERSION_INFO = [
 		[0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
 		[0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0],
 		[0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1],
@@ -1622,4 +609,1033 @@ class QrCode implements Stringable
 		[1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
 		[1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1]
 	];
+
+	public function __construct(public string $data)
+	{
+	}
+
+	public function __toString(): string
+	{
+		return $this->toSvg();
+	}
+
+	protected function applyBestMask(array $matrix, int $size): array
+	{
+		$mask     = 0;
+		$mmatrix  = $this->applyMask($matrix, $size, $mask);
+		$penalty  = $this->penalty($mmatrix, $size);
+
+		for ($tmask = 1; $tmask < 8; $tmask++) {
+			$tmatrix  = $this->applyMask($matrix, $size, $tmask);
+			$tpenalty = $this->penalty($tmatrix, $size);
+
+			if ($tpenalty < $penalty) {
+				$mask    = $tmask;
+				$mmatrix = $tmatrix;
+				$penalty = $tpenalty;
+			}
+		}
+
+		return [$mask, $mmatrix];
+	}
+
+	protected function applyMask(
+		array $matrix,
+		int $size,
+		int $mask
+	): array {
+		for ($i = 0; $i < $size; $i++) {
+			for ($j = 0; $j < $size; $j++) {
+				if ($matrix[$i][$j] >= 4 && $this->mask($mask, $i, $j)) {
+					$matrix[$i][$j] ^= 1;
+				}
+			}
+		}
+
+		return $matrix;
+	}
+
+	protected function createMatrix(int $version, array $data): array
+	{
+		$size   = $version * 4 + 17;
+		$matrix = [];
+		$row    = array_fill(0, $size, 0);
+
+		for ($i = 0; $i < $size; $i++) {
+			$matrix[] = $row;
+		}
+
+		// finder patterns
+		for ($i = 0; $i < 8; $i++) {
+			for ($j = 0; $j < 8; $j++) {
+				$m = (($i == 7 || $j == 7) ? 2 :
+					 (($i == 0 || $j == 0 || $i == 6 || $j == 6) ? 3 :
+					 (($i == 1 || $j == 1 || $i == 5 || $j == 5) ? 2 : 3)));
+				$matrix[$i][$j] = $m;
+				$matrix[$size - $i - 1][$j] = $m;
+				$matrix[$i][$size - $j - 1] = $m;
+			}
+		}
+
+		// alignment patterns
+		if ($version >= 2) {
+			$alignment = static::ALIGNMENT_PATTERNS[$version - 2];
+
+			foreach ($alignment as $i) {
+				foreach ($alignment as $j) {
+					if (!$matrix[$i][$j]) {
+						for ($ii = -2; $ii <= 2; $ii++) {
+							for ($jj = -2; $jj <= 2; $jj++) {
+								$m = (max(abs($ii), abs($jj)) & 1) ^ 3;
+								$matrix[$i + $ii][$j + $jj] = $m;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// timing patterns
+		for ($i = $size - 9; $i >= 8; $i--) {
+			$matrix[$i][6] = ($i & 1) ^ 3;
+			$matrix[6][$i] = ($i & 1) ^ 3;
+		}
+
+		// dark module – such an ominous name for such an innocuous thing
+		$matrix[$size - 8][8] = 3;
+
+		// format information area
+		for ($i = 0; $i <= 8; $i++) {
+			if (!$matrix[$i][8]) {
+				$matrix[$i][8] = 1;
+			}
+			if (!$matrix[8][$i]) {
+				$matrix[8][$i] = 1;
+			}
+			if ($i && !$matrix[$size - $i][8]) {
+				$matrix[$size - $i][8] = 1;
+			}
+			if ($i && !$matrix[8][$size - $i]) {
+				$matrix[8][$size - $i] = 1;
+			}
+		}
+
+		// version information area
+		if ($version >= 7) {
+			for ($i = 9; $i < 12; $i++) {
+				for ($j = 0; $j < 6; $j++) {
+					$matrix[$size - $i][$j] = 1;
+					$matrix[$j][$size - $i] = 1;
+				}
+			}
+		}
+
+		// data
+		$col    = $size - 1;
+		$row    = $size - 1;
+		$dir    = -1;
+		$offset = 0;
+		$length = count($data);
+
+		while ($col > 0 && $offset < $length) {
+			if (!$matrix[$row][$col]) {
+				$matrix[$row][$col] = $data[$offset] ? 5 : 4;
+				$offset++;
+			}
+			if (!$matrix[$row][$col - 1]) {
+				$matrix[$row][$col - 1] = $data[$offset] ? 5 : 4;
+				$offset++;
+			}
+			$row += $dir;
+			if ($row < 0 || $row >= $size) {
+				$dir = -$dir;
+				$row += $dir;
+				$col -= 2;
+
+				if ($col == 6) {
+					$col--;
+				}
+			}
+		}
+
+		return [$size, $matrix];
+	}
+
+	/**
+	 * Loops over every row and column, finds all modules that can
+	 * be grouped as rectangle (starting at the top left corner)
+	 * and applies the given action to each active module group
+	 */
+	protected function eachModuleGroup(array $code, Closure $action): array
+	{
+		$result = [];
+		$xStart = $code['q'][3];
+		$yStart = $code['q'][0];
+
+		// generate empty matrix to track what modules have been covered
+		$covered = array_fill(0, count($code['bits']), array_fill(0, count($code['bits'][0]), 0));
+
+		foreach ($code['bits'] as $by => $row) {
+			foreach ($row as $bx => $module) {
+				// skip if module is inactive or already covered
+				if ($module === 0 || $covered[$by][$bx] === 1) {
+					continue;
+				}
+
+				$width  = 0;
+				$height = 0;
+
+				$rowLength = count($row);
+				$colLength = count($code['bits']);
+
+				// extend to the right as long as the modules are active
+				// and use this to determine the width of the group
+				for ($x = $bx; $x < $rowLength; $x++) {
+					if ($row[$x] === 0) {
+						break;
+					}
+					$width++;
+					$covered[$by][$x] = 1;
+				}
+
+				// extend downwards as long as all the modules
+				// at the same width range are active;
+				// use this to determine the height of the group
+				for ($y = $by; $y < $colLength; $y++) {
+					$below = array_slice($code['bits'][$y], $bx, $width);
+
+					// if the sum is less than the width,
+					// there is at least one inactive module
+					if (array_sum($below) < $width) {
+						break;
+					}
+
+					$height++;
+
+					for ($x = $bx; $x < $bx + $width; $x++) {
+						$covered[$y][$x] = 1;
+					}
+				}
+
+				$result[] = $action(
+					$xStart + $bx,
+					$yStart + $by,
+					$width,
+					$height
+				);
+			}
+		}
+
+		return $result;
+	}
+
+	protected function encode(int $q = 4): array
+	{
+		[$data, $version, $ecl, $ec] = $this->encodeData();
+		$data = $this->encodeErrorCorrection($data, $ec, $version);
+		[$size, $mtx] = $this->createMatrix($version, $data);
+		[$mask, $mtx] = $this->applyBestMask($mtx, $size);
+		$mtx = $this->finalizeMatrix($mtx, $size, $ecl, $mask, $version);
+
+		return [
+			'q'    => [$q, $q, $q, $q],
+			'size' => [$size, $size],
+			'bits' => $mtx
+		];
+	}
+
+	protected function encodeAlphanum($data, $version_group): array
+	{
+		$alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+		$code = [0, 0, 1, 0];
+		$length = strlen($data);
+		switch ($version_group) {
+			case 2: // 27 - 40
+				$code[] = $length & 0x1000;
+				$code[] = $length & 0x0800;
+				// no break
+			case 1: // 10 - 26
+				$code[] = $length & 0x0400;
+				$code[] = $length & 0x0200;
+				// no break
+			case 0: // 1 - 9
+				$code[] = $length & 0x0100;
+				$code[] = $length & 0x0080;
+				$code[] = $length & 0x0040;
+				$code[] = $length & 0x0020;
+				$code[] = $length & 0x0010;
+				$code[] = $length & 0x0008;
+				$code[] = $length & 0x0004;
+				$code[] = $length & 0x0002;
+				$code[] = $length & 0x0001;
+		}
+		for ($i = 0; $i < $length; $i += 2) {
+			$group = substr($data, $i, 2);
+			if (strlen($group) > 1) {
+				$c1 = strpos($alphabet, substr($group, 0, 1));
+				$c2 = strpos($alphabet, substr($group, 1, 1));
+				$ch = $c1 * 45 + $c2;
+				$code[] = $ch & 0x400;
+				$code[] = $ch & 0x200;
+				$code[] = $ch & 0x100;
+				$code[] = $ch & 0x080;
+				$code[] = $ch & 0x040;
+				$code[] = $ch & 0x020;
+				$code[] = $ch & 0x010;
+				$code[] = $ch & 0x008;
+				$code[] = $ch & 0x004;
+				$code[] = $ch & 0x002;
+				$code[] = $ch & 0x001;
+			} else {
+				$ch = strpos($alphabet, $group);
+				$code[] = $ch & 0x020;
+				$code[] = $ch & 0x010;
+				$code[] = $ch & 0x008;
+				$code[] = $ch & 0x004;
+				$code[] = $ch & 0x002;
+				$code[] = $ch & 0x001;
+			}
+		}
+		return $code;
+	}
+
+	protected function encodeBinary(string $data, int $version_group): array
+	{
+		$code   = [0, 1, 0, 0];
+		$length = strlen($data);
+
+		switch ($version_group) {
+			case 2:  // 27 - 40
+			case 1:  // 10 - 26
+				$code[] = $length & 0x8000;
+				$code[] = $length & 0x4000;
+				$code[] = $length & 0x2000;
+				$code[] = $length & 0x1000;
+				$code[] = $length & 0x0800;
+				$code[] = $length & 0x0400;
+				$code[] = $length & 0x0200;
+				$code[] = $length & 0x0100;
+				// no break
+			case 0:  // 1 - 9
+				$code[] = $length & 0x0080;
+				$code[] = $length & 0x0040;
+				$code[] = $length & 0x0020;
+				$code[] = $length & 0x0010;
+				$code[] = $length & 0x0008;
+				$code[] = $length & 0x0004;
+				$code[] = $length & 0x0002;
+				$code[] = $length & 0x0001;
+		}
+
+		for ($i = 0; $i < $length; $i++) {
+			$ch = ord(substr($data, $i, 1));
+			$code[] = $ch & 0x80;
+			$code[] = $ch & 0x40;
+			$code[] = $ch & 0x20;
+			$code[] = $ch & 0x10;
+			$code[] = $ch & 0x08;
+			$code[] = $ch & 0x04;
+			$code[] = $ch & 0x02;
+			$code[] = $ch & 0x01;
+		}
+
+		return $code;
+	}
+
+	protected function encodeData(): array
+	{
+		$mode = $this->mode();
+		[$version, $ecl] = $this->version($mode);
+
+		$group = match (true) {
+			$version >= 27 => 2,
+			$version >= 10 => 1,
+			default        => 0
+		};
+
+		$ec = static::EC_PARAMS[($version - 1) * 4 + $ecl];
+
+		// don't cut off mid-character if exceeding capacity
+		$max_chars = static::CAPACITY[$version - 1][$ecl][$mode];
+
+		if ($mode == 3) {
+			$max_chars <<= 1;
+		}
+
+		$data = substr($this->data, 0, $max_chars);
+
+		// convert from character level to bit level
+		$code = match ($mode) {
+			0 => $this->encodeNumeric($data, $group),
+			1 => $this->encodeAlphanum($data, $group),
+			2 => $this->encodeBinary($data, $group),
+			default => throw new LogicException(message: 'Invalid QR mode') // @codeCoverageIgnore
+		};
+
+		$code = [...$code, ...array_fill(0, 4, 0)];
+
+		if ($remainder = count($code) % 8) {
+			$code = [...$code, ...array_fill(0, 8 - $remainder, 0)];
+		}
+
+		// convert from bit level to byte level
+		$data = [];
+
+		for ($i = 0, $n = count($code); $i < $n; $i += 8) {
+			$byte = 0;
+
+			if ($code[$i]) {
+				$byte |= 0x80;
+			}
+			if ($code[$i + 1]) {
+				$byte |= 0x40;
+			}
+			if ($code[$i + 2]) {
+				$byte |= 0x20;
+			}
+			if ($code[$i + 3]) {
+				$byte |= 0x10;
+			}
+			if ($code[$i + 4]) {
+				$byte |= 0x08;
+			}
+			if ($code[$i + 5]) {
+				$byte |= 0x04;
+			}
+			if ($code[$i + 6]) {
+				$byte |= 0x02;
+			}
+			if ($code[$i + 7]) {
+				$byte |= 0x01;
+			}
+
+			$data[] = $byte;
+		}
+
+		for (
+			$i = count($data),
+			$a = 1,
+			$n = $ec[0];
+			$i < $n;
+			$i++,
+			$a ^= 1
+		) {
+			$data[] = $a ? 236 : 17;
+		}
+
+		return [
+			$data,
+			$version,
+			$ecl,
+			$ec
+		];
+	}
+
+	protected function encodeErrorCorrection(
+		array $data,
+		array $ec_params,
+		int $version
+	): array {
+		$blocks    = $this->errorCorrectionSplit($data, $ec_params);
+		$ec_blocks = [];
+
+		for ($i = 0, $n = count($blocks); $i < $n; $i++) {
+			$ec_blocks[] = $this->errorCorrectionDivide($blocks[$i], $ec_params);
+		}
+
+		$data    = $this->errorCorrectionInterleave($blocks);
+		$ec_data = $this->errorCorrectionInterleave($ec_blocks);
+		$code    = [];
+
+		foreach ($data as $ch) {
+			$code[] = $ch & 0x80;
+			$code[] = $ch & 0x40;
+			$code[] = $ch & 0x20;
+			$code[] = $ch & 0x10;
+			$code[] = $ch & 0x08;
+			$code[] = $ch & 0x04;
+			$code[] = $ch & 0x02;
+			$code[] = $ch & 0x01;
+		}
+		foreach ($ec_data as $ch) {
+			$code[] = $ch & 0x80;
+			$code[] = $ch & 0x40;
+			$code[] = $ch & 0x20;
+			$code[] = $ch & 0x10;
+			$code[] = $ch & 0x08;
+			$code[] = $ch & 0x04;
+			$code[] = $ch & 0x02;
+			$code[] = $ch & 0x01;
+		}
+		for ($n = static::REMAINER_BITS[$version - 1]; $n > 0; $n--) {
+			$code[] = 0;
+		}
+
+		return $code;
+	}
+
+	protected function encodeNumeric($data, $version_group): array
+	{
+		$code   = [0, 0, 0, 1];
+		$length = strlen($data);
+
+		switch ($version_group) {
+			case 2: // 27 - 40
+				$code[] = $length & 0x2000;
+				$code[] = $length & 0x1000;
+				// no break
+			case 1: // 10 - 26
+				$code[] = $length & 0x0800;
+				$code[] = $length & 0x0400;
+				// no break
+			case 0: // 1 - 9
+				$code[] = $length & 0x0200;
+				$code[] = $length & 0x0100;
+				$code[] = $length & 0x0080;
+				$code[] = $length & 0x0040;
+				$code[] = $length & 0x0020;
+				$code[] = $length & 0x0010;
+				$code[] = $length & 0x0008;
+				$code[] = $length & 0x0004;
+				$code[] = $length & 0x0002;
+				$code[] = $length & 0x0001;
+		}
+		for ($i = 0; $i < $length; $i += 3) {
+			$group = substr($data, $i, 3);
+
+			switch (strlen($group)) {
+				case 3:
+					$code[] = (int)$group & 0x200;
+					$code[] = (int)$group & 0x100;
+					$code[] = (int)$group & 0x080;
+					// no break
+				case 2:
+					$code[] = (int)$group & 0x040;
+					$code[] = (int)$group & 0x020;
+					$code[] = (int)$group & 0x010;
+					// no break
+				case 1:
+					$code[] = (int)$group & 0x008;
+					$code[] = (int)$group & 0x004;
+					$code[] = (int)$group & 0x002;
+					$code[] = (int)$group & 0x001;
+			}
+		}
+		return $code;
+	}
+
+	protected function errorCorrectionDivide(array $data, array $ec): array
+	{
+		$num_data  = count($data);
+		$num_error = $ec[1];
+		$generator = static::EC_POLYNOMIALS[$num_error];
+		$message   = $data;
+
+		for ($i = 0; $i < $num_error; $i++) {
+			$message[] = 0;
+		}
+
+		for ($i = 0; $i < $num_data; $i++) {
+			if ($message[$i]) {
+				$leadterm = static::LOG[$message[$i]];
+
+				for ($j = 0; $j <= $num_error; $j++) {
+					$term = ($generator[$j] + $leadterm) % 255;
+					$message[$i + $j] ^= static::EXP[$term];
+				}
+			}
+		}
+
+		return array_slice($message, $num_data, $num_error);
+	}
+
+	protected function errorCorrectionInterleave(array $blocks): array
+	{
+		$data       = [];
+		$num_blocks = count($blocks);
+
+		for ($offset = 0; true; $offset++) {
+			$break = true;
+
+			for ($i = 0; $i < $num_blocks; $i++) {
+				if (isset($blocks[$i][$offset]) === true) {
+					$data[] = $blocks[$i][$offset];
+					$break = false;
+				}
+			}
+
+			if ($break) {
+				break;
+			}
+		}
+
+		return $data;
+	}
+
+	protected function errorCorrectionSplit(array $data, array $ec): array
+	{
+		$blocks = [];
+		$offset = 0;
+
+		for ($i = $ec[2], $length = $ec[3]; $i > 0; $i--) {
+			$blocks[] = array_slice($data, $offset, $length);
+			$offset += $length;
+		}
+		for ($i = $ec[4], $length = $ec[5]; $i > 0; $i--) {
+			$blocks[] = array_slice($data, $offset, $length);
+			$offset += $length;
+		}
+
+		return $blocks;
+	}
+
+	protected function finalizeMatrix(
+		array $matrix,
+		int $size,
+		int $ecl,
+		int $mask,
+		int $version
+	): array {
+		// Format info
+		$format = static::FORMAT_INFO[$ecl * 8 + $mask];
+		$matrix[8][0] = $format[0];
+		$matrix[8][1] = $format[1];
+		$matrix[8][2] = $format[2];
+		$matrix[8][3] = $format[3];
+		$matrix[8][4] = $format[4];
+		$matrix[8][5] = $format[5];
+		$matrix[8][7] = $format[6];
+		$matrix[8][8] = $format[7];
+		$matrix[7][8] = $format[8];
+		$matrix[5][8] = $format[9];
+		$matrix[4][8] = $format[10];
+		$matrix[3][8] = $format[11];
+		$matrix[2][8] = $format[12];
+		$matrix[1][8] = $format[13];
+		$matrix[0][8] = $format[14];
+		$matrix[$size - 1][8] = $format[0];
+		$matrix[$size - 2][8] = $format[1];
+		$matrix[$size - 3][8] = $format[2];
+		$matrix[$size - 4][8] = $format[3];
+		$matrix[$size - 5][8] = $format[4];
+		$matrix[$size - 6][8] = $format[5];
+		$matrix[$size - 7][8] = $format[6];
+		$matrix[8][$size - 8] = $format[7];
+		$matrix[8][$size - 7] = $format[8];
+		$matrix[8][$size - 6] = $format[9];
+		$matrix[8][$size - 5] = $format[10];
+		$matrix[8][$size - 4] = $format[11];
+		$matrix[8][$size - 3] = $format[12];
+		$matrix[8][$size - 2] = $format[13];
+		$matrix[8][$size - 1] = $format[14];
+
+		// version info
+		if ($version >= 7) {
+			$version = static::VERSION_INFO[$version - 7];
+
+			for ($i = 0; $i < 18; $i++) {
+				$r = $size - 9 - ($i % 3);
+				$c = 5 - intdiv($i, 3);
+				$matrix[$r][$c] = $version[$i];
+				$matrix[$c][$r] = $version[$i];
+			}
+		}
+
+		// patterns and data
+		for ($i = 0; $i < $size; $i++) {
+			for ($j = 0; $j < $size; $j++) {
+				$matrix[$i][$j] &= 1;
+			}
+		}
+
+		return $matrix;
+	}
+
+	protected function mask(int $mask, int $row, int $column): bool
+	{
+		return match ($mask) {
+			0 => !(($row + $column) % 2),
+			1 => !($row % 2),
+			2 => !($column % 3),
+			3 => !(($row + $column) % 3),
+			4 => !((floor($row / 2) + floor($column / 3)) % 2),
+			5 => !(((($row * $column) % 2) + (($row * $column) % 3))),
+			6 => !(((($row * $column) % 2) + (($row * $column) % 3)) % 2),
+			7 => !(((($row + $column) % 2) + (($row * $column) % 3)) % 2),
+			default => throw new LogicException(message: 'Invalid QR mask') // @codeCoverageIgnore
+		};
+	}
+
+	/**
+	 * Returns width and height based on the
+	 * generated modules and quiet zone
+	 */
+	protected function measure($code): array
+	{
+		return [
+			$code['q'][3] + $code['size'][0] + $code['q'][1],
+			$code['q'][0] + $code['size'][1] + $code['q'][2]
+		];
+	}
+
+	/**
+	 * Detect what encoding mode (numeric, alphanumeric, binary)
+	 * can be used
+	 */
+	protected function mode(): int
+	{
+		// numeric
+		if (preg_match('/^[0-9]*$/', $this->data)) {
+			return 0;
+		}
+
+		// alphanumeric
+		if (preg_match('/^[0-9A-Z .\/:$%*+-]*$/', $this->data)) {
+			return 1;
+		}
+
+		return 2;
+	}
+
+	protected function penalty(array &$matrix, int $size): int
+	{
+		$score  = $this->penalty1($matrix, $size);
+		$score += $this->penalty2($matrix, $size);
+		$score += $this->penalty3($matrix, $size);
+		$score += $this->penalty4($matrix, $size);
+		return $score;
+	}
+
+	protected function penalty1(array &$matrix, int $size): int
+	{
+		$score = 0;
+
+		for ($i = 0; $i < $size; $i++) {
+			$rowvalue = 0;
+			$rowcount = 0;
+			$colvalue = 0;
+			$colcount = 0;
+
+			for ($j = 0; $j < $size; $j++) {
+				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
+				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
+
+				if ($rv == $rowvalue) {
+					$rowcount++;
+				} else {
+					if ($rowcount >= 5) {
+						$score += $rowcount - 2;
+					}
+					$rowvalue = $rv;
+					$rowcount = 1;
+				}
+
+				if ($cv == $colvalue) {
+					$colcount++;
+				} else {
+					if ($colcount >= 5) {
+						$score += $colcount - 2;
+					}
+					$colvalue = $cv;
+					$colcount = 1;
+				}
+			}
+
+			if ($rowcount >= 5) {
+				$score += $rowcount - 2;
+			}
+			if ($colcount >= 5) {
+				$score += $colcount - 2;
+			}
+		}
+
+		return $score;
+	}
+
+	protected function penalty2(array &$matrix, int $size): int
+	{
+		$score = 0;
+
+		for ($i = 1; $i < $size; $i++) {
+			for ($j = 1; $j < $size; $j++) {
+				$v1 = $matrix[$i - 1][$j - 1];
+				$v2 = $matrix[$i - 1][$j    ];
+				$v3 = $matrix[$i    ][$j - 1];
+				$v4 = $matrix[$i    ][$j    ];
+				$v1 = ($v1 == 5 || $v1 == 3) ? 1 : 0;
+				$v2 = ($v2 == 5 || $v2 == 3) ? 1 : 0;
+				$v3 = ($v3 == 5 || $v3 == 3) ? 1 : 0;
+				$v4 = ($v4 == 5 || $v4 == 3) ? 1 : 0;
+
+				if ($v1 == $v2 && $v2 == $v3 && $v3 == $v4) {
+					$score += 3;
+				}
+			}
+		}
+
+		return $score;
+	}
+
+	protected function penalty3(array &$matrix, int $size): int
+	{
+		$score = 0;
+
+		for ($i = 0; $i < $size; $i++) {
+			$rowvalue = 0;
+			$colvalue = 0;
+
+			for ($j = 0; $j < 11; $j++) {
+				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
+				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
+				$rowvalue = (($rowvalue << 1) & 0x7FF) | $rv;
+				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
+			}
+
+			if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
+				$score += 40;
+			}
+			if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
+				$score += 40;
+			}
+
+			for ($j = 11; $j < $size; $j++) {
+				$rv = ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) ? 1 : 0;
+				$cv = ($matrix[$j][$i] == 5 || $matrix[$j][$i] == 3) ? 1 : 0;
+				$rowvalue = (($rowvalue << 1) & 0x7FF) | $rv;
+				$colvalue = (($colvalue << 1) & 0x7FF) | $cv;
+
+				if ($rowvalue == 0x5D0 || $rowvalue == 0x5D) {
+					$score += 40;
+				}
+
+				if ($colvalue == 0x5D0 || $colvalue == 0x5D) {
+					$score += 40;
+				}
+			}
+		}
+
+		return $score;
+	}
+
+	protected function penalty4(array &$matrix, int $size): int
+	{
+		$dark = 0;
+
+		for ($i = 0; $i < $size; $i++) {
+			for ($j = 0; $j < $size; $j++) {
+				if ($matrix[$i][$j] == 5 || $matrix[$i][$j] == 3) {
+					$dark++;
+				}
+			}
+		}
+
+		$dark *= 20;
+		$dark /= $size * $size;
+		$a     = abs(floor($dark) - 10);
+		$b     = abs(ceil($dark) - 10);
+		return (int)min($a, $b) * 10;
+	}
+
+	/**
+	 * Returns the QR code as a PNG data URI
+	 *
+	 * @param $size Image width/height in pixels, defaults to a size per module of 4x4
+	 * @param $color Foreground color in hex format
+	 * @param $back Background color in hex format
+	 * @param $border Border size in number of modules
+	 */
+	public function toDataUri(
+		int|null $size = null,
+		string $color = '#000000',
+		string $back = '#ffffff',
+		int $border = 4
+	): string {
+		$image = $this->toImage($size, $color, $back, $border);
+
+		ob_start();
+		imagepng($image);
+		$data = ob_get_contents();
+		ob_end_clean();
+
+		return 'data:image/png;base64,' . base64_encode($data);
+	}
+
+	/**
+	 * Returns the QR code as a GdImage object
+	 *
+	 * @param $size Image width/height in pixels, defaults to a size per module of 4x4
+	 * @param $color Foreground color in hex format
+	 * @param $back Background color in hex format
+	 * @param $border Border size in number of modules
+	 */
+	public function toImage(
+		int|null $size = null,
+		string $color = '#000000',
+		string $back = '#ffffff',
+		int $border = 4
+	): GdImage {
+		// get code and size measurements
+		$code   = $this->encode($border);
+		[$width, $height] = $this->measure($code);
+		$size ??= (int)ceil($width * 4);
+		$ws     = $size / $width;
+		$hs     = $size / $height;
+
+		// create image baseplate
+		$image = imagecreatetruecolor($size, $size);
+
+		if ($image === false) {
+			// @codeCoverageIgnoreStart
+			throw new Exception(
+				message: 'Could not create QR code image'
+			);
+			// @codeCoverageIgnoreEnd
+		}
+
+		$allocateColor = static function (string $hex) use ($image) {
+			$hex = preg_replace('/[^0-9A-Fa-f]/', '', $hex);
+			$r   = hexdec(substr($hex, 0, 2));
+			$g   = hexdec(substr($hex, 2, 2));
+			$b   = hexdec(substr($hex, 4, 2));
+			return imagecolorallocate($image, $r, $g, $b);
+		};
+
+		$back  = $allocateColor($back);
+		$color = $allocateColor($color);
+		imagefill($image, 0, 0, $back);
+
+		// paint square for each module
+		$this->eachModuleGroup(
+			$code,
+			fn ($x, $y, $width, $height) => imagefilledrectangle(
+				$image,
+				(int)floor($x * $ws),
+				(int)floor($y * $hs),
+				(int)floor($x * $ws + $ws * $width) - 1,
+				(int)floor($y * $hs + $hs * $height) - 1,
+				$color
+			)
+		);
+
+		return $image;
+	}
+
+	/**
+	 * Returns the QR code as `<svg>` element
+	 *
+	 * @param $size Optional CSS width of the `<svg>` element
+	 * @param $color Foreground color in hex format
+	 * @param $back Background color in hex format
+	 * @param $border Border size in number of modules
+	 */
+	public function toSvg(
+		int|string|null $size = null,
+		string $color = '#000000',
+		string $back = '#ffffff',
+		int $border = 4
+	): string {
+		$code = $this->encode($border);
+		[$vbw, $vbh] = $this->measure($code);
+
+		$modules = $this->eachModuleGroup(
+			$code,
+			fn ($x, $y, $width, $height) => 'M' . $x . ',' . $y . 'h' . $width . 'v' . $height . 'h-' . $width . 'z'
+		);
+
+		// escape the values that end up in SVG (XML) attributes
+		$color = Escape::xml($color);
+		$back  = Escape::xml($back);
+		$size  = $size ? ' style="width: ' . Escape::xml((string)$size) . '"' : '';
+
+		return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . $vbw . ' ' . $vbh . '" stroke="none"' . $size . '>' .
+			'<rect width="100%" height="100%" fill="' . $back . '"/>' .
+			'<path d="' . implode(' ', $modules) . '" fill="' . $color . '"/>' .
+			'</svg>';
+	}
+
+	/**
+	 * Detect what version needs to be used by
+	 * trying to maximize the error correction level
+	 */
+	protected function version(int $mode): array
+	{
+		$length = strlen($this->data);
+
+		if ($mode == 3) {
+			$length >>= 1;
+		}
+
+		$ecl = 0;
+
+		// first try to find the minimum version
+		// that can contain the data
+		for ($version = 1; $version <= 40; $version++) {
+			if ($length <= static::CAPACITY[$version - 1][$ecl][$mode]) {
+				break;
+			}
+		}
+
+		// reject data that does not fit into the largest QR version
+		// instead of overflowing into undefined version/capacity
+		if ($version > 40) {
+			throw new InvalidArgumentException(
+				message: 'The provided data exceeds the maximum capacity of a QR code'
+			);
+		}
+
+		// with the version in place, try to raise
+		// the error correction level as long as
+		// the data still fits
+		for ($newEcl = 1; $newEcl <= 3; $newEcl++) {
+			if ($length <= static::CAPACITY[$version - 1][$newEcl][$mode]) {
+				$ecl = $newEcl;
+			}
+		}
+
+		return [$version, $ecl];
+	}
+
+	/**
+	 * Saves the QR code to a file.
+	 * Supported formats: gif, jpg, jpeg, png, svg, webp
+	 *
+	 * @param $file Path to the output file with one of the supported file extensions
+	 * @param $size Optional image width/height in pixels (defaults to a size per module of 4x4) or CSS width of the `<svg>` element
+	 * @param $color Foreground color in hex format
+	 * @param $back Background color in hex format
+	 * @param $border Border size in number of modules
+	 */
+	public function write(
+		string $file,
+		int|string|null $size = null,
+		string $color = '#000000',
+		string $back = '#ffffff',
+		int $border = 4
+	): void {
+		$format = F::extension($file);
+
+		if ($format === 'svg') {
+			$svg = $this->toSvg($size, $color, $back, $border);
+			F::write($file, $svg);
+			return;
+		}
+
+		// the string size form is only supported by SVG (CSS width);
+		// raster formats require an integer pixel size
+		if (is_string($size) === true) {
+			$size = (int)$size;
+		}
+
+		$img = $this->toImage($size, $color, $back, $border);
+
+		match ($format) {
+			'gif'         => imagegif($img, $file),
+			'jpg', 'jpeg' => imagejpeg($img, $file),
+			'png'         => imagepng($img, $file),
+			'webp'        => imagewebp($img, $file),
+			default       => throw new InvalidArgumentException(
+				message: 'Cannot write QR code as ' . $format
+			)
+		};
+	}
 }

@@ -77,7 +77,7 @@ We use [`cpx`](https://github.com/laravel/cpx) to run our PHP dev tools (e.g. PH
 Install `cpx` globally once via Composer:
 
 ```bash
-composer global require cpx/cpx
+composer global require laravel/cpx
 ```
 
 Make sure Composer's global `bin` directory is on your `PATH` (run `composer global config bin-dir --absolute` to find it). After that you don't need to install PHPUnit, Psalm or PHP CS Fixer globally. The `composer` scripts (`composer fix`, `composer test`, `composer analyze`) call them through `cpx` for you.
@@ -100,9 +100,9 @@ We use an [`.editorconfig`](https://editorconfig.org) file to enforce basic form
 
 We use [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) to ensure a consistent style for our PHP code. It is mainly based on [PSR-12](https://www.php-fig.org/psr/psr-12/). Run `composer fix` in the `kirby` folder to check for inconsistencies and fix them (this runs PHP CS Fixer through [`cpx`](#development-setup), no separate installation needed). Our automated PR checks will fail if there are code style issues with your code.
 
-#### Frontend/Panel (JavaScript, Vue)
+#### Frontend/Panel (JavaScript, TypeScript, Vue)
 
-We use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) to ensure a consistent style for our JavaScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and `npm run format:fix` to fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
+We use [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) to ensure a consistent style for our JavaScript, TypeScript and Vue code. After running `npm install` in the `kirby/panel` folder, you can run `npm run format` to check for inconsistencies and `npm run format:fix` to fix them. We also use [ESLint](https://eslint.org) which you can use by running `npm run lint` and/or `npm run lint:fix`.
 
 ### Documentation
 

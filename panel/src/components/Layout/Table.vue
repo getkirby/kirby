@@ -2,6 +2,7 @@
 	<div
 		:aria-disabled="disabled"
 		:class="['k-table', $attrs.class]"
+		:data-responsive="responsive"
 		:style="$attrs.style"
 	>
 		<table
@@ -82,6 +83,7 @@
 						:data-selecting="selecting"
 						:data-selectable="rowIsSelectable(row)"
 						:data-sortable="rowIsSortable(row)"
+						:data-theme="row.theme"
 					>
 						<!-- Index & drag handle -->
 						<td
@@ -96,7 +98,12 @@
 									rowIndex
 								}"
 							>
-								<div class="k-table-index" v-text="index + rowIndex" />
+								<k-icon
+									v-if="row.theme === 'skeleton'"
+									class="k-table-index"
+									type="loader"
+								/>
+								<div v-else class="k-table-index" v-text="index + rowIndex" />
 							</slot>
 
 							<k-sort-handle
@@ -118,7 +125,7 @@
 							:value="row[columnIndex]"
 							:style="{ width: width(column.width) }"
 							class="k-table-column"
-							@click.native="
+							@click="
 								onCell({
 									row,
 									rowIndex,
@@ -145,21 +152,21 @@
 								<label class="k-table-select-checkbox">
 									<input
 										:disabled="row.selectable === false"
-										type="checkbox"
-										@change="$emit('select', row, rowIndex)"
+										:type="selectmode === 'single' ? 'radio' : 'checkbox'"
+										:checked="isSelected(row)"
+										@change="onSelect(row)"
 									/>
 								</label>
 							</template>
 
-							<template v-else>
-								<slot name="options" v-bind="{ row, rowIndex }">
-									<k-options-dropdown
-										:options="row.options ?? options"
-										:text="(row.options ?? options).length > 1"
-										@option="onOption($event, row, rowIndex)"
-									/>
-								</slot>
-							</template>
+							<slot name="options" v-bind="{ row, rowIndex }">
+								<k-options-dropdown
+									v-if="!selecting"
+									:options="row.options ?? options"
+									:text="(row.options ?? options).length > 1"
+									@option="onOption($event, row, rowIndex)"
+								/>
+							</slot>
 						</td>
 					</tr>
 				</template>
@@ -178,6 +185,9 @@
 <script>
 /**
  * A simple table component with columns and rows
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	inheritAttrs: false,
@@ -229,16 +239,47 @@ export default {
 		 * Optional pagination settings
 		 */
 		pagination: [Object, Boolean],
+		responsive: {
+			type: Boolean,
+			default: true
+		},
 		/**
 		 * Whether the table is in select mode
+		 * @since 5.0.0
+		 * @values "single", "multiple", false
 		 */
 		selecting: Boolean,
+		/**
+		 * Selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
+		},
 		/**
 		 * Whether table is sortable
 		 */
 		sortable: Boolean
 	},
-	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
+	emits: [
+		"cell",
+		"change",
+		"header",
+		"input",
+		"option",
+		"paginate",
+		"select",
+		"sort"
+	],
 	data() {
 		return {
 			values: this.rows
@@ -294,8 +335,8 @@ export default {
 		 */
 		hasOptions() {
 			return (
-				this.selecting ||
-				this.$scopedSlots.options ||
+				this.selecting !== false ||
+				this.$slots.options ||
 				this.options?.length > 0 ||
 				Object.values(this.values).filter((row) => row?.options).length > 0
 			);
@@ -322,6 +363,11 @@ export default {
 		}
 	},
 	methods: {
+		findSelectedIndex(row) {
+			return this.selected.findIndex(
+				(selected) => selected === (row._id ?? row.id)
+			);
+		},
 		/**
 		 * Checks if specific column is fully empty
 		 * @param {number} columnIndex
@@ -333,6 +379,9 @@ export default {
 					(row) => this.$helper.object.isEmpty(row[columnIndex]) === false
 				).length === 0
 			);
+		},
+		isSelected(row) {
+			return this.findSelectedIndex(row) !== -1;
 		},
 		/**
 		 * Returns label for a column
@@ -380,6 +429,19 @@ export default {
 		 */
 		onOption(option, row, rowIndex) {
 			this.$emit("option", option, row, rowIndex);
+		},
+		onSelect(row) {
+			if (this.selectmode === "single") {
+				return this.$emit("select", [row._id ?? row.id]);
+			}
+
+			const index = this.findSelectedIndex(row);
+
+			if (index !== -1) {
+				return this.$emit("select", this.selected.toSpliced(index, 1));
+			}
+
+			return this.$emit("select", [...this.selected, row._id ?? row.id]);
 		},
 		/**
 		 * When the table has been sorted,
@@ -595,6 +657,16 @@ export default {
 	outline-offset: -2px;
 }
 
+/* Theme: skeleton */
+.k-table tr[data-theme="skeleton"] .k-table-column::after {
+	content: "";
+	display: block;
+	height: 0.75em;
+	margin-inline: var(--table-cell-padding);
+	border-radius: var(--rounded-sm);
+	background: light-dark(var(--color-gray-250), var(--color-gray-800));
+}
+
 /* Empty */
 .k-table-empty {
 	color: var(--color-text-dimmed);
@@ -616,20 +688,20 @@ export default {
 
 /* Mobile */
 @container (max-width: 40rem) {
-	.k-table {
+	.k-table[data-responsive="true"] {
 		overflow-x: auto;
 	}
-	.k-table thead th {
+	.k-table[data-responsive="true"] thead th {
 		position: static;
 	}
 
 	/** Make sure that the option toggle does not create huge row heights **/
-	.k-table .k-options-dropdown-toggle {
+	.k-table[data-responsive="true"] .k-options-dropdown-toggle {
 		aspect-ratio: auto !important;
 	}
 
 	/**	Reset any custom column widths **/
-	.k-table
+	.k-table[data-responsive="true"]
 		:where(th, td):not(
 			.k-table-index-column,
 			.k-table-options-column,
@@ -639,7 +711,7 @@ export default {
 		width: auto !important;
 	}
 
-	.k-table :where(th, td):not([data-mobile="true"]) {
+	.k-table[data-responsive="true"] :where(th, td):not([data-mobile="true"]) {
 		display: none;
 	}
 }

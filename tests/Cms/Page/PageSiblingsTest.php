@@ -7,7 +7,16 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageSiblingsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageSiblings';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageSiblings';
+
+	protected function collection(): array
+	{
+		return [
+			['slug' => 'project-a'],
+			['slug' => 'project-b'],
+			['slug' => 'project-c']
+		];
+	}
 
 	public function site(array|null $children = null): Site
 	{
@@ -20,19 +29,31 @@ class PageSiblingsTest extends ModelTestCase
 		return $this->app->site();
 	}
 
-	protected function collection(): array
-	{
-		return [
-			['slug' => 'project-a'],
-			['slug' => 'project-b'],
-			['slug' => 'project-c']
-		];
-	}
-
 	public function testDefaultSiblings(): void
 	{
 		$page = new Page(['slug' => 'test']);
 		$this->assertInstanceOf(Pages::class, $page->siblings());
+	}
+
+	public function testDraftSiblings(): void
+	{
+		$parent = new Page([
+			'slug' => 'parent',
+			'children' => [
+				['slug' => 'a'],
+				['slug' => 'b'],
+			],
+			'drafts' => [
+				['slug' => 'c'],
+				['slug' => 'd'],
+				['slug' => 'e'],
+			]
+		]);
+
+		$drafts = $parent->drafts();
+		$draft  = $drafts->find('c');
+
+		$this->assertSame($drafts, $draft->siblings());
 	}
 
 	public function testHasNext(): void
@@ -191,14 +212,6 @@ class PageSiblingsTest extends ModelTestCase
 		$this->assertSame($collection->first()->next(), $collection->nth(1));
 	}
 
-	public function testNextNotInCollection(): void
-	{
-		$collection = $this->site()->children();
-		$page       = $collection->first();
-
-		$this->assertNull($page->next($collection->not($page)));
-	}
-
 	public function testNextAll(): void
 	{
 		$collection = $this->site()->children();
@@ -228,6 +241,14 @@ class PageSiblingsTest extends ModelTestCase
 		])->children();
 
 		$this->assertSame('listed-a', $collection->first()->nextListed()->slug());
+	}
+
+	public function testNextNotInCollection(): void
+	{
+		$collection = $this->site()->children();
+		$page       = $collection->first();
+
+		$this->assertNull($page->next($collection->not($page)));
 	}
 
 	public function testNextUnlisted(): void
@@ -293,27 +314,6 @@ class PageSiblingsTest extends ModelTestCase
 
 		$this->assertSame($children, $page->siblings());
 		$this->assertEquals($siblings, $page->siblings(false)); // cannot use strict assertion (cloned object)
-	}
-
-	public function testDraftSiblings(): void
-	{
-		$parent = new Page([
-			'slug' => 'parent',
-			'children' => [
-				['slug' => 'a'],
-				['slug' => 'b'],
-			],
-			'drafts' => [
-				['slug' => 'c'],
-				['slug' => 'd'],
-				['slug' => 'e'],
-			]
-		]);
-
-		$drafts = $parent->drafts();
-		$draft  = $drafts->find('c');
-
-		$this->assertSame($drafts, $draft->siblings());
 	}
 
 	public function testTemplateSiblings(): void

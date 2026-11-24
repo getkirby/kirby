@@ -1,0 +1,685 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Closure;
+use Kirby\Api\Api;
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+class FilePickerFieldTestApi extends Api
+{
+	public Closure|null $preflight = null;
+	public string|null $template = null;
+
+	public function upload(
+		Closure $callback,
+		bool $single = false,
+		bool $debug = false,
+		string|null $template = null,
+		Closure|null $preflight = null
+	): array {
+		$this->preflight = $preflight;
+		$this->template  = $template;
+
+		// like the real upload handler, authorize the
+		// upload before any data gets processed
+		$preflight?->__invoke('test.txt', $template);
+
+		return [
+			'status' => 'ok',
+			'data'   => $callback('source.txt', 'test.txt', $template)
+		];
+	}
+}
+
+class FilePickerFieldTestPage extends Page
+{
+	public array $createdFile = [];
+
+	public function createFile(array $props, bool $move = false): File
+	{
+		$this->createdFile = $props;
+
+		return new File([
+			'filename' => $props['filename'],
+			'parent'   => $this,
+			'template' => $props['template']
+		]);
+	}
+}
+
+#[CoversClass(FilePickerField::class)]
+#[CoversClass(ModelPickerField::class)]
+class FilePickerFieldTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Form.Fields.FilePickerField';
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'test-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'test-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'test-c'],
+							],
+						]
+					]
+				],
+				'drafts' => [
+					[
+						'slug'  => 'test-draft',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'draft-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'draft-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'draft-c'],
+							],
+						]
+					]
+				]
+			]
+		]);
+	}
+
+	public function model()
+	{
+		return $this->app->page('test');
+	}
+
+	public function testAcceptedFileBlueprints(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => $this->model(),
+			'uploads' => 'a'
+		]);
+
+		$this->assertSame(['a'], $field->acceptedFileBlueprints());
+	}
+
+	public function testApiItems(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'my-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'my-b'],
+							],
+							[
+								'filename' => 'c.jpg',
+								'content' => ['uuid'  => 'my-c'],
+							],
+						],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'gallery' => [
+									'type' => 'filepicker',
+								]
+							]
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'test/a.jpg,test/b.jpg'
+				]
+			]
+		]);
+
+		$app->impersonate('kirby');
+		$api = $app->api()->call('pages/test/fields/gallery/items');
+
+		$this->assertCount(2, $api);
+		$this->assertSame('file://my-a', $api[0]['uuid']);
+		$this->assertSame('file://my-b', $api[1]['uuid']);
+	}
+
+	public function testApiItemsWithProtectedModel(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so both need to be unique for this test
+		$uuid = uuid();
+
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'blueprints' => [
+				'files/secret-' . $uuid => [
+					'options' => ['list' => false]
+				]
+			],
+			'options' => ['api.allowImpersonation' => true],
+			'roles' => [
+				['name' => 'editor-' . $uuid]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content' => ['uuid'  => 'my-a'],
+							],
+							[
+								'filename' => 'b.jpg',
+								'content' => ['uuid'  => 'my-b'],
+								'template' => 'secret-' . $uuid,
+							],
+						],
+						'blueprint' => [
+							'title' => 'Test',
+							'name' => 'test',
+							'fields' => [
+								'gallery' => [
+									'type' => 'filepicker',
+								]
+							]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor-' . $uuid
+				]
+			],
+			'request' => [
+				'query' => [
+					'items' => 'file://my-a,file://my-b'
+				]
+			]
+		]);
+
+		$app->impersonate('editor@getkirby.com');
+		$api = $app->api()->call('pages/test/fields/gallery/items');
+
+		$this->assertCount(2, $api);
+
+		// the listable file is resolved as usual
+		$this->assertSame('test/a.jpg', $api[0]['id']);
+		$this->assertSame('file://my-a', $api[0]['uuid']);
+
+		// the file that must not be listed only echoes back
+		// the ID that is already stored in the content file
+		$this->assertSame('file://my-b', $api[1]['id']);
+		$this->assertSame('file://my-b', $api[1]['uuid']);
+		$this->assertSame('[unknown]', $api[1]['text']);
+		$this->assertFalse($api[1]['link']);
+	}
+
+	public function testDialogs(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model()
+		]);
+
+		$dialogs = $field->dialogs();
+		$dialog  = $dialogs['picker']();
+		$this->assertInstanceOf(FilePickerDialogController::class, $dialog);
+	}
+
+	public function testEmpty(): void
+	{
+		$field = $this->field('filepicker', ['empty' => 'Test']);
+		$this->assertSame('Test', $field->empty());
+
+		// translated
+		$field = $this->field('filepicker', [
+			'empty' => ['en' => 'Test', 'de' => 'Töst']
+		]);
+
+		$this->assertSame('Test', $field->empty());
+	}
+
+	public function testFillWithFile(): void
+	{
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$field->fill($this->app->file('test/a.jpg'));
+
+		$this->assertSame(['file://test-a'], $field->toStoredValue());
+	}
+
+	public function testFillWithFileInArray(): void
+	{
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$field->fill([
+			$this->app->file('test/a.jpg'),
+			$this->app->file('test-draft/b.jpg')
+		]);
+
+		$this->assertSame(['file://test-a', 'file://draft-b'], $field->toStoredValue());
+	}
+
+	public function testFillWithFiles(): void
+	{
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$field->fill($this->model()->files());
+
+		$expected = ['file://test-a', 'file://test-b', 'file://test-c'];
+		$this->assertSame($expected, $field->toStoredValue());
+	}
+
+	public function testFillWithFilesWithoutUuids(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$field->fill([
+			$this->app->file('test/a.jpg'),
+			$this->app->file('test-draft/b.jpg')
+		]);
+
+		// files of the model itself are stored by filename
+		$this->assertSame(['a.jpg', 'test-draft/b.jpg'], $field->toStoredValue());
+	}
+
+	public function testFillWithPage(): void
+	{
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$field->fill([$this->model()]);
+
+		$this->assertSame([], $field->toStoredValue());
+	}
+
+	public function testIsValid(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'    => $this->model(),
+			'required' => true
+		]);
+
+		$this->assertFalse($field->isValid());
+
+		$field = $this->field('filepicker', [
+			'model'    => $this->model(),
+			'required' => true,
+			'value'    => ['a.jpg'],
+		]);
+
+		$this->assertTrue($field->isValid());
+	}
+
+	public function testMax(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a.jpg', // exists
+				'b.jpg', // exists
+			],
+			'max' => 1
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(1, $field->max());
+		$this->assertArrayHasKey('max', $field->errors());
+	}
+
+	public function testMin(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a.jpg', // exists
+				'b.jpg', // exists
+			],
+			'min' => 3
+		]);
+
+		$this->assertFalse($field->isValid());
+		$this->assertSame(3, $field->min());
+		$this->assertTrue($field->isRequired());
+		$this->assertArrayHasKey('min', $field->errors());
+	}
+
+	public function testParentModel(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model()
+		]);
+
+		$this->assertSame($this->model(), $field->parentModel());
+
+		$field = $this->field('filepicker', [
+			'model'  => $this->model(),
+			'parent' => 'site'
+		]);
+
+		$this->assertSame($this->app->site(), $field->parentModel());
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model()
+		]);
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'empty'       => null,
+			'help'        => null,
+			'hidden'      => false,
+			'image'       => null,
+			'info'        => null,
+			'label'       => 'Filepicker',
+			'layout'      => 'list',
+			'link'        => true,
+			'max'         => null,
+			'min'         => null,
+			'multiple'    => true,
+			'name'        => 'filepicker',
+			'parent'      => 'pages/test',
+			'query'       => null,
+			'required'    => false,
+			'saveable'    => true,
+			'search'      => true,
+			'size'        => 'auto',
+			'store'       => 'uuid',
+			'text'        => null,
+			'translate'   => true,
+			'type'        => 'filepicker',
+			'uploads'     => ['accept' => '*'],
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
+	}
+
+	public function testRequired(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'    => $this->model(),
+			'required' => true
+		]);
+
+		$this->assertTrue($field->required());
+		$this->assertSame(1, $field->min());
+	}
+
+	public function testStore(): void
+	{
+		// Default
+		$field = $this->field('filepicker');
+		$this->assertSame('uuid', $field->store());
+
+		// Custom
+		$field = $this->field('filepicker', ['store' => 'id']);
+		$this->assertSame('id', $field->store());
+
+		// Belongs to parent model, but stores UUIDs
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$file  = $this->app->file('test/a.jpg');
+		$this->assertSame('uuid', $field->store($file));
+
+		// Disabled UUIDs
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$field = $this->field('filepicker');
+		$this->assertSame('id', $field->store());
+
+		// Belongs to parent model
+		$field = $this->field('filepicker', ['model' => $this->model()]);
+		$file  = $this->app->file('test/a.jpg');
+		$this->assertSame('id', $field->store());
+		$this->assertSame('filename', $field->store($file));
+	}
+
+	public function testToModel(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => new Page(['slug' => 'test']),
+		]);
+
+		$model = $field->toModel('test/a.jpg');
+		$this->assertInstanceOf(File::class, $model);
+		$this->assertSame('test/a.jpg', $model->id());
+	}
+
+	public function testToStoredValue(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a.jpg',
+				'test-draft/b.jpg'
+			]
+		]);
+
+		$this->assertSame(['file://test-a', 'file://draft-b'], $field->toStoredValue());
+	}
+
+	public function testToStoredValueWithoutUuids(): void
+	{
+		$this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => false
+				]
+			]
+		]);
+
+		$field = $this->field('filepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a.jpg',
+				'test-draft/b.jpg'
+			]
+		]);
+
+		// files of the model itself are stored by filename
+		$this->assertSame(['a.jpg', 'test-draft/b.jpg'], $field->toStoredValue());
+	}
+
+	public function testUploadPassesTemplateToApi(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/custom' => [
+					'name'   => 'custom',
+					'accept' => ['extension' => 'txt']
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+
+		$field = $this->field('filepicker', [
+			'model'   => $parent,
+			'uploads' => 'custom'
+		]);
+		$this->assertSame('.txt', $field->uploads()['accept']);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$result = $field->upload(
+			$api,
+			$field->uploads(),
+			fn ($file) => $file->template()
+		);
+
+		$this->assertSame('custom', $api->template);
+		$this->assertSame('custom', $parent->createdFile['template']);
+		$this->assertSame('custom', $result['data']);
+	}
+
+	public function testUploadPreflight(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+		$field  = $this->field('filepicker', [
+			'model' => $parent
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
+
+		$this->assertInstanceOf(Closure::class, $api->preflight);
+		$this->assertSame('test.txt', $parent->createdFile['filename']);
+	}
+
+	public function testUploadPreflightWithoutCreatePermission(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so the role needs to be unique for this test
+		$role = 'client-' . uuid();
+
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => $role,
+					'permissions' => [
+						'files' => ['create' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'client@getkirby.com',
+					'role'  => $role
+				]
+			]
+		]);
+		$this->app->impersonate('client@getkirby.com');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+		$field  = $this->field('filepicker', [
+			'model' => $parent
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		try {
+			$field->upload($api, $field->uploads(), fn ($file) => $file);
+			$this->fail('The upload should have been rejected');
+		} catch (PermissionException $e) {
+			$this->assertSame('The file cannot be created', $e->getMessage());
+		}
+
+		// the file has not been created
+		$this->assertSame([], $parent->createdFile);
+	}
+
+	public function testUploadWithInvalidParentQuery(): void
+	{
+		$field = $this->field('filepicker', [
+			'model'   => new FilePickerFieldTestPage(['slug' => 'test']),
+			'uploads' => ['parent' => 'site.title']
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('"site.title" could not be resolved as a valid parent for the upload');
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
+	}
+
+	public function testValue(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->model(),
+			'value' => [
+				'a.jpg', // exists
+				'b.jpg', // exists
+				'e.jpg'  // does not exist
+			]
+		]);
+
+		// the missing file keeps its stored ID
+		$expected = [
+			'file://test-a',
+			'file://test-b',
+			'e.jpg'
+		];
+
+		$this->assertSame($expected, $field->value());
+	}
+
+	public function testValueFilesInDraft(): void
+	{
+		$field = $this->field('filepicker', [
+			'model' => $this->app->page('test-draft'),
+			'value' => [
+				'a.jpg', // exists
+				'b.jpg', // exists
+				'e.jpg', // does not exist
+			]
+		]);
+
+		// the missing file keeps its stored ID
+		$expected = [
+			'file://draft-a',
+			'file://draft-b',
+			'e.jpg'
+		];
+
+		$this->assertSame($expected, $field->value());
+	}
+}

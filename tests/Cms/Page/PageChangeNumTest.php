@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageChangeNumTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeNum';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeNum';
 
 	public function testChangeNum(): void
 	{
@@ -106,5 +106,4 @@ class PageChangeNumTest extends ModelTestCase
 		$this->assertIsPage($page, $children->find('test'));
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
-
 }

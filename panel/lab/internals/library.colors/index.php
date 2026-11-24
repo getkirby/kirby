@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/libraries/colors.js'
+	'source' => 'panel/src/libraries/colors.ts'
 ];

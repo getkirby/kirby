@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.File';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.File';
 
 	public function testApiUrl(): void
 	{
@@ -116,6 +116,17 @@ class FileTest extends ModelTestCase
 		$this->assertNull($file->page());
 	}
 
+	public function testPanel(): void
+	{
+		$page = new Page(['slug'  => 'test']);
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => $page
+		]);
+
+		$this->assertInstanceOf(PanelFile::class, $file->panel());
+	}
+
 	public function testParentId(): void
 	{
 		$page = new Page(['slug' => 'test']);
@@ -127,26 +138,14 @@ class FileTest extends ModelTestCase
 		$this->assertSame('test', $file->parentId());
 	}
 
-	public function testToString(): void
+	public function testParentIdWithSite(): void
 	{
-		$page = new Page(['slug' => 'test']);
 		$file = new File([
 			'filename' => 'test.jpg',
-			'parent'   => $page
+			'parent'   => new Site()
 		]);
 
-		$this->assertSame('test.jpg', $file->toString('{{ file.filename }}'));
-	}
-
-	public function testPanel(): void
-	{
-		$page = new Page(['slug'  => 'test']);
-		$file = new File([
-			'filename' => 'test.pdf',
-			'parent'   => $page
-		]);
-
-		$this->assertInstanceOf(PanelFile::class, $file->panel());
+		$this->assertNull($file->parentId());
 	}
 
 	public function testQuery(): void
@@ -159,5 +158,16 @@ class FileTest extends ModelTestCase
 
 		$this->assertSame('test.pdf', $file->query('file.filename'));
 		$this->assertSame('test.pdf', $file->query('model.filename'));
+	}
+
+	public function testToString(): void
+	{
+		$page = new Page(['slug' => 'test']);
+		$file = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page
+		]);
+
+		$this->assertSame('test.jpg', $file->toString('{{ file.filename }}'));
 	}
 }

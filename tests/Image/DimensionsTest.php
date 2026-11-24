@@ -9,14 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Dimensions::class)]
 class DimensionsTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-
-	public function testDimensions(): void
-	{
-		$dimensions = new Dimensions(1200, 768);
-		$this->assertSame(1200, $dimensions->width());
-		$this->assertSame(768, $dimensions->height());
-	}
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testCrop(): void
 	{
@@ -29,6 +22,13 @@ class DimensionsTest extends TestCase
 		$dimensions->crop(500);
 		$this->assertSame(500, $dimensions->width());
 		$this->assertSame(500, $dimensions->height());
+	}
+
+	public function testDimensions(): void
+	{
+		$dimensions = new Dimensions(1200, 768);
+		$this->assertSame(1200, $dimensions->width());
+		$this->assertSame(768, $dimensions->height());
 	}
 
 	public function testFit(): void
@@ -79,31 +79,6 @@ class DimensionsTest extends TestCase
 		$this->assertSame(2000, $dimensions->height());
 	}
 
-	public function testFitWidth(): void
-	{
-		$dimensions = new Dimensions(1200, 768);
-		$dimensions->fitWidth(0);
-		$this->assertSame(1200, $dimensions->width());
-		$this->assertSame(768, $dimensions->height());
-
-		$dimensions = new Dimensions(1200, 768);
-		$dimensions->fitWidth(500);
-		$this->assertSame(500, $dimensions->width());
-		$this->assertSame(320, $dimensions->height());
-
-		// no upscale
-		$dimensions = new Dimensions(1200, 768);
-		$dimensions->fitWidth(2000);
-		$this->assertSame(1200, $dimensions->width());
-		$this->assertSame(768, $dimensions->height());
-
-		// force upscale
-		$dimensions = new Dimensions(1200, 768);
-		$dimensions->fitWidth(2000, true);
-		$this->assertSame(2000, $dimensions->width());
-		$this->assertSame(1280, $dimensions->height());
-	}
-
 	public function testFitHeight(): void
 	{
 		$dimensions = new Dimensions(1200, 768);
@@ -127,6 +102,31 @@ class DimensionsTest extends TestCase
 		$dimensions->fitHeight(2000, true);
 		$this->assertSame(3125, $dimensions->width());
 		$this->assertSame(2000, $dimensions->height());
+	}
+
+	public function testFitWidth(): void
+	{
+		$dimensions = new Dimensions(1200, 768);
+		$dimensions->fitWidth(0);
+		$this->assertSame(1200, $dimensions->width());
+		$this->assertSame(768, $dimensions->height());
+
+		$dimensions = new Dimensions(1200, 768);
+		$dimensions->fitWidth(500);
+		$this->assertSame(500, $dimensions->width());
+		$this->assertSame(320, $dimensions->height());
+
+		// no upscale
+		$dimensions = new Dimensions(1200, 768);
+		$dimensions->fitWidth(2000);
+		$this->assertSame(1200, $dimensions->width());
+		$this->assertSame(768, $dimensions->height());
+
+		// force upscale
+		$dimensions = new Dimensions(1200, 768);
+		$dimensions->fitWidth(2000, true);
+		$this->assertSame(2000, $dimensions->width());
+		$this->assertSame(1280, $dimensions->height());
 	}
 
 	public function testFitWidthAndHeight(): void

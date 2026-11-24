@@ -1,11 +1,10 @@
 <template>
-	<k-text v-if="text" :html="text" />
-	<k-box v-else theme="info">{{ empty }}</k-box>
+	<k-text v-if="text" :text="text" class="k-dialog-text" />
+	<k-box v-else theme="info" class="k-dialog-text">{{ empty }}</k-box>
 </template>
 
 <script>
 /**
- * @displayName DialogText
  * @since 4.0.0
  */
 export const props = {
@@ -25,6 +24,9 @@ export const props = {
 
 /**
  * @displayName DialogText
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props]

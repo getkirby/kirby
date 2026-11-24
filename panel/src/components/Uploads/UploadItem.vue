@@ -30,6 +30,7 @@
 			</p>
 			<k-progress
 				v-else-if="progress"
+				:label="$t('upload')"
 				:value="progress"
 				class="k-upload-item-progress"
 			/>
@@ -61,7 +62,10 @@ import { props as Preview } from "./UploadItemPreview.vue";
 
 /**
  * Represents one file to upload in an upload dialog
- * @since 4.3.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.3.0
  */
 export default {
 	mixins: [Preview],

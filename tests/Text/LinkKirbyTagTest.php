@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class LinkKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.LinkKirbyTag';
 
 	protected function setUp(): void
 	{
@@ -24,31 +24,6 @@ class LinkKirbyTagTest extends TestCase
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
-	}
-
-	public function testWithLangAttribute(): void
-	{
-		$app = $this->app->clone([
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'languages' => [
-				'en' => [
-					'code' => 'en'
-				],
-				'de' => [
-					'code' => 'de'
-				]
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'a']
-				]
-			]
-		]);
-
-		$this->assertSame('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a lang: en)'));
-		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
 	}
 
 	public function testWithHash(): void
@@ -76,6 +51,31 @@ class LinkKirbyTagTest extends TestCase
 		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
 		$this->assertSame('<a href="https://getkirby.com/en/a#anchor">getkirby.com/en/a</a>', $app->kirbytags('(link: a#anchor lang: en)'));
 		$this->assertSame('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
+	}
+
+	public function testWithLangAttribute(): void
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'languages' => [
+				'en' => [
+					'code' => 'en'
+				],
+				'de' => [
+					'code' => 'de'
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a']
+				]
+			]
+		]);
+
+		$this->assertSame('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a lang: en)'));
+		$this->assertSame('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
 	}
 
 	public function testWithUuid(): void
@@ -113,68 +113,6 @@ class LinkKirbyTagTest extends TestCase
 		// broken link with text: link dropped, text kept
 		$result = $app->kirbytags('(link: file://not-exists text: file)');
 		$this->assertSame('<span>file</span>', $result);
-	}
-
-	public function testWithUuidDebug(): void
-	{
-		$app = $this->app->clone([
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'    => 'a',
-						'content' => ['uuid' => 'page-uuid'],
-						'files'   => [
-							[
-								'filename' => 'foo.jpg',
-								'content' => ['uuid' => 'file-uuid'],
-							]
-						]
-					]
-				]
-			],
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		$result = $app->kirbytags('(link: page://not-exists)');
-		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
-
-		// a custom class is merged with the broken-link class
-		$result = $app->kirbytags('(link: page://not-exists class: my-link)');
-		$this->assertSame('<span class="kirby-broken-link my-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
-	}
-
-	public function testWithUuidDebugText(): void
-	{
-		$app = $this->app->clone([
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'    => 'a',
-						'content' => ['uuid' => 'page-uuid'],
-						'files'   => [
-							[
-								'filename' => 'foo.jpg',
-								'content' => ['uuid' => 'file-uuid'],
-							]
-						]
-					]
-				]
-			],
-			'options' => [
-				'debug' => true
-			]
-		]);
-
-		$result = $app->kirbytags('(link: page://not-exists text: click here)');
-		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found for the link text &quot;click here&quot;</span>', $result);
 	}
 
 	public function testWithUuidAndLang(): void
@@ -237,5 +175,67 @@ class LinkKirbyTagTest extends TestCase
 
 		$result = $app->kirbytags('(link: file://file-uuid text: file lang: de)');
 		$this->assertSame('<a href="' . $app->file('a/foo.jpg')->url() . '">file</a>', $result);
+	}
+
+	public function testWithUuidDebug(): void
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['uuid' => 'page-uuid'],
+						'files'   => [
+							[
+								'filename' => 'foo.jpg',
+								'content' => ['uuid' => 'file-uuid'],
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$result = $app->kirbytags('(link: page://not-exists)');
+		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
+
+		// a custom class is merged with the broken-link class
+		$result = $app->kirbytags('(link: page://not-exists class: my-link)');
+		$this->assertSame('<span class="kirby-broken-link my-link">🚨 The link &quot;page://not-exists&quot; cannot be found</span>', $result);
+	}
+
+	public function testWithUuidDebugText(): void
+	{
+		$app = $this->app->clone([
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'    => 'a',
+						'content' => ['uuid' => 'page-uuid'],
+						'files'   => [
+							[
+								'filename' => 'foo.jpg',
+								'content' => ['uuid' => 'file-uuid'],
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$result = $app->kirbytags('(link: page://not-exists text: click here)');
+		$this->assertSame('<span class="kirby-broken-link">🚨 The link &quot;page://not-exists&quot; cannot be found for the link text &quot;click here&quot;</span>', $result);
 	}
 }

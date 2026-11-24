@@ -1,14 +1,10 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Panel\Ui\Buttons\OpenButton;
-use Kirby\Panel\Ui\Buttons\SettingsButton;
+use Kirby\Panel\Ui\Button\OpenButton;
+use Kirby\Panel\Ui\Button\SettingsButton;
 
 return [
-	'file.open' => function (File $file) {
-		return new OpenButton(link: $file->previewUrl());
-	},
-	'file.settings' => function (File $file) {
-		return new SettingsButton(model: $file);
-	}
+	'file.open'     => fn (File $file) => new OpenButton($file->previewUrl()),
+	'file.settings' => fn (File $file) => new SettingsButton($file)
 ];

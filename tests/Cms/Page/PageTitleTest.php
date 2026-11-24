@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageTitleTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageTitle';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageTitle';
 
 	public function testTitleFromSlug(): void
 	{
@@ -16,18 +16,6 @@ class PageTitleTest extends ModelTestCase
 		]);
 
 		$this->assertSame('test', $page->title()->value());
-	}
-
-	public function testTitleInSingleLanguageMode(): void
-	{
-		$page = new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test Title'
-			]
-		]);
-
-		$this->assertSame('Test Title', $page->title()->value());
 	}
 
 	public function testTitleInMultiLanguageMode(): void
@@ -58,5 +46,17 @@ class PageTitleTest extends ModelTestCase
 		$this->app->setCurrentLanguage('de');
 
 		$this->assertSame('Test Title DE', $page->title()->value());
+	}
+
+	public function testTitleInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Test Title'
+			]
+		]);
+
+		$this->assertSame('Test Title', $page->title()->value());
 	}
 }

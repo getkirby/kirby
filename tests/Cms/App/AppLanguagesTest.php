@@ -7,47 +7,16 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class AppLanguagesTest extends TestCase
 {
-	public function testLanguages(): void
-	{
-		$app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
+	protected string|null $acceptLang;
 
-		$this->assertTrue($app->multilang());
-		$this->assertCount(2, $app->languages());
-		$this->assertSame('en', $app->languageCode());
+	protected function setUp(): void
+	{
+		$this->acceptLang = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 	}
 
-	public function testLanguageCode(): void
+	protected function tearDown(): void
 	{
-		$app = new App([
-			'languages' => [
-				[
-					'code'    => 'en',
-					'name'    => 'English',
-					'default' => true
-				],
-				[
-					'code'    => 'de',
-					'name'    => 'Deutsch'
-				]
-			]
-		]);
-
-		$this->assertSame('de', $app->languageCode('de'));
-		$this->assertSame('en', $app->languageCode('en'));
-		$this->assertSame('en', $app->languageCode());
-		$this->assertNull($app->languageCode('fr'));
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->acceptLang;
 	}
 
 	public static function detectedLanguageProvider(): array
@@ -64,14 +33,9 @@ class AppLanguagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @backupGlobals enabled
-	 */
 	#[DataProvider('detectedLanguageProvider')]
 	public function testDetectedLanguage($accept, $expected): void
 	{
-		// set the accepted visitor language
-		$acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
 
 		$app = new App([
@@ -103,9 +67,6 @@ class AppLanguagesTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
-
-		// reset the $_SERVER value
-		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
 	}
 
 	public static function detectedLanguageWithLocaleProvider(): array
@@ -121,13 +82,9 @@ class AppLanguagesTest extends TestCase
 		];
 	}
 
-	/**
-	 * @backupGlobals enabled
-	 */
 	#[DataProvider('detectedLanguageWithLocaleProvider')]
 	public function testDetectedLanguageWithLocale($accept, $expected): void
 	{
-		$acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
 		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
 
 		$app = new App([
@@ -164,8 +121,48 @@ class AppLanguagesTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $app->detectedLanguage()->code());
+	}
 
-		// reset the $_SERVER value
-		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
+	public function testLanguageCode(): void
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$this->assertSame('de', $app->languageCode('de'));
+		$this->assertSame('en', $app->languageCode('en'));
+		$this->assertSame('en', $app->languageCode());
+		$this->assertNull($app->languageCode('fr'));
+	}
+
+	public function testLanguages(): void
+	{
+		$app = new App([
+			'languages' => [
+				[
+					'code'    => 'en',
+					'name'    => 'English',
+					'default' => true
+				],
+				[
+					'code'    => 'de',
+					'name'    => 'Deutsch'
+				]
+			]
+		]);
+
+		$this->assertTrue($app->multilang());
+		$this->assertCount(2, $app->languages());
+		$this->assertSame('en', $app->languageCode());
 	}
 }

@@ -8,14 +8,18 @@ use NumberFormatter;
 /**
  * Localization class, roughly inspired by VueI18n
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class I18n
 {
+	/**
+	 * The fallback locale or a list of fallback locales
+	 *
+	 * @var string|array<string>|Closure|null
+	 */
+	public static string|array|Closure|null $fallback = ['en'];
+
 	/**
 	 * Custom loader function
 	 */
@@ -28,18 +32,37 @@ class I18n
 
 	/**
 	 * All registered translations
+	 *
+	 * @var array<string, array<string, mixed>>
 	 */
 	public static array $translations = [];
 
 	/**
-	 * The fallback locale or a list of fallback locales
-	 */
-	public static string|array|Closure|null $fallback = ['en'];
-
-	/**
 	 * Cache of `NumberFormatter` objects by locale
+	 *
+	 * @var array<string, NumberFormatter>
 	 */
 	protected static array $decimalsFormatters = [];
+
+	/**
+	 * Returns (and creates) a decimal number formatter for a given locale
+	 */
+	protected static function decimalNumberFormatter(
+		string $locale
+	): NumberFormatter|null {
+		if ($formatter = static::$decimalsFormatters[$locale] ?? null) {
+			return $formatter;
+		}
+
+		if (
+			extension_loaded('intl') !== true ||
+			class_exists('NumberFormatter') !== true
+		) {
+			return null; // @codeCoverageIgnore
+		}
+
+		return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+	}
 
 	/**
 	 * Returns the entry for the key or `null`
@@ -66,6 +89,8 @@ class I18n
 
 	/**
 	 * Returns the list of fallback locales
+	 *
+	 * @return array<string>
 	 */
 	public static function fallbacks(): array
 	{
@@ -78,7 +103,7 @@ class I18n
 		}
 
 		if (is_string(static::$fallback) === true) {
-			return A::wrap(static::$fallback);
+			return [static::$fallback];
 		}
 
 		return static::$fallback = ['en'];
@@ -87,7 +112,8 @@ class I18n
 	/**
 	 * Returns singular or plural depending on the given number
 	 *
-	 * @param bool $none If true, 'none' will be returned if the count is 0
+	 * @param $none If true, 'none' will be returned if the count is 0
+	 * @return 'none'|'singular'|'plural'
 	 */
 	public static function form(int $count, bool $none = false): string
 	{
@@ -133,6 +159,8 @@ class I18n
 	/**
 	 * Translate by key and then replace
 	 * placeholders in the text
+	 *
+	 * @param $fallback Fallback text or, if it is an array, the replacements
 	 */
 	public static function template(
 		string $key,
@@ -161,10 +189,7 @@ class I18n
 		string|array|null $fallback = null,
 		string|null $locale = null
 	): string|array|Closure|null {
-		// use current locale if no specific is passed
 		$locale ??= static::locale();
-		// create shorter locale code, e.g. `es` for `es_ES` locale
-		$shortLocale = Str::before($locale, '_');
 
 		// There are two main use cases that we will treat separately:
 		// (1) with a string representing an i18n key to be looked up
@@ -175,7 +200,6 @@ class I18n
 
 		// (1) string $key: look up i18n string from global translations
 		if (is_string($key) === true) {
-			// look up locale in global translations list,
 			$result = static::entry(static::translation($locale), $key);
 
 			if ($result !== null) {
@@ -193,13 +217,13 @@ class I18n
 			}
 
 			// last resort: try using the fallback locales
-			foreach (static::fallbacks() as $fallback) {
+			foreach (static::fallbacks() as $code) {
 				// skip locale if we have already tried to save performance
-				if ($locale === $fallback) {
+				if ($code === $locale) {
 					continue;
 				}
 
-				$result = static::entry(static::translation($fallback), $key);
+				$result = static::entry(static::translation($code), $key);
 
 				if ($result !== null) {
 					return $result;
@@ -212,10 +236,13 @@ class I18n
 		// --------
 		// (2) array|null $key with entries per locale
 
+		// language code, e.g. `es` for `es_ES` locale
+		$language = Str::before($locale, '_');
+
 		// try entry for long and short locale
 		$result =
 			static::entry($key, $locale) ??
-			static::entry($key, $shortLocale);
+			static::entry($key, $language);
 
 		if ($result !== null) {
 			return $result;
@@ -239,7 +266,7 @@ class I18n
 		// check with long and short locale if we find a matching entry
 		$result =
 			static::entry($fallback, $locale) ??
-			static::entry($fallback, $shortLocale);
+			static::entry($fallback, $language);
 
 		if ($result !== null) {
 			return $result;
@@ -247,11 +274,11 @@ class I18n
 
 		// all options for long/short actual locale have been exhausted,
 		// revert to the list of fallback locales and try with each of them
-		foreach (static::fallbacks() as $locale) {
+		foreach (static::fallbacks() as $code) {
 			// first on the original input, then on the fallback
 			$result =
-				static::entry($key, $locale) ??
-				static::entry($fallback, $locale);
+				static::entry($key, $code) ??
+				static::entry($fallback, $code);
 
 			if ($result !== null) {
 				return $result;
@@ -265,10 +292,11 @@ class I18n
 
 		// otherwise the first array element of the input
 		// or the first array element of the fallback
-		if (is_array($key) === true) {
+		if (is_array($key) === true && $key !== []) {
 			return reset($key);
 		}
-		if (is_array($fallback) === true) {
+
+		if (is_array($fallback) === true && $fallback !== []) {
 			return reset($fallback);
 		}
 
@@ -276,9 +304,54 @@ class I18n
 	}
 
 	/**
+	 * Translates amounts
+	 *
+	 * Translation definition options:
+	 * - Translation is a simple string: `{{ count }}` gets replaced in the template
+	 * - Translation is an array with a value for each count: Chooses the correct template and
+	 *   replaces `{{ count }}` in the template; if no specific template for the input count is
+	 *   defined, the template that is defined last in the translation array is used
+	 * - Translation is a callback with a `$count` argument: Returns the callback return value
+	 *
+	 * @param $formatNumber If set to `false`, the count is not formatted
+	 */
+	public static function translateCount(
+		string $key,
+		int $count,
+		string|null $locale = null,
+		bool $formatNumber = true
+	) {
+		$locale    ??= static::locale();
+		$translation = static::translate($key, null, $locale);
+
+		if ($translation === null) {
+			return null;
+		}
+
+		if ($translation instanceof Closure) {
+			return $translation($count);
+		}
+
+		$message = match (true) {
+			is_string($translation) === true     => $translation,
+			isset($translation[$count]) === true => $translation[$count],
+			default                              => end($translation)
+		};
+
+		return Str::template($message, [
+			'count' => match ($formatNumber) {
+				true  => static::formatNumber($count, $locale),
+				false => $count
+			}
+		]);
+	}
+
+	/**
 	 * Returns the current or any other translation
 	 * by locale. If the translation does not exist
 	 * yet, the loader will try to load it, if defined.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function translation(string|null $locale = null): array
 	{
@@ -302,71 +375,11 @@ class I18n
 
 	/**
 	 * Returns all loaded or defined translations
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
 	public static function translations(): array
 	{
 		return static::$translations;
-	}
-
-	/**
-	 * Returns (and creates) a decimal number formatter for a given locale
-	 */
-	protected static function decimalNumberFormatter(
-		string $locale
-	): NumberFormatter|null {
-		if ($formatter = static::$decimalsFormatters[$locale] ?? null) {
-			return $formatter;
-		}
-
-		if (
-			extension_loaded('intl') !== true ||
-			class_exists('NumberFormatter') !== true
-		) {
-			return null; // @codeCoverageIgnore
-		}
-
-		return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-	}
-
-	/**
-	 * Translates amounts
-	 *
-	 * Translation definition options:
-	 * - Translation is a simple string: `{{ count }}` gets replaced in the template
-	 * - Translation is an array with a value for each count: Chooses the correct template and
-	 *   replaces `{{ count }}` in the template; if no specific template for the input count is
-	 *   defined, the template that is defined last in the translation array is used
-	 * - Translation is a callback with a `$count` argument: Returns the callback return value
-	 *
-	 * @param bool $formatNumber If set to `false`, the count is not formatted
-	 */
-	public static function translateCount(
-		string $key,
-		int $count,
-		string|null $locale = null,
-		bool $formatNumber = true
-	) {
-		$locale    ??= static::locale();
-		$translation = static::translate($key, null, $locale);
-
-		if ($translation === null) {
-			return null;
-		}
-
-		if ($translation instanceof Closure) {
-			return $translation($count);
-		}
-
-		$message = match (true) {
-			is_string($translation)     => $translation,
-			isset($translation[$count]) => $translation[$count],
-			default 				    => end($translation)
-		};
-
-		if ($formatNumber === true) {
-			$count = static::formatNumber($count, $locale);
-		}
-
-		return Str::template($message, compact('count'));
 	}
 }

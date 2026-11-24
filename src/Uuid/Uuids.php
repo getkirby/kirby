@@ -9,13 +9,10 @@ use Kirby\Exception\LogicException;
 
 /**
  * Helper methods that deal with the entirety of UUIDs in the system
- * @since 3.8.0
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.8.0
  */
 class Uuids
 {
@@ -35,7 +32,7 @@ class Uuids
 	/**
 	 * Runs the callback for each identifiable model of type
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param 'all'|'page'|'file' $type Which models to include
 	 */
 	public static function each(Closure $callback, string $type = 'all'): void
 	{
@@ -93,7 +90,7 @@ class Uuids
 	/**
 	 * Generates UUID for all identifiable models of type
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param 'all'|'page'|'file' $type Which models to include
 	 */
 	public static function generate(string $type = 'all'): void
 	{
@@ -113,7 +110,7 @@ class Uuids
 	 * Populates cache with UUIDs for all identifiable models
 	 * that need to be cached (not site and users)
 	 *
-	 * @param string $type which models to include (`all`|`page`|`file`|`block`|`struct`)
+	 * @param 'all'|'page'|'file' $type Which models to include
 	 */
 	public static function populate(string $type = 'all'): void
 	{

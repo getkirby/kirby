@@ -5,17 +5,13 @@ namespace Kirby\Cache;
 /**
  * Dummy Cache Driver (does not do any caching)
  *
- * @package   Kirby Cache
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class NullCache extends Cache
 {
 	/**
-	 * Returns whether the cache is ready to
-	 * store values
+	 * Returns whether the cache is ready to store values
 	 */
 	public function enabled(): bool
 	{
@@ -23,15 +19,19 @@ class NullCache extends Cache
 	}
 
 	/**
-	 * Writes an item to the cache for a given number of minutes and
-	 * returns whether the operation was successful
-	 *
-	 * ```php
-	 * // put an item in the cache for 15 minutes
-	 * $cache->set('value', 'my value', 15);
-	 * ```
+	 * Flushes the entire cache and returns
+	 * whether the operation was successful
 	 */
-	public function set(string $key, $value, int $minutes = 0): bool
+	public function flush(): bool
+	{
+		return true;
+	}
+
+	/**
+	 * Removes an item from the cache and returns
+	 * whether the operation was successful
+	 */
+	public function remove(string $key): bool
 	{
 		return true;
 	}
@@ -46,19 +46,15 @@ class NullCache extends Cache
 	}
 
 	/**
-	 * Removes an item from the cache and returns
-	 * whether the operation was successful
+	 * Writes an item to the cache for a given number of minutes and
+	 * returns whether the operation was successful
+	 *
+	 * ```php
+	 * // put an item in the cache for 15 minutes
+	 * $cache->set('value', 'my value', 15);
+	 * ```
 	 */
-	public function remove(string $key): bool
-	{
-		return true;
-	}
-
-	/**
-	 * Flushes the entire cache and returns
-	 * whether the operation was successful
-	 */
-	public function flush(): bool
+	public function set(string $key, $value, int $minutes = 0): bool
 	{
 		return true;
 	}

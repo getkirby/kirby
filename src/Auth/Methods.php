@@ -1,0 +1,221 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Kirby\Cms\App;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Session\Session;
+use Kirby\Toolkit\A;
+use SensitiveParameter;
+use Throwable;
+
+/**
+ * Handler for all auth methods
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class Methods
+{
+	/**
+	 * Available auth method classes
+	 * from the core and plugins
+	 *
+	 * @var array<string, class-string<Method>>
+	 */
+	public static array $methods = [];
+
+	/**
+	 * @var array<string, array>|null
+	 */
+	protected array|null $enabled = null;
+
+	public function __construct(
+		protected Auth $auth,
+		protected App $kirby
+	) {
+	}
+
+	/**
+	 * Authenticates via the specific auth method
+	 *
+	 * @throws InvalidArgumentException If auth method type does not exists or is not available
+	 */
+	public function authenticate(
+		string $type,
+		string|null $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		if ($this->has($type) === false) {
+			throw new InvalidArgumentException(
+				message: 'Auth method "' . $type . '" is not enabled'
+			);
+		}
+
+		// Reject blocked IPs before running any method.
+		// This covers the pre-identification phase of passwordless
+		// methods (e.g. passkeys, where no email is known upfront).
+		$this->auth->limits()->ensure();
+
+		return $this->get($type)->authenticate($email, $password, $long);
+	}
+
+	/**
+	 * Returns the auth method class for the provided type
+	 *
+	 * @return class-string<Method>
+	 * @throws NotFoundException If no valid class is registered for the type
+	 */
+	public function class(string $type): string
+	{
+		if (
+			($class = static::$methods[$type] ?? null) &&
+			is_subclass_of($class, Method::class) === true
+		) {
+			/** @var class-string<Method> $class */
+			return $class;
+		}
+
+		throw new NotFoundException(
+			message: 'No auth method class for: ' . $type
+		);
+	}
+
+	/**
+	 * Removes the pending login state of the auth methods
+	 */
+	public function clear(Session $session): void
+	{
+		$session->remove('kirby.method.data');
+	}
+
+	/**
+	 * Returns normalized array of configured methods;
+	 * methods that are set to `false` are left out
+	 */
+	public function config(): array
+	{
+		$default    = ['password' => []];
+		$methods    = $this->kirby->option('auth.methods', $default);
+		$normalized = [];
+
+		foreach (A::wrap($methods) as $type => $options) {
+			if (is_int($type) === true) {
+				// ['password']
+				$type    = $options;
+				$options = [];
+			} elseif ($options === true) {
+				// ['password' => true]
+				$options = [];
+			} elseif ($options === false) {
+				// ['password' => false]
+				continue;
+			}
+
+			$normalized[$type] = $options;
+		}
+
+		return $normalized;
+	}
+
+	/**
+	 * Returns normalized array of enabled/configured methods
+	 * by the `auth.methods` config option
+	 *
+	 * @return array<string, array>
+	 */
+	public function enabled(): array
+	{
+		if ($this->enabled !== null) {
+			return $this->enabled; // @codeCoverageIgnore
+		}
+
+		$config  = $this->config();
+		$enabled = [];
+
+		foreach ($config as $type => $options) {
+			// fail loudly for unknown types
+			$this->class($type);
+
+			try {
+				if ($this->get($type)->isEnabled() === true) {
+					$enabled[$type] = $options;
+				}
+
+			} catch (Throwable $e) {
+				// consider methods that throw an exception from
+				// their constructor or `::isEnabled()` as not enabled
+
+				// when running in debug, re-throw exception
+				if ($this->kirby->option('debug') === true) {
+					throw $e;
+				}
+
+				// otherwise only print it to the error log
+				// unless disabled by setting `auth.debug` to `false`
+				if ($this->kirby->option('auth.debug', 'log') === 'log') {
+					error_log($e);
+				}
+			}
+		}
+
+		return $this->enabled = $enabled;
+	}
+
+	/**
+	 * Returns the first enabled auth method
+	 * for the current context
+	 *
+	 * @throws NotFoundException If no auth method is enabled
+	 */
+	public function firstEnabled(): Method
+	{
+		$enabled = $this->enabled();
+		$type    = array_key_first($enabled);
+
+		if ($type === null) {
+			throw new NotFoundException(
+				message: 'No auth method is enabled'
+			);
+		}
+
+		return $this->get($type);
+	}
+
+	/**
+	 * Returns an instance of the requested auth method.
+	 * (You might still need to check yourself
+	 * if the method is actually enabled in your context)
+	 */
+	public function get(string $type): Method
+	{
+		$method = $this->class($type);
+
+		return new $method(
+			auth:    $this->auth,
+			type:    $type,
+			options: $this->config()[$type] ?? []
+		);
+	}
+
+	/**
+	 * Checks if the method type is enabled/configured
+	 */
+	public function has(string $type): bool
+	{
+		return array_key_exists($type, $this->enabled());
+	}
+
+	/**
+	 * Checks if any method requires 2FA
+	 */
+	public function hasAnyRequiring2FA(): bool
+	{
+		return in_array(true, array_column($this->config(), '2fa'), true);
+	}
+}

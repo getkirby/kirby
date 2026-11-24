@@ -14,35 +14,84 @@ use Kirby\Cms\Users;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Filesystem\Dir;
 use Kirby\Image\QrCode;
-use Kirby\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use TypeError;
 
-class FieldMethodsTest extends TestCase
+enum Priority: int
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Content.FieldMethods';
+	case High = 2;
+	case Low = 1;
+}
 
-	protected function setUp(): void
+enum Status: string
+{
+	case Draft = 'draft';
+	case Listed = 'listed';
+}
+
+#[CoversClass(Field::class)]
+class FieldMethodsTest extends FieldTest
+{
+	public function test__call(): void
 	{
-		parent::setUp();
+		Field::$methods['foo'] = fn (Field $field, string $bar) => $bar;
 
-		new App([
-			'roots' => [
-				'index'   => static::TMP,
-				'content' => static::FIXTURES
-			]
-		]);
-
-		Dir::make(static::TMP);
+		$field = $this->field('test');
+		$this->assertSame('bar', $field->foo('bar'));
+		$this->assertSame('bar', $field->FOO('bar'));
 	}
 
-	protected function tearDown(): void
+	public function test__callNonExistingMethod(): void
 	{
-		parent::tearDown();
-		Dir::remove(static::TMP);
-		App::destroy();
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('Field method "methoddoesnotexist" does not exist');
+
+		$field  = $this->field('value');
+		$field->methodDoesNotExist();
+	}
+
+	public function testCallback(): void
+	{
+		$field  = $this->field('Hello world');
+		$result = $field->callback(function ($field) {
+			$field->value = 'foo';
+			return $field;
+		});
+		$this->assertSame('foo', $result->toString());
+
+		// the original field stays the same
+		$this->assertSame('Hello world', $field->value());
+	}
+
+	public function testEscape(): void
+	{
+		$expected = '&lt;script&gt;alert(&quot;hello&quot;)&lt;/script&gt;';
+
+		$field = $this->field('<script>alert("hello")</script>');
+		$this->assertSame($expected, $field->escape()->value());
+
+		// alias
+		$field = $this->field('<script>alert("hello")</script>');
+		$this->assertSame($expected, $field->esc()->value());
+	}
+
+	public function testExcerpt(): void
+	{
+		// html
+		$string   = 'This is a long text<br>with some html';
+		$expected = 'This is a long text with …';
+
+		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
+
+		// markdown
+		$string   = 'This is a long text **with some** html';
+		$expected = 'This is a long text with …';
+
+		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
 	}
 
 	public function testFieldMethodCaseInsensitivity(): void
@@ -52,23 +101,87 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame('TEST', $field->UPPER()->value());
 	}
 
-	public function testFieldMethodAliasCaseInsensitivity(): void
-	{
-		$field = $this->field('1');
-		$this->assertSame(1, $field->toInt());
-		$this->assertSame(1, $field->int());
-	}
-
-	public function testFieldMethodCombination(): void
+	public function testFieldMethodChained(): void
 	{
 		$field = $this->field('test')->upper()->short(3);
 		$this->assertSame('TES…', $field->value());
+	}
+
+	public function testFieldMethodImmutable(): void
+	{
+		Field::$methods = [
+			'test' => function ($field) {
+				$field->value = 'Test';
+				return $field;
+			}
+		];
+
+		$original = $this->field('Title');
+		$modified = $original->test();
+
+		$this->assertSame('Title', $original->value());
+		$this->assertSame('Test', $modified->value());
+	}
+
+	public function testHtml(): void
+	{
+		$expected = '&ouml;';
+
+		$field = $this->field('ö');
+		$this->assertSame($expected, $field->html()->value());
+
+		// alias
+		$field = $this->field('ö');
+		$this->assertSame($expected, $field->h()->value());
+	}
+
+	public function testInline(): void
+	{
+		$html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
+		$expected = 'Headline Subtitle with <a href="#">link</a>.';
+
+		$this->assertSame($expected, $this->field($html)->inline()->value());
+		$this->assertSame('', $this->field(null)->inline()->value());
+	}
+
+	public static function emptyDataProvider(): array
+	{
+		return [
+			['test', false],
+			['0', false],
+			[0, false],
+			[true, false],
+			['true', false],
+			[false, false],
+			['false', false],
+			[null, true],
+			['', true],
+			['   ', true],
+			['[]', true],
+			[[], true],
+			['[1]', false],
+			['["a"]', false],
+		];
+	}
+
+	#[DataProvider('emptyDataProvider')]
+	public function testIsEmpty($input, $expected): void
+	{
+		$field = $this->field($input);
+		$this->assertSame($expected, $field->isEmpty());
 	}
 
 	public function testIsFalse(): void
 	{
 		$this->assertTrue($this->field('false')->isFalse());
 		$this->assertTrue($this->field(false)->isFalse());
+	}
+
+	#[DataProvider('emptyDataProvider')]
+	public function testIsNotEmpty($input, $expected): void
+	{
+		$field = $this->field($input);
+		$this->assertSame(!$expected, $field->isNotEmpty());
 	}
 
 	public function testIsTrue(): void
@@ -81,6 +194,455 @@ class FieldMethodsTest extends TestCase
 	{
 		$this->assertTrue($this->field('mail@example.com')->isValid('email'));
 		$this->assertTrue($this->field('https://example.com')->isValid('url'));
+
+		// alias
+		$this->assertTrue($this->field('mail@example.com')->v('email'));
+		$this->assertTrue($this->field('https://example.com')->v('url'));
+	}
+
+	public function testKirbytags(): void
+	{
+		$kirbytext = '(link: # text: Test)';
+		$expected  = '<a href="#">Test</a>';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytags()->value());
+	}
+
+	public function testKirbytext(): void
+	{
+		$kirbytext = '(link: # text: Test)';
+		$expected  = '<p><a href="#">Test</a></p>';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytext()->value());
+
+		// alias
+		$this->assertSame($expected, $this->field($kirbytext)->kt()->value());
+	}
+
+	public function testKirbytextInline(): void
+	{
+		$kirbytext = '(link: # text: Test)';
+		$expected  = '<a href="#">Test</a>';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytextinline()->value());
+
+		// alias
+		$this->assertSame($expected, $this->field($kirbytext)->kti()->value());
+	}
+
+	public function testKirbytextInlineWithSafeMode(): void
+	{
+		$kirbytext = '<b>Test</b>';
+		$expected  = '&lt;b&gt;Test&lt;/b&gt;';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytextInline(['markdown' => ['safe' => true]])->value());
+	}
+
+	public function testKirbytextWithSafeMode(): void
+	{
+		$kirbytext = '<h1>Test</h1>';
+		$expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
+
+		$this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
+	}
+
+	public function testLength(): void
+	{
+		$this->assertSame(3, $this->field('abc')->length());
+	}
+
+	public function testLower(): void
+	{
+		$this->assertSame('abc', $this->field('ABC')->lower()->value());
+	}
+
+	public function testMarkdown(): void
+	{
+		$markdown = '**Test**';
+		$expected = '<p><strong>Test</strong></p>';
+
+		$this->assertSame($expected, $this->field($markdown)->markdown()->value());
+
+		// alias
+		$this->assertSame($expected, $this->field($markdown)->md()->value());
+	}
+
+	public function testMarkdownWithSafeMode(): void
+	{
+		$markdown = '<h1>Test</h1>';
+		$expected = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
+
+		$this->assertSame($expected, $this->field($markdown)->markdown(['safe' => true])->value());
+	}
+
+	public function testNl2br(): void
+	{
+		$input = 'Multiline' . PHP_EOL . 'test' . PHP_EOL . 'string';
+		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
+
+		$this->assertSame($expected, $this->field($input)->nl2br()->value());
+		$this->assertSame('', $this->field(null)->nl2br()->value());
+	}
+
+	public function testOr(): void
+	{
+		// with value, fallback is ignored
+		$fallback = $this->field('fallback value');
+		$field    = $this->field('field value');
+
+		$this->assertSame($field, $field->or($fallback));
+
+		// with field fallback
+		$fallback = $this->field('fallback value');
+		$field    = $this->field('');
+
+		$this->assertSame($fallback, $fallback->or($field));
+		$this->assertSame($fallback, $field->or($fallback));
+
+		// with string fallback
+		$fallback = 'fallback value';
+		$field    = $this->field('');
+		$result   = $field->or($fallback);
+
+		$this->assertNotSame($field, $result);
+		$this->assertSame($fallback, $result->value());
+	}
+
+	public function testPermalinksToUrls(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'uuid' => 'my-page'
+						],
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => [
+									'uuid'  => 'my-file',
+								]
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>. This should not be <a href="https://getkirby.com">affected</a>.');
+		$result = $field->permalinksToUrls();
+		$hash   = $app->file('a/test.jpg')->mediaHash();
+
+		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
+	}
+
+	public function testPermalinksToUrlsWithMissingUUID(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+		]);
+
+		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a></p>.');
+		$result = $field->permalinksToUrls();
+
+		$this->assertSame('<p>This is a <a href="/@/page/my-page">test</a></p>.', (string)$result);
+	}
+
+	public function testPermalinksToUrlsWithUuids(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'uuid' => 'my-page'
+						],
+						'files' => [
+							[
+								'filename' => 'test.jpg',
+								'content' => [
+									'uuid'  => 'my-file',
+								]
+							]
+						]
+					],
+				]
+			]
+		]);
+
+		$field  = $this->field('<p><a href="page://my-page">Page</a><img src="file://my-file"><a href="site://">Site</a><a href="page://missing">Missing</a><a href="mailto:mail@getkirby.com">Mail</a></p>');
+		$result = $field->permalinksToUrls();
+		$hash   = $app->file('a/test.jpg')->mediaHash();
+
+		$this->assertSame('<p><a href="/a">Page</a><img src="/media/pages/a/' . $hash . '/test.jpg"><a href="/">Site</a><a href="page://missing">Missing</a><a href="mailto:mail@getkirby.com">Mail</a></p>', (string)$result);
+	}
+
+	public function testQuery(): void
+	{
+		// with page
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Hello world',
+				'text'  => 'page.title'
+			]
+		]);
+
+		$this->assertSame('Hello world', $page->text()->query()->value());
+	}
+
+	public function testQueryWithoutParent(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'site' => [
+				'content' => [
+					'title' => 'Kirby',
+				]
+			]
+		]);
+
+		$field = $this->field('site.title');
+		$this->assertSame('Kirby', $field->query()->value());
+	}
+
+	public function testReplace(): void
+	{
+		// simple replacement
+		$this->assertSame('Hello world', $this->field('Hello {{ message }}')->replace(['message' => 'world'])->value());
+
+		// nested replacement
+		$this->assertSame('Hello world', $this->field('Hello {{ message.text }}')->replace([
+			'message' => [
+				'text' => 'world'
+			]
+		])->value());
+
+		// missing or empty field
+		$this->assertSame('', $this->field(null)->replace(['message' => 'world'])->value());
+		$this->assertSame('', $this->field('')->replace(['message' => 'world'])->value());
+
+		// with page
+		$page = new Page([
+			'slug'    => 'test',
+			'content' => [
+				'title' => 'Hello world',
+				'text'  => 'Title: {{ page.title }}'
+			]
+		]);
+
+		$this->assertSame('Title: Hello world', $page->text()->replace()->value());
+		$this->assertSame('', $page->doesNotExist()->replace()->value());
+
+		// with fallback
+		$this->assertSame(
+			'Hello ',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'])->value()
+		);
+		$this->assertSame(
+			'Hello fallback',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], 'fallback')->value()
+		);
+		$this->assertSame(
+			'Hello {{ invalid }}',
+			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], null)->value()
+		);
+	}
+
+	public function testShort(): void
+	{
+		$this->assertSame('abc…', $this->field('abcd')->short(3)->value());
+	}
+
+	public function testSlug(): void
+	{
+		$text     = 'Ä--Ö--Ü';
+		$expected = 'a-o-u';
+
+		$this->assertSame($expected, $this->field($text)->slug()->value());
+	}
+
+	public function testSmartypants(): void
+	{
+		$text     = '"Test"';
+		$expected = '“Test”';
+
+		$this->assertSame($expected, $this->field($text)->smartypants()->value());
+
+		// alias
+		$this->assertSame($expected, $this->field($text)->sp()->value());
+	}
+
+	public function testSmartypantsWithKirbytext(): void
+	{
+		new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'options' => [
+				'smartypants' => true
+			]
+		]);
+
+		$text     = '"Test"';
+		$expected = '“Test”';
+
+		$this->assertSame($expected, $this->field($text)->kti()->value());
+	}
+
+	public function testSplit(): void
+	{
+		$text = 'a, b, c';
+		$expected = ['a', 'b', 'c'];
+
+		$this->assertSame($expected, $this->field($text)->split());
+	}
+
+	public function testToBlocks(): void
+	{
+		$data = [
+			[
+				'type' => 'code',
+				'content' => [
+					'code' => '<?php echo "Hello World!"; ?>',
+					'language' => 'php',
+				]
+			],
+			[
+				'type' => 'gallery',
+				'content' => [
+					'images' => [
+						'a.png',
+						'b.png'
+					],
+				]
+			],
+			[
+				'type'    => 'image',
+				'content' => [
+					'alt'      => 'The Kirby logo as favicon',
+					'caption'  => 'This favicon is really amazing!',
+					'location' => 'web',
+					'src'      => 'https://getkirby.com/favicon.png',
+					'link'     => 'https://getkirby.com',
+				]
+			],
+			[
+				'type'    => 'image',
+				'content' => [
+					'alt'   => 'White ink on a white canvas',
+					'image' => 'a.png',
+				]
+			],
+			[
+				'type'    => 'heading',
+				'content' => [
+					'text' => 'A nice heading',
+				]
+			],
+			[
+				'type'    => 'list',
+				'content' => [
+					'text' => '<ul><li>list item 1<\/li><li>list item 2<\/li><\/ul>',
+				]
+			],
+			[
+				'type'    => 'markdown',
+				'content' => [
+					'text' => '# Heading 1',
+				]
+			],
+			[
+				'type'    => 'quote',
+				'content' => [
+					'text'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.',
+					'citation' => 'John Doe',
+				]
+			],
+			[
+				'type'    => 'text',
+				'content' => [
+					'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.'
+				]
+			],
+			[
+				'type'    => 'video',
+				'content' => [
+					'caption' => 'How to install Kirby in 5 minutes',
+					'url'     => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+				]
+			]
+		];
+
+		$json   = Json::encode($data);
+		$page   = kirby()->page('files');
+		$field  = $this->field($json, $page);
+		$blocks = $field->toBlocks();
+
+		$this->assertInstanceOf(Blocks::class, $blocks);
+		$this->assertIsPage($blocks->parent());
+		$this->assertCount(count($data), $blocks);
+		$this->assertCount(count($data), $blocks->data());
+
+		foreach ($data as $index => $row) {
+			$block = $blocks->nth($index);
+
+			$this->assertSame($page, $block->parent());
+			$this->assertEquals($field, $block->field()); // cannot use strict assertion (cloned object)
+			$this->assertSame($row['type'], $block->type());
+			$this->assertSame($row['content'], $block->content()->data());
+			$this->assertNotEmpty($block->toHtml());
+		}
+	}
+
+	public function testToBlocksWithInvalidData(): void
+	{
+		$data = [
+			[
+				'content' => [
+					'text' => 'foo',
+				]
+			]
+		];
+
+		$json   = Json::encode($data);
+		$field  = $this->field($json, kirby()->page('files'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
+
+		$field->toBlocks();
+	}
+
+	public function testToBool(): void
+	{
+		$this->assertTrue($this->field('1')->toBool());
+		$this->assertTrue($this->field('true')->toBool());
+		$this->assertFalse($this->field('0')->toBool());
+		$this->assertFalse($this->field('false')->toBool());
+
+		// alias
+		$this->assertFalse($this->field('false')->bool());
+	}
+
+	public function testToDataJson(): void
+	{
+		$data = ['a', 'b'];
+
+		$this->assertSame(['a', 'b'], $this->field(json_encode($data))->toData('json'));
 	}
 
 	public function testToDataSplit(): void
@@ -98,21 +660,6 @@ class FieldMethodsTest extends TestCase
 		$data = ['a', 'b'];
 
 		$this->assertSame(['a', 'b'], $this->field(Yaml::encode($data))->toData('yaml'));
-	}
-
-	public function testToDataJson(): void
-	{
-		$data = ['a', 'b'];
-
-		$this->assertSame(['a', 'b'], $this->field(json_encode($data))->toData('json'));
-	}
-
-	public function testToBool(): void
-	{
-		$this->assertTrue($this->field('1')->toBool());
-		$this->assertTrue($this->field('true')->toBool());
-		$this->assertFalse($this->field('0')->toBool());
-		$this->assertFalse($this->field('false')->toBool());
 	}
 
 	public function testToDate(): void
@@ -144,6 +691,12 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($date, $field->toDate('%d.%m.%Y'));
 	}
 
+	public function testToDateWithEmptyValueAndNoFallback(): void
+	{
+		$field = $this->field(null);
+		$this->assertNull($field->toDate('d.m.Y'));
+	}
+
 	public function testToDateWithFallback(): void
 	{
 		$field = $this->field(null);
@@ -151,12 +704,6 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertSame($date, $field->toDate('d.m.Y', '2012-12-12'));
 		$this->assertSame(date('d.m.Y'), $field->toDate('d.m.Y', 'today'));
-	}
-
-	public function testToDateWithEmptyValueAndNoFallback(): void
-	{
-		$field = $this->field(null);
-		$this->assertNull($field->toDate('d.m.Y'));
 	}
 
 	public function testToEntries(): void
@@ -202,6 +749,43 @@ class FieldMethodsTest extends TestCase
 
 		$this->assertInstanceOf(Collection::class, $entries);
 		$this->assertCount(0, $entries);
+	}
+
+	public function testToEnum(): void
+	{
+		$this->assertSame(Status::Draft, $this->field('draft')->toEnum(Status::class));
+		$this->assertSame(Status::Listed, $this->field('listed')->toEnum(Status::class));
+	}
+
+	public function testToEnumWithEmptyValue(): void
+	{
+		$this->assertNull($this->field()->toEnum(Status::class));
+		$this->assertNull($this->field(null)->toEnum(Status::class));
+	}
+
+	public function testToEnumWithIntBackedEnum(): void
+	{
+		$this->assertSame(Priority::Low, $this->field('1')->toEnum(Priority::class));
+		$this->assertSame(Priority::High, $this->field('2')->toEnum(Priority::class));
+		$this->assertNull($this->field('3')->toEnum(Priority::class));
+	}
+
+	public function testToEnumWithIntBackedEnumAndEmptyValue(): void
+	{
+		$this->assertNull($this->field()->toEnum(Priority::class));
+		$this->assertNull($this->field(null)->toEnum(Priority::class));
+	}
+
+	public function testToEnumWithIntBackedEnumAndInvalidValue(): void
+	{
+		$this->expectException(TypeError::class);
+		$this->field('high')->toEnum(Priority::class);
+	}
+
+	public function testToEnumWithInvalidValue(): void
+	{
+		$this->assertNull($this->field('unlisted')->toEnum(Status::class));
+		$this->assertNull($this->field('Draft')->toEnum(Status::class));
 	}
 
 	public function testToFile(): void
@@ -328,12 +912,54 @@ class FieldMethodsTest extends TestCase
 		$expected = 1.2;
 
 		$this->assertSame($expected, $field->toFloat());
+
+		// alias
+		$this->assertSame($expected, $field->float());
 	}
 
 	public function testToInt(): void
 	{
 		$this->assertSame(1, $this->field('1')->toInt());
 		$this->assertIsInt($this->field('1')->toInt());
+
+		// alias
+		$this->assertSame(1, $this->field('1')->int());
+	}
+
+	public function testToLayouts(): void
+	{
+		$data = [
+			[
+				'type'    => 'heading',
+				'content' => ['text' => 'Heading'],
+			],
+			[
+				'type'    => 'text',
+				'content' => ['text' => 'Text'],
+			]
+		];
+
+		$page    = kirby()->page('files');
+		$field   = $this->field(json_encode($data), $page);
+		$layouts = $field->toLayouts();
+		$blocks  = $layouts->toBlocks();
+
+		$this->assertInstanceOf(Layouts::class, $layouts);
+		$this->assertSame($page, $layouts->parent());
+		$this->assertCount(1, $layouts->data());
+
+		$layout = $layouts->first();
+		$this->assertSame($page, $layout->parent());
+		$this->assertEquals($field, $layout->field()); // cannot use strict assertion (cloned object)
+
+		$array = $layout->toArray();
+		$this->assertArrayHasKey('attrs', $array);
+		$this->assertArrayHasKey('columns', $array);
+		$this->assertArrayHasKey('id', $array);
+
+		$block = $blocks->first();
+		$this->assertSame($page, $block->parent());
+		$this->assertEquals($field, $block->field());
 	}
 
 	public function testToLink(): void
@@ -348,20 +974,9 @@ class FieldMethodsTest extends TestCase
 		$expected = '<a href="/test">Test</a>';
 
 		$this->assertSame($expected, $page->title()->toLink());
-	}
 
-	public function testToLinkWithHref(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-			'content' => [
-				'title' => 'Test'
-			]
-		]);
-
-		$expected = '<a class="test" href="https://getkirby.com">Test</a>';
-
-		$this->assertSame($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
+		// alias
+		$this->assertSame($expected, $page->title()->link());
 	}
 
 	public function testToLinkWithActivePage(): void
@@ -381,6 +996,35 @@ class FieldMethodsTest extends TestCase
 		$expected = '<a aria-current="page" href="/test">Test</a>';
 
 		$this->assertSame($expected, $page->title()->toLink());
+	}
+
+	public function testToLinkWithHref(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => [
+				'title' => 'Test'
+			]
+		]);
+
+		$expected = '<a class="test" href="https://getkirby.com">Test</a>';
+
+		$this->assertSame($expected, $page->title()->toLink('https://getkirby.com', ['class' => 'test']));
+	}
+
+	public function testToObject(): void
+	{
+		$data = [
+			'heading' => 'Heading',
+			'text'    => 'Text'
+		];
+
+		$field  = $this->field(Yaml::encode($data));
+		$object = $field->toObject();
+
+		$this->assertInstanceOf(Content::class, $object);
+
+		$this->assertSame('Heading', $object->heading()->value());
 	}
 
 	public function testToPage(): void
@@ -472,7 +1116,7 @@ class FieldMethodsTest extends TestCase
 		$this->assertInstanceOf(Pages::class, $result);
 		$this->assertSame($pages->data(), $result->data());
 
-		// no results
+		// no matching results
 		$content = Yaml::encode([
 			'c',
 			'd'
@@ -481,6 +1125,26 @@ class FieldMethodsTest extends TestCase
 		$result = $this->field($content)->toPages();
 		$this->assertInstanceOf(Pages::class, $result);
 		$this->assertSame([], $result->data());
+
+		// single non-matching id
+		$result = $this->field('nonexistent')->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
+
+		// empty content
+		$result = $this->field('')->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
+
+		// mix of matching and non-matching ids
+		$content = Yaml::encode([
+			'a',
+			'nonexistent',
+			'b'
+		]);
+		$result = $this->field($content)->toPages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertSame(['a', 'b'], $result->keys());
 	}
 
 	public function testToQrCode(): void
@@ -494,51 +1158,13 @@ class FieldMethodsTest extends TestCase
 		$this->assertNull($this->field()->toQrCode());
 	}
 
-	public function testPermalinksToUrls(): void
+	public function testToString(): void
 	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'uuid' => 'my-page'
-						],
-						'files' => [
-							[
-								'filename' => 'test.jpg',
-								'content' => [
-									'uuid'  => 'my-file',
-								]
-							]
-						]
-					],
-				]
-			]
-		]);
+		$field = $this->field('Title');
 
-		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a><img src="/@/file/my-file"></p>. This should not be <a href="https://getkirby.com">affected</a>.');
-		$result = $field->permalinksToUrls();
-		$hash   = $app->file('a/test.jpg')->mediaHash();
-
-		$this->assertSame('<p>This is a <a href="/a">test</a><img src="/media/pages/a/' . $hash . '/test.jpg"></p>. This should not be <a href="https://getkirby.com">affected</a>.', (string)$result);
-	}
-
-	public function testPermalinksToUrlsWithMissingUUID(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-		]);
-
-		$field  = $this->field('<p>This is a <a href="/@/page/my-page">test</a></p>.');
-		$result = $field->permalinksToUrls();
-
-		$this->assertSame('<p>This is a <a href="/@/page/my-page">test</a></p>.', (string)$result);
+		$this->assertSame('Title', $field->toString());
+		$this->assertSame('Title', $field->__toString());
+		$this->assertSame('Title', (string)$field);
 	}
 
 	public function testToStructure(): void
@@ -590,14 +1216,6 @@ class FieldMethodsTest extends TestCase
 		$this->assertFalse($this->field(null)->toTimestamp());
 	}
 
-	public function testToDefaultUrl(): void
-	{
-		$field    = $this->field('super/cool');
-		$expected = '/super/cool';
-
-		$this->assertSame($expected, $field->toUrl());
-	}
-
 	public function testToUrlCustom(): void
 	{
 		$app = new App([
@@ -615,13 +1233,30 @@ class FieldMethodsTest extends TestCase
 		$this->assertSame($expected, $field->toUrl());
 	}
 
+	public function testToUrlDefault(): void
+	{
+		$field    = $this->field('super/cool');
+		$expected = '/super/cool';
+
+		$this->assertSame($expected, $field->toUrl());
+	}
+
 	public function testToUrlEmpty(): void
 	{
 		$field = $this->field();
 		$this->assertNull($field->toUrl());
 	}
 
-	public function testToUuidUrl(): void
+	public function testToUrlInvalidUuid(): void
+	{
+		$field = $this->field('page://invalid');
+		$this->assertNull($field->toUrl());
+
+		$field = $this->field('file://invalid');
+		$this->assertNull($field->toUrl());
+	}
+
+	public function testToUrlUuid(): void
 	{
 		$app = new App([
 			'roots' => [
@@ -657,15 +1292,6 @@ class FieldMethodsTest extends TestCase
 		$field = $this->field('file://my-file-uuid');
 		$this->assertSame('/media/pages/test/' . $file->mediaHash() . '/test.jpg', $field->toUrl());
 		$this->assertSame($file->url(), $field->toUrl());
-	}
-
-	public function testToInvalidUuidUrl(): void
-	{
-		$field = $this->field('page://invalid');
-		$this->assertNull($field->toUrl());
-
-		$field = $this->field('file://invalid');
-		$this->assertNull($field->toUrl());
 	}
 
 	public function testToUser(): void
@@ -726,251 +1352,48 @@ class FieldMethodsTest extends TestCase
 			]
 		]);
 
-		// two results
+		// two matching emails
 		$content = Yaml::encode([
 			'a@company.com',
 			'b@company.com'
 		]);
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com', 'b@company.com'], $result->pluck('email'));
 
-		$this->assertSame(['a@company.com', 'b@company.com'], $this->field($content)->toUsers()->pluck('email'));
-
-		// no results
+		// no matching emails
 		$content = Yaml::encode([
 			'c@company.com',
 			'd@company.com'
 		]);
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 
-		$this->assertInstanceOf(Users::class, $this->field($content)->toUsers());
-	}
+		// single matching email
+		$result = $this->field('a@company.com')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com'], $result->pluck('email'));
 
-	public function testLength(): void
-	{
-		$this->assertSame(3, $this->field('abc')->length());
-	}
+		// single non-matching email
+		$result = $this->field('nobody@company.com')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 
-	public function testCallback(): void
-	{
-		$field  = $this->field('Hello world');
-		$result = $field->callback(function ($field) {
-			$field->value = 'foo';
-			return $field;
-		});
-		$this->assertSame('foo', $result->toString());
-	}
+		// empty content
+		$result = $this->field('')->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 
-	public function testEscape(): void
-	{
-		$this->assertSame('&lt;script&gt;alert(&quot;hello&quot;)&lt;/script&gt;', $this->field('<script>alert("hello")</script>')->escape()->value());
-	}
-
-	public function testExcerpt(): void
-	{
-		// html
-		$string   = 'This is a long text<br>with some html';
-		$expected = 'This is a long text with …';
-
-		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
-
-		// markdown
-		$string   = 'This is a long text **with some** html';
-		$expected = 'This is a long text with …';
-
-		$this->assertSame($expected, $this->field($string)->excerpt(27)->value());
-	}
-
-	public function testHtml(): void
-	{
-		$this->assertSame('&ouml;', $this->field('ö')->html()->value());
-	}
-
-	public function testInline(): void
-	{
-		$html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
-		$expected = 'Headline Subtitle with <a href="#">link</a>.';
-
-		$this->assertSame($expected, $this->field($html)->inline()->value());
-		$this->assertSame('', $this->field(null)->inline()->value());
-	}
-
-	public function testNl2br(): void
-	{
-		$input = 'Multiline' . PHP_EOL . 'test' . PHP_EOL . 'string';
-		$expected = 'Multiline<br>' . PHP_EOL . 'test<br>' . PHP_EOL . 'string';
-
-		$this->assertSame($expected, $this->field($input)->nl2br()->value());
-		$this->assertSame('', $this->field(null)->nl2br()->value());
-	}
-
-	public function testKirbytext(): void
-	{
-		$kirbytext = '(link: # text: Test)';
-		$expected  = '<p><a href="#">Test</a></p>';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytext()->value());
-		$this->assertSame($expected, $this->field($kirbytext)->kt()->value());
-	}
-
-	public function testKirbytextWithSafeMode(): void
-	{
-		$kirbytext = '<h1>Test</h1>';
-		$expected  = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytext(['markdown' => ['safe' => true]])->value());
-	}
-
-	public function testKirbytextInline(): void
-	{
-		$kirbytext = '(link: # text: Test)';
-		$expected  = '<a href="#">Test</a>';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytextinline()->value());
-		$this->assertSame($expected, $this->field($kirbytext)->kti()->value());
-	}
-
-	public function testKirbytextInlineWithSafeMode(): void
-	{
-		$kirbytext = '<b>Test</b>';
-		$expected  = '&lt;b&gt;Test&lt;/b&gt;';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytextInline(['markdown' => ['safe' => true]])->value());
-	}
-
-	public function testKirbytags(): void
-	{
-		$kirbytext = '(link: # text: Test)';
-		$expected  = '<a href="#">Test</a>';
-
-		$this->assertSame($expected, $this->field($kirbytext)->kirbytags()->value());
-	}
-
-	public function testLower(): void
-	{
-		$this->assertSame('abc', $this->field('ABC')->lower()->value());
-	}
-
-	public function testMarkdown(): void
-	{
-		$markdown = '**Test**';
-		$expected = '<p><strong>Test</strong></p>';
-
-		$this->assertSame($expected, $this->field($markdown)->markdown()->value());
-	}
-
-	public function testMarkdownWithSafeMode(): void
-	{
-		$markdown = '<h1>Test</h1>';
-		$expected = '<p>&lt;h1&gt;Test&lt;/h1&gt;</p>';
-
-		$this->assertSame($expected, $this->field($markdown)->markdown(['safe' => true])->value());
-	}
-
-	public function testOr(): void
-	{
-		$this->assertSame('field value', $this->field('field value')->or('fallback')->value());
-		$this->assertSame('fallback', $this->field()->or('fallback')->value());
-	}
-
-	public function testQuery(): void
-	{
-		// with page
-		$page = new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Hello world',
-				'text'  => 'page.title'
-			]
+		// mix of matching and non-matching emails
+		$content = Yaml::encode([
+			'a@company.com',
+			'nobody@company.com',
+			'b@company.com'
 		]);
-
-		$this->assertSame('Hello world', $page->text()->query()->value());
-	}
-
-	public function testReplace(): void
-	{
-		// simple replacement
-		$this->assertSame('Hello world', $this->field('Hello {{ message }}')->replace(['message' => 'world'])->value());
-
-		// nested replacement
-		$this->assertSame('Hello world', $this->field('Hello {{ message.text }}')->replace([
-			'message' => [
-				'text' => 'world'
-			]
-		])->value());
-
-		// missing or empty field
-		$this->assertSame('', $this->field(null)->replace(['message' => 'world'])->value());
-		$this->assertSame('', $this->field('')->replace(['message' => 'world'])->value());
-
-		// with page
-		$page = new Page([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Hello world',
-				'text'  => 'Title: {{ page.title }}'
-			]
-		]);
-
-		$this->assertSame('Title: Hello world', $page->text()->replace()->value());
-		$this->assertSame('', $page->doesNotExist()->replace()->value());
-
-		// with fallback
-		$this->assertSame(
-			'Hello ',
-			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'])->value()
-		);
-		$this->assertSame(
-			'Hello fallback',
-			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], 'fallback')->value()
-		);
-		$this->assertSame(
-			'Hello {{ invalid }}',
-			$this->field('Hello {{ invalid }}')->replace(['message' => 'world'], null)->value()
-		);
-	}
-
-	public function testShort(): void
-	{
-		$this->assertSame('abc…', $this->field('abcd')->short(3)->value());
-	}
-
-	public function testSmartypants(): void
-	{
-		$text     = '"Test"';
-		$expected = '“Test”';
-
-		$this->assertSame($expected, $this->field($text)->smartypants()->value());
-	}
-
-	public function testSmartypantsWithKirbytext(): void
-	{
-		new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'options' => [
-				'smartypants' => true
-			]
-		]);
-
-		$text     = '"Test"';
-		$expected = '“Test”';
-
-		$this->assertSame($expected, $this->field($text)->kti()->value());
-	}
-
-	public function testSlug(): void
-	{
-		$text     = 'Ä--Ö--Ü';
-		$expected = 'a-o-u';
-
-		$this->assertSame($expected, $this->field($text)->slug()->value());
-	}
-
-	public function testSplit(): void
-	{
-		$text = 'a, b, c';
-		$expected = ['a', 'b', 'c'];
-
-		$this->assertSame($expected, $this->field($text)->split());
+		$result = $this->field($content)->toUsers();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertSame(['a@company.com', 'b@company.com'], $result->pluck('email'));
 	}
 
 	public function testUpper(): void
@@ -993,7 +1416,14 @@ class FieldMethodsTest extends TestCase
 
 	public function testXml(): void
 	{
-		$this->assertSame('&#246;&#228;&#252;', $this->field('öäü')->xml()->value());
+		$expected = '&#246;&#228;&#252;';
+
+		$field = $this->field('öäü');
+		$this->assertSame($expected, $field->xml()->value());
+
+		// alias
+		$field = $this->field('öäü');
+		$this->assertSame($expected, $field->x()->value());
 	}
 
 	public function testYaml(): void
@@ -1006,177 +1436,5 @@ class FieldMethodsTest extends TestCase
 
 		$yaml = Yaml::encode($data);
 		$this->assertSame($data, $this->field($yaml)->yaml());
-	}
-
-	public function testToBlocks(): void
-	{
-		$data = [
-			[
-				'type' => 'code',
-				'content' => [
-					'code' => '<?php echo "Hello World!"; ?>',
-					'language' => 'php',
-				]
-			],
-			[
-				'type' => 'gallery',
-				'content' => [
-					'images' => [
-						'a.png',
-						'b.png'
-					],
-				]
-			],
-			[
-				'type'    => 'image',
-				'content' => [
-					'alt'      => 'The Kirby logo as favicon',
-					'caption'  => 'This favicon is really amazing!',
-					'location' => 'web',
-					'src'      => 'https://getkirby.com/favicon.png',
-					'link'     => 'https://getkirby.com',
-				]
-			],
-			[
-				'type'    => 'image',
-				'content' => [
-					'alt'   => 'White ink on a white canvas',
-					'image' => 'a.png',
-				]
-			],
-			[
-				'type'    => 'heading',
-				'content' => [
-					'text' => 'A nice heading',
-				]
-			],
-			[
-				'type'    => 'list',
-				'content' => [
-					'text' => '<ul><li>list item 1<\/li><li>list item 2<\/li><\/ul>',
-				]
-			],
-			[
-				'type'    => 'markdown',
-				'content' => [
-					'text' => '# Heading 1',
-				]
-			],
-			[
-				'type'    => 'quote',
-				'content' => [
-					'text'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.',
-					'citation' => 'John Doe',
-				]
-			],
-			[
-				'type'    => 'text',
-				'content' => [
-					'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.'
-				]
-			],
-			[
-				'type'    => 'video',
-				'content' => [
-					'caption' => 'How to install Kirby in 5 minutes',
-					'url'     => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
-				]
-			]
-		];
-
-		$json   = Json::encode($data);
-		$page   = kirby()->page('files');
-		$field  = new Field($page, 'test', $json);
-		$blocks = $field->toBlocks();
-
-		$this->assertInstanceOf(Blocks::class, $blocks);
-		$this->assertIsPage($blocks->parent());
-		$this->assertCount(count($data), $blocks);
-		$this->assertCount(count($data), $blocks->data());
-
-		foreach ($data as $index => $row) {
-			$block = $blocks->nth($index);
-
-			$this->assertSame($page, $block->parent());
-			$this->assertEquals($field, $block->field()); // cannot use strict assertion (cloned object)
-			$this->assertSame($row['type'], $block->type());
-			$this->assertSame($row['content'], $block->content()->data());
-			$this->assertNotEmpty($block->toHtml());
-		}
-	}
-
-	public function testToBlocksWithInvalidData(): void
-	{
-		$data = [
-			[
-				'content' => [
-					'text' => 'foo',
-				]
-			]
-		];
-
-		$json   = Json::encode($data);
-		$field  = new Field(kirby()->page('files'), 'test', $json);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid blocks data for "test" field on parent "files"');
-
-		$field->toBlocks();
-	}
-
-	public function testToLayouts(): void
-	{
-		$data = [
-			[
-				'type'    => 'heading',
-				'content' => ['text' => 'Heading'],
-			],
-			[
-				'type'    => 'text',
-				'content' => ['text' => 'Text'],
-			]
-		];
-
-		$page    = kirby()->page('files');
-		$field   = new Field($page, 'test', json_encode($data));
-		$layouts = $field->toLayouts();
-		$blocks  = $layouts->toBlocks();
-
-		$this->assertInstanceOf(Layouts::class, $layouts);
-		$this->assertSame($page, $layouts->parent());
-		$this->assertCount(1, $layouts->data());
-
-		$layout = $layouts->first();
-		$this->assertSame($page, $layout->parent());
-		$this->assertEquals($field, $layout->field()); // cannot use strict assertion (cloned object)
-
-		$array = $layout->toArray();
-		$this->assertArrayHasKey('attrs', $array);
-		$this->assertArrayHasKey('columns', $array);
-		$this->assertArrayHasKey('id', $array);
-
-		$block = $blocks->first();
-		$this->assertSame($page, $block->parent());
-		$this->assertEquals($field, $block->field());
-	}
-
-	public function testToObject(): void
-	{
-		$data = [
-			'heading' => 'Heading',
-			'text'    => 'Text'
-		];
-
-		$field  = $this->field(Yaml::encode($data));
-		$object = $field->toObject();
-
-		$this->assertInstanceOf(Content::class, $object);
-
-		$this->assertSame('Heading', $object->heading()->value());
-	}
-
-	protected function field($value = '', $parent = null)
-	{
-		return new Field($parent, 'test', $value);
 	}
 }

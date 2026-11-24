@@ -1,3 +1,9 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+import type { ConcreteComponent } from "vue";
 import { wrap } from "./array";
 import { clone } from "./object";
 
@@ -17,11 +23,10 @@ export function defaultValue(field: Field): unknown {
 		return clone(field.default);
 	}
 
-	// TODO: Remove once window.panel is globally typed
-	// @ts-expect-error - window.panel has no type yet
-	const options = window.panel.app.$options;
-	const component = options.components[`k-${field.type}-field`];
-	const valueProp = component?.options.props?.value;
+	const component = window.panel.app.component(`k-${field.type}-field`) as
+		| ConcreteComponent
+		| undefined;
+	const valueProp = component?.props?.value;
 
 	// if the field has no value prop,
 	// it will be completely skipped
@@ -67,7 +72,7 @@ export function form(fields: Record<string, Field>): Record<string, unknown> {
 
 /**
  * Checks if a form field is visible based on its "when" conditions
- * and the current form values. Also works for sections.
+ * and the current form values.
  * @unstable
  *
  * @example
@@ -132,15 +137,13 @@ export function options(options: Option[], value: unknown): Option[] {
 			known.includes(String(value)) === false
 	);
 
-	// TODO: Remove once window.panel is globally typed
-	// @ts-expect-error - window.panel has no type yet
 	const text = `[${window.panel.t("unknown")}]`;
 
 	return [...options, ...unknown.map((value) => ({ text, value }))];
 }
 
 /**
- * Adds proper endpoint and section definitions
+ * Adds proper endpoint definitions
  * to subfields for a form field.
  * @unstable
  */
@@ -151,20 +154,17 @@ export function subfields(
 	const subfields: Record<string, Field> = {};
 
 	for (const name in fields) {
-		const subfield = fields[name];
-
-		subfield.section = field.name;
+		// copy the subfield, so that the given fields stay untouched
+		const subfield = { ...fields[name] };
 
 		if (field.endpoints) {
 			const endpoints = field.endpoints as {
 				field: string;
-				section: string;
 				model: string;
 			};
 
 			subfield.endpoints = {
 				field: endpoints.field + "+" + name,
-				section: endpoints.section,
 				model: endpoints.model
 			};
 		}

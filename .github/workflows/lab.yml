@@ -29,15 +29,8 @@ jobs:
         with:
           ref: ${{ github.event.release.tag_name || inputs.tag }}
 
-      - name: Set up Node.js and cache npm dependencies
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          cache: "npm"
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        run: npm ci
-        working-directory: panel
+      - name: Setup Node/npm
+        uses: ./.github/actions/setup-npm
 
       - name: Build Lab JSON docs
         run: npm run build:docs

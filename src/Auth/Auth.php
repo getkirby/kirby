@@ -1,0 +1,746 @@
+<?php
+
+namespace Kirby\Auth;
+
+use Closure;
+use Kirby\Auth\Exception\ChallengeTimeoutException;
+use Kirby\Auth\Exception\LoginNotPermittedException;
+use Kirby\Auth\Exception\RateLimitException;
+use Kirby\Auth\Method\BasicAuthMethod;
+use Kirby\Auth\User as AuthUser;
+use Kirby\Cms\App;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
+use Kirby\Exception\UserNotFoundException;
+use Kirby\Http\Idn;
+use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Session\Session;
+use SensitiveParameter;
+use Throwable;
+
+/**
+ * Authentication layer
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+class Auth
+{
+	protected Challenges $challenges;
+	protected Csrf $csrf;
+	protected Limits $limits;
+	protected Methods $methods;
+	protected Passwords|null $passwords = null;
+	protected Status|null $status = null;
+	protected AuthUser $user;
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	public function __construct(
+		protected App $kirby
+	) {
+		$this->challenges = new Challenges($this, $kirby);
+		$this->csrf       = new Csrf($kirby);
+		$this->limits     = new Limits($kirby);
+		$this->methods    = new Methods($this, $kirby);
+		$this->user       = new AuthUser($this, $kirby);
+	}
+
+	/**
+	 * Login a user with email and (maybe optional) password
+	 * as well as an auth challenge, if required by the auth method
+	 *
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 */
+	public function authenticate(
+		string $method,
+		string|null $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false
+	): User|Status {
+		$result = $this->methods()->authenticate(
+			type:      $method,
+			email:     $email,
+			password:  $password,
+			long:      $long
+		);
+
+		if ($result instanceof User === true) {
+			$this->setUser($result);
+
+			$session = $this->kirby->session();
+			$this->challenges->clear($session);
+			$this->methods->clear($session);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Returns the auth challenges handler
+	 * @since 6.0.0
+	 */
+	public function challenges(): Challenges
+	{
+		return $this->challenges;
+	}
+
+	/**
+	 * Creates an authentication challenge
+	 * (one-time auth code)
+	 * @since 3.5.0
+	 *
+	 * @param $long If `true`, a long session will be created
+	 * @param 'login'|'password-reset'|'2fa' $mode Purpose of the code
+	 *
+	 * @throws LogicException If there is no suitable authentication challenge (only in debug mode)
+	 * @throws NotFoundException If the user does not exist (only in debug mode)
+	 * @throws PermissionException If the rate limit is exceeded
+	 */
+	public function createChallenge(
+		string $email,
+		bool $long = false,
+		string $mode = 'login'
+	): Status {
+		$email   = Idn::decodeEmail($email);
+		$session = $this->kirby->session([
+			'createMode' => 'cookie',
+			'long'       => $long === true
+		]);
+
+		// catch every exception to hide them from attackers
+		try {
+			// create available challenge for that user
+			$this->challenges->create($session, $email, $mode);
+
+		} catch (Throwable $e) {
+			// drop the previous challenge; its type and data must not
+			// survive, or its code could be verified against the email below
+			$this->challenges->clear($session);
+
+			// only re-throw the exception in auth debug mode
+			$this->fail($e);
+
+			// always make sure to still keep the session generically
+			// pending, even if the challenge wasn't created;
+			// this avoids leaking whether the user exists
+			$this->challenges()->keepPending($session, $email, $mode);
+		}
+
+		// sleep for a random amount of milliseconds
+		// to make automated attacks harder and to
+		// avoid leaking whether the user exists
+		usleep(random_int(50000, 300000));
+
+		// clear the status cache
+		$this->status = null;
+
+		return $this->status($session, false);
+	}
+
+	/**
+	 * Returns the csrf token if it exists and if it is valid
+	 */
+	public function csrf(): string|false
+	{
+		return $this->csrf->get();
+	}
+
+	/**
+	 * Returns either predefined csrf or the one from session
+	 * @since 3.6.0
+	 */
+	public function csrfFromSession(): string
+	{
+		return $this->csrf->fromSession();
+	}
+
+	/**
+	 * Returns the logged in user by checking for a
+	 * basic authentication header with valid credentials
+	 *
+	 * @throws InvalidArgumentException if the authorization header is invalid
+	 * @throws PermissionException if basic authentication is not allowed
+	 */
+	public function currentUserFromBasicAuth(
+		BasicAuth|null $auth = null
+	): User|null {
+		return $this->user->fromBasicAuth($auth);
+	}
+
+	/**
+	 * Returns the currently impersonated user
+	 */
+	public function currentUserFromImpersonation(): User|null
+	{
+		return $this->user->fromImpersonation();
+	}
+
+	/**
+	 * Returns the logged in user by checking the current session
+	 * and finding a valid user id in there
+	 */
+	public function currentUserFromSession(
+		Session|array|null $session = null
+	): User|null {
+		return $this->user->fromSession($session);
+	}
+
+	/**
+	 * Returns the list of enabled challenges in the
+	 * configured order
+	 * @since 3.5.1
+	 * @deprecated 6.0.0 Use `self::challenges()->enabled()` instead
+	 *
+	 * @return list<string>
+	 */
+	public function enabledChallenges(): array
+	{
+		return $this->challenges()->enabled();
+	}
+
+	/**
+	 * Re-confirms the password of an already authenticated user before
+	 * a sensitive action, inside the shared rate-limit envelope so that
+	 * a hijacked session cannot brute-force it.
+	 *
+	 * @internal
+	 * @since 6.0.0
+	 *
+	 * @throws RateLimitException If the rate limit was exceeded
+	 * @throws InvalidArgumentException If the password is not valid
+	 */
+	public function ensurePassword(
+		User $user,
+		#[SensitiveParameter]
+		string|null $password
+	): void {
+		$email = $user->email();
+
+		$this->limits->ensure($email);
+
+		try {
+			$user->validatePassword($password);
+		} catch (Throwable $e) {
+			// confirming a password is not a login attempt,
+			// so do not fire user.login:failed
+			$this->limits->track($email, triggerHook: false);
+			throw $e;
+		}
+	}
+
+	/**
+	 * Throws an exception only in debug mode, otherwise falls back
+	 * to a public error without sensitive information
+	 *
+	 * @throws Throwable Either the passed `$exception` or the `$fallback`
+	 *                   (no exception if debugging is disabled and no fallback was passed)
+	 */
+	protected function fail(
+		Throwable $exception,
+		Throwable|null $fallback = null
+	): void {
+		$debug = $this->kirby->option('auth.debug', 'log');
+
+		// throw the original exception only in debug mode
+		if ($debug === true) {
+			throw $exception;
+		}
+
+		// otherwise hide the real error and only print it to the error log
+		// unless disabled by setting `auth.debug` to `false`
+		if ($debug === 'log') {
+			error_log($exception); // @codeCoverageIgnore
+		}
+
+		// only throw an error in production if requested by the calling method
+		if ($fallback !== null) {
+			throw $fallback;
+		}
+	}
+
+	/**
+	 * Clears the cached user data after logout
+	 */
+	public function flush(): void
+	{
+		$this->user->flush();
+		$this->status = null;
+	}
+
+	/**
+	 * Runs some auth attempt inside the shared rate-limit envelope:
+	 * enforces the limit up front and, on any failure, tracks the
+	 * attempt, adds timing jitter and hides the real reason behind a
+	 * generic fallback error.
+	 *
+	 * @since 6.0.0
+	 * @internal
+	 *
+	 * @throws Throwable Fallback or the original error in debug mode
+	 */
+	public function guard(
+		string|null $email,
+		#[SensitiveParameter]
+		Closure $attempt,
+		Throwable|null $fallback = null
+	): mixed {
+		try {
+			$this->limits->ensure($email);
+			return $attempt();
+
+		} catch (Throwable $e) {
+			// a hit that already is the rate limit was tracked
+			// when the limit fired, so don't count it twice here
+			if ($e instanceof RateLimitException === false) {
+				try {
+					$this->limits->track($email);
+				} catch (Throwable $tracked) {
+					// keep the tracking error (e.g. limit exceeded)
+					$e = $tracked;
+				}
+			}
+
+			// sleep for a random amount of milliseconds to make
+			// automated attacks harder and to avoid leaking whether
+			// the email/user exists
+			usleep(random_int(10000, 2000000));
+
+			// keep throwing the original error in debug mode,
+			// otherwise hide it to avoid leaking security-relevant info
+			$this->fail($e, $fallback);
+
+			return null;
+		}
+	}
+
+	/**
+	 * Become any existing user or disable the current user
+	 *
+	 * @param $who User ID or email address,
+	 *            `null` to use the actual user again,
+	 *            `'kirby'` for a virtual admin user or
+	 *            `'nobody'` to disable the actual user
+	 * @throws NotFoundException if the given user cannot be found
+	 */
+	public function impersonate(string|null $who = null): User|null
+	{
+		// clear the status cache
+		$this->status = null;
+
+		return $this->user->impersonate($who);
+	}
+
+	/**
+	 * Check if logins are blocked for the current ip or email
+	 * @deprecated 6.0.0 Use `self::limits()->isBlocked()` instead
+	 */
+	public function isBlocked(string $email): bool
+	{
+		return $this->limits->isBlocked($email);
+	}
+
+	/**
+	 * Checks if the currently logged in user was authenticated
+	 * by a password reset challenge and may therefore set a new
+	 * password without knowing the previous one
+	 * @since 6.0.0
+	 */
+	public function isResettingPassword(
+		Session|array|null $session = null
+	): bool {
+		$user = $this->user($session);
+
+		if ($user === null) {
+			return false;
+		}
+
+		return $this->session($session)->get('kirby.resetPassword') === $user->id();
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function kirby(): App
+	{
+		return $this->kirby;
+	}
+
+	/**
+	 * Returns the auth rate limits object
+	 * @since 6.0.0
+	 */
+	public function limits(): Limits
+	{
+		return $this->limits;
+	}
+
+	/**
+	 * Read all tracked logins
+	 * @deprecated 6.0.0 Use `self::limits()->log()` instead
+	 */
+	public function log(): array
+	{
+		return $this->limits->log();
+	}
+
+	/**
+	 * Returns the absolute path to the logins log
+	 * @deprecated 6.0.0 Use `self::limits()->file()` instead
+	 */
+	public function logfile(): string
+	{
+		return $this->limits->file();
+	}
+
+	/**
+	 * Login a user by email and password
+	 *
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 */
+	public function login(
+		string $email,
+		#[SensitiveParameter]
+		string $password,
+		bool $long = false
+	): User {
+		$user = $this->authenticate('password', $email, $password, $long);
+
+		if ($user instanceof User === false) {
+			// if a method returned a pending status here,
+			// it's a misconfiguration (e.g. password + 2FA active);
+			// keep the existing login signature strict
+			throw new LoginNotPermittedException(); // @codeCoverageIgnore
+		}
+
+		return $user;
+	}
+
+	/**
+	 * Login a user by email, password and auth challenge
+	 * @since 3.5.0
+	 *
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 *
+	 * @deprecated 6.0.0 Use `self::authenticate()` instead
+	 */
+	public function login2fa(
+		string $email,
+		#[SensitiveParameter]
+		string $password,
+		bool $long = false
+	): Status {
+		$this->validatePassword($email, $password);
+		return $this->createChallenge($email, $long, '2fa');
+	}
+
+	/**
+	 * Logout the current user
+	 */
+	public function logout(): void
+	{
+		// ensures that we log out the actually logged in user
+		$this->user->impersonate(null);
+
+		// clear our own session data before the user is logged out;
+		// otherwise this leftover data would keep the session alive
+		// and its cookie would block the pages cache
+		$session = $this->kirby->session();
+
+		$this->challenges->clear($session);
+		$this->csrf->clear($session);
+		$this->methods->clear($session);
+		$session->remove('kirby.resetPassword');
+
+		$this->user()?->logout();
+
+		$this->status = null;
+	}
+
+	/**
+	 * Returns the auth methods handler
+	 * @since 6.0.0
+	 */
+	public function methods(): Methods
+	{
+		return $this->methods;
+	}
+
+	/**
+	 * Returns the password policy defined via the
+	 * `auth.passwords` option
+	 * @since 6.0.0
+	 */
+	public function passwords(): Passwords
+	{
+		return $this->passwords ??= Passwords::factory($this->kirby);
+	}
+
+	/**
+	 * Creates a session object from the passed options
+	 */
+	public function session(Session|array|null $session = null): Session
+	{
+		// use passed session options or session object if set
+		if (is_array($session) === true) {
+			return $this->kirby->session($session);
+		}
+
+		// try session in header or cookie
+		if ($session instanceof Session === false) {
+			return $this->kirby->session(['detect' => true]);
+		}
+
+		return $session;
+	}
+
+	/**
+	 * Sets a user object as the current user in the cache
+	 * @internal
+	 */
+	public function setUser(User $user): void
+	{
+		$this->user->set($user);
+		// clear the status cache
+		$this->status = null;
+	}
+
+	/**
+	 * Returns the authentication status object
+	 * @since 3.5.1
+	 *
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
+	 */
+	public function status(
+		Session|array|null $session = null,
+		bool $allowImpersonation = true
+	): Status {
+		// only the status for the auto-detected session with
+		// impersonation allowed should be cached
+		$default = $session === null && $allowImpersonation === true;
+
+		if ($this->status !== null && $default === true) {
+			return $this->status;
+		}
+
+		$session = $this->session($session);
+		$user    = $this->user($session, $allowImpersonation);
+		$status  = Status::for(
+			kirby:        $this->kirby,
+			user:         $user,
+			impersonated: $allowImpersonation && $this->user->isImpersonated(),
+			session:      $session,
+			challenges:   $this->challenges()
+		);
+
+		if ($default === true) {
+			$this->status = $status;
+		}
+
+		return $status;
+	}
+
+	/**
+	 * Switches the active challenge within the current pending session
+	 * and hides all errors (e.g. rate limits) to avoid leaking whether
+	 * the user exists
+	 *
+	 * @since 6.0.0
+	 *
+	 * @throws Throwable Any error from switching the challenge (only in debug mode)
+	 */
+	public function switchChallenge(string $type): Challenge|null
+	{
+		// catch every exception to hide them from attackers
+		try {
+			return $this->challenges->switch($this->kirby->session(), $type);
+		} catch (Throwable $e) {
+			// only re-throw the exception in auth debug mode
+			$this->fail($e);
+			return null;
+		}
+	}
+
+	/**
+	 * Tracks a login
+	 *
+	 * @param $triggerHook If `false`, no user.login:failed hook is triggered
+	 * @deprecated 6.0.0 Use `self::limits()->track()` instead
+	 */
+	public function track(
+		string|null $email,
+		bool $triggerHook = true
+	): bool {
+		return $this->limits->track($email, $triggerHook);
+	}
+
+	/**
+	 * Returns the current authentication type
+	 *
+	 * @param $allowImpersonation If set to false, 'impersonate' won't
+	 *                           be returned as authentication type
+	 *                           even if an impersonation is active
+	 * @return 'basic'|'impersonate'|'session'
+	 */
+	public function type(bool $allowImpersonation = true): string
+	{
+		// route on attempt, not full validity, so misconfigured basic auth
+		// raises a precise error rather than silently using a session
+		if (BasicAuthMethod::isAttempted($this) === true) {
+			return 'basic';
+		}
+
+		if (
+			$allowImpersonation === true &&
+			$this->user->isImpersonated() === true
+		) {
+			return 'impersonate';
+		}
+
+		return 'session';
+	}
+
+	/**
+	 * Validates the currently logged in user
+	 *
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
+	 *
+	 * @throws Throwable If an authentication error occurred
+	 */
+	public function user(
+		Session|array|null $session = null,
+		bool $allowImpersonation = true
+	): User|null {
+		return $this->user->get($session, $allowImpersonation);
+	}
+
+	/**
+	 * Validates the user credentials and returns the user object on success;
+	 * otherwise logs the failed attempt
+	 *
+	 * @throws PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the email was invalid
+	 * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+	 */
+	public function validatePassword(
+		string $email,
+		#[SensitiveParameter]
+		string $password
+	): User|null {
+		$email = Idn::decodeEmail($email);
+
+		return $this->guard(
+			email:    $email,
+			attempt: function () use ($email, $password) {
+				$user = $this->kirby->users()->findByEmail($email);
+
+				// validate the user and its password
+				if (
+					$user instanceof User &&
+					$user->validatePassword($password) === true
+				) {
+					return $user;
+				}
+
+				// run a dummy password_verify() when the user is not found
+				// so that the timing is indistinguishable from a regular
+				// failure; without this, the absence of a bcrypt computation
+				// could leak whether the email address is registered
+				if ($user instanceof User === false) {
+					password_verify($password, '$2y$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW');
+				}
+
+				throw new UserNotFoundException($email);
+			},
+			fallback: new LoginNotPermittedException()
+		);
+	}
+
+	/**
+	 * Verifies an authentication code that was
+	 * requested with the `createChallenge()` method;
+	 * if successful, the user is automatically logged in
+	 * @since 3.5.0
+	 *
+	 * @param $input User-provided auth code/input to verify
+	 * @return User User object of the logged-in user
+	 *
+	 * @throws PermissionException If the rate limit was exceeded, the challenge timed out, the code
+	 *                             is incorrect or if any other error occurred with debug mode off
+	 * @throws NotFoundException If the user from the challenge doesn't exist
+	 * @throws InvalidArgumentException If no authentication challenge is active
+	 * @throws LogicException If the authentication challenge is invalid
+	 */
+	public function verifyChallenge(
+		#[SensitiveParameter]
+		mixed $input
+	): User|null {
+		$session = $this->kirby->session();
+		$email   = $session->get('kirby.challenge.email');
+
+		// `::guard()` tracks every non-rate-limit failure as an attempt.
+		// This method can be reached with a missing/expired challenge
+		// in the session. In that case, unlike `::login()`, there is
+		// nothing to really attempt at all here. Reject it, so that
+		// this will not consume the rate-limit budget.
+		// A generically pending session (email but no challenge type,
+		// see `Challenges::keepPending()`) must not be rejected here:
+		// it has to go through `::guard()` like a wrong code for a real
+		// challenge, otherwise the missing rate-limit tracking and timing
+		// jitter would reveal that the user does not exist
+		if (is_string($email) !== true) {
+			$this->fail(
+				new InvalidArgumentException(
+					message: 'No authentication challenge is active'
+				),
+				new PermissionException(key: 'access.code')
+			);
+		}
+
+		return $this->guard(
+			email:   $email,
+			attempt: function () use ($session, $input) {
+				try {
+					$challenge = $this->challenges->verify($session, $input);
+				} catch (ChallengeTimeoutException $e) {
+					// a timed-out challenge already cleared its own session
+					// state; additionally drop any active login so the
+					// pending session cannot be reused
+					$this->logout();
+					throw $e;
+				}
+
+				$user = $challenge->user();
+
+				$this->logout();
+				$user->loginPasswordless();
+
+				// allow the user to set a new password without knowing the
+				// previous one; bound to the user the challenge was issued
+				// for, so that no other user of the same session can make
+				// use of the flag
+				if ($challenge->mode() === 'password-reset') {
+					$session->set('kirby.resetPassword', $user->id());
+				}
+
+				$this->setUser($user);
+
+				return $user;
+			},
+			fallback: new PermissionException(key: 'access.code')
+		);
+	}
+}

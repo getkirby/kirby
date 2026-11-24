@@ -8,7 +8,7 @@ use Kirby\Form\Field;
 use Kirby\Form\Fields;
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected function setUp(): void
 	{
@@ -78,9 +78,18 @@ class TestCase extends BaseTestCase
 		]);
 	}
 
-	public function field(string $type, array $attr = [], Fields|null $formFields = null)
-	{
-		$page = new Page(['slug' => 'test']);
-		return Field::factory($type, ['model' => $page, ...$attr], $formFields);
+	public function field(
+		string $type,
+		array $attr = [],
+		Fields|null $formFields = null
+	): Field {
+		$page  = new Page(['slug' => 'test']);
+		$class = Field::resolve($type);
+
+		return new $class(...[
+			'model'    => $page,
+			...$attr,
+			'siblings' => $formFields
+		]);
 	}
 }

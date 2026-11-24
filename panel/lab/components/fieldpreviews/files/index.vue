@@ -1,6 +1,6 @@
 <template>
 	<k-lab-examples>
-		<k-lab-example label="Default">
+		<k-lab-example label="Value as item objects">
 			<k-lab-table-cell>
 				<!-- @code -->
 				<k-files-field-preview
@@ -21,8 +21,16 @@
 			</k-lab-table-cell>
 		</k-lab-example>
 
-		<k-lab-example label="Overflow">
+		<k-lab-example v-if="ids.length" label="Value as ID strings">
 			<k-lab-table-cell>
+				<!-- @code -->
+				<k-files-field-preview :value="ids" />
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overflow: many items">
+			<k-lab-table-cell style="max-width: 20rem">
 				<!-- @code -->
 				<k-files-field-preview
 					:value="
@@ -32,6 +40,28 @@
 							link: '/'
 						})
 					"
+				/>
+				<!-- @code-end -->
+			</k-lab-table-cell>
+		</k-lab-example>
+
+		<k-lab-example label="Overflow: long filename">
+			<k-lab-table-cell style="max-width: 20rem">
+				<!-- @code -->
+				<k-files-field-preview
+					:value="[
+						{
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename:
+								'this-is-a-file-with-a-very-long-filename-to-test-how-previews-handle-overflow.js',
+							link: '/'
+						},
+						{
+							image: { icon: 'code', back: 'black', color: 'white' },
+							filename: 'test-2.js',
+							link: '/'
+						}
+					]"
 				/>
 				<!-- @code-end -->
 			</k-lab-table-cell>
@@ -62,3 +92,14 @@
 		</k-lab-example>
 	</k-lab-examples>
 </template>
+
+<script>
+export default {
+	props: {
+		ids: {
+			type: Array,
+			default: () => []
+		}
+	}
+};
+</script>

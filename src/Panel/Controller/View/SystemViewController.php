@@ -1,0 +1,220 @@
+<?php
+
+namespace Kirby\Panel\Controller\View;
+
+use Kirby\Cms\License;
+use Kirby\Cms\System;
+use Kirby\Cms\System\UpdateStatus;
+use Kirby\Http\Cookie;
+use Kirby\Panel\Controller\ViewController;
+use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Ui\Stat;
+use Kirby\Panel\Ui\Stats;
+use Kirby\Panel\Ui\View;
+use Kirby\Plugin\Plugin;
+
+/**
+ * Controls the system view
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class SystemViewController extends ViewController
+{
+	protected array $exceptions;
+	protected License $license;
+	protected array|null $plugins = null;
+	protected System $system;
+	protected UpdateStatus|null $update;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->system     = $this->kirby->system();
+		$this->license    = $this->system->license();
+		$this->update     = $this->system->updateStatus();
+		$this->exceptions = $this->update?->exceptionMessages() ?? [];
+	}
+
+	public function buttons(): ViewButtons
+	{
+		return ViewButtons::view('system');
+	}
+
+	public function exceptions(): array
+	{
+		if ($this->isDebugging() === false) {
+			return [];
+		}
+
+		// Call `::plugins()` to ensure they inject their exceptions
+		$this->plugins();
+
+		return $this->exceptions;
+	}
+
+	protected function isDebugging(): bool
+	{
+		return $this->kirby->option('debug', false) === true;
+	}
+
+	protected function isLocal(): bool
+	{
+		return $this->system->isLocal();
+	}
+
+	public function load(): View
+	{
+		return new View(
+			component:   'k-system-view',
+			buttons:     $this->buttons(),
+			environment: $this->stats()->reports(),
+			exceptions:  $this->exceptions(),
+			info:        $this->system->info(),
+			plugins:     $this->plugins(),
+			security:    $this->security(),
+			urls:        $this->urls()
+		);
+	}
+
+	public function plugins(): array
+	{
+		return $this->plugins ??= $this->system->plugins()->values(function (Plugin $plugin) {
+			$authors   = $plugin->authorsNames();
+			$update    = $plugin->updateStatus();
+			$version   = $update?->toArray() ?? $plugin->version() ?? '–';
+
+			// Inject exceptions from plugin to global exceptions
+			$this->exceptions = [
+				...$this->exceptions,
+				...$update?->exceptionMessages() ?? []
+			];
+
+			return [
+				'author'  => $authors === '' ? '–' : $authors,
+				'license' => $plugin->license()->toArray(),
+				'name'    => [
+					'text' => $plugin->name(),
+					'href' => $plugin->link(),
+				],
+				'status'  => $plugin->license()->status()->toArray(),
+				'version' => $version,
+			];
+		});
+	}
+
+	public function security(): array
+	{
+		$security = $this->update?->messages() ?? [];
+
+		if ($this->isLocal() === false) {
+			if ($this->kirby->environment()->https() !== true) {
+				$security[] = [
+					'id'   => 'https',
+					'text' => $this->i18n('system.issues.https'),
+					'link' => 'https://getkirby.com/security/https'
+				];
+			}
+
+			foreach ($this->system->extensions() as $extension => $status) {
+				if ($status === false) {
+					// @codeCoverageIgnoreStart
+					$security[] = [
+						'id'   => 'extension-' . $extension,
+						'text' => $this->i18nHtml('installation.issues.extension', [
+							'extension' => $extension
+						])
+					];
+					// @codeCoverageIgnoreEnd
+				}
+			}
+		}
+
+		if ($this->isDebugging() === true) {
+			$security[] = [
+				'id'    => 'debug',
+				'icon'  => $this->isLocal() ? 'info' : 'alert',
+				'theme' => $this->isLocal() ? 'info' : 'negative',
+				'text'  => $this->i18n('system.issues.debug'),
+				'link'  => 'https://getkirby.com/security/debug'
+			];
+		}
+
+		if ($this->isLocal() === true) {
+			$security[] = [
+				'id'    => 'local',
+				'icon'  => 'info',
+				'theme' => 'info',
+				'text'  => $this->i18n('system.issues.local')
+			];
+		}
+
+		if ($this->kirby->option('content.salt') === null) {
+			$security[] = [
+				'id'    => 'content-salt',
+				'link'  => 'https://getkirby.com/security/content-salt',
+				'text'  => $this->i18n('system.issues.content.salt'),
+				'theme' => 'notice'
+			];
+		}
+
+		if (($this->kirby->option('cookie.key') ?? Cookie::$key) === 'KirbyHttpCookieKey') {
+			$security[] = [
+				'id'    => 'cookie-key',
+				'link'  => 'https://getkirby.com/security/cookie-key',
+				'text'  => $this->i18n('system.issues.cookie.key'),
+				'theme' => 'notice'
+			];
+		}
+
+		return $security;
+	}
+
+	public function stats(): Stats
+	{
+		return new Stats(reports: [
+			new Stat(
+				label: $this->license->status()->label(),
+				value: $this->license->label(),
+				theme: $this->license->status()->theme(),
+				icon: $this->license->status()->icon(),
+				dialog: $this->license->status()->dialog()
+			),
+			new Stat(
+				label: $this->update?->label() ?? $this->i18n('version'),
+				value: $this->kirby->version(),
+				link: $this->update?->url() ??
+					'https://github.com/getkirby/kirby/releases/tag/' . $this->kirby->version(),
+				theme: $this->update?->theme(),
+				icon: $this->update?->icon() ?? 'info'
+			),
+			new Stat(
+				label: 'PHP',
+				value: phpversion(),
+				icon: 'code'
+			),
+			new Stat(
+				label: $this->i18n('server'),
+				value: $this->system->serverSoftwareShort(),
+				icon: 'server'
+			)
+		]);
+	}
+
+	public function urls(): array
+	{
+		if ($this->isLocal() === true) {
+			return [];
+		}
+
+		// sensitive URLs
+		return [
+			'content' => $this->system->exposedFileUrl('content'),
+			'git'     => $this->system->exposedFileUrl('git'),
+			'kirby'   => $this->system->exposedFileUrl('kirby'),
+			'site'    => $this->system->exposedFileUrl('site')
+		];
+	}
+}

@@ -7,19 +7,22 @@ use Kirby\Content\Field;
 /**
  * The Nest class converts any array type
  * into a Kirby style collection/object. This
- * can be used make any type of array compatible
+ * can be used to make any type of array compatible
  * with Kirby queries.
  *
- * REFACTOR: move this to the toolkit
- *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo REFACTOR: move this to the toolkit
  */
 class Nest
 {
+	/**
+	 * Converts scalars to fields and arrays to collections
+	 * (numeric keys) or objects (string keys), recursively
+	 *
+	 * @param array|scalar $data
+	 */
 	public static function create(
 		$data,
 		object|null $parent = null

@@ -10,9 +10,6 @@ namespace Kirby\Http\Request;
  * complex with the option to fetch single keys
  * or entire arrays.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -46,8 +43,8 @@ trait Data
 		if (is_array($key) === true) {
 			$result = [];
 
-			foreach ($key as $k) {
-				$result[$k] = $this->get($k);
+			foreach ($key as $name) {
+				$result[$name] = $this->get($name);
 			}
 
 			return $result;

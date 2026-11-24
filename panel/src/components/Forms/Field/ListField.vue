@@ -22,10 +22,14 @@ import { props as List } from "@/components/Forms/Input/ListInput.vue";
 
 /**
  * Have a look at `<k-field>` and `<k-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, List],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

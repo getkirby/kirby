@@ -2,19 +2,18 @@
 
 namespace Kirby\Uuid;
 
+use Kirby\Cms\ModelWithContent;
+
 /**
  * Base for UUIDs for models where id string
  * is stored in the content, such as pages and files
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @template TModel of \Kirby\Cms\ModelWithContent
- * @extends \Kirby\Uuid\Uuid<TModel>
+ * @template TModel of ModelWithContent
+ * @extends Uuid<TModel>
  */
 abstract class ModelUuid extends Uuid
 {
@@ -41,17 +40,15 @@ abstract class ModelUuid extends Uuid
 	 */
 	public function id(): string
 	{
-		if ($id = $this->uri->host()) {
+		$id = $this->uri->host();
+
+		if ($id !== null && $id !== '') {
 			return $id;
 		}
 
-		// generate a new ID (to be saved in the content file)
 		$id = static::generate();
 
-		// store the new UUID
 		$this->storeId($id);
-
-		// update the Uri object
 		$this->uri->host($id);
 
 		return $id;
@@ -76,7 +73,7 @@ abstract class ModelUuid extends Uuid
 	 * Retrieves the ID string (UUID without scheme) for the model
 	 * from the content file, if it is already stored there
 	 *
-	 * @param \Kirby\Cms\ModelWithContent $model
+	 * @param ModelWithContent $model
 	 */
 	public static function retrieveId(Identifiable $model): string|null
 	{
@@ -89,13 +86,12 @@ abstract class ModelUuid extends Uuid
 	 */
 	protected function storeId(string $id): void
 	{
-		// get the content array from the page
 		$data = $this->model->content('default')->toArray();
 
 		// check for an empty content array
 		// and read content from file again,
 		// just to be sure we don't lose content
-		if (empty($data) === true) {
+		if ($data === []) {
 			usleep(1000);
 			$data = $this->model->version()->read('default');
 		}

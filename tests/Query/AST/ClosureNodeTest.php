@@ -20,6 +20,11 @@ class ClosureNodeTest extends TestCase
 		);
 
 		$visitor = new DefaultVisitor();
-		$this->assertEquals(fn ($a, $b) => $a ?? $b, $node->resolve($visitor));
+		$closure = $node->resolve($visitor);
+
+		// Test the behavior instead of comparing closures directly
+		$this->assertSame(3, $closure(3, 4));
+		$this->assertSame(4, $closure(null, 4));
+		$this->assertSame(5, $closure(5, null));
 	}
 }

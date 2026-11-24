@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use JsonException;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
@@ -21,6 +22,32 @@ class UriTest extends TestCase
 		Uri::$current = null;
 	}
 
+	public function testAuth(): void
+	{
+		$url = new Uri(['username' => 'testuser', 'password' => 'weakpassword']);
+		$this->assertSame('testuser:weakpassword', $url->auth());
+	}
+
+	public function testBase(): void
+	{
+		$url = new Uri(['scheme' => 'https', 'host' => 'getkirby.com']);
+		$this->assertSame('https://getkirby.com', $url->base());
+
+		$url->username = 'testuser';
+		$url->password = 'weakpassword';
+
+		$this->assertSame('https://testuser:weakpassword@getkirby.com', $url->base());
+
+		$url->port = 3000;
+		$this->assertSame('https://testuser:weakpassword@getkirby.com:3000', $url->base());
+	}
+
+	public function testBaseWithoutHost(): void
+	{
+		$url = new Uri();
+		$this->assertNull($url->base());
+	}
+
 	public function testClone(): void
 	{
 		$uri = new Uri([
@@ -35,6 +62,33 @@ class UriTest extends TestCase
 
 		$this->assertSame('http://getkirby.com/test', $uri->toString());
 		$this->assertSame('http://getkirby.com/yay?foo=bar', $clone->toString());
+	}
+
+	public function testConstructParamsDisabled(): void
+	{
+		// with slash
+		$url = new Uri('https://getkirby.com/search/page:2/?q=something', ['params' => false]);
+		$this->assertTrue($url->slash());
+		$this->assertSame('', $url->params()->toString());
+		$this->assertSame('search/page:2', $url->path()->toString());
+
+		// without slash
+		$url = new Uri('https://getkirby.com/search/page:2?q=something', ['params' => false]);
+		$this->assertFalse($url->slash());
+		$this->assertSame('', $url->params()->toString());
+		$this->assertSame('search/page:2', $url->path()->toString());
+
+		// from array path
+		$url = new Uri(['path' => ['search', 'page:2'], 'params' => false]);
+		$this->assertFalse($url->slash());
+		$this->assertSame('', $url->params()->toString());
+		$this->assertSame('search/page:2', $url->path()->toString());
+
+		// without path
+		$url = new Uri(['params' => false]);
+		$this->assertFalse($url->slash());
+		$this->assertSame('', $url->params()->toString());
+		$this->assertSame('', $url->path()->toString());
 	}
 
 	public function testCurrent(): void
@@ -64,19 +118,6 @@ class UriTest extends TestCase
 		Uri::$current = $uri = new Uri('/');
 
 		$this->assertSame($uri, Uri::current());
-	}
-
-	public function testCurrentWithRequestUri(): void
-	{
-		new App([
-			'cli' => false,
-			'server' => [
-				'REQUEST_URI' => '/a/b'
-			]
-		]);
-
-		$uri = Uri::current();
-		$this->assertSame('/a/b', $uri->toString());
 	}
 
 	public function testCurrentWithHostAndPathInRequestUri(): void
@@ -118,6 +159,19 @@ class UriTest extends TestCase
 		$this->assertSame('/a/b/ktest.loc', $uri->toString());
 	}
 
+	public function testCurrentWithRequestUri(): void
+	{
+		new App([
+			'cli' => false,
+			'server' => [
+				'REQUEST_URI' => '/a/b'
+			]
+		]);
+
+		$uri = Uri::current();
+		$this->assertSame('/a/b', $uri->toString());
+	}
+
 	public function testFragment(): void
 	{
 		$uri = new Uri('https://getkirby.com#top');
@@ -125,17 +179,51 @@ class UriTest extends TestCase
 
 		$uri = new Uri('https://getkirby.com');
 		$this->assertNull($uri->fragment());
+
+		$uri = new Uri('https://getkirby.com#0');
+		$this->assertSame('0', $uri->fragment());
+		$this->assertNull($uri->setFragment('#')->fragment());
+		$this->assertSame('0', $uri->setFragment('#0')->fragment());
+		$this->assertSame('https://getkirby.com#0', $uri->toString());
+
+		$uri = (new Uri('https://getkirby.com'))->inherit('https://foo.com#0');
+		$this->assertSame('https://getkirby.com#0', $uri->toString());
 	}
 
-	public function testValidScheme(): void
+	public function testHasFragment(): void
 	{
-		$url = new Uri();
+		$uri = new Uri('https://getkirby.com/#footer');
+		$this->assertTrue($uri->hasFragment());
 
-		$url->setScheme('http');
-		$this->assertSame('http', $url->scheme());
+		$uri = new Uri('https://getkirby.com');
+		$this->assertFalse($uri->hasFragment());
+	}
 
-		$url->setScheme('https');
-		$this->assertSame('https', $url->scheme());
+	public function testHasPath(): void
+	{
+		$uri = new Uri('https://getkirby.com/docs');
+		$this->assertTrue($uri->hasPath());
+
+		$uri = new Uri('https://getkirby.com');
+		$this->assertFalse($uri->hasPath());
+	}
+
+	public function testHasQuery(): void
+	{
+		$uri = new Uri('https://getkirby.com?search=foo');
+		$this->assertTrue($uri->hasQuery());
+
+		$uri = new Uri('https://getkirby.com');
+		$this->assertFalse($uri->hasQuery());
+	}
+
+	public function testHttps(): void
+	{
+		$url = new Uri(['scheme' => 'http']);
+		$this->assertFalse($url->https());
+
+		$url = new Uri(['scheme' => 'https']);
+		$this->assertTrue($url->https());
 	}
 
 	public function testIdn(): void
@@ -187,54 +275,15 @@ class UriTest extends TestCase
 		$this->assertSame('https://getkirby.com?one=two&foo=bar', $uri->toString());
 	}
 
-	public function testInvalidScheme(): void
+	public function testInheritKeepsOwnValues(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid URL scheme: abc');
+		$uri = new Uri('https://getkirby.com/tag:own?q=own&a=1#own');
+		$uri->inherit('https://foo.com/tag:parent/page:2?q=parent&b=2#parent');
 
-		$url = new Uri();
-		$url->setScheme('abc');
-	}
-
-	public function testValidHost(): void
-	{
-		$url = new Uri();
-
-		$url->setHost('getkirby.com');
-		$this->assertSame('getkirby.com', $url->host());
-	}
-
-	public function testMissingHost(): void
-	{
-		$url = new Uri(['host' => false]);
-		$this->assertSame('', $url->host());
-	}
-
-	public function testIsAbsolute(): void
-	{
-		$url = new Uri(['host' => 'localhost']);
-		$this->assertTrue($url->isAbsolute());
-	}
-
-	public function testIsNotAbsolute(): void
-	{
-		$url = new Uri();
-		$this->assertFalse($url->isAbsolute());
-	}
-
-	public function testValidPort(): void
-	{
-		$url = new Uri(['port' => 1234]);
-		$this->assertSame(1234, $url->port());
-
-		$url = new Uri(['port' => null]);
-		$this->assertNull($url->port());
-	}
-
-	public function testZeroPort(): void
-	{
-		$url = new Uri(['port' => 0]);
-		$this->assertNull($url->port());
+		$this->assertSame(
+			'https://getkirby.com/tag:own/page:2?q=own&a=1&b=2#own',
+			$uri->toString()
+		);
 	}
 
 	public function testInvalidPortFormat1(): void
@@ -252,90 +301,31 @@ class UriTest extends TestCase
 		$url = new Uri(['port' => 12010210210]);
 	}
 
-	public function testValidUsername(): void
+	public function testInvalidScheme(): void
 	{
-		$url = new Uri(['username' => 'testuser']);
-		$this->assertSame('testuser', $url->username());
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid URL scheme: abc');
 
-		$url = new Uri(['username' => null]);
-		$this->assertNull($url->username());
+		$url = new Uri();
+		$url->setScheme('abc');
 	}
 
-	public function testValidPassword(): void
+	public function testIsAbsolute(): void
 	{
-		$url = new Uri(['password' => 'weakpassword']);
-		$this->assertSame('weakpassword', $url->password());
-
-		$url = new Uri(['password' => null]);
-		$this->assertNull($url->password());
+		$url = new Uri(['host' => 'localhost']);
+		$this->assertTrue($url->isAbsolute());
 	}
 
-	public function testValidPath(): void
-	{
-		$url = new Uri(['path' => '/a/b/c']);
-		$this->assertSame('a/b/c', $url->path()->toString());
-
-		$url = new Uri(['path' => '/a/b/c/']);
-		$this->assertSame('a/b/c', $url->path()->toString());
-
-		$url = new Uri(['path' => ['a', 'b', 'c']]);
-		$this->assertSame('a/b/c', $url->path()->toString());
-
-		$url = new Uri(['path' => null]);
-		$this->assertTrue($url->path()->isEmpty());
-	}
-
-	public function testValidQuery(): void
-	{
-		$url = new Uri(['query' => 'foo=bar']);
-		$this->assertSame('foo=bar', $url->query()->toString());
-
-		$url = new Uri(['query' => '?foo=bar']);
-		$this->assertSame('foo=bar', $url->query()->toString());
-
-		$url = new Uri(['query' => ['foo' => 'bar']]);
-		$this->assertSame('foo=bar', $url->query()->toString());
-
-		$url = new Uri(['query' => null]);
-		$this->assertTrue($url->query()->isEmpty());
-	}
-
-	public function testValidFragment(): void
-	{
-		$url = new Uri(['fragment' => 'top']);
-		$this->assertSame('top', $url->fragment());
-
-		$url = new Uri(['fragment' => '#top']);
-		$this->assertSame('top', $url->fragment());
-
-		$url = new Uri(['fragment' => null]);
-		$this->assertNull($url->fragment());
-	}
-
-	public function testAuth(): void
-	{
-		$url = new Uri(['username' => 'testuser', 'password' => 'weakpassword']);
-		$this->assertSame('testuser:weakpassword', $url->auth());
-	}
-
-	public function testBase(): void
-	{
-		$url = new Uri(['scheme' => 'https', 'host' => 'getkirby.com']);
-		$this->assertSame('https://getkirby.com', $url->base());
-
-		$url->username = 'testuser';
-		$url->password = 'weakpassword';
-
-		$this->assertSame('https://testuser:weakpassword@getkirby.com', $url->base());
-
-		$url->port = 3000;
-		$this->assertSame('https://testuser:weakpassword@getkirby.com:3000', $url->base());
-	}
-
-	public function testBaseWithoutHost(): void
+	public function testIsNotAbsolute(): void
 	{
 		$url = new Uri();
-		$this->assertNull($url->base());
+		$this->assertFalse($url->isAbsolute());
+	}
+
+	public function testMissingHost(): void
+	{
+		$url = new Uri(['host' => false]);
+		$this->assertSame('', $url->host());
 	}
 
 	public function testToArray(): void
@@ -352,6 +342,28 @@ class UriTest extends TestCase
 		$this->assertSame('https', $result['scheme']);
 		$this->assertSame(true, $result['slash']);
 		$this->assertSame('testuser', $result['username']);
+	}
+
+	public function testToJson(): void
+	{
+		$url = new Uri(static::$example1);
+		$this->assertSame(json_encode($url->toArray()), $url->toJson());
+	}
+
+	public function testToJsonFailure(): void
+	{
+		$url = new Uri(static::$example1);
+
+		// inject an unencodable byte sequence into the array via subclass
+		$bad = new class (static::$example1) extends Uri {
+			public function toArray(): array
+			{
+				return ['invalid' => "\xb1\x31"];
+			}
+		};
+
+		$this->expectException(JsonException::class);
+		$bad->toJson();
 	}
 
 	public static function buildProvider(): array
@@ -393,6 +405,23 @@ class UriTest extends TestCase
 					'query'  => ['q' => 'something']
 				],
 				'/search/page:2/?q=something'
+			],
+
+			// relative root + adding params
+			[
+				'/',
+				[
+					'params' => ['page' => 2],
+					'query'  => ['q' => 'something']
+				],
+				'/page:2/?q=something'
+			],
+
+			// relative root with params
+			[
+				'/evil.com:443',
+				[],
+				'/evil.com:443'
 			],
 
 			// relative path with colon + adding query
@@ -487,69 +516,6 @@ class UriTest extends TestCase
 		$this->assertSame($expected, (string)$url);
 	}
 
-	public function testConstructParamsDisabled(): void
-	{
-		// with slash
-		$url = new Uri('https://getkirby.com/search/page:2/?q=something', ['params' => false]);
-		$this->assertTrue($url->slash());
-		$this->assertSame('', $url->params()->toString());
-		$this->assertSame('search/page:2', $url->path()->toString());
-
-		// without slash
-		$url = new Uri('https://getkirby.com/search/page:2?q=something', ['params' => false]);
-		$this->assertFalse($url->slash());
-		$this->assertSame('', $url->params()->toString());
-		$this->assertSame('search/page:2', $url->path()->toString());
-
-		// from array path
-		$url = new Uri(['path' => ['search', 'page:2'], 'params' => false]);
-		$this->assertFalse($url->slash());
-		$this->assertSame('', $url->params()->toString());
-		$this->assertSame('search/page:2', $url->path()->toString());
-
-		// without path
-		$url = new Uri(['params' => false]);
-		$this->assertFalse($url->slash());
-		$this->assertSame('', $url->params()->toString());
-		$this->assertSame('', $url->path()->toString());
-	}
-
-	public function testHttps(): void
-	{
-		$url = new Uri(['scheme' => 'http']);
-		$this->assertFalse($url->https());
-
-		$url = new Uri(['scheme' => 'https']);
-		$this->assertTrue($url->https());
-	}
-
-	public function testHasFragment(): void
-	{
-		$uri = new Uri('https://getkirby.com/#footer');
-		$this->assertTrue($uri->hasFragment());
-
-		$uri = new Uri('https://getkirby.com');
-		$this->assertFalse($uri->hasFragment());
-	}
-
-	public function testHasPath(): void
-	{
-		$uri = new Uri('https://getkirby.com/docs');
-		$this->assertTrue($uri->hasPath());
-
-		$uri = new Uri('https://getkirby.com');
-		$this->assertFalse($uri->hasPath());
-	}
-
-	public function testHasQuery(): void
-	{
-		$uri = new Uri('https://getkirby.com?search=foo');
-		$this->assertTrue($uri->hasQuery());
-
-		$uri = new Uri('https://getkirby.com');
-		$this->assertFalse($uri->hasQuery());
-	}
-
 	public function testUnIdn(): void
 	{
 		$url = new Uri('https://bücher.ch');
@@ -563,5 +529,99 @@ class UriTest extends TestCase
 		$url = new Uri('https://-leading-hyphen-.example/a');
 		$this->assertSame('-leading-hyphen-.example', $url->unIdn()->host());
 		$this->assertSame('https://-leading-hyphen-.example/a', $url->toString());
+	}
+
+	public function testValidFragment(): void
+	{
+		$url = new Uri(['fragment' => 'top']);
+		$this->assertSame('top', $url->fragment());
+
+		$url = new Uri(['fragment' => '#top']);
+		$this->assertSame('top', $url->fragment());
+
+		$url = new Uri(['fragment' => null]);
+		$this->assertNull($url->fragment());
+	}
+
+	public function testValidHost(): void
+	{
+		$url = new Uri();
+
+		$url->setHost('getkirby.com');
+		$this->assertSame('getkirby.com', $url->host());
+	}
+
+	public function testValidPassword(): void
+	{
+		$url = new Uri(['password' => 'weakpassword']);
+		$this->assertSame('weakpassword', $url->password());
+
+		$url = new Uri(['password' => null]);
+		$this->assertNull($url->password());
+	}
+
+	public function testValidPath(): void
+	{
+		$url = new Uri(['path' => '/a/b/c']);
+		$this->assertSame('a/b/c', $url->path()->toString());
+
+		$url = new Uri(['path' => '/a/b/c/']);
+		$this->assertSame('a/b/c', $url->path()->toString());
+
+		$url = new Uri(['path' => ['a', 'b', 'c']]);
+		$this->assertSame('a/b/c', $url->path()->toString());
+
+		$url = new Uri(['path' => null]);
+		$this->assertTrue($url->path()->isEmpty());
+	}
+
+	public function testValidPort(): void
+	{
+		$url = new Uri(['port' => 1234]);
+		$this->assertSame(1234, $url->port());
+
+		$url = new Uri(['port' => null]);
+		$this->assertNull($url->port());
+	}
+
+	public function testValidQuery(): void
+	{
+		$url = new Uri(['query' => 'foo=bar']);
+		$this->assertSame('foo=bar', $url->query()->toString());
+
+		$url = new Uri(['query' => '?foo=bar']);
+		$this->assertSame('foo=bar', $url->query()->toString());
+
+		$url = new Uri(['query' => ['foo' => 'bar']]);
+		$this->assertSame('foo=bar', $url->query()->toString());
+
+		$url = new Uri(['query' => null]);
+		$this->assertTrue($url->query()->isEmpty());
+	}
+
+	public function testValidScheme(): void
+	{
+		$url = new Uri();
+
+		$url->setScheme('http');
+		$this->assertSame('http', $url->scheme());
+
+		$url->setScheme('https');
+		$this->assertSame('https', $url->scheme());
+	}
+
+	public function testValidUsername(): void
+	{
+		$url = new Uri(['username' => 'testuser']);
+		$this->assertSame('testuser', $url->username());
+
+		$url = new Uri(['username' => null]);
+		$this->assertNull($url->username());
+	}
+
+	public function testZeroPort(): void
+	{
+		$url = new Uri(['port' => 0]);
+		$this->assertNull($url->port());
 	}
 }

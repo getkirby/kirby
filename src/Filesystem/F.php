@@ -17,14 +17,23 @@ use ZipArchive;
  * level, like creating, reading,
  * deleting, copying or validatings files.
  *
- * @package   Kirby Filesystem
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class F
 {
+	/**
+	 * Cache for loaded files when using `load()` with `cache: true`
+	 *
+	 * @var array<string, mixed>
+	 */
+	public static array $loadCache = [];
+
+	/**
+	 * File types with their extensions
+	 *
+	 * @var array<string, list<string>>
+	 */
 	public static array $types = [
 		'archive' => [
 			'gz',
@@ -40,9 +49,11 @@ class F
 			'm4a',
 			'midi',
 			'mp3',
+			'oga',
 			'ogg',
 			'opus',
 			'wav',
+			'weba',
 		],
 		'code' => [
 			'css',
@@ -122,6 +133,9 @@ class F
 		],
 	];
 
+	/**
+	 * @var list<string>
+	 */
 	public static array $units = [
 		'B',
 		'KB',
@@ -135,15 +149,9 @@ class F
 	];
 
 	/**
-	 * Cache for loaded files when using `load()` with `cache: true`
-	 */
-	public static array $loadCache = [];
-
-	/**
 	 * Appends new content to an existing file
 	 *
-	 * @param string $file The path for the file
-	 * @param mixed $content Either a string or an array. Arrays will be converted to JSON.
+	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
 	 */
 	public static function append(string $file, $content): bool
 	{
@@ -152,8 +160,6 @@ class F
 
 	/**
 	 * Returns the file content as base64 encoded string
-	 *
-	 * @param string $file The path for the file
 	 */
 	public static function base64(string $file): string
 	{
@@ -193,8 +199,6 @@ class F
 	 * $dirname = F::dirname('/var/www/test.txt');
 	 * // dirname is /var/www
 	 * ```
-	 *
-	 * @param string $file The path
 	 */
 	public static function dirname(string $file): string
 	{
@@ -217,8 +221,8 @@ class F
 	/**
 	 * Gets the extension of a file
 	 *
-	 * @param string|null $file The filename or path
-	 * @param string|null $extension Set an optional extension to overwrite the current one
+	 * @param $file The filename or path
+	 * @param $extension Set an optional extension to overwrite the current one
 	 */
 	public static function extension(
 		string|null $file = null,
@@ -233,6 +237,20 @@ class F
 
 		// return the current extension
 		return Str::lower(pathinfo($file, PATHINFO_EXTENSION));
+	}
+
+	/**
+	 * Returns all extensions for a certain file type
+	 *
+	 * @return list<string>
+	 */
+	public static function extensions(string|null $type = null): array
+	{
+		if ($type === null) {
+			return array_keys(Mime::types());
+		}
+
+		return static::$types[$type] ?? [];
 	}
 
 	/**
@@ -258,26 +276,12 @@ class F
 	}
 
 	/**
-	 * Returns all extensions for a certain file type
-	 */
-	public static function extensions(string|null $type = null): array
-	{
-		if ($type === null) {
-			return array_keys(Mime::types());
-		}
-
-		return static::$types[$type] ?? [];
-	}
-
-	/**
 	 * Extracts the filename from a file path
 	 *
 	 * ```php
 	 * $filename = F::filename('/var/www/test.txt');
 	 * // filename is test.txt
 	 * ```
-	 *
-	 * @param string $name The path
 	 */
 	public static function filename(string $name): string
 	{
@@ -285,14 +289,12 @@ class F
 	}
 
 	/**
-	 * Invalidate opcode cache for file.
-	 *
-	 * @param string $file The path of the file
+	 * Invalidate opcode cache for file
 	 */
 	public static function invalidateOpcodeCache(string $file): bool
 	{
 		if (
-			function_exists('opcache_invalidate') &&
+			function_exists('opcache_invalidate') === true &&
 			strlen(ini_get('opcache.restrict_api')) === 0
 		) {
 			return opcache_invalidate($file, true);
@@ -304,8 +306,8 @@ class F
 	/**
 	 * Checks if a file is of a certain type
 	 *
-	 * @param string $file Full path to the file
-	 * @param string $value An extension or mime type
+	 * @param $file Full path to the file
+	 * @param $value An extension or mime type
 	 */
 	public static function is(string $file, string $value): bool
 	{
@@ -371,7 +373,7 @@ class F
 	 * Loads a file and returns the result or `false` if the
 	 * file to load does not exist
 	 *
-	 * @param array $data Optional array of variables to extract in the variable scope
+	 * @param $data Optional array of variables to extract in the variable scope
 	 */
 	public static function load(
 		string $file,
@@ -381,7 +383,10 @@ class F
 		bool $cache = false
 	) {
 		// return cached result if available
-		if ($cache === true && array_key_exists($file, static::$loadCache)) {
+		if (
+			$cache === true &&
+			array_key_exists($file, static::$loadCache) === true
+		) {
 			return static::$loadCache[$file];
 		}
 
@@ -395,8 +400,8 @@ class F
 		$callback = fn () => static::loadIsolated($file, $data);
 
 		// if the loaded file should not produce any output,
-		// call the loaidIsolated method from the Response class
-		// which checks for unintended ouput and throws an error if detected
+		// call the loadIsolated method via the Response class
+		// which checks for unintended output and throws an error if detected
 		$result = match ($allowOutput) {
 			true  => $callback(),
 			false => Response::guardAgainstOutput($callback),
@@ -448,7 +453,7 @@ class F
 	/**
 	 * Loads a file with as little as possible in the variable scope
 	 *
-	 * @param array $data Optional array of variables to extract in the variable scope
+	 * @param $data Optional array of variables to extract in the variable scope
 	 */
 	protected static function loadIsolated(string $file, array $data = [])
 	{
@@ -513,6 +518,7 @@ class F
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public static function modified(
 		string $file,
@@ -531,9 +537,9 @@ class F
 	/**
 	 * Moves a file to a new location
 	 *
-	 * @param string $oldRoot The current path for the file
-	 * @param string $newRoot The path to the new location
-	 * @param bool $force Force move if the target file exists
+	 * @param $oldRoot The current path for the file
+	 * @param $newRoot The path to the new location
+	 * @param $force Force move if the target file exists
 	 */
 	public static function move(
 		string $oldRoot,
@@ -585,8 +591,6 @@ class F
 
 	/**
 	 * Extracts the name from a file path or filename without extension
-	 *
-	 * @param string $name The path or filename
 	 */
 	public static function name(string $name): string
 	{
@@ -596,10 +600,10 @@ class F
 	/**
 	 * Converts an integer size into a human readable format
 	 *
-	 * @param int|string|array $size The file size, a file path or array of paths
-	 * @param string|false|null $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $size The file size, a file path or array of paths
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public static function niceSize(
 		int|string|array $size,
@@ -610,16 +614,14 @@ class F
 			$size = static::size($size);
 		}
 
-		// make sure it's an int
-		$size = (int)$size;
-
 		// avoid errors for invalid sizes
 		if ($size <= 0) {
 			return '0 KB';
 		}
 
 		// the math magic
-		$size = round($size / 1024 ** ($unit = floor(log($size, 1024))), 2);
+		$unit = (int)floor(log($size, 1024));
+		$size = round($size / 1024 ** $unit, 2);
 
 		// format the number if requested
 		if ($locale !== false) {
@@ -630,12 +632,35 @@ class F
 	}
 
 	/**
+	 * Writes the content into the file in place
+	 *
+	 * @since 5.7.0
+	 */
+	protected static function put(
+		string $file,
+		mixed $content,
+		bool $append = false
+	): bool {
+		// create the parent directory if it does not exist yet
+		if (Dir::make(dirname($file)) === false) {
+			return false;
+		}
+
+		if (static::isWritable($file) === false) {
+			throw new Exception('The file "' . $file . '" is not writable');
+		}
+
+		$flags = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
+
+		return file_put_contents($file, $content, $flags) !== false;
+	}
+
+	/**
 	 * Reads a specific byte range from a file
 	 * @since 5.3.0
 	 *
-	 * @param string $file The path to the file
-	 * @param int $offset The byte offset to start reading from
-	 * @param int|null $length The number of bytes to read (null = read to end)
+	 * @param $offset The byte offset to start reading from
+	 * @param $length The number of bytes to read (`null` = read to end)
 	 */
 	public static function range(
 		string $file,
@@ -663,9 +688,10 @@ class F
 					fseek($handle, $offset);
 				}
 
-				$content = $length !== null
-					? fread($handle, $length)
-					: fread($handle, filesize($file) - $offset);
+				// `fread()` fails for a length of 0,
+				// e.g. for empty files or at the end of the file
+				$length ??= filesize($file) - $offset;
+				$content  = $length > 0 ? fread($handle, $length) : '';
 
 				fclose($handle);
 				return $content;
@@ -676,10 +702,8 @@ class F
 	}
 
 	/**
-	 * Reads the content of a file or requests the
-	 * contents of a remote HTTP or HTTPS URL
-	 *
-	 * @param string $file The path for the file or an absolute URL
+	 * Reads the content of a file; returns `false`
+	 * for URLs and files that don't exist
 	 */
 	public static function read(string $file): string|false
 	{
@@ -692,43 +716,34 @@ class F
 			return false;
 		}
 
-		// to increase performance, directly try to load the file
-		// without checking if it exists; fall back to return `false`
-		// if it doesn't exist while letting other warnings through
-		return Helpers::handleErrors(
-			fn (): string|false => file_get_contents($file),
-			fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
-			false
-		);
-	}
+		// on Docker Desktop mounts, a file just replaced via `rename()` can
+		// fail to open for a few ms although it is still listed: retry
+		for ($attempt = 1; $attempt <= 15; $attempt++) {
+			// to increase performance, directly try to load the file
+			// without checking if it exists; fall back to return `false`
+			// if it doesn't exist while letting other warnings through
+			$content = Helpers::handleErrors(
+				action:    fn (): string|false => file_get_contents($file),
+				condition: fn (int $errno, string $errstr): bool => str_contains($errstr, 'No such file'),
+				fallback:  false
+			);
 
-	/**
-	 * Changes the name of the file without
-	 * touching the extension
-	 *
-	 * @param bool $overwrite Force overwrite existing files
-	 */
-	public static function rename(
-		string $file,
-		string $newName,
-		bool $overwrite = false
-	): string|false {
-		// create the new name
-		$name = static::safeName(basename($newName));
+			if ($content !== false) {
+				return $content;
+			}
 
-		// overwrite the root
-		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
+			// a file that is gone or not readable (e.g. permissions)
+			// does not come back by waiting
+			clearstatcache(true, $file);
 
-		// nothing has changed
-		if ($newRoot === $file) {
-			return $newRoot;
+			if (is_readable($file) === false) {
+				return false;
+			}
+
+			usleep(1000);
 		}
 
-		if (F::move($file, $newRoot, $overwrite) !== true) {
-			return false;
-		}
-
-		return $newRoot;
+		return false;
 	}
 
 	/**
@@ -768,8 +783,6 @@ class F
 	/**
 	 * Returns the relative path of the file
 	 * starting after $in
-	 *
-	 * @SuppressWarnings(PHPMD.CountInLoopExpression)
 	 */
 	public static function relativepath(
 		string $file,
@@ -815,8 +828,6 @@ class F
 	 * $remove = F::remove('test.txt');
 	 * if ($remove) echo 'The file has been removed';
 	 * ```
-	 *
-	 * @param string $file The path for the file
 	 */
 	public static function remove(string $file): bool
 	{
@@ -838,26 +849,32 @@ class F
 	}
 
 	/**
-	 * Sanitize a file's full name (filename and extension)
-	 * to strip unwanted special characters
+	 * Changes the name of the file without
+	 * touching the extension
 	 *
-	 * ```php
-	 * $safe = f::safeName('über genius.txt');
-	 * // safe will be ueber-genius.txt
-	 * ```
-	 *
-	 * @param string $string The file name
+	 * @param $overwrite Force overwrite existing files
 	 */
-	public static function safeName(string $string): string
-	{
-		$basename  = static::safeBasename($string);
-		$extension =  static::safeExtension($string);
+	public static function rename(
+		string $file,
+		string $newName,
+		bool $overwrite = false
+	): string|false {
+		// create the new name
+		$name = static::safeName(basename($newName));
 
-		if (empty($extension) === false) {
-			$extension = '.' . $extension;
+		// overwrite the root
+		$newRoot = rtrim(dirname($file) . '/' . $name . '.' . F::extension($file), '.');
+
+		// nothing has changed
+		if ($newRoot === $file) {
+			return $newRoot;
 		}
 
-		return $basename . $extension;
+		if (F::move($file, $newRoot, $overwrite) !== true) {
+			return false;
+		}
+
+		return $newRoot;
 	}
 
 	/**
@@ -893,8 +910,31 @@ class F
 	}
 
 	/**
+	 * Sanitize a file's full name (filename and extension)
+	 * to strip unwanted special characters
+	 *
+	 * ```php
+	 * $safe = F::safeName('über genius.txt');
+	 * // safe will be ueber-genius.txt
+	 * ```
+	 */
+	public static function safeName(string $string): string
+	{
+		$basename  = static::safeBasename($string);
+		$extension = static::safeExtension($string);
+
+		if ($extension !== '') {
+			$extension = '.' . $extension;
+		}
+
+		return $basename . $extension;
+	}
+
+	/**
 	 * Tries to find similar or the same file by
 	 * building a glob based on the path
+	 *
+	 * @return list<string>
 	 */
 	public static function similar(string $path, string $pattern = '*'): array
 	{
@@ -902,13 +942,13 @@ class F
 		$name      = static::name($path);
 		$extension = static::extension($path);
 		$glob      = $dir . '/' . $name . $pattern . '.' . $extension;
-		return glob($glob);
+		return glob($glob) ?: [];
 	}
 
 	/**
-	 * Returns the size of a file or an array of files.
+	 * Returns the size of a file or an array of files
 	 *
-	 * @param string|array $file file path or array of paths
+	 * @param $file File path or array of paths
 	 */
 	public static function size(string|array $file): int
 	{
@@ -930,39 +970,33 @@ class F
 	/**
 	 * Categorize the file
 	 *
-	 * @param string $file Either the file path or extension
+	 * @param $file Either the file path or extension
 	 */
 	public static function type(string $file): string|null
 	{
-		$length    = strlen($file);
-		$extension = match ($length >= 2 && $length <= 4) {
-			// use the file name as extension
-			true  => $file,
-			// get the extension from the filename
-			false => pathinfo($file, PATHINFO_EXTENSION)
-		};
+		// the input is an extension itself
+		$type = static::extensionToType(strtolower($file));
 
-		if (empty($extension) === true || $extension === 'tmp') {
+		if ($type !== false) {
+			return $type;
+		}
+
+		$extension = static::extension($file);
+
+		if ($extension === '' || $extension === 'tmp') {
 			// detect the mime type first to get the most reliable extension
 			$mime      = static::mime($file);
 			$extension = static::mimeToExtension($mime);
 		}
 
-		// sanitize extension
-		$extension = strtolower($extension);
-
-		foreach (static::$types as $type => $extensions) {
-			if (in_array($extension, $extensions, true) === true) {
-				return $type;
-			}
-		}
-
-		return null;
+		return static::extensionToType($extension) ?: null;
 	}
 
 	/**
 	 * Returns all extensions of a given file type
 	 * or `null` if the file type is unknown
+	 *
+	 * @return list<string>|null
 	 */
 	public static function typeToExtensions(string $type): array|null
 	{
@@ -1019,11 +1053,8 @@ class F
 	): bool {
 		// ensure the parent directory exists so `fopen('c+')`
 		// can create the file if it does not yet exist
-		$dir = dirname($file);
-		if (is_dir($dir) === false) {
-			if (Dir::make($dir) === false) {
-				return false; // @codeCoverageIgnore
-			}
+		if (Dir::make(dirname($file)) === false) {
+			return false; // @codeCoverageIgnore
 		}
 
 		// `c+` opens read/write, creates the file if missing,
@@ -1072,8 +1103,6 @@ class F
 
 	/**
 	 * Returns the file as data uri
-	 *
-	 * @param string $file The path for the file
 	 */
 	public static function uri(string $file): string|false
 	{
@@ -1087,9 +1116,9 @@ class F
 	/**
 	 * Creates a new file
 	 *
-	 * @param string $file The path for the new file
-	 * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
-	 * @param bool $append true: append the content to an existing file if available. false: overwrite.
+	 * @param $file The path for the new file
+	 * @param $content Either a string, an object or an array. Arrays and objects will be serialized.
+	 * @param $append true: append the content to an existing file if available. false: overwrite.
 	 */
 	public static function write(
 		string $file,
@@ -1100,19 +1129,6 @@ class F
 			$content = serialize($content);
 		}
 
-		$mode = $append === true ? FILE_APPEND | LOCK_EX : LOCK_EX;
-
-		// if the parent directory does not exist, create it
-		if (is_dir(dirname($file)) === false) {
-			if (Dir::make(dirname($file)) === false) {
-				return false;
-			}
-		}
-
-		if (static::isWritable($file) === false) {
-			throw new Exception('The file "' . $file . '" is not writable');
-		}
-
-		return file_put_contents($file, $content, $mode) !== false;
+		return static::put($file, $content, $append);
 	}
 }

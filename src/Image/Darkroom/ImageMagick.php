@@ -10,9 +10,6 @@ use Kirby\Image\Focus;
 /**
  * Legacy ImageMagick driver using the convert CLI
  *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
@@ -112,19 +109,6 @@ class ImageMagick extends Darkroom
 	}
 
 	/**
-	 * Applies sharpening if activated in the options.
-	 */
-	protected function sharpen(string $file, array $options): string|null
-	{
-		if (is_int($options['sharpen']) === false) {
-			return null;
-		}
-
-		$amount = max(1, min(100, $options['sharpen'])) / 100;
-		return '-sharpen ' . escapeshellarg('0x' . $amount);
-	}
-
-	/**
 	 * Applies the correct settings for interlaced JPEGs if
 	 * activated via options
 	 */
@@ -141,7 +125,7 @@ class ImageMagick extends Darkroom
 	 * Creates and runs the full imagemagick command
 	 * to process the image
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public function process(string $file, array $options = []): array
 	{
@@ -225,6 +209,19 @@ class ImageMagick extends Darkroom
 		}
 
 		return escapeshellarg($file);
+	}
+
+	/**
+	 * Applies sharpening if activated in the options.
+	 */
+	protected function sharpen(string $file, array $options): string|null
+	{
+		if (is_int($options['sharpen']) === false) {
+			return null;
+		}
+
+		$amount = max(1, min(100, $options['sharpen'])) / 100;
+		return '-sharpen ' . escapeshellarg('0x' . $amount);
 	}
 
 	/**

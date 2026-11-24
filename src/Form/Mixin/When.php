@@ -2,12 +2,13 @@
 
 namespace Kirby\Form\Mixin;
 
+use Kirby\Reflection\Attributes\Prop;
+
 /**
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
+ * Provides the `when` prop for conditional field visibility
+ *
  * @copyright Bastian Allgeier
- * @license   https://opensource.org/licenses/MIT
+ * @license   https://getkirby.com/license
  */
 trait When
 {
@@ -16,6 +17,7 @@ trait When
 	 *
 	 * @since 3.1.0
 	 */
+	#[Prop]
 	protected array|null $when = null;
 
 	/**
@@ -24,19 +26,24 @@ trait When
 	 */
 	public function isActive(): bool
 	{
-		if ($this->when === null || $this->when === []) {
+		$when = $this->when();
+
+		if ($when === null || $when === []) {
 			return true;
 		}
 
 		$siblings = $this->siblings();
 
-		foreach ($this->when as $field => $value) {
-			$field = $siblings->get($field);
-			$input = $field?->value() ?? '';
+		foreach ($when as $name => $value) {
+			$field = $siblings->get($name);
+			$input = '';
 
-			// if the input data doesn't match the requested `when` value,
-			// that means that this field is not required and can be saved
-			// (*all* `when` conditions must be met for this field to be required)
+			if ($field?->hasValue() === true) {
+				$input = $field->value() ?? '';
+			}
+
+			// *all* `when` conditions must be met
+			// for the field to be active
 			if ($input !== $value) {
 				return false;
 			}
@@ -45,11 +52,9 @@ trait When
 		return true;
 	}
 
-	protected function setWhen(array|null $when = null): void
-	{
-		$this->when = $when;
-	}
-
+	/**
+	 * @return array<string, mixed>|null
+	 */
 	public function when(): array|null
 	{
 		return $this->when;

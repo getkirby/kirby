@@ -3,6 +3,7 @@
 		v-bind="$props"
 		:class="['k-url-field', $attrs.class]"
 		:input="id"
+		:link="undefined"
 		:style="$attrs.style"
 	>
 		<k-input
@@ -34,7 +35,12 @@ import { props as UrlInput } from "../Input/UrlInput.vue";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>`
  * for additional information.
- * @example <k-url-field :value="url" @input="url = $event" name="url" label="Url" />
+ *
+ * @example
+ * <k-url-field :value="url" @input="url = $event" name="url" label="Url" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, UrlInput],
@@ -49,6 +55,7 @@ export default {
 			default: "url"
 		}
 	},
+	emits: ["input"],
 	computed: {
 		isValidUrl() {
 			return (

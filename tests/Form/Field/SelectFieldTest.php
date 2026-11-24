@@ -2,21 +2,24 @@
 
 namespace Kirby\Form\Field;
 
-use Kirby\Cms\App;
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(SelectField::class)]
 class SelectFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testNumericOptions(): void
 	{
-		$field = $this->field('select');
+		$field = $this->field('select', [
+			'value'   => '2',
+			'options' => [1, 2, 3]
+		]);
 
-		$this->assertSame('select', $field->type());
-		$this->assertSame('select', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertNull($field->icon());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
+		$this->assertTrue($field->isValid());
+
+		$field->fill('4');
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('option', $field->errors());
 	}
 
 	public function testOptionsQuery(): void
@@ -100,16 +103,20 @@ class SelectFieldTest extends TestCase
 
 		$field = $this->field('select', [
 			'model'   => $app->page('b'),
-			'options' => 'query',
-			'query'   => 'page.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'page.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
 
 		$field = $this->field('select', [
 			'model'   => $app->file('a/b.jpg'),
-			'options' => 'query',
-			'query'   => 'file.siblings.pluck("tags", ",", true)',
+			'options' => [
+				'type'  => 'query',
+				'query' => 'file.siblings.pluck("tags", ",", true)',
+			],
 		]);
 
 		$this->assertSame($expected, $field->options());
@@ -190,58 +197,19 @@ class SelectFieldTest extends TestCase
 
 	public function testOptionsQueryWithProtectedPages(): void
 	{
-		// the permission cache is keyed by template and role,
-		// so both need to be unique for this test
-		$uuid = uuid();
-
-		$app = new App([
-			'blueprints' => [
-				'pages/secret-' . $uuid => [
-					'options' => ['list' => false]
-				]
-			],
-			'roles' => [
-				['name' => 'editor-' . $uuid]
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'a'],
-					[
-						'slug'     => 'b',
-						'template' => 'secret-' . $uuid
-					],
-					[
-						'slug'     => 'c',
-						'template' => 'secret-' . $uuid
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor-' . $uuid
-				]
-			],
-			'user' => 'editor@getkirby.com'
-		]);
-
+		$app   = $this->appWithProtectedPages();
 		$field = $this->field('select', [
 			'model'   => $app->site(),
-			'options' => [
-				'type'  => 'query',
-				'query' => 'site.children'
-			]
+			'options' => 'site.children'
 		]);
 
 		// pages that must not be listed are hidden
 		$this->assertSame(['a'], array_column($field->options(), 'value'));
 
-		// ... unless already stored, then they are kept as placeholder
-		// (filled after creating the field, like a form does)
+		// ... unless they are in the value, then they are kept as placeholder
 		$field->fill('b');
 
-		$this->assertSame('b', $field->value());
-		$this->assertSame('a', $field->options()[0]['value']);
+		$this->assertSame(['a', 'b'], array_column($field->options(), 'value'));
 		$this->assertSame([
 			'disabled' => false,
 			'icon'     => null,
@@ -249,37 +217,52 @@ class SelectFieldTest extends TestCase
 			'text'     => '[unknown]',
 			'value'    => 'b'
 		], $field->options()[1]);
-		$this->assertCount(2, $field->options());
+		$this->assertTrue($field->isValid());
 		$this->assertSame('b', $field->toStoredValue());
-	}
 
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', ''],
-			['1', '1'],
-			['2', '2'],
-			['3', '']
-		];
-	}
+		// the placeholder follows the value
+		$field->fill('a');
+		$this->assertSame(['a'], array_column($field->options(), 'value'));
 
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
+		// unknown values stay invalid
+		$field->fill('x');
+		$this->assertFalse($field->isValid());
+
+		// the default value keeps its placeholder as well
 		$field = $this->field('select', [
-			'options' => [
-				'a',
-				'b',
-				'c',
-				1,
-				2
-			],
-			'value' => $input
+			'model'   => $app->site(),
+			'options' => 'site.children',
+			'default' => 'c'
 		]);
 
-		$this->assertSame($expected, $field->value());
+		$this->assertSame(['a', 'c'], array_column($field->options(), 'value'));
+	}
+
+	public function testProps(): void
+	{
+		$field = $this->field('select');
+		$props = $field->props();
+
+		ksort($props);
+
+		$expected = [
+			'autofocus'   => false,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Select',
+			'name'        => 'select',
+			'options'     => [],
+			'placeholder' => '—',
+			'required'    => false,
+			'saveable'    => true,
+			'translate'   => true,
+			'type'        => 'select',
+			'when'	      => null,
+			'width'	      => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 }

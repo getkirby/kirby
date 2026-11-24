@@ -4,6 +4,8 @@ namespace Kirby\Content;
 
 use Kirby\Cache\Cache;
 use Kirby\Cms\App;
+use Kirby\Cms\Pages;
+use Kirby\Cms\Users;
 use Kirby\TestCase;
 use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -11,7 +13,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Changes::class)]
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Content.Changes';
+	public const string TMP = KIRBY_TMP_DIR . '/Content.Changes';
 
 	protected function setUp(): void
 	{
@@ -63,6 +65,20 @@ class ChangesTest extends TestCase
 		$this->assertInstanceOf(Cache::class, $cache);
 	}
 
+	public function testCacheKey(): void
+	{
+		$changes = new Changes();
+
+		$page = $this->app->page('test');
+		$file = $this->app->file('test/test.jpg');
+		$user = $this->app->user('test');
+
+		$this->assertSame('pages', $changes->cacheKey($page));
+		$this->assertSame('files', $changes->cacheKey($file));
+		$this->assertSame('sites', $changes->cacheKey($this->app->site()));
+		$this->assertSame('users', $changes->cacheKey($user));
+	}
+
 	public function testFiles(): void
 	{
 		$this->app->cache('changes')->set('files', $cache = [
@@ -91,19 +107,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test/test.jpg', $changes->files()->first()->id());
 	}
 
-	public function testCacheKey(): void
-	{
-		$changes = new Changes();
-
-		$page = $this->app->page('test');
-		$file = $this->app->file('test/test.jpg');
-		$user = $this->app->user('test');
-
-		$this->assertSame('pages', $changes->cacheKey($page));
-		$this->assertSame('files', $changes->cacheKey($file));
-		$this->assertSame('users', $changes->cacheKey($user));
-	}
-
 	public function testGenerateCache(): void
 	{
 		$changes = new Changes();
@@ -120,11 +123,16 @@ class ChangesTest extends TestCase
 		$user->version('latest')->save(['foo' => 'bar']);
 		$user->version('changes')->save(['foo' => 'bar']);
 
+		$site = $this->app->site();
+		$site->version('latest')->save(['foo' => 'bar']);
+		$site->version('changes')->save(['foo' => 'bar']);
+
 		$this->app->cache('changes')->flush();
 
 		$this->assertFalse($changes->cacheExists());
 		$this->assertSame([], $changes->read('files'));
 		$this->assertSame([], $changes->read('pages'));
+		$this->assertSame([], $changes->read('sites'));
 		$this->assertSame([], $changes->read('users'));
 
 		$changes->generateCache();
@@ -132,6 +140,7 @@ class ChangesTest extends TestCase
 		$this->assertTrue($changes->cacheExists());
 		$this->assertSame(['file://test'], $changes->read('files'));
 		$this->assertSame(['page://test'], $changes->read('pages'));
+		$this->assertSame(['site://'], $changes->read('sites'));
 		$this->assertSame(['user://test'], $changes->read('users'));
 	}
 
@@ -145,6 +154,7 @@ class ChangesTest extends TestCase
 
 		// in cache, but changes don't exist in reality
 		$this->assertCount(0, $changes->pages());
+		$this->assertInstanceOf(Pages::class, $changes->pages());
 		$this->assertSame([], $this->app->cache('changes')->get('pages'));
 
 		// in cache and changes exist in reality
@@ -153,7 +163,15 @@ class ChangesTest extends TestCase
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('pages'));
 		$this->assertCount(1, $changes->pages());
+		$this->assertInstanceOf(Pages::class, $changes->pages());
 		$this->assertSame('test', $changes->pages()->first()->id());
+
+		// no cache entry, read returns []
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$result  = $changes->pages();
+		$this->assertInstanceOf(Pages::class, $result);
+		$this->assertCount(0, $result);
 	}
 
 	public function testRead(): void
@@ -175,6 +193,28 @@ class ChangesTest extends TestCase
 		$this->assertSame(['file://test'], $changes->read('files'));
 		$this->assertSame(['page://test'], $changes->read('pages'));
 		$this->assertSame(['user://test'], $changes->read('users'));
+	}
+
+	public function testSite(): void
+	{
+		$this->app->cache('changes')->set('sites', $cache = [
+			'site://'
+		]);
+
+		$changes = new Changes();
+
+		$this->assertNull($changes->site());
+		$this->assertSame([], $this->app->cache('changes')->get('sites'));
+
+		$this->app->site()->version('latest')->save([]);
+		$this->app->site()->version('changes')->save([]);
+
+		$this->assertSame($cache, $this->app->cache('changes')->get('sites'));
+		$this->assertSame($this->app->site(), $changes->site());
+
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$this->assertNull($changes->site());
 	}
 
 	public function testTrack(): void
@@ -227,35 +267,6 @@ class ChangesTest extends TestCase
 		$this->assertSame('test', $users[0]);
 	}
 
-	public function testUpdate(): void
-	{
-		$changes = new Changes();
-
-		$changes->update('files', [
-			$this->app->file('test/test.jpg')->uuid()->toString(),
-		]);
-
-		$changes->update('pages', [
-			$this->app->page('test')->uuid()->toString(),
-		]);
-
-		$changes->update('users', [
-			$this->app->user('test')->uuid()->toString()
-		]);
-
-		$this->assertCount(1, $changes->read('files'));
-		$this->assertCount(1, $changes->read('pages'));
-		$this->assertCount(1, $changes->read('users'));
-
-		$changes->update('files', []);
-		$changes->update('pages', []);
-		$changes->update('users', []);
-
-		$this->assertCount(0, $changes->read('files'));
-		$this->assertCount(0, $changes->read('pages'));
-		$this->assertCount(0, $changes->read('users'));
-	}
-
 	public function testUntrack(): void
 	{
 		$changes = new Changes();
@@ -306,6 +317,35 @@ class ChangesTest extends TestCase
 		$this->assertCount(0, $changes->read('users'));
 	}
 
+	public function testUpdate(): void
+	{
+		$changes = new Changes();
+
+		$changes->update('files', [
+			$this->app->file('test/test.jpg')->uuid()->toString(),
+		]);
+
+		$changes->update('pages', [
+			$this->app->page('test')->uuid()->toString(),
+		]);
+
+		$changes->update('users', [
+			$this->app->user('test')->uuid()->toString()
+		]);
+
+		$this->assertCount(1, $changes->read('files'));
+		$this->assertCount(1, $changes->read('pages'));
+		$this->assertCount(1, $changes->read('users'));
+
+		$changes->update('files', []);
+		$changes->update('pages', []);
+		$changes->update('users', []);
+
+		$this->assertCount(0, $changes->read('files'));
+		$this->assertCount(0, $changes->read('pages'));
+		$this->assertCount(0, $changes->read('users'));
+	}
+
 	public function testUsers(): void
 	{
 		$this->app->cache('changes')->set('users', $cache = [
@@ -316,6 +356,7 @@ class ChangesTest extends TestCase
 
 		// in cache, but changes don't exist in reality
 		$this->assertCount(0, $changes->users());
+		$this->assertInstanceOf(Users::class, $changes->users());
 		$this->assertSame([], $this->app->cache('changes')->get('users'));
 
 		// in cache and changes exist in reality
@@ -324,6 +365,14 @@ class ChangesTest extends TestCase
 
 		$this->assertSame($cache, $this->app->cache('changes')->get('users'));
 		$this->assertCount(1, $changes->users());
+		$this->assertInstanceOf(Users::class, $changes->users());
 		$this->assertSame('test', $changes->users()->first()->id());
+
+		// no cache entry, read returns []
+		$this->app->cache('changes')->flush();
+		$changes = new Changes();
+		$result  = $changes->users();
+		$this->assertInstanceOf(Users::class, $result);
+		$this->assertCount(0, $result);
 	}
 }

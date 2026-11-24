@@ -10,8 +10,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileReplaceTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileReplace';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileReplace';
 
 	public function testReplace(): void
 	{
@@ -41,32 +41,52 @@ class FileReplaceTest extends ModelTestCase
 		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 
-	public function testReplaceMove(): void
+	public function testReplaceHooks(): void
 	{
-		$parent      = new Page(['slug' => 'test']);
-		$original    = static::TMP . '/original.md';
-		$replacement = static::TMP . '/replacement.md';
+		$parent  = new Page(['slug' => 'test']);
+		$calls   = 0;
+		$phpunit = $this;
 
-		// create the dummy files
-		F::write($original, '# Original');
-		F::write($replacement, '# Replacement');
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
+					$phpunit->assertIsFile($file);
+					$phpunit->assertInstanceOf(BaseFile::class, $upload);
+					$phpunit->assertSame('site.csv', $file->filename());
+					$phpunit->assertSame('replace.csv', $upload->filename());
+					$phpunit->assertFileDoesNotExist($file->root());
+					$calls++;
+				},
+				'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+					$phpunit->assertIsFile($newFile);
+					$phpunit->assertIsFile($oldFile);
+					$phpunit->assertSame('site.csv', $newFile->filename());
+					$phpunit->assertSame('Replace', F::read($newFile->root()));
+					$phpunit->assertSame('site.csv', $oldFile->filename());
+					$calls++;
+				},
+			]
+		]);
 
-		$originalFile = File::create([
-			'filename' => 'test.md',
-			'source'   => $original,
+		$this->app->impersonate('kirby');
+
+		// create the dummy source
+		F::write($source = static::TMP . '/replace.csv', 'Replace');
+
+		File::create([
+			'filename' => 'replace.csv',
+			'source'   => $source,
 			'parent'   => $parent
 		]);
 
-		$this->assertFileExists($original);
-		$this->assertSame(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
+		$file = new File([
+			'filename' => 'site.csv',
+			'parent'   => $this->app->site()
+		]);
 
-		$replacedFile = $originalFile->replace($replacement, true);
+		$file->replace($source);
 
-		$this->assertFileExists($original);
-		$this->assertFileDoesNotExist($replacement);
-		$this->assertSame('# Replacement', F::read($replacedFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
+		$this->assertSame(2, $calls);
 	}
 
 	public function testReplaceImage(): void
@@ -117,51 +137,31 @@ class FileReplaceTest extends ModelTestCase
 		$this->assertSame('pdf', $replacedFile->extension());
 	}
 
-	public function testReplaceHooks(): void
+	public function testReplaceMove(): void
 	{
-		$parent  = new Page(['slug' => 'test']);
-		$calls   = 0;
-		$phpunit = $this;
+		$parent      = new Page(['slug' => 'test']);
+		$original    = static::TMP . '/original.md';
+		$replacement = static::TMP . '/replacement.md';
 
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
-					$phpunit->assertIsFile($file);
-					$phpunit->assertInstanceOf(BaseFile::class, $upload);
-					$phpunit->assertSame('site.csv', $file->filename());
-					$phpunit->assertSame('replace.csv', $upload->filename());
-					$phpunit->assertFileDoesNotExist($file->root());
-					$calls++;
-				},
-				'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
-					$phpunit->assertIsFile($newFile);
-					$phpunit->assertIsFile($oldFile);
-					$phpunit->assertSame('site.csv', $newFile->filename());
-					$phpunit->assertSame('Replace', F::read($newFile->root()));
-					$phpunit->assertSame('site.csv', $oldFile->filename());
-					$calls++;
-				},
-			]
-		]);
+		// create the dummy files
+		F::write($original, '# Original');
+		F::write($replacement, '# Replacement');
 
-		$this->app->impersonate('kirby');
-
-		// create the dummy source
-		F::write($source = static::TMP . '/replace.csv', 'Replace');
-
-		File::create([
-			'filename' => 'replace.csv',
-			'source'   => $source,
+		$originalFile = File::create([
+			'filename' => 'test.md',
+			'source'   => $original,
 			'parent'   => $parent
 		]);
 
-		$file = new File([
-			'filename' => 'site.csv',
-			'parent'   => $this->app->site()
-		]);
+		$this->assertFileExists($original);
+		$this->assertSame(F::read($original), F::read($originalFile->root()));
+		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
 
-		$file->replace($source);
+		$replacedFile = $originalFile->replace($replacement, true);
 
-		$this->assertSame(2, $calls);
+		$this->assertFileExists($original);
+		$this->assertFileDoesNotExist($replacement);
+		$this->assertSame('# Replacement', F::read($replacedFile->root()));
+		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
 	}
 }

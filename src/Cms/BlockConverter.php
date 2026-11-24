@@ -5,17 +5,14 @@ namespace Kirby\Cms;
 /**
  * Converts the data from the old builder and editor fields
  * to the format supported by the new block field.
- * @since 3.9.0
- * @deprecated
  *
- * @todo block.converter remove eventually
- * @codeCoverageIgnore
- *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
+ * @since     3.9.0
+ *
+ * @deprecated
+ * @todo block.converter remove eventually
+ * @codeCoverageIgnore
  */
 class BlockConverter
 {
@@ -43,14 +40,25 @@ class BlockConverter
 		$method = 'editor' . $params['type'];
 
 		if (method_exists(static::class, $method) === true) {
-			$params = static::$method($params);
-		} else {
-			$params = static::editorCustom($params);
+			return static::$method($params);
 		}
 
-		return $params;
+		return static::editorCustom($params);
 	}
 
+	public static function editorBlockquote(array $params): array
+	{
+		return [
+			'content' => [
+				'text' => $params['content']
+			],
+			'type' => 'quote'
+		];
+	}
+
+	/**
+	 * @param list<array> $blocks
+	 */
 	public static function editorBlocks(array $blocks = []): array
 	{
 		if ($blocks === []) {
@@ -61,8 +69,8 @@ class BlockConverter
 			return $blocks;
 		}
 
-		$list = [];
-		$listStart = null;
+		$list      = [];
+		$listStart = 0;
 
 		foreach ($blocks as $index => $block) {
 			if (in_array($block['type'], ['ul', 'ol'], true) === true) {
@@ -99,25 +107,15 @@ class BlockConverter
 						$blocks[$x] = false;
 					}
 
-					$listStart = null;
-					$list = [];
+					$listStart = 0;
+					$list      = [];
 				}
 			} else {
 				$blocks[$index] = static::editorBlock($block);
 			}
 		}
 
-		return array_filter($blocks);
-	}
-
-	public static function editorBlockquote(array $params): array
-	{
-		return [
-			'content' => [
-				'text' => $params['content']
-			],
-			'type' => 'quote'
-		];
+		return array_values(array_filter($blocks));
 	}
 
 	public static function editorCode(array $params): array
@@ -135,7 +133,7 @@ class BlockConverter
 	{
 		return [
 			'content' => [
-				...$params['attrs'] ?? [],
+				...(array)($params['attrs'] ?? []),
 				'body' => $params['content'] ?? null
 			],
 			'type' => $params['type'] ?? 'unknown'
@@ -172,14 +170,6 @@ class BlockConverter
 		return static::editorHeading($params, 'h6');
 	}
 
-	public static function editorHr(array $params): array
-	{
-		return [
-			'content' => [],
-			'type'    => 'line'
-		];
-	}
-
 	public static function editorHeading(array $params, string $level = 'h1'): array
 	{
 		return [
@@ -188,6 +178,14 @@ class BlockConverter
 				'text'  => $params['content']
 			],
 			'type' => 'heading'
+		];
+	}
+
+	public static function editorHr(array $params): array
+	{
+		return [
+			'content' => [],
+			'type'    => 'line'
 		];
 	}
 

@@ -10,9 +10,6 @@ use Stringable;
  * interface to get values from
  * structured bodies (json encoded or form data)
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -32,11 +29,19 @@ class Body implements Stringable
 	 * fetch the body either from the $_POST global
 	 * or from php://input.
 	 *
-	 * @param array|string|null $contents The raw body content
+	 * @param $contents The raw body content
 	 */
 	public function __construct(
 		protected array|string|null $contents = null
 	) {
+	}
+
+	/**
+	 * Magic string converter
+	 */
+	public function __toString(): string
+	{
+		return $this->toString();
 	}
 
 	/**
@@ -53,7 +58,8 @@ class Body implements Stringable
 			return $this->contents = $_POST;
 		}
 
-		return $this->contents = file_get_contents('php://input');
+		$contents = file_get_contents('php://input');
+		return $this->contents = $contents !== false ? $contents : '';
 	}
 
 	/**
@@ -86,10 +92,7 @@ class Body implements Stringable
 		if (str_contains($contents, '=') === true) {
 			// try to parse the body as query string
 			parse_str($contents, $parsed);
-
-			if (is_array($parsed) === true) {
-				return $this->data = $parsed;
-			}
+			return $this->data = $parsed;
 		}
 
 		return $this->data = [];
@@ -102,13 +105,5 @@ class Body implements Stringable
 	public function toString(): string
 	{
 		return http_build_query($this->data());
-	}
-
-	/**
-	 * Magic string converter
-	 */
-	public function __toString(): string
-	{
-		return $this->toString();
 	}
 }

@@ -26,13 +26,11 @@
 					/>
 					<label :for="id + '-' + index" :title="option.text">
 						<k-icon v-if="option.icon" :type="option.icon" />
-						<!-- eslint-disable vue/no-v-html -->
 						<span
 							v-if="labels || !option.icon"
+							v-safe-html="option.text"
 							class="k-toggles-text"
-							v-html="option.text"
 						/>
-						<!-- eslint-enable vue/no-v-html -->
 					</label>
 				</li>
 			</ul>
@@ -55,8 +53,13 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	mounted() {
 		if (this.$props.autofocus) {
 			this.focus();
@@ -107,7 +110,7 @@ export default {
 }
 
 .k-toggles-input li {
-	height: var(--field-input-height);
+	height: var(--input-height);
 }
 .k-toggles-input label {
 	align-items: center;
@@ -115,10 +118,14 @@ export default {
 	cursor: pointer;
 	display: flex;
 	font-size: var(--text-sm);
+	gap: var(--spacing-2);
 	justify-content: center;
 	line-height: 1.25;
 	padding: 0 var(--spacing-3);
 	height: 100%;
+}
+.k-toggles-input[disabled] label {
+	cursor: not-allowed;
 }
 
 .k-toggles-input input:checked + label {
@@ -134,9 +141,5 @@ export default {
 .k-toggles-input input[disabled]:not(:checked) + label {
 	color: var(--color-text-dimmed);
 	background: var(--panel-color-back);
-}
-
-.k-toggles-input .k-icon + .k-toggles-text {
-	margin-inline-start: var(--spacing-2);
 }
 </style>

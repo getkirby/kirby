@@ -9,7 +9,8 @@ use Kirby\TestCase;
 
 class ChangesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
+	public const string TMP = KIRBY_TMP_DIR . '/Api.Controller.Changes';
+
 	public Page $page;
 
 	protected function setUp(): void
@@ -99,12 +100,129 @@ class ChangesTest extends TestCase
 		], $published);
 	}
 
+	public function testPublishWithArrayBasedPluginField(): void
+	{
+		$this->app = $this->app->clone([
+			// array-based definitions have been removed in Kirby 6
+			// and are replaced with an error field without a value
+			'fields' => [
+				'test-array-based' => [
+					'props' => [
+						'value' => fn (string|null $value = null) => $value
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug'      => 'contact',
+						'template'  => 'contact',
+						'blueprint' => [
+							'fields' => [
+								'location' => [
+									'type' => 'test-array-based'
+								],
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('contact');
+
+		Data::write(
+			file: $page->root() . '/contact.txt',
+			data: [
+				'title'    => 'Test',
+				'location' => 'Neckargemünd',
+				'uuid'     => 'test'
+			]
+		);
+
+		$response = Changes::publish(
+			model: $page,
+			input: ['text' => 'Test']
+		);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		$published = Data::read($page->root() . '/contact.txt');
+
+		$this->assertSame([
+			'title'    => 'Test',
+			'text'     => 'Test',
+			'location' => 'Neckargemünd',
+			'uuid'     => 'test'
+		], $published);
+	}
+
 	public function testPublishWithoutPermissions(): void
 	{
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionMessage('You are not allowed to publish this version');
 
 		Changes::publish($this->page, []);
+	}
+
+	public function testPublishWithSectionOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'      => 'stats',
+						'template'  => 'stats',
+						'blueprint' => [
+							'sections' => [
+								'views' => [
+									'type' => 'info',
+									'text' => '{{ page.views }}'
+								],
+								'content' => [
+									'type'   => 'fields',
+									'fields' => [
+										'text' => [
+											'type' => 'text'
+										]
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('stats');
+
+		Data::write($page->root() . '/stats.txt', [
+			'title' => 'Test',
+			'views' => '1234',
+			'uuid'  => 'test'
+		]);
+
+		$response = Changes::publish($page, [
+			'text' => 'Test'
+		]);
+
+		$this->assertSame(['status' => 'ok'], $response);
+
+		$published = Data::read($page->root() . '/stats.txt');
+
+		$this->assertSame([
+			'title' => 'Test',
+			'text'  => 'Test',
+			'views' => '1234',
+			'uuid'  => 'test'
+		], $published);
 	}
 
 	public function testSave(): void
@@ -285,8 +403,16 @@ class ChangesTest extends TestCase
 		$this->assertFileDoesNotExist($this->page->root() . '/_changes/article.txt');
 	}
 
+	public function testSaveWithoutPermissions(): void
+	{
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to change this version');
+
+		Changes::save($this->page, []);
+	}
+
 	/**
-	 * @todo We want to ignore undefined fields later in v6. This needs to be
+	 * @todo We want to ignore undefined fields later in v7. This needs to be
 	 * refactored at that point to make sure that undefined fields are not saved.
 	 */
 	public function testSaveWithUndefinedField(): void
@@ -314,14 +440,6 @@ class ChangesTest extends TestCase
 			'undefined' => 'This should be passed through',
 			'lock'      => 'kirby'
 		], $changes);
-	}
-
-	public function testSaveWithoutPermissions(): void
-	{
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change this version');
-
-		Changes::save($this->page, []);
 	}
 
 	public function testUnlock(): void

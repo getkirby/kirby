@@ -82,19 +82,17 @@ class EventsTest extends TestCase
 		$this->assertSame('message: hello', $result);
 	}
 
-	public function testApplyWithWildcard(): void
+	public function testApplyWithModifier(): void
 	{
 		$events = $this->events([
-			'test.*' => [
-				fn (string $message) => 'message: ' . $message
+			'test' => [
+				fn ($a, $b) => $a . ' ' . $b,
+				fn ($a, $b) => $b . ' ' . $a
 			]
 		]);
 
-		$a = $events->apply('test.a', ['message' => 'hello']);
-		$b = $events->apply('test.b', ['message' => 'hello']);
-
-		$this->assertSame('message: hello', $a);
-		$this->assertSame('message: hello', $b);
+		$result = $events->apply('test', ['a' => 'hello', 'b' => 'world'], 'b');
+		$this->assertSame('hello world hello', $result);
 	}
 
 	public function testApplyWithoutHooks(): void
@@ -121,29 +119,19 @@ class EventsTest extends TestCase
 		$this->assertSame('world hello world', $result);
 	}
 
-	public function testApplyWithModifier(): void
+	public function testApplyWithWildcard(): void
 	{
 		$events = $this->events([
-			'test' => [
-				fn ($a, $b) => $a . ' ' . $b,
-				fn ($a, $b) => $b . ' ' . $a
+			'test.*' => [
+				fn (string $message) => 'message: ' . $message
 			]
 		]);
 
-		$result = $events->apply('test', ['a' => 'hello', 'b' => 'world'], 'b');
-		$this->assertSame('hello world hello', $result);
-	}
+		$a = $events->apply('test.a', ['message' => 'hello']);
+		$b = $events->apply('test.b', ['message' => 'hello']);
 
-	public function testHooksWithSingleHandler(): void
-	{
-		$events = $this->events([
-			'test' => $handlers = [
-				fn () => 'test'
-			]
-		]);
-
-		$event = new Event('test');
-		$this->assertSame($handlers, $events->hooks($event));
+		$this->assertSame('message: hello', $a);
+		$this->assertSame('message: hello', $b);
 	}
 
 	public function testHooksWithMultipleHandlers(): void
@@ -152,6 +140,18 @@ class EventsTest extends TestCase
 			'test' => $handlers = [
 				fn () => 'a',
 				fn () => 'b'
+			]
+		]);
+
+		$event = new Event('test');
+		$this->assertSame($handlers, $events->hooks($event));
+	}
+
+	public function testHooksWithSingleHandler(): void
+	{
+		$events = $this->events([
+			'test' => $handlers = [
+				fn () => 'test'
 			]
 		]);
 
@@ -319,6 +319,37 @@ class EventsTest extends TestCase
 		$this->assertSame('121', $message);
 	}
 
+	public function testTriggerWithBoundApp(): void
+	{
+		$self   = $this;
+		$events = $this->events([
+			'test' => [
+				function () use ($self) {
+					$self->assertInstanceOf(App::class, $this);
+				}
+			]
+		]);
+
+		$events->trigger('test');
+	}
+
+	public function testTriggerWithImpersonation(): void
+	{
+		// request hooks like `system.loadPlugins:after`
+		// may impersonate for the rest of the request
+		$app = $this->app([
+			'test' => [
+				function () {
+					$this->impersonate('kirby');
+				}
+			]
+		]);
+
+		$app->trigger('test');
+
+		$this->assertSame('kirby', $app->user()->id());
+	}
+
 	public function testTriggerWithLoopProtection(): void
 	{
 		$count = 0;
@@ -333,6 +364,25 @@ class EventsTest extends TestCase
 
 		$app->trigger('test');
 		$this->assertSame(1, $count);
+	}
+
+	public function testTriggerWithMultipleHandlers(): void
+	{
+		$count = 0;
+		$events = $this->events([
+			'test' => [
+				function () use (&$count) {
+					$count++;
+				},
+				function () use (&$count) {
+					$count++;
+				}
+			]
+		]);
+
+		$events->trigger('test');
+
+		$this->assertSame(2, $count);
 	}
 
 	public function testTriggerWithMutualLoopProtection(): void
@@ -370,39 +420,6 @@ class EventsTest extends TestCase
 
 		$events->trigger('test.a');
 		$events->trigger('test.b');
-
-		$this->assertSame(2, $count);
-	}
-
-	public function testTriggerWithBoundApp(): void
-	{
-		$self   = $this;
-		$events = $this->events([
-			'test' => [
-				function () use ($self) {
-					$self->assertInstanceOf(App::class, $this);
-				}
-			]
-		]);
-
-		$events->trigger('test');
-	}
-
-	public function testTriggerWithMultipleHandlers(): void
-	{
-		$count = 0;
-		$events = $this->events([
-			'test' => [
-				function () use (&$count) {
-					$count++;
-				},
-				function () use (&$count) {
-					$count++;
-				}
-			]
-		]);
-
-		$events->trigger('test');
 
 		$this->assertSame(2, $count);
 	}

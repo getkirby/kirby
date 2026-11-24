@@ -1,19 +1,34 @@
-import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
-import { toLowerKeys } from "../helpers/object";
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 import AuthError from "@/errors/AuthError.js";
+import ExternalRequestError from "@/errors/ExternalRequestError.js";
 import JsonRequestError from "@/errors/JsonRequestError.js";
 import OfflineError from "@/errors/OfflineError.js";
 import RedirectError from "@/errors/RedirectError.js";
 import RequestError from "@/errors/RequestError.js";
+import { HtmlString } from "@/panel/html";
+import { isAbortError } from "@/helpers/error";
+import { toLowerKeys } from "@/helpers/object";
+import { buildUrl, isSameOrigin, makeAbsolute } from "@/helpers/url";
 
-export interface PanelResponse {
+/**
+ * @since 6.0.0
+ */
+export interface HttpResponse {
 	headers: Headers;
-	json: Record<string, unknown>;
+	json: Record<string, unknown> | null;
 	ok: boolean;
 	status: number;
 	statusText: string;
 	text: string;
 	url: string;
+}
+
+export interface PanelResponse extends Omit<HttpResponse, "json"> {
+	json: Record<string, unknown>;
 }
 
 export type RequestBody =
@@ -29,11 +44,13 @@ export interface PanelRequestOptions extends Omit<
 > {
 	body: RequestBody;
 	csrf?: string;
+	external?: boolean;
 	globals?: string | string[];
 	headers: Record<string, string>;
 	language?: string | null;
 	query: Record<string, string | null>;
 	referrer?: string;
+	translation?: string | null;
 }
 
 /**
@@ -54,6 +71,75 @@ export function body(data: RequestBody | undefined): string | null | undefined {
 	}
 
 	return data;
+}
+
+/**
+ * Sends a plain request to a third-party URL without
+ * any of the Panel's headers or response handling
+ * @since 6.0.0
+ */
+export async function external(
+	url: string | URL,
+	options: Partial<PanelRequestOptions> = {}
+): Promise<{ request: Request; response: HttpResponse }> {
+	// Panel-only options must not reach the third party
+	const {
+		body: data,
+		csrf,
+		external,
+		globals,
+		headers,
+		language,
+		query,
+		referrer,
+		translation,
+		...rest
+	} = options;
+
+	const payload = body(data);
+
+	const req = new Request(buildUrl(url, query), {
+		...rest,
+		body: payload,
+		// without a payload, skip the content type to avoid a CORS preflight
+		headers: payload
+			? { "content-type": "application/json", ...toLowerKeys(headers ?? {}) }
+			: headers
+	});
+
+	// no safeFetch: a dead endpoint must not mark the Panel offline
+	const raw = await fetch(req);
+
+	const response: HttpResponse = {
+		headers: raw.headers,
+		json: null,
+		ok: raw.ok,
+		status: raw.status,
+		statusText: raw.statusText,
+		text: await raw.text(),
+		url: raw.url
+	};
+
+	if (raw.headers.get("Content-Type")?.includes("json") === true) {
+		try {
+			response.json = JSON.parse(response.text);
+		} catch {
+			// no JsonRequestError: the fatal view renders its text as Panel HTML
+		}
+	}
+
+	// no RequestError: its message, key and details come from the response
+	if (response.ok === false) {
+		throw new ExternalRequestError(
+			window.panel.t("error.request.failed", { url: req.url }),
+			{ request: req, response }
+		);
+	}
+
+	return {
+		request: req,
+		response
+	};
 }
 
 /**
@@ -78,7 +164,7 @@ export function headers(
 ): Record<string, string> {
 	const result: Record<string, string> = {
 		"content-type": "application/json",
-		"x-fiber": "true",
+		"x-panel": "true",
 		...toLowerKeys(input)
 	};
 
@@ -94,11 +180,16 @@ export function headers(
 	const globalsHeader = globals(options.globals);
 
 	if (globalsHeader) {
-		result["x-fiber-globals"] = globalsHeader;
+		result["x-panel-globals"] = globalsHeader;
 	}
 
 	if (options.referrer) {
-		result["x-fiber-referrer"] = options.referrer;
+		result["x-panel-referrer"] = options.referrer;
+	}
+
+	// lets the backend send a new translation when it changed, e.g. on login
+	if (options.translation) {
+		result["x-panel-translation"] = options.translation;
 	}
 
 	return result;
@@ -118,14 +209,32 @@ export function redirect(url: string | URL): never {
  * It also makes sure to redirect requests,
  * which cannot be handled via fetch and
  * throws more useful errors.
+ * Pass `external: true` for third-party URLs.
  * @since 4.0.0
  */
 export async function request(
-	url: string,
+	url: string | URL,
+	options: Partial<PanelRequestOptions> & { external: true }
+): Promise<{ request: Request; response: HttpResponse }>;
+export async function request(
+	url: string | URL,
+	options?: Partial<PanelRequestOptions> & { external?: false }
+): Promise<{ request: Request; response: PanelResponse }>;
+export async function request(
+	url: string | URL,
+	options?: Partial<PanelRequestOptions>
+): Promise<{ request: Request; response: HttpResponse | PanelResponse }>;
+export async function request(
+	url: string | URL,
 	options: Partial<PanelRequestOptions> = {}
-): Promise<{ request: Request; response: PanelResponse }> {
+): Promise<{ request: Request; response: HttpResponse | PanelResponse }> {
+	if (options.external === true) {
+		return await external(url, options);
+	}
+
 	// extract Request options from options
-	const { csrf, globals, language, referrer, query, ...rest } = options;
+	const { csrf, globals, language, referrer, query, translation, ...rest } =
+		options;
 
 	// merge with a few defaults
 	const init: RequestInit = {
@@ -179,9 +288,12 @@ export async function responder(
 
 	try {
 		response.text = await raw.text();
-		response.json = JSON.parse(response.text);
+
+		// rewrap any `<key>` payloads into HtmlString instances, so that
+		// the backend can flag trusted HTML through the same JSON shape
+		response.json = HtmlString.resolve(JSON.parse(response.text));
 	} catch (error) {
-		if (error instanceof Error && error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			throw error;
 		}
 
@@ -222,11 +334,10 @@ export async function safeFetch(request: Request): Promise<Response> {
 	try {
 		return await fetch(request);
 	} catch (error) {
-		if (error instanceof Error && error.name === "AbortError") {
+		if (isAbortError(error) === true) {
 			throw error;
 		}
 
-		// @ts-expect-error - remove once Panel type exists (TODO)
 		window.panel?.events?.emit("offline", error);
 
 		throw new OfflineError("Panel is offline", {

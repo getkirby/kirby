@@ -1,8 +1,9 @@
 <template>
 	<component
 		:is="element"
-		:for="input"
+		:for="element === 'label' ? input : undefined"
 		:class="'k-' + type + '-label'"
+		:data-has-diff="hasDiff"
 		class="k-label"
 	>
 		<k-link v-if="link" :to="link">
@@ -25,10 +26,14 @@
 
 <script>
 /**
- * Used to label form fields and sections
+ * Used to label form fields and sections of a view
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
+		hasDiff: Boolean,
 		/**
 		 * ID of the input element to which the label belongs
 		 */
@@ -128,5 +133,11 @@ export default {
 	> .k-label
 	abbr:has(+ abbr.k-label-invalid) {
 	display: none;
+}
+
+.k-label[data-has-diff="true"] .k-label-text {
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--color-orange-500);
 }
 </style>

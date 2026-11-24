@@ -12,6 +12,10 @@
 <script>
 import TextDialog from "./TextDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [TextDialog],
 	props: {
@@ -27,6 +31,7 @@ export default {
 		theme: {
 			default: "negative"
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

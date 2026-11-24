@@ -4,7 +4,7 @@
 		:input="false"
 		:class="['k-entries-field', $attrs.class]"
 		:style="$attrs.style"
-		@click.native.stop
+		@click.stop
 	>
 		<!-- Options -->
 		<template v-if="!disabled" #options>
@@ -26,16 +26,17 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" :options="options" align-x="end" />
+				<k-dropdown ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(entries)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="entries.length">
 			<!-- Empty State -->
-			<k-empty v-if="entries.length === 0" icon="list-bullet" @click="add()">
+			<k-empty
+				v-if="entries.length === 0"
+				icon="list-bullet"
+				v-on="!disabled ? { click: () => add() } : {}"
+			>
 				{{ empty ?? $t("field.entries.empty") }}
 			</k-empty>
 
@@ -58,21 +59,22 @@
 						icon="sort"
 						class="k-sort-handle k-entries-field-item-sort-handle"
 						size="sm"
-						@keydown.up.native="sortUp(index)"
-						@keydown.down.native="sortDown(index)"
+						@keydown.up="sortUp(index)"
+						@keydown.down="sortDown(index)"
 					/>
 					<component
 						:is="`k-${field.type}-field`"
 						:ref="'entry-' + index + '-input'"
+						v-bind="field"
 						:disabled="disabled"
 						:value="entry.value"
-						v-bind="field"
 						:counter="false"
 						:label="false"
 						class="k-entries-field-item-input"
 						@input="onInput(index, $event)"
 					/>
 					<k-button-group
+						v-if="more || !disabled"
 						class="k-entries-field-item-options"
 						layout="collapsed"
 					>
@@ -100,7 +102,7 @@
 					</k-button-group>
 				</div>
 			</k-draggable>
-		</k-input-validator>
+		</k-validator>
 
 		<footer v-if="more" class="k-entries-field-footer">
 			<k-button
@@ -118,6 +120,11 @@
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
+ */
 export default {
 	mixins: [Field, Input],
 	inheritAttrs: false,
@@ -212,14 +219,14 @@ export default {
 					disabled: this.entries.length === 0 || this.disabled,
 					icon: "template",
 					text: this.$t("copy.all"),
-					click: this.copyAll
+					click: () => this.copyAll()
 				},
 				"-",
 				{
 					disabled: this.entries.length === 0 || this.disabled,
 					icon: "trash",
 					text: this.$t("delete.all"),
-					click: this.removeAll
+					click: () => this.removeAll()
 				}
 			];
 		},
@@ -232,8 +239,9 @@ export default {
 			handler(entries) {
 				entries ??= [];
 
-				// no need to add ids again if the values are the same
-				if (entries === this.values) {
+				// Prevent unnecessary re-creation of entries that causes focus loss
+				// when typing in input fields by comparing actual values
+				if (JSON.stringify(entries) === JSON.stringify(this.values)) {
 					return;
 				}
 

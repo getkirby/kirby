@@ -26,15 +26,15 @@
 					>
 						<k-color-frame :color="value" />
 					</button>
-					<k-dropdown-content ref="picker" class="k-color-field-picker">
+					<k-dropdown ref="picker" class="k-color-field-picker">
 						<k-colorpicker-input
 							ref="color"
 							v-bind="$props"
 							:options="convertedOptions"
 							@input="$emit('input', $event)"
-							@click.native.stop
+							@click.stop
 						/>
-					</k-dropdown-content>
+					</k-dropdown>
 				</template>
 				<k-color-frame v-else :color="value" />
 			</template>
@@ -44,11 +44,10 @@
 			</template>
 
 			<template v-if="currentOption?.text" #after>
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-html="currentOption.text" />
+				<span v-safe-html="currentOption.text" />
 			</template>
 
-			<template v-if="mode === 'picker'" #icon>
+			<template v-if="mode === 'picker' && !disabled" #icon>
 				<k-button
 					:icon="icon"
 					class="k-input-icon-button"
@@ -65,7 +64,9 @@ import { props as Input } from "../Input.vue";
 import { props as ColornameInput } from "../Input/ColornameInput.vue";
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Field, Input, ColornameInput],
@@ -92,6 +93,7 @@ export default {
 			default: () => []
 		}
 	},
+	emits: ["input"],
 	computed: {
 		convertedOptions() {
 			return this.options.map((option) => ({

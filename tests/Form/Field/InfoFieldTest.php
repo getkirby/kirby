@@ -3,19 +3,39 @@
 namespace Kirby\Form\Field;
 
 use Kirby\Cms\Page;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(InfoField::class)]
 class InfoFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testIcon(): void
+	{
+		$field = $this->field('info', ['icon' => 'heart']);
+		$this->assertSame('heart', $field->icon());
+	}
+
+	public function testProps(): void
 	{
 		$field = $this->field('info');
+		$props = $field->props();
 
-		$this->assertSame('info', $field->type());
-		$this->assertSame('info', $field->name());
-		$this->assertNull($field->value());
-		$this->assertNull($field->label());
-		$this->assertNull($field->text());
-		$this->assertFalse($field->save());
+		ksort($props);
+
+		$expected = [
+			'help'     => null,
+			'hidden'   => false,
+			'icon'     => null,
+			'label'    => 'Info',
+			'name'     => 'info',
+			'saveable' => false,
+			'text'     => null,
+			'theme'    => null,
+			'type'     => 'info',
+			'when'     => null,
+			'width'    => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
 	public function testText(): void
@@ -25,7 +45,7 @@ class InfoFieldTest extends TestCase
 			'text' => 'test'
 		]);
 
-		$this->assertSame('<p>test</p>', $field->text());
+		$this->assertSame('<p>test</p>', (string)$field->text());
 
 		// translated text
 		$field = $this->field('info', [
@@ -35,7 +55,7 @@ class InfoFieldTest extends TestCase
 			]
 		]);
 
-		$this->assertSame('<p>en</p>', $field->text());
+		$this->assertSame('<p>en</p>', (string)$field->text());
 
 		// text template
 		$field = $this->field('info', [
@@ -48,6 +68,12 @@ class InfoFieldTest extends TestCase
 			])
 		]);
 
-		$this->assertSame('<p>Test</p>', $field->text());
+		$this->assertSame('<p>Test</p>', (string)$field->text());
+	}
+
+	public function testTheme(): void
+	{
+		$field = $this->field('info', ['theme' => 'positive']);
+		$this->assertSame('positive', $field->theme());
 	}
 }

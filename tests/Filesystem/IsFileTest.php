@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
+use Kirby\Cms\File as CmsFile;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
 use Kirby\TestCase;
@@ -15,7 +16,7 @@ class AFile
 	public string $foo = 'bar';
 }
 
-#[CoversClass(IsFile::class)]
+#[CoversClass(CmsFile::class)]
 class IsFileTest extends TestCase
 {
 	protected function _asset($file = 'blank.pdf')
@@ -24,14 +25,6 @@ class IsFileTest extends TestCase
 			'root' => '/dev/null/' . $file,
 			'url'  => 'https://foo.bar/' . $file
 		]);
-	}
-
-	public function testConstruct(): void
-	{
-		$asset = $this->_asset();
-
-		$this->assertSame('/dev/null/blank.pdf', $asset->root());
-		$this->assertSame('https://foo.bar/blank.pdf', $asset->url());
 	}
 
 	public function testAsset(): void
@@ -43,6 +36,12 @@ class IsFileTest extends TestCase
 		$this->assertSame($file, $asset->asset());
 	}
 
+	public function testAssetImage(): void
+	{
+		$asset = $this->_asset('cat.jpg');
+		$this->assertInstanceOf(Image::class, $asset->asset());
+	}
+
 	public function testAssetStringProp(): void
 	{
 		$asset = $this->_asset();
@@ -52,28 +51,10 @@ class IsFileTest extends TestCase
 		$this->assertSame('/dev/null/blank.pdf', $file->root());
 	}
 
-	public function testAssetImage(): void
-	{
-		$asset = $this->_asset('cat.jpg');
-		$this->assertInstanceOf(Image::class, $asset->asset());
-	}
-
-	public function testKirby(): void
-	{
-		$asset = $this->_asset();
-		$this->assertInstanceOf(App::class, $asset->kirby());
-	}
-
 	public function testCall(): void
 	{
 		$asset = $this->_asset();
 		$this->assertSame('pdf', $asset->extension());
-	}
-
-	public function testCallPublicProperty(): void
-	{
-		$asset = $this->_asset();
-		$this->assertSame('bar', $asset->foo());
 	}
 
 	public function testCallNotExisting(): void
@@ -82,5 +63,25 @@ class IsFileTest extends TestCase
 		$this->expectException(BadMethodCallException::class);
 		$this->expectExceptionMessage('The method: "nonexists" does not exist');
 		$asset->nonexists();
+	}
+
+	public function testCallPublicProperty(): void
+	{
+		$asset = $this->_asset();
+		$this->assertSame('bar', $asset->foo());
+	}
+
+	public function testConstruct(): void
+	{
+		$asset = $this->_asset();
+
+		$this->assertSame('/dev/null/blank.pdf', $asset->root());
+		$this->assertSame('https://foo.bar/blank.pdf', $asset->url());
+	}
+
+	public function testKirby(): void
+	{
+		$asset = $this->_asset();
+		$this->assertInstanceOf(App::class, $asset->kirby());
 	}
 }

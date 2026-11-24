@@ -1,27 +1,29 @@
 <template>
-	<k-dropdown-content
+	<k-dropdown
 		ref="dropdown"
 		align-x="start"
 		:disabled="disabled"
 		:navigate="false"
 		class="k-picklist-dropdown"
-		@click.native.stop
+		@click.stop
 	>
 		<k-picklist-input
 			v-bind="$props"
-			@click.native.stop
+			@click.stop
 			@create="add"
 			@input="input"
 			@escape="$refs.dropdown.close()"
 		/>
-	</k-dropdown-content>
+	</k-dropdown>
 </template>
 
 <script>
 import { props as PicklistInputProps } from "@/components/Forms/Input/PicklistInput.vue";
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [PicklistInputProps],
@@ -72,7 +74,7 @@ export default {
 	padding: var(--dropdown-padding);
 }
 
-.k-picklist-dropdown .k-picklist-input-header {
+.k-picklist-dropdown .k-picklist-input-header:not(:last-child) {
 	border-bottom: 1px solid var(--dropdown-color-hr);
 }
 .k-picklist-dropdown .k-picklist-input-search {

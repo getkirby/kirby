@@ -17,12 +17,10 @@ use Kirby\Toolkit\BlockCollectionAccess;
  * The Version class handles all actions for a single
  * version and is identified by a VersionId instance
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class Version
@@ -75,7 +73,15 @@ class Version
 	#[BlockCollectionAccess]
 	public function contentFile(Language|string $language = 'default'): string
 	{
-		return $this->model->storage()->contentFile(
+		$storage = $this->model->storage();
+
+		if ($storage instanceof PlainTextStorage === false) {
+			throw new LogicException(
+				message: 'Version::contentFile() is only available for plain text storage'
+			);
+		}
+
+		return $storage->contentFile(
 			$this->id,
 			Language::ensure($language)
 		);
@@ -94,7 +100,7 @@ class Version
 	 * Creates a new version for the given language
 	 * @todo Convert to a static method that creates the version initially with all relevant languages
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields
 	 */
 	#[BlockCollectionAccess]
 	public function create(
@@ -123,6 +129,13 @@ class Version
 
 	/**
 	 * Deletes a version for a specific language
+	 *
+	 * ```php
+	 * $page->version('changes')->delete();
+	 *
+	 * // by language
+	 * $page->version('changes')->delete('de');
+	 * ```
 	 */
 	#[BlockCollectionAccess]
 	public function delete(Language|string $language = 'default'): void
@@ -305,7 +318,7 @@ class Version
 	/**
 	 * Moves the version to a new language and/or version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function move(
@@ -338,6 +351,18 @@ class Version
 		// remove both versions from the cache
 		VersionCache::remove($fromVersion, $fromLanguage);
 		VersionCache::remove($toVersion, $toLanguage);
+	}
+
+	/**
+	 * Make sure that reading from storage will always
+	 * return a usable set of fields with clean field names
+	 */
+	protected function prepareFieldsAfterRead(array $fields, Language $language): array
+	{
+		$fields = $this->convertFieldNamesToLowerCase($fields);
+
+		// ignore all fields with null values
+		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**
@@ -383,18 +408,6 @@ class Version
 		unset($fields['uuid']);
 
 		return $fields;
-	}
-
-	/**
-	 * Make sure that reading from storage will always
-	 * return a usable set of fields with clean field names
-	 */
-	protected function prepareFieldsAfterRead(array $fields, Language $language): array
-	{
-		$fields = $this->convertFieldNamesToLowerCase($fields);
-
-		// ignore all fields with null values
-		return array_filter($fields, fn ($field) => $field !== null);
 	}
 
 	/**
@@ -457,6 +470,13 @@ class Version
 	 * This method can only be applied to the "changes" version.
 	 * It will copy all fields over to the "latest" version and delete
 	 * this version afterwards.
+	 *
+	 * ```php
+	 * $page->version('changes')->publish();
+	 *
+	 * // by language
+	 * $page->version('changes')->publish('de');
+	 * ```
 	 */
 	#[BlockCollectionAccess]
 	public function publish(Language|string $language = 'default'): void
@@ -521,10 +541,7 @@ class Version
 
 				$fields = $this->model->storage()->read($this->id, $language);
 				$fields = $this->prepareFieldsAfterRead($fields, $language);
-
-				if ($fields !== null) {
-					VersionCache::set($this, $language, $fields);
-				}
+				VersionCache::set($this, $language, $fields);
 			}
 
 			return $fields;
@@ -536,9 +553,9 @@ class Version
 	/**
 	 * Replaces the content of the current version with the given fields
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function replace(
@@ -597,7 +614,7 @@ class Version
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function touch(Language|string $language = 'default'): void
@@ -613,6 +630,7 @@ class Version
 	 * Removes the lock from the changes version without discarding changes.
 	 * With `$force`, the lock is removed even if the current user doesn't hold it.
 	 */
+	#[BlockCollectionAccess]
 	public function unlock(
 		Language|string $language = 'default',
 		bool $force = false
@@ -655,9 +673,9 @@ class Version
 	/**
 	 * Updates the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, mixed> $fields Content fields; null removes a field
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	#[BlockCollectionAccess]
 	public function update(
@@ -705,7 +723,8 @@ class Version
 	public function url(): string|null
 	{
 		if (
-			($this->model instanceof Page || $this->model instanceof Site) === false
+			$this->model instanceof Page === false &&
+			$this->model instanceof Site === false
 		) {
 			throw new LogicException('Only pages and the site have a content preview URL');
 		}

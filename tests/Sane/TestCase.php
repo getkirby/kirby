@@ -10,9 +10,9 @@ use Kirby\TestCase as BaseTestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	protected static string $type;
 
@@ -34,8 +34,8 @@ class TestCase extends BaseTestCase
 	/**
 	 * Returns the path to a test fixture file
 	 *
-	 * @param string $name Fixture name including file extension
-	 * @param bool $tmp If true, the fixture will be copied to a temporary location
+	 * @param $name Fixture name including file extension
+	 * @param $tmp If true, the fixture will be copied to a temporary location
 	 */
 	protected function fixture(string $name, bool $tmp = false): string
 	{
@@ -54,8 +54,8 @@ class TestCase extends BaseTestCase
 	 * Returns a list of all fixture files in the given fixture
 	 * directory; works recursively
 	 *
-	 * @param string $directory `'allowed'`, `'disallowed'` or `'invalid'`
-	 * @param string $extension File extension to filter by
+	 * @param $directory `'allowed'`, `'disallowed'` or `'invalid'`
+	 * @param $extension File extension to filter by
 	 */
 	protected static function fixtureList(
 		string $directory,

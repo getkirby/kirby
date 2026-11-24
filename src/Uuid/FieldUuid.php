@@ -4,6 +4,7 @@ namespace Kirby\Uuid;
 
 use Generator;
 use Kirby\Cms\Collection;
+use Kirby\Cms\ModelWithContent;
 use Kirby\Content\Field;
 use Kirby\Toolkit\A;
 
@@ -12,18 +13,16 @@ use Kirby\Toolkit\A;
  * such as blocks and structure entries
  *
  * Not yet supported
- * @todo Finish for uuid-block-structure-support
- * @codeCoverageIgnore
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @todo Finish for uuid-block-structure-support
+ * @codeCoverageIgnore
  */
 abstract class FieldUuid extends Uuid
 {
-	protected const FIELD = 'field';
+	protected const string FIELD = 'field';
 
 	/**
 	 * Converts a content field to a related
@@ -41,10 +40,12 @@ abstract class FieldUuid extends Uuid
 		// get mixed Uri from cache
 		if ($key = $this->key()) {
 			if ($value = Uuids::cache()->get($key)) {
-				// value is an array containing
-				// the UUID for the parent, the field name
-				// and the specific ID
-				$parent = Uuid::for($value['parent'])->model();
+				/**
+				 * $value is an array containing the UUID for the parent,
+				 * the field name and the specific ID
+				 * @var ModelWithContent|null $parent
+				 */
+				$parent = Uuid::from($value['parent'])->model();
 
 				if ($field = $parent?->content()->get($value['field'])) {
 					return static::fieldToCollection($field)->get($value['id']);
@@ -70,9 +71,9 @@ abstract class FieldUuid extends Uuid
 		return null;
 	}
 
-	/*
+	/**
 	 * Returns the ID for the specific entry/row of the field
-	 * (we can rely in this case that the Uri was filled  on initiation)
+	 * (we can rely in this case that the Uri was filled on initiation)
 	 * @todo needs to be ensured for structure field once refactoring
 	 */
 	public function id(): string
@@ -84,7 +85,7 @@ abstract class FieldUuid extends Uuid
 	 * Generator function that returns collections for all fields globally
 	 * (in any page's, file's, user's or site's content file)
 	 *
-	 * @return \Generator|\Kirby\Cms\Collection[]
+	 * @return Generator<string, Collection>
 	 */
 	public static function index(): Generator
 	{
@@ -94,7 +95,7 @@ abstract class FieldUuid extends Uuid
 
 				foreach ($fields as $name => $field) {
 					if (A::get($field, 'type') === static::FIELD) {
-						yield static::fieldToCollection($model->$name());
+						yield $model->id() . '.' . $name => static::fieldToCollection($model->$name());
 					}
 				}
 			}
@@ -108,13 +109,16 @@ abstract class FieldUuid extends Uuid
 
 	/**
 	 * Returns value to be stored in cache,
-	 * constisting of three parts:
+	 * consisting of three parts:
 	 * - parent UUID including scheme
 	 * - field name
 	 * - UUID id string for model
 	 */
 	public function value(): array
 	{
+		/**
+		 * @var ModelWithContent $model
+		 */
 		$model  = $this->model();
 		$parent = Uuid::for($model->parent());
 

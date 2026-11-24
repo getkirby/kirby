@@ -5,11 +5,9 @@ namespace Kirby\Content;
 use Kirby\Cache\MemoryCache;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\NotFoundException;
 
 /**
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -31,11 +29,11 @@ class MemoryStorage extends Storage
 
 	/**
 	 * Returns a unique id for a combination
-	 * of the version id, the language code and the model id
+	 * of the version id and the language code
 	 */
 	protected function cacheId(VersionId $versionId, Language $language): string
 	{
-		return $versionId->value() . '/' . $language->code() . '/' . $this->model->id() . '/' . spl_object_hash($this->model);
+		return $versionId->value() . '/' . $language->code();
 	}
 
 	/**
@@ -63,7 +61,13 @@ class MemoryStorage extends Storage
 			return null;
 		}
 
-		return $this->cache->modified($this->cacheId($versionId, $language));
+		$modified = $this->cache->modified($this->cacheId($versionId, $language));
+
+		if ($modified === false) {
+			return null; // @codeCoverageIgnore
+		}
+
+		return $modified;
 	}
 
 	/**
@@ -79,7 +83,7 @@ class MemoryStorage extends Storage
 	/**
 	 * Updates the modification timestamp of an existing version
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	public function touch(VersionId $versionId, Language $language): void
 	{
@@ -90,7 +94,7 @@ class MemoryStorage extends Storage
 	/**
 	 * Writes the content fields of an existing version
 	 *
-	 * @param array<string, string> $fields Content fields
+	 * @param array<string, string|null> $fields Content fields
 	 */
 	protected function write(VersionId $versionId, Language $language, array $fields): void
 	{

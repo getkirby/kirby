@@ -63,9 +63,14 @@ export const props = {
 };
 
 /**
- * The Times component displayes available times to choose from
- * @since 4.0.0
- * @example <k-timeoptions-input value="12:12" @input="onInput" />
+ * The timeoptions input component displays available times to choose from
+ *
+ * @example
+ * <k-timeoptions-input value="12:12" @input="onInput" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
@@ -76,6 +81,7 @@ export default {
 		},
 		value: String
 	},
+	emits: ["input"],
 	computed: {
 		day() {
 			return this.formatTimes([
@@ -96,6 +102,9 @@ export default {
 		},
 		night() {
 			return this.formatTimes([18, 19, 20, 21, 22, 23, "-", 0, 1, 2, 3, 4, 5]);
+		},
+		pattern() {
+			return this.$library.dayjs.pattern(this.display);
 		}
 	},
 	methods: {
@@ -108,10 +117,13 @@ export default {
 					return time;
 				}
 
-				const dt = this.$library.dayjs(time + ":00", "H:mm");
+				// the full hour as the ISO string a time is stored as
+				const select = String(time).padStart(2, "0") + ":00:00";
+				const dt = this.$library.dayjs.iso(select, "time");
+
 				return {
-					display: dt.format(this.display),
-					select: dt.toISO("time")
+					display: this.pattern.format(dt) ?? select,
+					select
 				};
 			});
 		},

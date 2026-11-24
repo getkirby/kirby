@@ -1,6 +1,6 @@
 import State from "./state";
 
-type UserState = {
+export type UserState = {
 	email: string | null;
 	id: string | null;
 	language: string | null;
@@ -21,7 +21,9 @@ export function defaults(): UserState {
 /**
  * Represents the currently authenticated Panel user
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function User() {
 	return State("user", defaults());

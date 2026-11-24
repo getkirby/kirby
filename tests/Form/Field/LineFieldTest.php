@@ -2,14 +2,27 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(LineField::class)]
 class LineFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
+	public function testProps(): void
 	{
 		$field = $this->field('line');
+		$props = $field->props();
 
-		$this->assertSame('line', $field->type());
-		$this->assertSame('line', $field->name());
-		$this->assertFalse($field->save());
+		ksort($props);
+
+		$expected = [
+			'hidden'   => false,
+			'name'     => 'line',
+			'saveable' => false,
+			'type'     => 'line',
+			'when'     => null,
+			'width'    => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 }

@@ -1,0 +1,97 @@
+<?php
+
+namespace Kirby\Panel\Ui\Button;
+
+use Kirby\Cms\Page;
+use Kirby\Panel\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(VersionsButton::class)]
+class VersionsButtonTest extends TestCase
+{
+	public function testButton(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+
+		$this->assertSame('k-view-button', $button->component);
+		$this->assertSame('k-versions-view-button', $button->class);
+		$this->assertSame('git-branch', $button->icon);
+	}
+
+	public function testIcon(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+		$this->assertSame('git-branch', $button->icon());
+
+		$button = new VersionsButton(model: $page, mode: 'compare');
+		$this->assertSame('layout-columns', $button->icon());
+
+		$button = new VersionsButton(model: $page, mode: 'form');
+		$this->assertSame('edit-line', $button->icon());
+	}
+
+	public function testIsCurrent(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+		$this->assertTrue($button->isCurrent('latest'));
+		$this->assertFalse($button->isCurrent('changes'));
+	}
+
+	public function testMode(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+
+		$button = new VersionsButton(model: $page, mode: 'latest');
+		$this->assertSame('latest', $button->mode());
+
+		$button = new VersionsButton(model: $page, mode: 'compare');
+		$this->assertSame('compare', $button->mode());
+
+		$button = new VersionsButton(model: $page, mode: 'form');
+		$this->assertSame('form', $button->mode());
+	}
+
+	public function testOptions(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+
+		$options = $button->options();
+		$this->assertSame('Live editor', $options[0]['label']);
+		$this->assertFalse($options[0]['current']);
+
+		$this->assertSame('-', $options[1]);
+
+		$this->assertSame('Compare versions', $options[2]['label']);
+		$this->assertFalse($options[2]['current']);
+
+		$this->assertSame('-', $options[3]);
+
+		$this->assertSame('Latest version', $options[4]['label']);
+		$this->assertTrue($options[4]['current']);
+
+		$this->assertSame('Changed version', $options[5]['label']);
+		$this->assertFalse($options[5]['current']);
+	}
+
+	public function testProps(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+
+		$props = $button->props();
+		$this->assertIsArray($props['options']);
+	}
+
+	public function testUrl(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$button = new VersionsButton(model: $page, mode: 'latest');
+
+		$this->assertSame('/pages/test/preview/latest', $button->url('latest'));
+		$this->assertSame('/pages/test/preview/changes', $button->url('changes'));
+	}
+}

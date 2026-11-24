@@ -14,9 +14,8 @@
 			@input="update({ text: $event })"
 		/>
 		<k-input
-			v-if="levels.length > 1"
+			v-if="levels.length > 1 && !disabled"
 			ref="level"
-			:disabled="disabled"
 			:empty="false"
 			:options="levels"
 			:value="content.level"
@@ -32,6 +31,9 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeHeading
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,

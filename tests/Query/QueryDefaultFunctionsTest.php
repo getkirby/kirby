@@ -12,7 +12,7 @@ use Kirby\Toolkit\I18n;
 
 class QueryDefaultFunctionsTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
+	public const string TMP = KIRBY_TMP_DIR . '/Query.QueryDefaultFunctions';
 
 	protected function setUp(): void
 	{
@@ -29,15 +29,6 @@ class QueryDefaultFunctionsTest extends TestCase
 	{
 		App::destroy();
 		Dir::remove(static::TMP);
-	}
-
-	public function testKirby(): void
-	{
-		$query = new Query('kirby');
-		$this->assertInstanceOf(App::class, $query->resolve());
-
-		$query = new Query('kirby.site');
-		$this->assertIsSite($query->resolve());
 	}
 
 	public function testCollection(): void
@@ -85,6 +76,15 @@ class QueryDefaultFunctionsTest extends TestCase
 
 		$query = new Query('file("b/test.jpg")');
 		$this->assertNull($query->resolve());
+	}
+
+	public function testKirby(): void
+	{
+		$query = new Query('kirby');
+		$this->assertInstanceOf(App::class, $query->resolve());
+
+		$query = new Query('kirby.site');
+		$this->assertIsSite($query->resolve());
 	}
 
 	public function testPage(): void

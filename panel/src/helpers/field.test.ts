@@ -1,83 +1,212 @@
+import type { ConcreteComponent } from "vue";
 import { describe, expect, it } from "vitest";
-import { form, options } from "./field";
+import { defaultValue, form, isVisible, options, subfields } from "./field";
+import type Panel from "@/panel/panel";
 
-// TODO: Remove once window.panel is globally typed
-// @ts-expect-error - window.panel is not typed yet
-// mock the app with the component setup used by form()
+// mock the Panel app with the component definitions used by defaultValue()
 // and the translation used by options()
 window.panel = {
 	app: {
-		$options: {
-			components: {
+		component(name: string) {
+			const components: Record<string, ConcreteComponent> = {
 				"k-custom-field": {
-					options: {
-						props: {
-							value: {
-								default: "test"
-							}
-						}
-					}
+					props: { value: { default: "test" } }
+				},
+				"k-fn-field": {
+					props: { value: { default: () => "from function" } }
+				},
+				"k-no-default-field": {
+					props: { value: {} }
 				}
-			}
+			};
+
+			return components[name];
 		}
 	},
 	t: (key: string) => key
-};
+} as unknown as Panel;
 
-describe("$helper.field.form()", () => {
-	it("should create form object with default values for each field", () => {
-		const fields = {
-			name: { default: "John" },
-			age: { default: 30 },
-			email: {},
-			custom: {
-				type: "custom"
-			}
-		};
-		const result = form(fields);
+describe("$helper.field", () => {
+	describe("defaultValue()", () => {
+		it("should return the field's explicit default", () => {
+			expect(defaultValue({ type: "text", default: "Hello" })).toBe("Hello");
+		});
 
-		expect(result).toEqual({
-			name: "John",
-			age: 30,
-			email: undefined,
-			custom: "test"
+		it("should return undefined when the component has no value prop", () => {
+			expect(defaultValue({ type: "unknown" })).toBeUndefined();
+		});
+
+		it("should resolve a function value-prop default", () => {
+			expect(defaultValue({ type: "fn" })).toBe("from function");
+		});
+
+		it("should return the static value-prop default", () => {
+			expect(defaultValue({ type: "custom" })).toBe("test");
+		});
+
+		it("should return null when the value prop has no default", () => {
+			expect(defaultValue({ type: "no-default" })).toBeNull();
 		});
 	});
-});
 
-describe("$helper.field.options()", () => {
-	const list = [
-		{ value: "a", text: "A" },
-		{ value: 1, text: "One" }
-	];
+	describe("form()", () => {
+		it("should create form object with default values for each field", () => {
+			const fields = {
+				name: { default: "John" },
+				age: { default: 30 },
+				email: {},
+				custom: {
+					type: "custom"
+				}
+			};
+			const result = form(fields);
 
-	it("should add an option for each value without option", () => {
-		expect(options(list, ["a", "b", "c"])).toStrictEqual([
-			...list,
-			{ text: "[unknown]", value: "b" },
-			{ text: "[unknown]", value: "c" }
-		]);
+			expect(result).toEqual({
+				name: "John",
+				age: 30,
+				email: undefined,
+				custom: "test"
+			});
+		});
 	});
 
-	it("should accept a single value", () => {
-		expect(options(list, "b")).toStrictEqual([
-			...list,
-			{ text: "[unknown]", value: "b" }
-		]);
+	describe("isVisible()", () => {
+		it("should hide fields of type hidden", () => {
+			expect(isVisible({ type: "hidden" }, {})).toBe(false);
+		});
+
+		it("should hide fields with hidden: true", () => {
+			expect(isVisible({ type: "text", hidden: true }, {})).toBe(false);
+		});
+
+		it("should be visible without a when condition", () => {
+			expect(isVisible({ type: "text" }, {})).toBe(true);
+		});
+
+		it("should be visible when the when condition matches", () => {
+			expect(
+				isVisible(
+					{ type: "text", when: { status: "draft" } },
+					{ status: "draft" }
+				)
+			).toBe(true);
+		});
+
+		it("should be hidden when the when condition does not match", () => {
+			expect(
+				isVisible(
+					{ type: "text", when: { status: "draft" } },
+					{ status: "published" }
+				)
+			).toBe(false);
+		});
+
+		it("should lowercase the when key when reading values", () => {
+			expect(
+				isVisible(
+					{ type: "text", when: { Status: "draft" } },
+					{ status: "draft" }
+				)
+			).toBe(true);
+		});
+
+		it("should treat an undefined value as matching an empty-string condition", () => {
+			expect(isVisible({ type: "text", when: { status: "" } }, {})).toBe(true);
+		});
+
+		it("should treat an undefined value as matching an empty-array condition", () => {
+			expect(isVisible({ type: "text", when: { tags: [] } }, {})).toBe(true);
+		});
+
+		it("should check all when conditions", () => {
+			const field = { type: "text", when: { a: 1, b: 2 } };
+			expect(isVisible(field, { a: 1, b: 2 })).toBe(true);
+			expect(isVisible(field, { a: 1, b: 3 })).toBe(false);
+		});
 	});
 
-	it("should match values loosely", () => {
-		expect(options(list, "1")).toStrictEqual(list);
+	describe("options()", () => {
+		const list = [
+			{ value: "a", text: "A" },
+			{ value: 1, text: "One" }
+		];
+
+		it("should add an option for each value without option", () => {
+			expect(options(list, ["a", "b", "c"])).toStrictEqual([
+				...list,
+				{ text: "[unknown]", value: "b" },
+				{ text: "[unknown]", value: "c" }
+			]);
+		});
+
+		it("should accept a single value", () => {
+			expect(options(list, "b")).toStrictEqual([
+				...list,
+				{ text: "[unknown]", value: "b" }
+			]);
+		});
+
+		it("should match values loosely", () => {
+			expect(options(list, "1")).toStrictEqual(list);
+		});
+
+		it("should ignore empty values", () => {
+			expect(options(list, "")).toStrictEqual(list);
+			expect(options(list, null)).toStrictEqual(list);
+			expect(options(list, undefined)).toStrictEqual(list);
+			expect(options(list, [])).toStrictEqual(list);
+		});
+
+		it("should ignore a missing value cast to false", () => {
+			expect(options(list, false)).toStrictEqual(list);
+		});
 	});
 
-	it("should ignore empty values", () => {
-		expect(options(list, "")).toStrictEqual(list);
-		expect(options(list, null)).toStrictEqual(list);
-		expect(options(list, undefined)).toStrictEqual(list);
-		expect(options(list, [])).toStrictEqual(list);
-	});
+	describe("subfields()", () => {
+		it("should pass all subfields through when the field has no endpoints", () => {
+			const fields = { title: { type: "text" }, age: { type: "number" } };
 
-	it("should ignore a missing value cast to false", () => {
-		expect(options(list, false)).toStrictEqual(list);
+			expect(subfields({ name: "structure" }, fields)).toEqual(fields);
+		});
+
+		it("should give each subfield its own endpoint", () => {
+			const result = subfields(
+				{
+					name: "structure",
+					endpoints: {
+						field: "pages/x/fields/structure",
+						model: "pages/x"
+					}
+				},
+				{ title: { type: "text" }, age: { type: "number" } }
+			);
+
+			expect(result.title.endpoints).toEqual({
+				field: "pages/x/fields/structure+title",
+				model: "pages/x"
+			});
+			expect(result.age.endpoints).toEqual({
+				field: "pages/x/fields/structure+age",
+				model: "pages/x"
+			});
+		});
+
+		it("should return an empty object for empty fields", () => {
+			expect(subfields({ name: "x" }, {})).toEqual({});
+		});
+
+		it("should leave the given fields untouched", () => {
+			const fields = { title: { type: "text" } };
+			const result = subfields(
+				{
+					name: "structure",
+					endpoints: { field: "pages/x/fields/structure", model: "pages/x" }
+				},
+				fields
+			);
+
+			expect(result.title).not.toBe(fields.title);
+			expect(fields.title).toStrictEqual({ type: "text" });
+		});
 	});
 });

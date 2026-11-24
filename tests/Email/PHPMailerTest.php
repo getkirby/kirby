@@ -8,21 +8,28 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PHPMailer::class)]
 class PHPMailerTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
 
 	protected function _email($props = [], $mailer = PHPMailer::class)
 	{
 		return parent::_email($props, $mailer);
 	}
 
-	public function testSend(): void
+	public function testBeforeSendInvalid(): void
 	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
+
 		$email = $this->_email([
-			'to' => 'test@test.com'
-		]);
+			'to' => 'someone@gmail.com',
+			'subject' => 'Thank you for your contact request',
+			'beforeSend' => function (\PHPMailer\PHPMailer\PHPMailer $mailer) {
+				return 'yay';
+			}
+		], PHPMailer::class);
+
 		$this->assertFalse($email->isSent());
 		$email->send(true);
-		$this->assertTrue($email->isSent());
 	}
 
 	public function testProperties(): void
@@ -95,21 +102,14 @@ class PHPMailerTest extends TestCase
 		$this->assertTrue($beforeSend);
 	}
 
-	public function testBeforeSendInvalid(): void
+	public function testSend(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
-
 		$email = $this->_email([
-			'to' => 'someone@gmail.com',
-			'subject' => 'Thank you for your contact request',
-			'beforeSend' => function (\PHPMailer\PHPMailer\PHPMailer $mailer) {
-				return 'yay';
-			}
-		], PHPMailer::class);
-
+			'to' => 'test@test.com'
+		]);
 		$this->assertFalse($email->isSent());
 		$email->send(true);
+		$this->assertTrue($email->isSent());
 	}
 
 	public function testSMTPTransportDefaults(): void

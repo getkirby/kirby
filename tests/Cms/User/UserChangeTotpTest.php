@@ -5,10 +5,13 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * @deprecated 6.0.0
+ */
 #[CoversClass(User::class)]
 class UserChangeTotpTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserChangeTotp';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserChangeTotp';
 
 	public function testChangeTotp(): void
 	{

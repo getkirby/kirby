@@ -15,7 +15,7 @@ class PageTestModel extends Page
 #[CoversClass(Page::class)]
 class PageModelTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageModel';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageModel';
 
 	protected function setUp(): void
 	{
@@ -33,21 +33,6 @@ class PageModelTest extends ModelTestCase
 	{
 		Page::extendModels([
 			'test' => PageTestModel::class
-		]);
-
-		$page = Page::factory([
-			'slug'  => 'test',
-			'model' => 'test'
-		]);
-
-		$this->assertInstanceOf(PageTestModel::class, $page);
-		$this->assertSame('test', $page->test());
-	}
-
-	public function testModelWithUppercaseKey(): void
-	{
-		Page::extendModels([
-			'Test' => PageTestModel::class
 		]);
 
 		$page = Page::factory([
@@ -83,5 +68,20 @@ class PageModelTest extends ModelTestCase
 
 		$this->assertIsPage($page);
 		$this->assertFalse(method_exists($page, 'test'));
+	}
+
+	public function testModelWithUppercaseKey(): void
+	{
+		Page::extendModels([
+			'Test' => PageTestModel::class
+		]);
+
+		$page = Page::factory([
+			'slug'  => 'test',
+			'model' => 'test'
+		]);
+
+		$this->assertInstanceOf(PageTestModel::class, $page);
+		$this->assertSame('test', $page->test());
 	}
 }

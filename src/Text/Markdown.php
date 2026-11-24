@@ -12,9 +12,6 @@ use ParsedownExtra;
  *
  * It uses Parsedown and ParsedownExtra by default.
  *
- * @package   Kirby Text
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -23,21 +20,10 @@ class Markdown
 	/**
 	 * Array with all configured options
 	 * for the parser
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $options = [];
-
-	/**
-	 * Returns default values for all
-	 * available parser options
-	 */
-	public function defaults(): array
-	{
-		return [
-			'breaks' => true,
-			'extra'  => false,
-			'safe'   => false
-		];
-	}
 
 	/**
 	 * Creates a new Markdown parser
@@ -46,6 +32,21 @@ class Markdown
 	public function __construct(array $options = [])
 	{
 		$this->options = [...$this->defaults(), ...$options];
+	}
+
+	/**
+	 * Returns default values for all
+	 * available parser options
+	 *
+	 * @return array{breaks: bool, extra: bool, safe: bool}
+	 */
+	public function defaults(): array
+	{
+		return [
+			'breaks' => true,
+			'extra'  => false,
+			'safe'   => false
+		];
 	}
 
 	/**

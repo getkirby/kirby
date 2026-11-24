@@ -19,12 +19,12 @@ if (
 		defined('KIRBY_PHP_VERSION_CHECK') !== true ||
 		KIRBY_PHP_VERSION_CHECK !== false
 	) && (
-		version_compare(PHP_VERSION, '8.2.0', '>=') === false ||
-		version_compare(PHP_VERSION, '8.6.0', '<')  === false
+		version_compare(PHP_VERSION, '8.3.0', '>=') === false ||
+		version_compare(PHP_VERSION, '8.7.0', '<')  === false
 	)
 ) {
 	http_response_code(503);
-	die(include __DIR__ . '/views/php.php');
+	exit(include __DIR__ . '/views/php.php');
 }
 
 if (is_file($autoloader = dirname(__DIR__) . '/vendor/autoload.php')) {

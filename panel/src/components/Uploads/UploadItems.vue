@@ -13,7 +13,10 @@
 <script>
 /**
  * Represents multiple files to upload in an upload dialog
- * @since 4.3.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.3.0
  */
 export default {
 	props: {

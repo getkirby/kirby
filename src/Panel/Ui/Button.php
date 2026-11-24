@@ -2,12 +2,7 @@
 
 namespace Kirby\Panel\Ui;
 
-use Kirby\Toolkit\I18n;
-
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
@@ -19,13 +14,13 @@ class Button extends Component
 		public array|null $badge = null,
 		public string|null $class = null,
 		public string|bool|null $current = null,
-		public string|null $dialog = null,
+		public array|string|null $dialog = null,
 		public bool $disabled = false,
-		public string|null $drawer = null,
+		public array|string|null $drawer = null,
 		public bool|null $dropdown = null,
 		public string|null $icon = null,
 		public string|null $link = null,
-		public bool|string $responsive = true,
+		public bool|string $responsive = false,
 		public string|null $size = null,
 		public string|null $style = null,
 		public string|null $target = null,
@@ -54,11 +49,21 @@ class Button extends Component
 			'responsive' => $this->responsive,
 			'size'       => $this->size,
 			'target'     => $this->target,
-			'text'       => I18n::translate($this->text, $this->text),
+			'text'       => $this->text(),
 			'theme'      => $this->theme,
-			'title'      => I18n::translate($this->title, $this->title),
+			'title'      => $this->title(),
 			'type'       => $this->type,
 			'variant'    => $this->variant,
 		];
+	}
+
+	public function text(): string|null
+	{
+		return $this->i18n($this->text);
+	}
+
+	public function title(): string|null
+	{
+		return $this->i18n($this->title);
 	}
 }

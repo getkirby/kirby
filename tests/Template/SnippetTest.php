@@ -12,7 +12,7 @@ use ReflectionProperty;
 #[CoversClass(Snippet::class)]
 class SnippetTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testCloseWhenNotOpen(): void
 	{
@@ -135,6 +135,21 @@ class SnippetTest extends TestCase
 		$this->assertSame($a, $b->parent());
 	}
 
+	public function testOpenCloseWithDefaultSlotContent(): void
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet('test.php');
+		$snippet->open();
+		echo 'Default content';
+		$snippet->close();
+
+		$slots = $snippet->slots();
+
+		$this->assertSame('Default content', $slots->default()->render());
+	}
+
 	public function testOpenCloseWithSlotsAndSwallowedDefaultContent(): void
 	{
 		// all output must be captured
@@ -156,19 +171,89 @@ class SnippetTest extends TestCase
 		$this->assertSame('Default content', $slots->default()->render());
 	}
 
-	public function testOpenCloseWithDefaultSlotContent(): void
+	public function testRenderOpenLayoutSnippet(): void
 	{
 		// all output must be captured
 		$this->expectOutputString('');
 
-		$snippet = new Snippet('test.php');
+		new App([
+			'roots' => [
+				'snippets'  => static::FIXTURES
+			]
+		]);
+
+		$snippet = new Snippet(static::FIXTURES . '/with-layout.php');
+		$this->assertSame(
+			"<h1>Layout</h1>\nMy content\n\nSimple output\n" .
+			"<footer>with other stuff</footer>\n",
+			$snippet->render()
+		);
+	}
+
+	public function testRenderWithData(): void
+	{
+		$snippet = new Snippet(
+			file: static::FIXTURES . '/data.php',
+			data: ['message' => 'hello']
+		);
+
+		$this->assertSame('hello', $snippet->render());
+	}
+
+	public function testRenderWithLazyData(): void
+	{
+		$snippet = new Snippet(
+			file: static::FIXTURES . '/data.php',
+		);
+
+		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
+	}
+
+	public function testRenderWithLazySlots(): void
+	{
+		$snippet = new Snippet(static::FIXTURES . '/slots.php');
+
+		$html = $snippet->render(slots: [
+			'header'  => 'Header content',
+			'default' => 'Body content',
+			'footer'  => 'Footer content'
+		]);
+
+		$expected  = 'Header content' . PHP_EOL;
+		$expected .= 'Body content' . PHP_EOL;
+		$expected .= 'Footer content';
+
+		$this->assertSame($expected, $html);
+	}
+
+	public function testRenderWithoutClosing(): void
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet(static::FIXTURES . '/layout.php');
 		$snippet->open();
-		echo 'Default content';
-		$snippet->close();
+		echo 'content';
 
-		$slots = $snippet->slots();
+		$this->assertSame("<h1>Layout</h1>\ncontent<footer>with other stuff</footer>\n", $snippet->render());
+	}
 
-		$this->assertSame('Default content', $slots->default()->render());
+	public function testRenderWithoutClosingAndMultipleSlots(): void
+	{
+		// all output must be captured
+		$this->expectOutputString('');
+
+		$snippet = new Snippet(static::FIXTURES . '/layout-with-multiple-slots.php');
+
+		$snippet->slot('header');
+		echo 'Header content';
+		$snippet->endslot();
+
+		$snippet->slot();
+		echo 'Body content';
+		$snippet->endslot();
+
+		$this->assertSame("<h1>Layout</h1>\n<header>Header content</header>\n<main>Body content</main>\n", $snippet->render());
 	}
 
 	public static function renderWithSlotsProvider(): array
@@ -210,72 +295,6 @@ class SnippetTest extends TestCase
 		$snippet->close();
 
 		$this->assertSame($expected, $snippet->render());
-	}
-
-	public function testRenderWithoutClosing(): void
-	{
-		// all output must be captured
-		$this->expectOutputString('');
-
-		$snippet = new Snippet(static::FIXTURES . '/layout.php');
-		$snippet->open();
-		echo 'content';
-
-		$this->assertSame("<h1>Layout</h1>\ncontent<footer>with other stuff</footer>\n", $snippet->render());
-	}
-
-	public function testRenderWithoutClosingAndMultipleSlots(): void
-	{
-		// all output must be captured
-		$this->expectOutputString('');
-
-		$snippet = new Snippet(static::FIXTURES . '/layout-with-multiple-slots.php');
-
-		$snippet->slot('header');
-		echo 'Header content';
-		$snippet->endslot();
-
-		$snippet->slot();
-		echo 'Body content';
-		$snippet->endslot();
-
-		$this->assertSame("<h1>Layout</h1>\n<header>Header content</header>\n<main>Body content</main>\n", $snippet->render());
-	}
-
-	public function testRenderWithLazySlots(): void
-	{
-		$snippet = new Snippet(static::FIXTURES . '/slots.php');
-
-		$html = $snippet->render(slots: [
-			'header'  => 'Header content',
-			'default' => 'Body content',
-			'footer'  => 'Footer content'
-		]);
-
-		$expected  = 'Header content' . PHP_EOL;
-		$expected .= 'Body content' . PHP_EOL;
-		$expected .= 'Footer content';
-
-		$this->assertSame($expected, $html);
-	}
-
-	public function testRenderWithData(): void
-	{
-		$snippet = new Snippet(
-			file: static::FIXTURES . '/data.php',
-			data: ['message' => 'hello']
-		);
-
-		$this->assertSame('hello', $snippet->render());
-	}
-
-	public function testRenderWithLazyData(): void
-	{
-		$snippet = new Snippet(
-			file: static::FIXTURES . '/data.php',
-		);
-
-		$this->assertSame('hello', $snippet->render(data: ['message' => 'hello']));
 	}
 
 	public function testRoot(): void
@@ -342,6 +361,25 @@ class SnippetTest extends TestCase
 		$this->assertSame('Scope snippet success', $snippet->render());
 	}
 
+	public function testScopeWithInvalidData(): void
+	{
+		new App([
+			'roots' => [
+				'snippets' => static::FIXTURES
+			]
+		]);
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Passing the $slot or $slots variables to snippets is not supported.');
+
+		Snippet::factory(
+			name: 'scope',
+			data: [
+				'slot' => 'Hello'
+			]
+		);
+	}
+
 	public function testScopeWithoutSlots(): void
 	{
 		new App([
@@ -391,25 +429,6 @@ class SnippetTest extends TestCase
 			]
 		);
 		$this->assertSame('Scope snippet success', $result);
-	}
-
-	public function testScopeWithInvalidData(): void
-	{
-		new App([
-			'roots' => [
-				'snippets' => static::FIXTURES
-			]
-		]);
-
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Passing the $slot or $slots variables to snippets is not supported.');
-
-		Snippet::factory(
-			name: 'scope',
-			data: [
-				'slot' => 'Hello'
-			]
-		);
 	}
 
 	public function testSlots(): void

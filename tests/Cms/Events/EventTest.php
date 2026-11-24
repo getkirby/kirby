@@ -9,6 +9,49 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Event::class)]
 class EventTest extends TestCase
 {
+	public function testArgument(): void
+	{
+		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
+
+		$this->assertSame('Arg1', $event->argument('arg1'));
+		$this->assertSame('Arg1', $event->arg1());
+		$this->assertSame(123, $event->argument('arg2'));
+		$this->assertSame(123, $event->arg2());
+
+		$this->assertNull($event->argument('arg3'));
+		$this->assertNull($event->arg3());
+	}
+
+	public function testCall(): void
+	{
+		$self     = $this;
+		$eventObj = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
+
+		// without bound object
+		$result = $eventObj->call(null, function ($arg2, $event, $arg3, $arg1) use ($eventObj, $self) {
+			$self->assertSame('Arg1', $arg1);
+			$self->assertSame(123, $arg2);
+			$self->assertNull($arg3);
+			$self->assertSame($eventObj, $event);
+			$self->assertSame($self, $this);
+
+			return 'some return value';
+		});
+		$this->assertSame('some return value', $result);
+
+		// with bound object
+		$result = $eventObj->call($eventObj, function ($arg2, $event, $arg3, $arg1) use ($eventObj, $self) {
+			$self->assertSame('Arg1', $arg1);
+			$self->assertSame(123, $arg2);
+			$self->assertNull($arg3);
+			$self->assertSame($eventObj, $event);
+			$self->assertSame($eventObj, $this);
+
+			return 'another value';
+		});
+		$this->assertSame('another value', $result);
+	}
+
 	public function testConstruct(): void
 	{
 		$args = ['arg1' => 'Arg1', 'arg2' => 123];
@@ -62,47 +105,17 @@ class EventTest extends TestCase
 		$this->assertSame($args, $event->arguments());
 	}
 
-	public function testArgument(): void
+	public function testExport(): void
 	{
-		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
+		$name       = 'page.create:after';
+		$arguments  = ['arg1' => 'Arg1', 'arg2' => 123];
+		$event      = new Event($name, $arguments);
 
-		$this->assertSame('Arg1', $event->argument('arg1'));
-		$this->assertSame('Arg1', $event->arg1());
-		$this->assertSame(123, $event->argument('arg2'));
-		$this->assertSame(123, $event->arg2());
+		$this->assertSame($name, $event->toString());
+		$this->assertSame($name, (string)$event);
 
-		$this->assertNull($event->argument('arg3'));
-		$this->assertNull($event->arg3());
-	}
-
-	public function testCall(): void
-	{
-		$self     = $this;
-		$eventObj = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
-
-		// without bound object
-		$result = $eventObj->call(null, function ($arg2, $event, $arg3, $arg1) use ($eventObj, $self) {
-			$self->assertSame('Arg1', $arg1);
-			$self->assertSame(123, $arg2);
-			$self->assertNull($arg3);
-			$self->assertSame($eventObj, $event);
-			$self->assertSame($self, $this);
-
-			return 'some return value';
-		});
-		$this->assertSame('some return value', $result);
-
-		// with bound object
-		$result = $eventObj->call($eventObj, function ($arg2, $event, $arg3, $arg1) use ($eventObj, $self) {
-			$self->assertSame('Arg1', $arg1);
-			$self->assertSame(123, $arg2);
-			$self->assertNull($arg3);
-			$self->assertSame($eventObj, $event);
-			$self->assertSame($eventObj, $this);
-
-			return 'another value';
-		});
-		$this->assertSame('another value', $result);
+		$this->assertSame(compact('name', 'arguments'), $event->toArray());
+		$this->assertSame(compact('name', 'arguments'), $event->__debugInfo());
 	}
 
 	public function testNameWildcards(): void
@@ -174,19 +187,6 @@ class EventTest extends TestCase
 		$this->assertSame([], $event->nameWildcards());
 	}
 
-	public function testExport(): void
-	{
-		$name       = 'page.create:after';
-		$arguments  = ['arg1' => 'Arg1', 'arg2' => 123];
-		$event      = new Event($name, $arguments);
-
-		$this->assertSame($name, $event->toString());
-		$this->assertSame($name, (string)$event);
-
-		$this->assertSame(compact('name', 'arguments'), $event->toArray());
-		$this->assertSame(compact('name', 'arguments'), $event->__debugInfo());
-	}
-
 	public function testUpdateArgument(): void
 	{
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
@@ -208,15 +208,6 @@ class EventTest extends TestCase
 		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
 
 		$event->updateArgument('arg3', 'New Arg3');
-	}
-
-	public function testUpdateArgumentWithNullValue(): void
-	{
-		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
-
-		$event->updateArgument('arg1', null);
-
-		$this->assertSame('Arg1', $event->argument('arg1'));
 	}
 
 	public function testUpdateArgumentWithNextModel(): void
@@ -263,5 +254,14 @@ class EventTest extends TestCase
 		$event->updateArgument('page', null);
 
 		$this->assertSame($mutablePage, $event->argument('page'));
+	}
+
+	public function testUpdateArgumentWithNullValue(): void
+	{
+		$event = new Event('page.create:after', ['arg1' => 'Arg1', 'arg2' => 123]);
+
+		$event->updateArgument('arg1', null);
+
+		$this->assertSame('Arg1', $event->argument('arg1'));
 	}
 }

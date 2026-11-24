@@ -13,7 +13,6 @@
 					:aria-label="$t('month')"
 					:autofocus="autofocus"
 					:options="months"
-					:empty="false"
 					:required="true"
 					:value="month"
 					@input="month = Number($event)"
@@ -21,7 +20,6 @@
 				<k-select-input
 					:aria-label="$t('year')"
 					:options="years"
-					:empty="false"
 					:required="true"
 					:value="year"
 					@input="year = Number($event)"
@@ -34,7 +32,7 @@
 			<thead>
 				<tr>
 					<th v-for="day in weekdays" :key="'weekday_' + day">
-						{{ $t("days." + day) }}
+						{{ day }}
 					</th>
 				</tr>
 			</thead>
@@ -94,16 +92,21 @@
 import { props as InputProps } from "@/mixins/input.js";
 import { IsoDateProps } from "./DateInput.vue";
 
-const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-
 /**
- * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
- * @since 4.0.0
+ * The Calendar component is mainly used for our `DateInput` component,
+ * but it could be used as stand-alone calendar as well with a little CSS love.
  *
- * @example <k-calendar-input :value="value" @input="value = $event" />
+ * @example
+ * <k-calendar-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [InputProps, IsoDateProps],
+	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		const today = this.$library.dayjs();
 
@@ -130,16 +133,21 @@ export default {
 		 * @returns {number}
 		 */
 		firstWeekday() {
-			const day = days[this.toDate().day()];
-			return this.weekdays.indexOf(day);
+			const first = this.$panel.translation.weekday;
+			return (this.toDate().day() - first + 7) % 7;
 		},
 		/**
-		 * Ordered weekday names abbreviations
+		 * Localized weekday abbreviations in the order they are
+		 * displayed in, starting with the first weekday of the
+		 * translation.
 		 * @returns {array}
 		 */
 		weekdays() {
 			const first = this.$panel.translation.weekday;
-			return [...days.slice(first), ...days.slice(0, first)];
+
+			return [...Array(7).keys()].map((day) =>
+				this.today.day((first + day) % 7).format("ddd")
+			);
 		},
 		/**
 		 * Weeks in the currently viewed month
@@ -151,24 +159,13 @@ export default {
 			return Math.ceil((this.numberOfDays + this.firstWeekday) / 7);
 		},
 		/**
-		 * Translated month names
+		 * Localized month names
 		 * @returns {array}
 		 */
 		monthnames() {
-			return [
-				"january",
-				"february",
-				"march",
-				"april",
-				"may",
-				"june",
-				"july",
-				"august",
-				"september",
-				"october",
-				"november",
-				"december"
-			].map((day) => this.$t("months." + day));
+			return [...Array(12).keys()].map((month) =>
+				this.toDate(1, month).format("MMMM")
+			);
 		},
 		/**
 		 * Select options for all months
@@ -200,21 +197,17 @@ export default {
 	watch: {
 		max: {
 			handler(newValue, oldValue) {
-				if (newValue === oldValue) {
-					return;
+				if (newValue !== oldValue) {
+					this.maxdate = this.$library.dayjs.iso(newValue);
 				}
-
-				this.maxdate = this.$library.dayjs.interpret(newValue, "date");
 			},
 			immediate: true
 		},
 		min: {
 			handler(newValue, oldValue) {
-				if (newValue === oldValue) {
-					return;
+				if (newValue !== oldValue) {
+					this.mindate = this.$library.dayjs.iso(newValue);
 				}
-
-				this.mindate = this.$library.dayjs.interpret(newValue, "date");
 			},
 			immediate: true
 		},
@@ -225,7 +218,7 @@ export default {
 				}
 
 				// set the selected date
-				this.selected = this.$library.dayjs.interpret(newValue, "date");
+				this.selected = this.$library.dayjs.iso(newValue, "date");
 				this.show(this.selected);
 			},
 			immediate: true
@@ -312,8 +305,8 @@ export default {
 		/**
 		 * Creates a dayjs object for a specified day and
 		 * optional month
-		 * @param {number} day
-		 * @param {number} month
+		 * @param {number} [day]
+		 * @param {number} [month]
 		 */
 		toDate(day = 1, month) {
 			return this.$library.dayjs(

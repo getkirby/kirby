@@ -1,0 +1,17 @@
+<template>
+	<component
+		:is="$panel.dialog.component"
+		:key="$panel.dialog.timestamp"
+		:visible="true"
+		v-bind="$panel.dialog.props"
+		v-on="$panel.dialog.listeners()"
+	/>
+</template>
+
+<script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+export default {};
+</script>

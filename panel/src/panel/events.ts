@@ -1,14 +1,36 @@
 import clipboard from "@/helpers/clipboard";
 import { lcfirst } from "@/helpers/string";
 import mitt from "mitt";
+import type Panel from "./panel";
+
+/**
+ * Friendly replacement names for special keys,
+ * used to build event names like `keydown.esc`
+ */
+const aliases: Record<string, string> = {
+	escape: "esc",
+	arrowUp: "up",
+	arrowDown: "down",
+	arrowLeft: "left",
+	arrowRight: "right"
+};
+
+/**
+ * Modifier keys that must not be added to a
+ * keychain as a standalone key part
+ */
+const modifiers = ["alt", "control", "shift", "meta"];
 
 /**
  * Global event delegation and event bus
  * which can be used by any component in the app
  * to start and stop listening to events
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
-export default function (panel: TODO) {
+export default function (panel: Panel) {
 	const emitter = mitt();
 
 	/**
@@ -63,7 +85,6 @@ export default function (panel: TODO) {
 		window: {
 			beforeunload: false,
 			dragenter: false,
-			dragexit: false,
 			dragleave: false,
 			dragover: false,
 			drop: false,
@@ -74,6 +95,13 @@ export default function (panel: TODO) {
 			popstate: false
 		}
 	};
+
+	/**
+	 * Stores the bound listeners registered by `subscribe()`
+	 * so the exact same references can be handed to
+	 * `removeEventListener` in `unsubscribe()`
+	 */
+	const listeners = new Map<string, EventListener>();
 
 	/**
 	 * Each globally delegated event
@@ -121,16 +149,6 @@ export default function (panel: TODO) {
 			this.entered = e.target;
 			this.prevent(e);
 			this.emit("dragenter", e);
-		},
-
-		/**
-		 * Global dragexit event, which
-		 * prevents the default
-		 */
-		dragexit(e: DragEvent): void {
-			this.prevent(e);
-			this.entered = null;
-			this.emit("dragexit", e);
 		},
 
 		/**
@@ -217,20 +235,12 @@ export default function (panel: TODO) {
 
 			let key = event.key ? lcfirst(event.key) : null;
 
-			// key replacements
-			const keys: Record<string, string> = {
-				escape: "esc",
-				arrowUp: "up",
-				arrowDown: "down",
-				arrowLeft: "left",
-				arrowRight: "right"
-			};
-
-			if (key && keys[key]) {
-				key = keys[key];
+			// apply friendly replacements for special keys
+			if (key && aliases[key]) {
+				key = aliases[key];
 			}
 
-			if (key && ["alt", "control", "shift", "meta"].includes(key) === false) {
+			if (key && modifiers.includes(key) === false) {
 				parts.push(key);
 			}
 
@@ -260,9 +270,9 @@ export default function (panel: TODO) {
 		/**
 		 * Proxy for mitt's off method
 		 */
-		off: emitter.off as (
+		off: emitter.off as <E = unknown>(
 			type: string,
-			handler?: (event?: unknown) => void
+			handler?: (event?: E) => void
 		) => void,
 
 		/**
@@ -275,9 +285,9 @@ export default function (panel: TODO) {
 		/**
 		 * Proxy for mitt's on method
 		 */
-		on: emitter.on as (
+		on: emitter.on as <E = unknown>(
 			type: string,
-			handler?: (event?: unknown) => void
+			handler?: (event?: E) => void
 		) => void,
 
 		/**
@@ -320,37 +330,33 @@ export default function (panel: TODO) {
 			const self = this as unknown as Record<string, EventListener>;
 
 			for (const event in events.document) {
-				document.addEventListener(
-					event,
-					self[event].bind(this),
-					events.document[event]
-				);
+				const listener = self[event].bind(this);
+				listeners.set(event, listener);
+				document.addEventListener(event, listener, events.document[event]);
 			}
 
 			for (const event in events.window) {
-				window.addEventListener(
-					event,
-					self[event].bind(this),
-					events.window[event]
-				);
+				const listener = self[event].bind(this);
+				listeners.set(event, listener);
+				window.addEventListener(event, listener, events.window[event]);
 			}
 		},
 
 		/**
 		 * Removes all global event listeners
 		 * from the events config. This is
-		 * used in the destroyed hook of the app
+		 * used in the unmounted hook of the app
 		 */
 		unsubscribe(): void {
-			const self = this as unknown as Record<string, EventListener>;
-
-			for (const event in events.document) {
-				document.removeEventListener(event, self[event]);
+			for (const [event, listener] of listeners) {
+				// a listener is only removed with the capture flag
+				// it was added with
+				const capture = events.document[event] ?? events.window[event];
+				document.removeEventListener(event, listener, capture);
+				window.removeEventListener(event, listener, capture);
 			}
 
-			for (const event in events.window) {
-				window.removeEventListener(event, self[event]);
-			}
+			listeners.clear();
 		}
 	};
 }

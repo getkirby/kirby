@@ -3,7 +3,6 @@
 namespace Kirby\Text;
 
 use Exception;
-use Kirby\Cms\Helpers;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -13,29 +12,23 @@ use Kirby\Toolkit\Str;
  * `KirbyTag::$types`. The default tags for the
  * Cms are located in `kirby/config/tags.php`
  *
- * @package   Kirby Text
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class KirbyTags
 {
+	/**
+	 * Replaces all KirbyTags in the given text with their HTML
+	 *
+	 * @param $data Data for the tags, e.g. the `kirby` instance and `parent` model
+	 * @param $debug If `true`, exceptions of a tag are thrown instead of being logged
+	 */
 	public static function parse(
 		string|null $text = null,
 		array $data = [],
-		array $options = [],
 		bool $debug = false
 	): string {
-		// make sure $text is a string
 		$text ??= '';
-
-		// @deprecated 5.5.0 the `$options` argument only ever carried the
-		// `debug` flag; derive it from there for backward compatibility
-		if ($options !== []) {
-			Helpers::deprecated('The `$options` argument of `KirbyTags::parse()` has been deprecated. Use the `$debug` argument instead.', 'kirbytags-parse-options');
-			$debug = $options['debug'] ?? $debug;
-		}
 
 		$regex = '!
             (?=[^\]])               # positive lookahead that matches a group after the main expression without including ] in the result
@@ -45,31 +38,27 @@ class KirbyTags
             \))                     # end of capturing group 1
         !isx';
 
-		return preg_replace_callback($regex, function ($match) use ($data, $debug) {
+		return preg_replace_callback($regex, function (array $match) use ($data, $debug): string {
 			try {
 				return KirbyTag::parse($match[0], $data)->render();
-			} catch (InvalidArgumentException $e) {
-				if (Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
-					return $match[0];
-				}
-
-				// stay silent in production and ignore non-existing tags
-				if ($debug !== true) {
-					error_log($e);
-
-					return $match[0];
-				}
-
-				throw $e;
 			} catch (Exception $e) {
+				// undefined tags stay as they are, even in debug mode
+				if (
+					$e instanceof InvalidArgumentException === true &&
+					Str::startsWith($e->getMessage(), 'Undefined tag type:') === true
+				) {
+					return $match[0];
+				}
+
 				if ($debug === true) {
 					throw $e;
 				}
 
+				// stay silent in production
 				error_log($e);
 
 				return $match[0];
 			}
-		}, $text);
+		}, $text) ?? $text;
 	}
 }

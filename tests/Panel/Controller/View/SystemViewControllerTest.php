@@ -1,0 +1,486 @@
+<?php
+
+namespace Kirby\Panel\Controller\View;
+
+use Kirby\Cms\App;
+use Kirby\Cms\System\UpdateStatus;
+use Kirby\Http\Cookie;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\Button\ViewButtons;
+use Kirby\Panel\Ui\Stats;
+use Kirby\Panel\Ui\View;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+/**
+ * Helper mock class to not repeat the same code in the tests
+ */
+class SystemMock
+{
+	public static function contentSaltWarning(): array
+	{
+		return [
+			'id'    => 'content-salt',
+			'link'  => 'https://getkirby.com/security/content-salt',
+			'text'  => 'The content salt has not been changed from its default value',
+			'theme' => 'notice'
+		];
+	}
+
+	public static function cookieKeyWarning(): array
+	{
+		return [
+			'id'    => 'cookie-key',
+			'link'  => 'https://getkirby.com/security/cookie-key',
+			'text'  => 'The cookie signing key has not been changed from its default value',
+			'theme' => 'notice'
+		];
+	}
+
+	public static function customWarning(): array
+	{
+		return [
+			'text'  => 'This is a very important announcement!',
+			'kirby' => '*',
+			'php'   => '*'
+		];
+	}
+
+	public static function unknownLicense(): array
+	{
+		return [
+			'link'   => null,
+			'name'   => '-',
+			'status' => static::unknownLicenseStatus()
+		];
+	}
+
+	public static function unknownLicenseStatus(): array
+	{
+		return [
+			'dialog' => null,
+			'drawer' => null,
+			'icon'   => 'question',
+			'label'  => 'Unknown',
+			'link'	 => null,
+			'theme'  => 'passive',
+			'value'  => 'unknown',
+		];
+	}
+}
+
+#[CoversClass(SystemViewController::class)]
+class SystemViewControllerTest extends TestCase
+{
+	public const string FIXTURES = __DIR__ . '/fixtures/system';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.SystemViewController';
+
+	protected static string $host;
+
+	public static function setUpBeforeClass(): void
+	{
+		static::$host = UpdateStatus::$host;
+		UpdateStatus::$host = 'file://' . static::FIXTURES;
+	}
+
+	public static function tearDownAfterClass(): void
+	{
+		UpdateStatus::$host = static::$host;
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'url' => 'https://example.com',
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		Cookie::$key = 'KirbyHttpCookieKey';
+		parent::tearDown();
+	}
+
+	protected function installPlugins(): void
+	{
+		App::plugin(
+			name: 'getkirby/private',
+			extends: [],
+			info: []
+		);
+
+		App::plugin(
+			name: 'getkirby/public',
+			extends: [],
+			info: [
+				'authors' => [
+					[
+						'name' => 'A'
+					],
+					[
+						'name' => 'B'
+					]
+				],
+				'homepage' => 'https://getkirby.com',
+				'version'  => '1.0.0',
+			]
+		);
+
+		App::plugin(
+			name: 'getkirby/unknown',
+			extends: [],
+			info: [
+				'version' => '1.0.0'
+			]
+		);
+	}
+
+	public function testButtons(): void
+	{
+		$controller = new SystemViewController();
+		$buttons    = $controller->buttons();
+		$this->assertInstanceOf(ViewButtons::class, $buttons);
+	}
+
+	public function testExceptions(): void
+	{
+		$controller = new SystemViewController();
+		$exceptions = $controller->exceptions();
+		$this->assertIsArray($exceptions);
+		$this->assertCount(0, $exceptions);
+	}
+
+	public function testExceptionsLocal(): void
+	{
+		$this->app = $this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$this->assertSame([], $controller->exceptions());
+	}
+
+	public function testExceptionsPlugins(): void
+	{
+		$this->installPlugins();
+		$controller = new SystemViewController();
+		$exceptions = $controller->exceptions();
+		$this->assertCount(0, $exceptions);
+	}
+
+	public function testExceptionsPluginsDebug(): void
+	{
+		$this->installPlugins();
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		// curl's wording for a missing local file differs between
+		// versions ("Couldn't open file" vs. "Could not open file"),
+		// so normalize it before comparing the full message
+		$normalize = fn ($messages) => str_replace(
+			'Could not open file',
+			'Couldn\'t open file',
+			$messages
+		);
+
+		$controller = new SystemViewController();
+		$exceptions = $normalize($controller->exceptions());
+		$this->assertSame([
+			'Could not load update data for plugin getkirby/private: Couldn\'t open file ' .
+			static::FIXTURES . '/plugins/getkirby/private.json',
+			'Could not load update data for plugin getkirby/unknown: Couldn\'t open file ' .
+			static::FIXTURES . '/plugins/getkirby/unknown.json',
+		], $exceptions);
+	}
+
+	public function testLoad(): void
+	{
+		$controller = new SystemViewController();
+		$view       = $controller->load();
+		$this->assertInstanceOf(View::class, $view);
+		$this->assertSame('k-system-view', $view->component);
+
+		$props = $view->props();
+		$this->assertIsArray($props['buttons']);
+		$this->assertIsArray($props['environment']);
+		$this->assertArrayHasKey('plugins', $props);
+		$this->assertArrayHasKey('exceptions', $props);
+		$this->assertSame($this->app->system()->info(), $props['info']);
+		$this->assertArrayHasKey('security', $props);
+		$this->assertArrayHasKey('urls', $props);
+	}
+
+	public function testPlugins(): void
+	{
+		$controller = new SystemViewController();
+		$plugins    = $controller->plugins();
+		$this->assertIsArray($plugins);
+		$this->assertCount(0, $plugins);
+
+		$this->installPlugins();
+
+		$controller = new SystemViewController();
+		$plugins    = $controller->plugins();
+		$this->assertCount(3, $plugins);
+
+		$expected = [
+			[
+				'author'  => '–',
+				'license' => SystemMock::unknownLicense(),
+				'name'    => [
+					'text' => 'getkirby/private',
+					'href' => null
+				],
+				'status'  => SystemMock::unknownLicenseStatus(),
+				'version' => [
+					'currentVersion' => '?',
+					'icon'           => 'question',
+					'label'          => 'Could not check for updates',
+					'latestVersion'  => '?',
+					'pluginName'     => 'getkirby/private',
+					'theme'          => 'passive',
+					'url'            => null
+				]
+			],
+			[
+				'author'  => 'A, B',
+				'license' => SystemMock::unknownLicense(),
+				'name'    => [
+					'text' => 'getkirby/public',
+					'href' => 'https://plugins.getkirby.com/getkirby/public'
+				],
+				'status'  => SystemMock::unknownLicenseStatus(),
+				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon'           => 'info',
+					'label'          => 'Free update 88888.8.8 available',
+					'latestVersion'  => '99999.9.9',
+					'pluginName'     => 'getkirby/public',
+					'theme'          => 'info',
+					'url'            => 'https://github.com/getkirby/public-plugin/releases/tag/88888.8.8'
+				]
+			],
+			[
+				'author'  => '–',
+				'license' => SystemMock::unknownLicense(),
+				'name'    => [
+					'text' => 'getkirby/unknown',
+					'href' => null
+				],
+				'status'  => SystemMock::unknownLicenseStatus(),
+				'version' => [
+					'currentVersion' => '1.0.0',
+					'icon'           => 'question',
+					'label'          => 'Could not check for updates',
+					'latestVersion'  => '?',
+					'pluginName'     => 'getkirby/unknown',
+					'theme'          => 'passive',
+					'url'            => null
+				]
+			]
+		];
+
+		$this->assertSame($expected, $plugins);
+	}
+
+	public function testPluginsWithoutUpdateCheck(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'updates' => false
+			]
+		]);
+
+		$this->installPlugins();
+
+		$controller = new SystemViewController();
+		$plugins    = $controller->plugins();
+		$this->assertSame('1.0.0', $plugins[1]['version']);
+	}
+
+	public function testSecurity(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::customWarning(),
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
+	}
+
+	public function testSecurityDebug(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::customWarning(),
+			[
+				'id'    => 'debug',
+				'icon'  => 'alert',
+				'theme' => 'negative',
+				'text'  => 'Debugging must be turned off in production',
+				'link'  => 'https://getkirby.com/security/debug'
+			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
+	}
+
+	public function testSecurityLocal(): void
+	{
+		$this->app = $this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::customWarning(),
+			[
+				'id'    => 'local',
+				'icon'  => 'info',
+				'theme' => 'info',
+				'text'  => 'The site is running locally with relaxed security checks'
+			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
+	}
+
+	public function testSecurityMissingHttps(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'url' => 'http://example.com'
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::customWarning(),
+			[
+				'id'   => 'https',
+				'text' => 'We recommend HTTPS for all your sites',
+				'link' => 'https://getkirby.com/security/https'
+			],
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
+	}
+
+	public function testSecurityWithContentSalt(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.salt' => 'custom-salt'
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::contentSaltWarning(), $security);
+	}
+
+	public function testSecurityWithCustomCookieKey(): void
+	{
+		Cookie::$key = 'custom-cookie-key';
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithCustomCookieKeyInConfig(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'cookie' => [
+					'key' => 'custom-cookie-key'
+				]
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertNotContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithoutContentSalt(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::contentSaltWarning(), $security);
+	}
+
+	public function testSecurityWithoutCustomCookieKey(): void
+	{
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertContains(SystemMock::cookieKeyWarning(), $security);
+	}
+
+	public function testSecurityWithoutUpdate(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'updates' => false
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$security   = $controller->security();
+		$this->assertSame([
+			SystemMock::contentSaltWarning(),
+			SystemMock::cookieKeyWarning()
+		], $security);
+	}
+
+	public function testStats(): void
+	{
+		$controller = new SystemViewController();
+		$stats      = $controller->stats();
+		$this->assertInstanceOf(Stats::class, $stats);
+		$this->assertCount(4, $stats->reports());
+	}
+
+	public function testUrls(): void
+	{
+		$controller = new SystemViewController();
+		$urls       = $controller->urls();
+		$this->assertCount(4, $urls);
+	}
+
+	public function testUrlsLocal(): void
+	{
+		$this->app = $this->app->clone([
+			'server' => [
+				'REMOTE_ADDR' => '127.0.0.1',
+			]
+		]);
+
+		$controller = new SystemViewController();
+		$urls       = $controller->urls();
+		$this->assertCount(0, $urls);
+	}
+}

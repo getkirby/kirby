@@ -16,6 +16,10 @@ describe("$helper.object.isEmpty()", () => {
 		expect(isEmpty([])).toBeTruthy();
 	});
 
+	it("should detect an object with a length of 0 as empty", () => {
+		expect(isEmpty({ length: 0 })).toBeTruthy();
+	});
+
 	it("should detect non-empty as false", () => {
 		expect(isEmpty([1, 2, 3])).toBeFalsy();
 		expect(isEmpty(["a", "b", "c"])).toBeFalsy();

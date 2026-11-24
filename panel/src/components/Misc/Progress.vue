@@ -1,15 +1,26 @@
 <template>
-	<progress :value="value" max="100" class="k-progress">{{ value }}%</progress>
+	<label class="k-progress">
+		<span class="sr-only">{{ label ?? $t("progress") }}</span>
+		<progress :value="value" max="100">{{ value }}%</progress>
+	</label>
 </template>
 
 <script>
 /**
  * A simple progress bar that we mostly use it in the upload dialog
  *
- * @example <k-progress :value="10" />
+ * @example
+ * <k-progress :value="10" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
+		/**
+		 * @since 6.0.0
+		 */
+		label: String,
 		/**
 		 * Current value of the the progress bar
 		 * @values 0-100

@@ -22,6 +22,9 @@ import { props as SelectInput } from "../Input/SelectInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-select-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, SelectInput],
@@ -32,6 +35,7 @@ export default {
 			default: "angle-down"
 		}
 	},
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

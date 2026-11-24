@@ -11,9 +11,6 @@ namespace Kirby\Data;
  * ---
  * Optional body stored as `text` field
  *
- * @package   Kirby Data
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -25,6 +22,9 @@ class Frontmatter extends Handler
 	 */
 	public static string $body = 'text';
 
+	/**
+	 * Parses a frontmatter string and returns a multi-dimensional array
+	 */
 	public static function decode($string): array
 	{
 		if ($string === null || $string === '') {
@@ -52,11 +52,12 @@ class Frontmatter extends Handler
 		return Yaml::decode($string);
 	}
 
+	/**
+	 * Converts an array to a frontmatter string
+	 */
 	public static function encode($data): string
 	{
 		$body = $data[static::$body] ?? null;
-
-		// remove the body key from the frontmatter fields
 		unset($data[static::$body]);
 
 		$frontmatter = "---\n" . rtrim(Yaml::encode($data)) . "\n---\n";

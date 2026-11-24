@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\DuplicateException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
@@ -9,26 +10,26 @@ use Kirby\Toolkit\Str;
 /**
  * A collection of all defined site languages
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Cms\Language>
+ * @extends Collection<Language>
  */
 class Languages extends Collection
 {
 	/**
 	 * All registered languages methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
 	/**
 	 * Creates a new collection with the given language objects
 	 *
+	 * @param array<Language> $objects
 	 * @param null $parent
-	 * @throws \Kirby\Exception\DuplicateException
+	 * @throws DuplicateException If more than one language is the default
 	 */
 	public function __construct(
 		array $objects = [],
@@ -50,14 +51,18 @@ class Languages extends Collection
 
 	/**
 	 * Returns all language codes as array
+	 *
+	 * @return list<string>
 	 */
 	public function codes(): array
 	{
-		return App::instance()->multilang() ? $this->keys() : ['default'];
+		return App::instance()->multilang() === true ? $this->keys() : ['default'];
 	}
 
 	/**
 	 * Creates a new language with the given props
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public function create(array $props): Language
 	{

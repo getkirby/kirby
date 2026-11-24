@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Mime;
 use Kirby\Http\Response as HttpResponse;
+use Kirby\Http\Uri;
 use Kirby\Http\VolatileHeaders;
 use Kirby\Toolkit\Str;
 use Stringable;
@@ -12,25 +13,11 @@ use Stringable;
 /**
  * Global response configuration
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
 class Responder implements Stringable
 {
-	/**
-	 * Timestamp when the response expires
-	 * in Kirby's cache
-	 */
-	protected int|null $expires = null;
-
-	/**
-	 * HTTP status code
-	 */
-	protected int|null $code = null;
-
 	/**
 	 * Response body
 	 */
@@ -43,7 +30,20 @@ class Responder implements Stringable
 	protected bool $cache = true;
 
 	/**
+	 * HTTP status code
+	 */
+	protected int|null $code = null;
+
+	/**
+	 * Timestamp when the response expires
+	 * in Kirby's cache
+	 */
+	protected int|null $expires = null;
+
+	/**
 	 * HTTP headers
+	 *
+	 * @var array<string, string>
 	 */
 	protected array $headers = [];
 
@@ -62,6 +62,8 @@ class Responder implements Stringable
 	/**
 	 * List of cookie names the response
 	 * relies on
+	 *
+	 * @var list<string>
 	 */
 	protected array $usesCookies = [];
 
@@ -81,7 +83,7 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for the response body
 	 *
-	 * @return $this|string|null
+	 * @return ($body is null ? string|null : static)
 	 */
 	public function body(string|null $body = null): static|string|null
 	{
@@ -99,7 +101,7 @@ class Responder implements Stringable
 	 * by Kirby's cache
 	 * @since 3.5.5
 	 *
-	 * @return bool|$this
+	 * @return ($cache is null ? bool : static)
 	 */
 	public function cache(bool|null $cache = null): bool|static
 	{
@@ -117,50 +119,17 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Setter and getter for the flag that defines
-	 * whether the current response uses the HTTP
-	 * `Authorization` request header
-	 * @since 3.7.0
+	 * Setter and getter for the status code
 	 *
-	 * @return bool|$this
+	 * @return ($code is null ? int|null : static)
 	 */
-	public function usesAuth(bool|null $usesAuth = null): bool|static
+	public function code(int|null $code = null): static|int|null
 	{
-		if ($usesAuth === null) {
-			return $this->usesAuth;
+		if ($code === null) {
+			return $this->code;
 		}
 
-		$this->usesAuth = $usesAuth;
-		return $this;
-	}
-
-	/**
-	 * Setter for a cookie name that is
-	 * used by the response
-	 * @since 3.7.0
-	 */
-	public function usesCookie(string $name): void
-	{
-		// only add unique names
-		if (in_array($name, $this->usesCookies, true) === false) {
-			$this->usesCookies[] = $name;
-		}
-	}
-
-	/**
-	 * Setter and getter for the list of cookie
-	 * names the response relies on
-	 * @since 3.7.0
-	 *
-	 * @return array|$this
-	 */
-	public function usesCookies(array|null $usesCookies = null): array|static
-	{
-		if ($usesCookies === null) {
-			return $this->usesCookies;
-		}
-
-		$this->usesCookies = $usesCookies;
+		$this->code = $code;
 		return $this;
 	}
 
@@ -170,8 +139,8 @@ class Responder implements Stringable
 	 * @since 3.5.5
 	 *
 	 * @param int|string|null $expires Timestamp, number of minutes or time string to parse
-	 * @param bool $override If `true`, the already defined timestamp will be overridden
-	 * @return int|null|$this
+	 * @param $override If `true`, the already defined timestamp will be overridden
+	 * @return int|$this|null
 	 */
 	public function expires($expires = null, bool $override = false): static|int|null
 	{
@@ -192,15 +161,15 @@ class Responder implements Stringable
 			$expires = time() + ($expires * 60);
 		} elseif (is_int($expires) !== true) {
 			// time string
-			$parsedExpires = strtotime($expires);
+			$parsed = strtotime($expires);
 
-			if (is_int($parsedExpires) !== true) {
+			if (is_int($parsed) !== true) {
 				throw new InvalidArgumentException(
 					message: 'Invalid time string "' . $expires . '"'
 				);
 			}
 
-			$expires = $parsedExpires;
+			$expires = $parsed;
 		}
 
 		// by default only ever *reduce* the cache expiry time
@@ -212,21 +181,6 @@ class Responder implements Stringable
 			$this->expires = $expires;
 		}
 
-		return $this;
-	}
-
-	/**
-	 * Setter and getter for the status code
-	 *
-	 * @return int|null|$this
-	 */
-	public function code(int|null $code = null): static|int|null
-	{
-		if ($code === null) {
-			return $this->code;
-		}
-
-		$this->code = $code;
 		return $this;
 	}
 
@@ -250,11 +204,14 @@ class Responder implements Stringable
 	 * Setter and getter for a single header
 	 *
 	 * @param string|false|null $value
-	 * @param bool $lazy If `true`, an existing header value is not overridden
-	 * @return string|null|$this
+	 * @param $lazy If `true`, an existing header value is not overridden
+	 * @return ($value is null ? string|null : static)
 	 */
-	public function header(string $key, $value = null, bool $lazy = false): static|string|null
-	{
+	public function header(
+		string $key,
+		$value = null,
+		bool $lazy = false
+	): static|string|null {
 		if ($value === null) {
 			return $this->headers()[$key] ?? null;
 		}
@@ -275,13 +232,14 @@ class Responder implements Stringable
 	/**
 	 * Setter and getter for all headers
 	 *
-	 * @return array|$this
+	 * @param array<string, string>|null $headers
+	 * @return ($headers is null ? array<string, string> : static)
 	 */
 	public function headers(array|null $headers = null): static|array
 	{
 		if ($headers === null) {
 			$injectedHeaders = [];
-			$isPrivate = static::isPrivate($this->usesAuth(), $this->usesCookies());
+			$isPrivate       = static::isPrivate($this->usesAuth(), $this->usesCookies());
 
 			if ($isPrivate === true) {
 				// never ever cache private responses
@@ -289,10 +247,7 @@ class Responder implements Stringable
 			}
 
 			// inject CORS headers if enabled
-			$corsHeaders = Cors::headers();
-			if ($corsHeaders !== []) {
-				$injectedHeaders = [...$injectedHeaders, ...$corsHeaders];
-			}
+			$injectedHeaders = [...$injectedHeaders, ...Cors::headers()];
 
 			if ($isPrivate === false) {
 				// the response is public, but it may
@@ -309,9 +264,10 @@ class Responder implements Stringable
 
 				// merge Vary from CORS if present
 				if (isset($injectedHeaders['Vary']) === true) {
-					// split CORS Vary into individual values to avoid duplication
-					$corsVaryValues = array_map('trim', explode(',', $injectedHeaders['Vary']));
-					$vary = [...$vary, ...$corsVaryValues];
+					// split CORS Vary into individual values
+					// to avoid duplication
+					$cors = explode(',', $injectedHeaders['Vary']);
+					array_push($vary, ...array_map(trim(...), $cors));
 				}
 
 				if ($vary !== []) {
@@ -325,111 +281,6 @@ class Responder implements Stringable
 
 		$this->headers = $headers;
 		$this->volatileHeaders([]);
-		return $this;
-	}
-
-	/**
-	 * Shortcut to configure a json response
-	 *
-	 * @return string|$this
-	 */
-	public function json(array|null $json = null): static|string
-	{
-		if ($json !== null) {
-			$this->body(json_encode($json));
-		}
-
-		return $this->type('application/json');
-	}
-
-	/**
-	 * Shortcut to create a redirect response
-	 *
-	 * @return $this
-	 */
-	public function redirect(
-		string|null $location = null,
-		int|null $code = null
-	): static {
-		$location = Url::to($location ?? '/');
-		$location = Url::unIdn($location);
-
-		return $this
-			->header('Location', (string)$location)
-			->code($code ?? 302);
-	}
-
-	/**
-	 * Creates and returns the response object from the config
-	 */
-	public function send(HttpResponse|string|null $body = null): HttpResponse
-	{
-		if ($body instanceof HttpResponse) {
-			// inject headers from the responder into the response
-			// (only if they are not already set);
-			$body->setHeaderFallbacks($this->headers());
-			return $body;
-		}
-
-		if ($body !== null) {
-			$this->body($body);
-		}
-
-		return new Response($this->toArray());
-	}
-
-	/**
-	 * Converts the response configuration
-	 * to an array
-	 */
-	public function toArray(): array
-	{
-		// the `cache`, `expires`, `usesAuth`, `usesCookies` and
-		// `volatileHeaders` values are explicitly *not* serialized
-		// as they are volatile and not to be exported
-		return [
-			'body'    => $this->body(),
-			'code'    => $this->code(),
-			'headers' => $this->headers(),
-			'type'    => $this->type(),
-		];
-	}
-
-	/**
-	 * Converts the response configuration to an array
-	 * that can safely be cached
-	 *
-	 * @since 5.2.0
-	 */
-	public function toCacheArray(): array
-	{
-		$response = $this->toArray();
-		$volatile = $this->volatileHeaders()->collect();
-
-		if ($volatile === []) {
-			return $response;
-		}
-
-		$response['headers'] = $this->volatileHeaders()->strip($response['headers'], $volatile);
-		return $response;
-	}
-
-	/**
-	 * Setter and getter for the content type
-	 *
-	 * @return string|null|$this
-	 */
-	public function type(string|null $type = null): static|string|null
-	{
-		if ($type === null) {
-			return $this->type;
-		}
-
-		if (Str::contains($type, '/') === false) {
-			$type = Mime::fromExtension($type);
-		}
-
-		$this->type = $type;
 		return $this;
 	}
 
@@ -460,15 +311,169 @@ class Responder implements Stringable
 	}
 
 	/**
-	 * Marks headers (or header parts) as request-dependent, so they
-	 * can be subtracted before caching a response snapshot
+	 * Shortcut to configure a json response
+	 *
+	 * @return $this
+	 */
+	public function json(array|null $json = null): static
+	{
+		if ($json !== null) {
+			$this->body(json_encode($json, JSON_THROW_ON_ERROR));
+		}
+
+		return $this->type('application/json');
+	}
+
+	/**
+	 * Shortcut to create a redirect response
+	 *
+	 * @param $inherit Keep the query and params of the current request (since 5.7.0)
+	 * @return $this
+	 */
+	public function redirect(
+		string|null $location = null,
+		int|null $code = null,
+		bool $inherit = false
+	): static {
+		$location = Url::to($location ?? '/');
+
+		if ($inherit === true) {
+			$current  = App::instance()->request()->url();
+			$location = (new Uri($location))->inherit($current)->toString();
+		}
+
+		$location = Url::unIdn($location);
+
+		return $this
+			->header('Location', (string)$location)
+			->code($code ?? 302);
+	}
+
+	/**
+	 * Creates and returns the response object from the config
+	 */
+	public function send(HttpResponse|string|null $body = null): HttpResponse
+	{
+		if ($body instanceof HttpResponse) {
+			// inject headers from the responder into the response
+			// (only if they are not already set)
+			$body->setHeaderFallbacks($this->headers());
+			return $body;
+		}
+
+		if ($body !== null) {
+			$this->body($body);
+		}
+
+		return new Response($this->toArray());
+	}
+
+	/**
+	 * Converts the response configuration
+	 * to an array
+	 *
+	 * @return array{body: string|null, code: int|null, headers: array<string, string>, type: string|null}
+	 */
+	public function toArray(): array
+	{
+		// the `cache`, `expires`, `usesAuth`, `usesCookies` and
+		// `volatileHeaders` values are explicitly *not* serialized
+		// as they are volatile and not to be exported
+		return [
+			'body'    => $this->body(),
+			'code'    => $this->code(),
+			'headers' => $this->headers(),
+			'type'    => $this->type(),
+		];
+	}
+
+	/**
+	 * Converts the response configuration to an array
+	 * that can safely be cached
 	 *
 	 * @since 5.2.0
-	 * @deprecated 5.3.0 Use `::volatileHeaders()->mark($name, $values)` instead. Will be removed in Kirby 6.
+	 *
+	 * @return array{body: string|null, code: int|null, headers: array<string, string>, type: string|null}
 	 */
-	public function markVolatileHeader(string $name, array|null $values = null): void
+	public function toCacheArray(): array
 	{
-		$this->volatileHeaders()->mark($name, $values);
+		$response = $this->toArray();
+		$volatile = $this->volatileHeaders()->collect();
+
+		if ($volatile === []) {
+			return $response;
+		}
+
+		$response['headers'] = $this->volatileHeaders()->strip($response['headers'], $volatile);
+		return $response;
+	}
+
+	/**
+	 * Setter and getter for the content type
+	 *
+	 * @return ($type is null ? string|null : static)
+	 */
+	public function type(string|null $type = null): static|string|null
+	{
+		if ($type === null) {
+			return $this->type;
+		}
+
+		if (Str::contains($type, '/') === false) {
+			$type = Mime::fromExtension($type);
+		}
+
+		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * Setter and getter for the flag that defines
+	 * whether the current response uses the HTTP
+	 * `Authorization` request header
+	 * @since 3.7.0
+	 *
+	 * @return ($usesAuth is null ? bool : static)
+	 */
+	public function usesAuth(bool|null $usesAuth = null): bool|static
+	{
+		if ($usesAuth === null) {
+			return $this->usesAuth;
+		}
+
+		$this->usesAuth = $usesAuth;
+		return $this;
+	}
+
+	/**
+	 * Setter for a cookie name that is
+	 * used by the response
+	 * @since 3.7.0
+	 */
+	public function usesCookie(string $name): void
+	{
+		// only add unique names
+		if (in_array($name, $this->usesCookies, true) === false) {
+			$this->usesCookies[] = $name;
+		}
+	}
+
+	/**
+	 * Setter and getter for the list of cookie
+	 * names the response relies on
+	 * @since 3.7.0
+	 *
+	 * @param list<string>|null $usesCookies
+	 * @return ($usesCookies is null ? list<string> : static)
+	 */
+	public function usesCookies(array|null $usesCookies = null): array|static
+	{
+		if ($usesCookies === null) {
+			return $this->usesCookies;
+		}
+
+		$this->usesCookies = $usesCookies;
+		return $this;
 	}
 
 	/**
@@ -486,6 +491,7 @@ class Responder implements Stringable
 		}
 
 		$volatileHeaders = new VolatileHeaders();
+
 		foreach ($headers as $name => $values) {
 			$volatileHeaders->mark($name, $values);
 		}

@@ -1,0 +1,373 @@
+<?php
+
+namespace Kirby\Panel\Controller\Dialog;
+
+use Kirby\Blueprint\PageBlueprint;
+use Kirby\Cms\App;
+use Kirby\Cms\Find;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Cms\User;
+use Kirby\Content\MemoryStorage;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Form\Form;
+use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
+use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\Dialog\FormDialog;
+use Kirby\Uuid\Uuid;
+use Kirby\Uuid\Uuids;
+use Throwable;
+
+/**
+ * Controls the Panel dialog to create a new page
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class PageCreateDialogController extends ModelCreateDialogController
+{
+	public static array $fieldTypes = [
+		'checkboxes',
+		'date',
+		'email',
+		'info',
+		'line',
+		'link',
+		'list',
+		'number',
+		'multiselect',
+		'radio',
+		'range',
+		'select',
+		'slug',
+		'tags',
+		'tel',
+		'text',
+		'toggle',
+		'toggles',
+		'time',
+		'url'
+	];
+
+	/**
+	 * @var Page
+	 */
+	public ModelWithContent|null $model = null;
+
+	/**
+	 * @var Page|Site
+	 */
+	public Page|Site|User $parent;
+
+	/**
+	 * @param list<string>|null $blueprints Names of the blueprints for the new page, by default the ones of the parent
+	 * @throws NotFoundException If no blueprints are given
+	 */
+	public function __construct(
+		Page|Site|null $parent = null,
+		protected array|null $blueprints = null
+	) {
+		parent::__construct(parent: $parent);
+
+		if ($blueprints === []) {
+			throw new NotFoundException(
+				message: 'No new pages can be created here'
+			);
+		}
+	}
+
+	/**
+	 * Returns the name and title of each blueprint for the
+	 * new page, also of ones that cannot be loaded or created
+	 *
+	 * @return list<array{name: string, title: string}>
+	 */
+	public function blueprints(): array
+	{
+		if ($this->blueprints === null) {
+			return $this->parent->blueprints();
+		}
+
+		$blueprints = [];
+
+		foreach ($this->blueprints as $name) {
+			try {
+				// the full blueprint, so that a title inherited
+				// through `extends` is taken into account
+				$blueprint = PageBlueprint::factory($this->parent, 'pages/' . $name);
+			} catch (Throwable) {
+				$blueprint = null;
+			}
+
+			$blueprints[] = match ($blueprint) {
+				null    => [
+					'name'  => basename($name),
+					'title' => ucfirst($name),
+				],
+				default => [
+					'name'  => basename($blueprint->name()),
+					'title' => $blueprint->title(),
+				]
+			};
+		}
+
+		return $blueprints;
+	}
+
+	/**
+	 * All the default fields for the dialog
+	 */
+	public function coreFields(): array
+	{
+		$fields = [];
+
+		$title = $this->blueprint()->create()['title'] ?? null;
+		$slug  = $this->blueprint()->create()['slug'] ?? null;
+
+		if ($title === false || $slug === false) {
+			throw new InvalidArgumentException(
+				message: 'Page create dialog: title and slug must not be false at the same time'
+			);
+		}
+
+		// title field
+		if ($title === null || is_array($title) === true) {
+			$label = $title['label'] ?? 'title';
+			$fields['title'] = Field::title([
+				...$title ?? [],
+				'label'     => $this->i18n($label),
+				'required'  => true,
+				'preselect' => true
+			]);
+		}
+
+		// slug field
+		if ($slug === null) {
+			$fields['slug'] = Field::slug([
+				'required' => true,
+				'sync'     => 'title',
+				'path'     => $this->parent instanceof Page ? '/' . $this->parent->id() . '/' : '/'
+			]);
+		}
+
+		// pass uuid field to the dialog if uuids are enabled
+		// to use the same uuid and prevent generating a new one
+		// when the page is created
+		if (Uuids::enabled() === true) {
+			$fields['uuid'] = Field::hidden();
+		}
+
+		return [
+			...$fields,
+			'parent'   => Field::hidden(),
+			'template' => Field::hidden(),
+		];
+	}
+
+	protected function customFieldsIgnore(): array
+	{
+		return [...parent::customFieldsIgnore(), 'title', 'slug'];
+	}
+
+	public static function factory(): static
+	{
+		$request = App::instance()->request();
+		$parent  = $request->get('parent');
+		$parent  = $parent ? Find::parent($parent) : Find::site();
+
+		if ($field = $request->get('field')) {
+			$blueprints = array_column($parent->blueprints($field), 'name');
+
+			if ($blueprints === []) {
+				throw new NotFoundException(
+					message: 'The field "' . $field . '" does not accept new pages'
+				);
+			}
+		}
+
+		return new static(
+			parent:     $parent,
+			blueprints: $blueprints ?? null
+		);
+	}
+
+	/**
+	 * Provides all the props for the
+	 * dialog, including the fields and
+	 * initial values
+	 */
+	public function load(): Dialog
+	{
+		$blueprints = $this->blueprints();
+
+		$status   = $this->blueprint()->create()['status'] ?? 'draft';
+		$status   = $this->blueprint()->status()[$status]['label'] ?? null;
+		$status ??= $this->i18n('page.status.' . $status);
+
+		$value   = $this->value();
+		$fields  = $this->fields();
+		$visible = array_filter(
+			$fields,
+			fn ($field) => ($field['hidden'] ?? null) !== true
+		);
+
+		// immediately submit the dialog if there is no editable field
+		if ($visible === [] && count($blueprints) < 2) {
+			$response = $this->submit();
+
+			Panel::go(
+				url: $response['redirect'] ?? $this->parent->panel()->url(true)
+			);
+		}
+
+		return new FormDialog(
+			component:    'k-page-create-dialog',
+			blueprints:   $blueprints,
+			fields:       $fields,
+			submitButton: $this->i18n('page.create', ['status' => $status]),
+			template:     $this->template(),
+			value:        $value
+		);
+	}
+
+	/**
+	 * Temporary model be created, used to properly render
+	 * the blueprint for fields
+	 */
+	public function model(): Page
+	{
+		if (isset($this->model) === true) {
+			return $this->model;
+		}
+
+		$props = [
+			'slug'     => $this->request->get('slug') ?: '__temp__',
+			'template' => $this->template(),
+			'model'    => $this->template(),
+			'parent'   => $this->parent instanceof Page ? $this->parent : null,
+			'content'  => ['title' => $this->request->get('title')]
+		];
+
+		// make sure that a UUID gets generated
+		// and added to content right away
+		if (Uuids::enabled() === true) {
+			$props['content']['uuid'] = $this->request->get('uuid', Uuid::generate());
+		}
+
+		$this->model = Page::factory($props);
+
+		// change the storage to memory immediately
+		// since this is a temporary model
+		// so that the model does not write to disk
+		$this->model->changeStorage(MemoryStorage::class);
+
+		return $this->model;
+	}
+
+	/**
+	 * Prepares and cleans up the input data
+	 */
+	public function sanitize(array $input): array
+	{
+		$input   = $this->resolveFieldTemplates($input, ['title', 'slug']);
+		$content = [
+			'title' => trim($input['title'] ?? ''),
+			'uuid'  => $input['uuid'] ?? $this->model()->uuid()?->id()
+		];
+
+		foreach ($this->customFields() as $name => $field) {
+			$content[$name] = $input[$name] ?? null;
+		}
+
+		// create temporary form to sanitize the input
+		// and add default values
+		$form = Form::for($this->model());
+		$form->fill(input: $content, defaults: true);
+
+		return [
+			'content'  => $form->toStoredValues(),
+			'slug'     => $input['slug'],
+			'template' => $this->template()
+		];
+	}
+
+	/**
+	 * Submits the dialog form and creates the new page
+	 */
+	public function submit(): array
+	{
+		$input  = $this->sanitize(input: $this->request->get());
+		$status = $this->blueprint()->create()['status'] ?? 'draft';
+
+		// validate the input before creating the page
+		$this->validate($input, $status);
+
+		$page = $this->parent->createChild($input);
+
+		if ($status !== 'draft') {
+			// grant all permissions as the status is set in the blueprint and
+			// should not be treated as if the user would try to change it
+			$page->kirby()->impersonate(
+				'kirby',
+				fn () => $page->changeStatus($status)
+			);
+		}
+
+		$payload = [
+			'event' => 'page.create'
+		];
+
+		// add redirect, if not explicitly disabled
+		$redirect = $this->blueprint()->create()['redirect'] ?? null;
+
+		if ($redirect !== false) {
+			$payload['redirect'] = $page->panel()->url(true);
+		}
+
+		return $payload;
+	}
+
+	public function template(): string
+	{
+		return $this->request->get('template', $this->blueprints()[0]['name']);
+	}
+
+	public function validate(array $input, string $status = 'draft'): bool
+	{
+		// basic validation
+		$validators = $this->model()->guards()->validators();
+		$validators->validateTitle($input['content']['title']);
+		$validators->validateSlugLength($input['slug']);
+
+		// if the page is supposed to be published directly,
+		// ensure that all field validations are met
+		if ($status !== 'draft') {
+			// create temporary form to validate the input
+			$form = Form::for($this->model())->fill(input: $input['content']);
+
+			if ($form->isInvalid() === true) {
+				throw new InvalidArgumentException(
+					key: 'page.changeStatus.incomplete'
+				);
+			}
+		}
+
+		return true;
+	}
+
+	public function value(): array
+	{
+		return [
+			...parent::value(),
+			'parent'   => $this->request->get('parent', ''),
+			'slug'     => $this->request->get('slug', ''),
+			'template' => $this->template(),
+			'title'    => $this->request->get('title', ''),
+			'uuid'     => $this->model()->uuid()?->id(),
+		];
+	}
+}

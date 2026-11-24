@@ -1,0 +1,223 @@
+import { describe, expect, it, vi } from "vitest";
+import Dialog from "./dialog";
+import Panel from "./panel";
+
+/**
+ * Renders the markup of an open modal in its portal
+ */
+function render(key: string) {
+	const portal = document.createElement("div");
+	const form = document.createElement("form");
+	const input = document.createElement("input");
+	const requestSubmit = vi.fn();
+
+	portal.classList.add(`k-${key}-portal`);
+	form.classList.add(`k-${key}`);
+
+	Object.defineProperty(form, "requestSubmit", {
+		configurable: true,
+		value: requestSubmit
+	});
+
+	form.append(input);
+	portal.append(form);
+	document.body.append(portal);
+
+	return { form, input, portal, requestSubmit };
+}
+
+describe("panel.dialog", () => {
+	describe("state", () => {
+		it("should have a default state", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+			const state = {
+				component: null,
+				id: null,
+				isLoading: false,
+				on: {},
+				path: null,
+				props: {},
+				query: {},
+				referrer: null,
+				timestamp: null
+			};
+
+			expect(dialog.key()).toStrictEqual("dialog");
+			expect(dialog.state()).toStrictEqual(state);
+		});
+	});
+
+	describe("open()", () => {
+		it("should open a dialog component", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+
+			await dialog.open({ component: "k-remove-dialog" });
+
+			expect(dialog.isOpen).toStrictEqual(true);
+			expect(dialog.component).toStrictEqual("k-remove-dialog");
+		});
+
+		it("should add to history when a component is given", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+
+			await dialog.open({ component: "k-remove-dialog" });
+
+			expect(dialog.history.isEmpty()).toStrictEqual(false);
+			expect(dialog.id).toBeTypeOf("string");
+		});
+
+		it("should not mark as open when no component is given", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+
+			await dialog.open({});
+
+			expect(dialog.isOpen).toStrictEqual(false);
+		});
+
+		it("should track multiple dialogs in history", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+
+			await dialog.open({ component: "k-first-dialog" });
+			await dialog.open({ component: "k-second-dialog" });
+
+			expect(dialog.history.milestones).toHaveLength(2);
+		});
+
+		it("should replace the current history entry when replace is true", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+
+			await dialog.open({ component: "k-first-dialog" });
+			await dialog.open({ component: "k-second-dialog", replace: true });
+
+			expect(dialog.history.milestones).toHaveLength(1);
+			expect(dialog.component).toStrictEqual("k-second-dialog");
+		});
+
+		it("should prefix string paths with /dialogs/", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+			const load = vi.spyOn(dialog, "load").mockResolvedValue(dialog.state());
+
+			await dialog.open("some/dialog");
+
+			expect(load).toHaveBeenCalledWith(
+				"/dialogs/some/dialog",
+				expect.anything()
+			);
+
+			load.mockRestore();
+		});
+
+		it("should handle a dialog object with a url property", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+			const load = vi.spyOn(dialog, "load").mockResolvedValue(dialog.state());
+
+			await dialog.open({ url: "some/dialog" });
+
+			expect(load).toHaveBeenCalledWith(
+				"/dialogs/some/dialog",
+				expect.anything()
+			);
+
+			load.mockRestore();
+		});
+
+		it("should pass options when using a dialog object with a url property", async () => {
+			const panel = Panel.create(app);
+			const dialog = Dialog(panel);
+			const load = vi.spyOn(dialog, "load").mockResolvedValue(dialog.state());
+			const onSubmit = vi.fn();
+
+			await dialog.open({ url: "some/dialog", on: { submit: onSubmit } });
+
+			expect(load).toHaveBeenCalledWith(
+				"/dialogs/some/dialog",
+				expect.objectContaining({ on: { submit: onSubmit } })
+			);
+
+			load.mockRestore();
+		});
+	});
+
+	describe("dialog.save event", () => {
+		it("should submit the dialog on dialog.save event", async () => {
+			const panel = Panel.create(app);
+			const event = { preventDefault: vi.fn() };
+			let submitted = false;
+
+			await panel.dialog.open({
+				component: "k-test",
+				on: {
+					submit() {
+						submitted = true;
+					}
+				}
+			});
+
+			panel.events.emit("dialog.save", event);
+
+			expect(submitted).toStrictEqual(true);
+			expect(event.preventDefault).toHaveBeenCalled();
+		});
+
+		it("should submit the active dialog form on save shortcut", () => {
+			const panel = Panel.create(app);
+			const { input, requestSubmit } = render("dialog");
+			const preventDefault = vi.fn();
+
+			panel.events.emit("dialog.save", { preventDefault, target: input });
+
+			expect(preventDefault).toHaveBeenCalledOnce();
+			expect(requestSubmit).toHaveBeenCalledOnce();
+		});
+
+		it("should submit the active dialog form when the focus is outside of it", () => {
+			const panel = Panel.create(app);
+			const { requestSubmit } = render("dialog");
+			const submit = vi.spyOn(panel.dialog, "submit");
+			const preventDefault = vi.fn();
+
+			// clicking a collection item moves the focus out of the form
+			panel.events.emit("dialog.save", {
+				preventDefault,
+				target: document.body
+			});
+
+			expect(requestSubmit).toHaveBeenCalledOnce();
+			expect(submit).not.toHaveBeenCalled();
+		});
+
+		it("should submit the topmost dialog form", () => {
+			const panel = Panel.create(app);
+			const first = render("dialog");
+			const last = render("dialog");
+			const preventDefault = vi.fn();
+
+			panel.events.emit("dialog.save", {
+				preventDefault,
+				target: first.input
+			});
+
+			expect(first.requestSubmit).not.toHaveBeenCalled();
+			expect(last.requestSubmit).toHaveBeenCalledOnce();
+		});
+
+		it("should fall back to direct submit without a dialog form", () => {
+			const panel = Panel.create(app);
+			const preventDefault = vi.fn();
+			const submit = vi.spyOn(panel.dialog, "submit");
+
+			panel.events.emit("dialog.save", { preventDefault });
+
+			expect(preventDefault).toHaveBeenCalledOnce();
+			expect(submit).toHaveBeenCalledOnce();
+		});
+	});
+});

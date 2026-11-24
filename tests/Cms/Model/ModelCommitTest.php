@@ -2,13 +2,14 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(ModelCommit::class)]
 class ModelCommitTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.ModelCommit';
 
 	protected function setUp(): void
 	{
@@ -20,28 +21,6 @@ class ModelCommitTest extends TestCase
 	{
 		parent::tearDown();
 		$this->tearDownTmp();
-	}
-
-	public static function modelProvider(): array
-	{
-		return [
-			[
-				new File(['parent' => new Site(), 'filename' => 'test.jpg']),
-				FileRules::class
-			],
-			[
-				new Page(['slug' => 'test']),
-				PageRules::class
-			],
-			[
-				new Site(),
-				SiteRules::class
-			],
-			[
-				new User(['email' => 'test@test.com']),
-				UserRules::class
-			],
-		];
 	}
 
 	public function testAfter(): void
@@ -105,97 +84,6 @@ class ModelCommitTest extends TestCase
 		$commit->after($page);
 
 		$this->assertSame(null, $this->app->cache('pages')->get('test'));
-	}
-
-	public function testAfterHookArgumentsForPageCreate(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'create'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $page
-		);
-
-		$this->assertSame([
-			'page' => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageDuplicate(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$copy = new Page([
-			'slug' => 'test-copy',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'duplicate'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $copy
-		);
-
-		$this->assertSame([
-			'duplicatePage' => $copy,
-			'originalPage'  => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageDelete(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $page,
-			action: 'delete'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: true
-		);
-
-		$this->assertSame([
-			'status' => true,
-			'page'   => $page
-		], $args);
-	}
-
-	public function testAfterHookArgumentsForPageUpdate(): void
-	{
-		$oldPage = new Page([
-			'slug' => 'test',
-		]);
-
-		$newPage = new Page([
-			'slug' => 'test',
-		]);
-
-		$commit = new ModelCommit(
-			model: $oldPage,
-			action: 'update'
-		);
-
-		$args = $commit->afterHookArguments(
-			state: $newPage
-		);
-
-		$this->assertSame([
-			'newPage' => $newPage,
-			'oldPage' => $oldPage
-		], $args);
 	}
 
 	public function testAfterHookArgumentsForFileCreate(): void
@@ -268,6 +156,97 @@ class ModelCommitTest extends TestCase
 		], $args);
 	}
 
+	public function testAfterHookArgumentsForPageCreate(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'create'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $page
+		);
+
+		$this->assertSame([
+			'page' => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageDelete(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'delete'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
+
+		$this->assertSame([
+			'status' => true,
+			'page'   => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageDuplicate(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$copy = new Page([
+			'slug' => 'test-copy',
+		]);
+
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'duplicate'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $copy
+		);
+
+		$this->assertSame([
+			'duplicatePage' => $copy,
+			'originalPage'  => $page
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForPageUpdate(): void
+	{
+		$oldPage = new Page([
+			'slug' => 'test',
+		]);
+
+		$newPage = new Page([
+			'slug' => 'test',
+		]);
+
+		$commit = new ModelCommit(
+			model: $oldPage,
+			action: 'update'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $newPage
+		);
+
+		$this->assertSame([
+			'newPage' => $newPage,
+			'oldPage' => $oldPage
+		], $args);
+	}
+
 	public function testAfterHookArgumentsForSiteActions(): void
 	{
 		$oldSite = new Site([
@@ -290,6 +269,67 @@ class ModelCommitTest extends TestCase
 		$this->assertSame([
 			'newSite' => $newSite,
 			'oldSite' => $oldSite
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForUserAvatarCreate(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'createAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $user
+		);
+
+		$this->assertSame([
+			'user' => $user
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForUserAvatarDelete(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'deleteAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: true
+		);
+
+		$this->assertSame([
+			'status' => true,
+			'user'   => $user
+		], $args);
+	}
+
+	public function testAfterHookArgumentsForUserAvatarReplace(): void
+	{
+		$user = new User([
+			'email' => 'test@test.com'
+		]);
+
+		$commit = new ModelCommit(
+			model: $user,
+			action: 'replaceAvatar'
+		);
+
+		$args = $commit->afterHookArguments(
+			state: $user
+		);
+
+		$this->assertSame([
+			'user' => $user
 		], $args);
 	}
 
@@ -373,6 +413,10 @@ class ModelCommitTest extends TestCase
 			]
 		]);
 
+		// `::before()` runs the guards, which deny
+		// everything for the logged out user
+		$this->app->impersonate('kirby');
+
 		$page = new Page([
 			'slug' => 'test',
 		]);
@@ -438,6 +482,69 @@ class ModelCommitTest extends TestCase
 		], $result);
 
 		$this->assertSame(1, $calls);
+	}
+
+	public function testHookWithImpersonation(): void
+	{
+		$phpunit = $this;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () use ($phpunit) {
+					$this->impersonate('kirby');
+					$phpunit->assertSame('kirby', $this->user()->id());
+				}
+			]
+		]);
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+		$commit->hook(hook: 'after', arguments: ['page' => $page]);
+
+		$this->assertNull($this->app->user());
+	}
+
+	public function testHookWithImpersonationAndException(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () {
+					$this->impersonate('kirby');
+					throw new LogicException('Hook failed');
+				}
+			]
+		]);
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+
+		try {
+			$commit->hook(hook: 'after', arguments: ['page' => $page]);
+			$this->fail('The hook exception should not be swallowed');
+		} catch (LogicException $e) {
+			$this->assertSame('Hook failed', $e->getMessage());
+		}
+
+		$this->assertNull($this->app->user());
+	}
+
+	public function testHookWithImpersonationByCaller(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.test:after' => function () {
+					$this->impersonate('nobody');
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(model: $page, action: 'test');
+		$commit->hook(hook: 'after', arguments: ['page' => $page]);
+
+		$this->assertSame('kirby', $this->app->user()->id());
 	}
 
 	public function testHookWithModifiedModel(): void
@@ -656,6 +763,83 @@ class ModelCommitTest extends TestCase
 		$commit = new ModelCommit(
 			model: $page,
 			action: 'create'
+		);
+
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+	}
+
+	public function testValidateWithModelFromArguments(): void
+	{
+		// the `before` hook can replace the model, which is why
+		// the model from the arguments takes priority over the
+		// model of the commit
+		$commit = new ModelCommit(
+			model: new Page(['slug' => 'a']),
+			action: 'create'
+		);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to create "b"');
+
+		$commit->validate(arguments: [
+			'page' => new Page(['slug' => 'b'])
+		]);
+	}
+
+	public function testValidateWithUndefinedAction(): void
+	{
+		// a role that is allowed to do everything
+		// that has a permission rule
+		$this->app = $this->app->clone([
+			'roles' => [['name' => 'editor', 'permissions' => true]],
+			'users' => [['email' => 'editor@getkirby.com', 'role' => 'editor']]
+		]);
+
+		$this->app->impersonate('editor@getkirby.com');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		// actions without a permission rule are denied,
+		// as no role can grant a permission that doesn't exist
+		$this->expectException(PermissionException::class);
+
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+	}
+
+	public function testValidateWithUndefinedActionAndKirbyUser(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
+		);
+
+		// the almighty `kirby` user overrules the default
+		$commit->validate(arguments: [
+			'page' => $page
+		]);
+
+		$this->assertTrue(true);
+	}
+
+	public function testValidateWithUndefinedActionAndNobodyUser(): void
+	{
+		$page   = new Page(['slug' => 'test']);
+		$commit = new ModelCommit(
+			model: $page,
+			action: 'test'
 		);
 
 		$this->expectException(PermissionException::class);

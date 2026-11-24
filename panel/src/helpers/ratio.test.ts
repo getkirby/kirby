@@ -2,25 +2,50 @@ import { describe, expect, it } from "vitest";
 import ratio from "./ratio";
 
 describe("$helper.ratio()", () => {
-	const data: Record<string, [unknown, string][]> = {
-		"should return default ratio": [[undefined, "66.67%"]],
-		"should return padding for 16/9": [["16/9", "56.25%"]],
-		"should return 100% on invalid fractions": [
-			["0/16", "100%"],
-			["16/0", "100%"]
-		],
-		"should return 100% on invalid input": [
-			["2", "100%"],
-			[1, "100%"],
-			[{}, "100%"]
-		]
-	};
+	const cases: {
+		name: string;
+		fraction: unknown;
+		vertical?: boolean;
+		expected: string;
+	}[] = [
+		{
+			name: "uses the default fraction",
+			fraction: undefined,
+			expected: "66.67%"
+		},
+		{
+			name: "calculates padding for 16/9",
+			fraction: "16/9",
+			expected: "56.25%"
+		},
+		{
+			name: "returns 100% when the first part is 0",
+			fraction: "0/16",
+			expected: "100%"
+		},
+		{
+			name: "returns 100% when the second part is 0",
+			fraction: "16/0",
+			expected: "100%"
+		},
+		{
+			name: "returns 100% for a non-fraction string",
+			fraction: "2",
+			expected: "100%"
+		},
+		{ name: "returns 100% for a number", fraction: 1, expected: "100%" },
+		{ name: "returns 100% for an object", fraction: {}, expected: "100%" },
+		{
+			name: "supports horizontal orientation",
+			fraction: "3/2",
+			vertical: false,
+			expected: "150%"
+		}
+	];
 
-	for (const test in data) {
-		it(test, () => {
-			for (const exp of data[test]) {
-				expect(ratio(exp[0] as string | undefined)).toBe(exp[1]);
-			}
-		});
-	}
+	it.each(cases)("$name", ({ fraction, vertical, expected }) => {
+		expect(ratio(fraction as string | undefined, undefined, vertical)).toBe(
+			expected
+		);
+	});
 });

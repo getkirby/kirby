@@ -2,35 +2,43 @@
 
 namespace Kirby\Http;
 
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Toolkit\Str;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
  * Static URL tools
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Url
 {
 	/**
-	 * The base Url to build absolute Urls from
-	 */
-	public static string|null $home = '/';
-
-	/**
 	 * The current Uri object as string
 	 */
 	public static string|null $current = null;
+
+	/**
+	 * The base Url to build absolute Urls from
+	 */
+	public static string|null $home = '/';
 
 	/**
 	 * Facade for all Uri object methods
 	 */
 	public static function __callStatic(string $method, array $arguments)
 	{
+		// `Uri::__call()` would return `null` for anything unknown
+		if (
+			method_exists(Uri::class, $method) === false &&
+			property_exists(Uri::class, $method) === false
+		) {
+			throw new BadMethodCallException(
+				message: 'The method: "' . $method . '" does not exist'
+			);
+		}
+
 		$uri = new Uri($arguments[0] ?? static::current());
 		return $uri->$method(...array_slice($arguments, 1));
 	}
@@ -69,8 +77,11 @@ class Url
 	 * a file at the given line number
 	 * @since 5.3.0
 	 */
-	public static function editor(string|false $editor, string|null $file, int $line = 0): string|null
-	{
+	public static function editor(
+		string|false $editor,
+		string|null $file,
+		int $line = 0
+	): string|null {
 		if ($editor === false || $file === null) {
 			return null;
 		}
@@ -78,7 +89,8 @@ class Url
 		$handler = new PrettyPageHandler();
 		$handler->setEditor($editor);
 
-		return $handler->getEditorHref($file, $line);
+		$href = $handler->getEditorHref($file, $line);
+		return is_string($href) === true ? $href : null;
 	}
 
 	/**
@@ -87,28 +99,14 @@ class Url
 	 */
 	public static function fix(string|null $url = null): string|null
 	{
+		$url ??= '';
+
 		// make sure to not touch absolute urls
-		if (!preg_match('!^(https|http|ftp)\:\/\/!i', $url ?? '')) {
+		if (preg_match('!^(https|http|ftp)\:\/\/!i', $url) !== 1) {
 			return 'http://' . $url;
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Returns the home url if defined
-	 */
-	public static function home(): string
-	{
-		return static::$home;
-	}
-
-	/**
-	 * Returns the url to the executed script
-	 */
-	public static function index(array $props = []): string
-	{
-		return Uri::index($props)->toString();
 	}
 
 	/**
@@ -136,7 +134,25 @@ class Url
 	}
 
 	/**
+	 * Returns the home url if defined
+	 */
+	public static function home(): string
+	{
+		return static::$home ?? '/';
+	}
+
+	/**
+	 * Returns the url to the executed script
+	 */
+	public static function index(array $props = []): string
+	{
+		return Uri::index($props)->toString();
+	}
+
+	/**
 	 * Checks if an URL is absolute
+	 *
+	 * @psalm-assert-if-true non-empty-string $url
 	 */
 	public static function isAbsolute(string|null $url = null): bool
 	{
@@ -149,6 +165,14 @@ class Url
 		//  http://example.com/uri, https://example.com/uri, ftp://example.com/uri
 		//  mailto:example@example.com, geo:49.0158,8.3239?z=11
 		return preg_match('!^(//|[a-z0-9+-.]+://|mailto:|tel:|geo:)!i', $url) === 1;
+	}
+
+	/**
+	 * Return the last url the user has been on if detectable
+	 */
+	public static function last(): string
+	{
+		return Environment::getGlobally('HTTP_REFERER', '');
 	}
 
 	/**
@@ -196,7 +220,7 @@ class Url
 	 */
 	public static function normalize(string $url): string
 	{
-		$url = preg_replace('/[\x09\x0a\x0d]/', '', $url);
+		$url = str_replace(["\t", "\n", "\r"], '', $url);
 		$url = trim($url, "\x00..\x20");
 
 		// browsers treat a backslash like a forward slash, so a leading
@@ -205,7 +229,7 @@ class Url
 			'!^[/\\\\]{2,}!',
 			fn ($slashes) => str_replace('\\', '/', $slashes[0]),
 			$url
-		);
+		) ?? $url;
 	}
 
 	/**
@@ -230,11 +254,21 @@ class Url
 	}
 
 	/**
-	 * Return the last url the user has been on if detectable
+	 * Whether two URLs point to the same host
+	 *
+	 * @since 6.0.0
 	 */
-	public static function last(): string
-	{
-		return Environment::getGlobally('HTTP_REFERER', '');
+	public static function sameHost(
+		string|null $a = null,
+		string|null $b = null
+	): bool {
+		$host = parse_url($a ?? '', PHP_URL_HOST);
+
+		if (is_string($host) === false) {
+			return false;
+		}
+
+		return $host === parse_url($b ?? '', PHP_URL_HOST);
 	}
 
 	/**
@@ -258,10 +292,18 @@ class Url
 		// remove the trailing slash from the path
 		$uri->setSlash(false);
 
-		$url = $base ? $uri->base() : $uri->toString();
+		$url = $base === true ? $uri->base() : $uri->toString();
 		$url = str_replace('www.', '', $url ?? '');
 
 		return Str::short($url, $length, $rep);
+	}
+
+	/**
+	 * Removes the fragment (hash) from the Url
+	 */
+	public static function stripFragment(string|null $url = null): string
+	{
+		return static::toObject($url)->setFragment(null)->toString();
 	}
 
 	/**
@@ -278,42 +320,6 @@ class Url
 	public static function stripQuery(string|null $url = null): string
 	{
 		return static::toObject($url)->setQuery(null)->toString();
-	}
-
-	/**
-	 * Removes the fragment (hash) from the Url
-	 */
-	public static function stripFragment(string|null $url = null): string
-	{
-		return static::toObject($url)->setFragment(null)->toString();
-	}
-
-	/**
-	 * Smart resolver for internal and external urls
-	 * @deprecated 5.3.0 Use `Kirby\Cms\Url::to()` instead
-	 */
-	public static function to(
-		string|null $path = null,
-		array|null $options = null
-	): string {
-		// make sure $path is string
-		$path ??= '';
-
-		// keep relative urls
-		if (
-			str_starts_with($path, './') === true ||
-			str_starts_with($path, '../') === true
-		) {
-			return $path;
-		}
-
-		$url = static::makeAbsolute($path);
-
-		if ($options === null) {
-			return $url;
-		}
-
-		return (new Uri($url, $options))->toString();
 	}
 
 	/**

@@ -28,20 +28,22 @@
 					:text="fieldset.name"
 					size="lg"
 					@click="$emit('submit', fieldset.type)"
-					@focus.native="$emit('input', fieldset.type)"
+					@focus="$emit('input', fieldset.type)"
 				/>
 			</k-navigate>
 		</details>
-		<!-- eslint-disable vue/no-v-html -->
 		<p
+			v-safe-html="$th('field.blocks.fieldsets.paste', { shortcut })"
 			class="k-clipboard-hint"
-			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
-		<!-- eslint-enable -->
 	</k-dialog>
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	inheritAttrs: false,
 	props: {
@@ -116,7 +118,7 @@ export default {
 	mounted() {
 		this.$events.on("paste", this.paste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("paste", this.paste);
 	},
 	methods: {

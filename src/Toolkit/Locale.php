@@ -7,20 +7,17 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * PHP locale handling
- * @since 3.5.0
  *
- * @package   Kirby Toolkit
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.0
  */
 class Locale
 {
 	/**
 	 * List of all locale constants supported by PHP
 	 */
-	public const LOCALE_CONSTANTS = [
+	public const array LOCALE_CONSTANTS = [
 		'LC_COLLATE',
 		'LC_CTYPE',
 		'LC_MONETARY',
@@ -32,6 +29,9 @@ class Locale
 	/**
 	 * Converts a normalized locale array to an array with the
 	 * locale constants replaced with their string representations
+	 *
+	 * @param array<int|string, string> $locale
+	 * @return array<int|string, string>
 	 */
 	public static function export(array $locale): array
 	{
@@ -53,11 +53,11 @@ class Locale
 	 * a specified or for all locale categories
 	 * @since 3.5.6
 	 *
-	 * @param int|string $category Locale category constant or constant name
+	 * @param $category Locale category constant or constant name
 	 * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
 	 *
-	 * @throws \Kirby\Exception\Exception If the locale cannot be determined
-	 * @throws \Kirby\Exception\InvalidArgumentException If the provided locale category is invalid
+	 * @throws Exception If the locale cannot be determined
+	 * @throws InvalidArgumentException If the provided locale category is invalid
 	 */
 	public static function get(int|string $category = LC_ALL): array|string
 	{
@@ -104,7 +104,7 @@ class Locale
 	 * Converts a locale string or an array with constant or
 	 * string keys to a normalized constant => value array
 	 *
-	 * @param array|string $locale
+	 * @param array<int|string, string>|string $locale
 	 */
 	public static function normalize($locale): array
 	{
@@ -129,9 +129,28 @@ class Locale
 	}
 
 	/**
+	 * Tries to convert an `LC_*` constant name
+	 * to its constant value
+	 */
+	protected static function normalizeConstant(
+		int|string $constant
+	): int|string {
+		if (
+			is_string($constant) === true &&
+			Str::startsWith($constant, 'LC_') === true
+		) {
+			return constant($constant);
+		}
+
+		// already an int or we cannot convert it safely
+		return $constant;
+	}
+
+	/**
 	 * Sets the PHP locale with a locale string or
 	 * an array with constant or string keys
-	 * @psalm-suppress UnusedFunctionCall
+	 *
+	 * @param array<int|string, string>|string $locale
 	 */
 	public static function set(array|string $locale): void
 	{
@@ -152,28 +171,11 @@ class Locale
 	}
 
 	/**
-	 * Tries to convert an `LC_*` constant name
-	 * to its constant value
-	 */
-	protected static function normalizeConstant(
-		int|string $constant
-	): int|string {
-		if (
-			is_string($constant) === true &&
-			Str::startsWith($constant, 'LC_') === true
-		) {
-			return constant($constant);
-		}
-
-		// already an int or we cannot convert it safely
-		return $constant;
-	}
-
-	/**
 	 * Builds an associative array with the locales
 	 * that are actually supported on this system
 	 *
-	 * @param bool $withAll If set to `true`, `LC_ALL` is returned as well
+	 * @param $withAll If set to `true`, `LC_ALL` is returned as well
+	 * @return array<int, string>
 	 */
 	protected static function supportedConstants(bool $withAll = false): array
 	{

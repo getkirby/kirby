@@ -1,10 +1,10 @@
 <template>
 	<input
+		:id="id"
 		ref="input"
 		v-bind="{
 			autofocus,
 			disabled,
-			id,
 			max,
 			min,
 			name,
@@ -47,10 +47,15 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="number" @input="number = $event" name="number" type="number" />
+ * @example
+ * <k-input :value="number" @input="number = $event" name="number" type="number" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			number: this.format(this.value),

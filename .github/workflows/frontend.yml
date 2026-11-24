@@ -1,122 +1,81 @@
 # To upgrade pinned actions: Use https://github.com/mheap/pin-github-action
 
 name: CI - Frontend
+
+env:
+  OS: &os ubuntu-24.04
+  TIMEOUT: &timeout 10
+
+  SHOULD_RUN: &should-run >-
+    github.event_name == 'workflow_dispatch' ||
+    github.event_name == 'workflow_call' ||
+    github.repository == 'getkirby/kirby' ||
+    github.repository_owner != 'getkirby'
+
 on:
+  # only the long-lived base branches run on push, so that their caches
+  # are seeded for the pull requests targeting them; feature/fix branches
+  # are covered by the pull_request event instead, which can restore caches
+  # from its base branch and keeps the same commit from running twice
   push:
-    branches-ignore:
+    branches:
       - "main"
-      - "release/**"
-    paths:
+      - "develop-patch"
+      - "develop-minor"
+      - "v*/develop"
+    paths: &frontend-paths
+      - ".github/actions/setup-npm/**"
       - ".github/workflows/frontend.yml"
       - "panel/**"
       - "!panel/scripts/**"
   pull_request:
-    branches-ignore:
-      - "main"
-      - "release/**"
-    paths:
-      - ".github/workflows/frontend.yml"
-      - "panel/**"
-      - "!panel/scripts/**"
+    paths: *frontend-paths
   workflow_call:
-
   workflow_dispatch:
 
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  # ===================== Tests & Style =====================
   tests:
-    name: "Unit tests"
-
-    # run job only under the following conditions:
-    # - can be triggered manually from any repository
-    # - if on pull request, only run if from a fork
-    #   (our own repo is covered by the push event)
-    # - if on push, only run CI automatically for the
-    #   main getkirby/kirby repo and for forks
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name != github.repository
-      ) ||
-      (
-        github.event_name == 'push' &&
-        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
-      )
-
-    runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    name: "Tests & Style"
+    if: *should-run
+    runs-on: *os
+    timeout-minutes: *timeout
+    defaults:
+      run:
+        working-directory: panel
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
-      - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - name: Setup Node/npm
+        uses: ./.github/actions/setup-npm
+
+      - name: Run JavaScript unit tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage results to Codecov
+        if: env.token != ''
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
-          cache: "npm"
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        id: finishPrepare
-        run: npm ci
-        working-directory: panel
-
-      - name: Run JavaScript unit tests
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run test:unit
-        working-directory: panel
+          # for better reliability if the GitHub API is down
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: panel/tests/coverage/lcov.info
+          disable_search: true
+          flags: frontend
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Check for TypeScript type errors
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: npm run types
-        working-directory: panel
+        run: npm run test:types
 
-  coding-style:
-    name: "Coding Style"
-
-    # run job only under the following conditions:
-    # - can be triggered manually from any repository
-    # - if on pull request, only run if from a fork
-    #   (our own repo is covered by the push event)
-    # - if on push, only run CI automatically for the
-    #   main getkirby/kirby repo and for forks
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      (
-        github.event_name == 'pull_request' &&
-        github.event.pull_request.head.repo.full_name != github.repository
-      ) ||
-      (
-        github.event_name == 'push' &&
-        (github.repository == 'getkirby/kirby' || github.repository_owner != 'getkirby')
-      )
-
-    runs-on: ubuntu-22.04
-    timeout-minutes: 5
-    env:
-      php: "8.2"
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Set up Node.js problem matchers and cache npm dependencies
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
-        with:
-          cache: "npm"
-          cache-dependency-path: panel/package-lock.json
-
-      - name: Install npm dependencies
-        id: finishPrepare
-        run: npm ci
-        working-directory: panel
-
-      - name: Check for JavaScript coding style violations (ESLint)
-        if: always() && steps.finishPrepare.outcome == 'success'
+      - name: "ESLint: JavaScript coding style violations"
         run: npm run lint -- --max-warnings 0 --format stylish --no-fix
-        working-directory: panel
 
-      - name: Check for JavaScript coding style violations (Oxfmt)
-        if: always() && steps.finishPrepare.outcome == 'success'
+      - name: "Oxfmt: JavaScript coding style violations"
         run: npm run format
-        working-directory: panel

@@ -1,0 +1,168 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\FieldOptions;
+use Kirby\Form\Mixin;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
+
+/**
+ * Color field
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class ColorField extends OptionField
+{
+	use Mixin\Icon;
+	use Mixin\Placeholder;
+
+	/**
+	 * Whether to allow alpha transparency in the color
+	 */
+	#[Prop]
+	protected bool $alpha = false;
+
+	/**
+	 * The CSS format (hex, rgb, hsl) to display and store the value
+	 */
+	#[Prop]
+	protected string $format = 'hex';
+
+	/**
+	 * Change mode to disable the color picker (`input`) or to only
+	 * show the `options` as toggles
+	 */
+	#[Prop]
+	protected string $mode = 'picker';
+
+	public function alpha(): bool
+	{
+		return $this->alpha;
+	}
+
+	protected function fieldOptions(): FieldOptions
+	{
+		// resolve options to support manual arrays
+		// alongside api and query options
+		$props = FieldOptions::polyfill(['options' => $this->options ?? []]);
+
+		return FieldOptions::factory([
+			'text'  => '{{ item.value }}',
+			'value' => '{{ item.key }}',
+			...$props['options'] ?? []
+		]);
+	}
+
+	/**
+	 * @return 'hex'|'hsl'|'rgb'
+	 * @throws InvalidArgumentException If the format is not supported
+	 */
+	public function format(): string
+	{
+		if (in_array($this->format, ['hex', 'hsl', 'rgb'], true) === true) {
+			return $this->format;
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Invalid format "' . $this->format . '" in color field' . ($this->name ? ' "' . $this->name . '"' : null)
+		);
+	}
+
+	public static function isColor(string $value): bool
+	{
+		return
+			static::isHex($value) === true ||
+			static::isRgb($value) === true ||
+			static::isHsl($value) === true;
+	}
+
+	public static function isHex(string $value): bool
+	{
+		return preg_match('/^#([\da-f]{3,4}){1,2}$/i', $value) === 1;
+	}
+
+	public static function isHsl(string $value): bool
+	{
+		return preg_match('/^hsla?\(\s*(\d{1,3}\.?\d*)(deg|rad|grad|turn)?(?:,|\s)+(\d{1,3})%(?:,|\s)+(\d{1,3})%(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
+	}
+
+	public static function isRgb(string $value): bool
+	{
+		return preg_match('/^rgba?\(\s*(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s)+(\d{1,3})(%?)(?:,|\s|\/)*(\d*(?:\.\d+)?)(%?)\s*\)?$/i', $value) === 1;
+	}
+
+	/**
+	 * @return 'input'|'options'|'picker'
+	 * @throws InvalidArgumentException If the mode is not supported
+	 */
+	public function mode(): string
+	{
+		if (in_array($this->mode, ['picker', 'input', 'options'], true) === true) {
+			return $this->mode;
+		}
+
+		throw new InvalidArgumentException(
+			message: 'Invalid mode "' . $this->mode . '" in color field' . ($this->name ? ' "' . $this->name . '"' : null)
+		);
+	}
+
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	public function options(): array
+	{
+		$options = parent::options();
+
+		if ($options === []) {
+			return [];
+		}
+
+		if (
+			is_numeric($options[0]['value']) === true ||
+			$options[0]['value'] === (string)$options[0]['text']
+		) {
+			// simple array of values
+			// or value=text (from Options class).
+			// the text is trusted HTML, the value must stay a plain string
+			$options = A::map($options, fn ($option) => [
+				'value' => (string)$option['text']
+			]);
+
+		} else {
+			$options = A::map($options, fn ($option) => [
+				'value' => $option['value'],
+				'text'  => $option['text']
+			]);
+		}
+
+		return $options;
+	}
+
+	protected function validateColor(string|null $value): void
+	{
+		if ($this->isEmptyValue($value) === true) {
+			return;
+		}
+
+		$format = $this->format();
+		$method = 'is' . $format;
+
+		if (static::$method($value) === false) {
+			throw new InvalidArgumentException(
+				key: 'validation.color',
+				data: ['format' => $format]
+			);
+		}
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'color' => fn ($value) => $this->validateColor($value)
+		];
+	}
+}

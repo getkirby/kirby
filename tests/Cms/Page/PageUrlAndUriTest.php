@@ -8,48 +8,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class PageUrlAndUriTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageUrl';
-
-	public function testHomeUrlAndUriInMultiLanguageMode(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$page = new Page([
-			'slug' => 'home',
-			'translations' => [
-				[
-					'code' => 'de',
-					// Should not have an effect on the
-					// base url. Only used for child urls.
-					'slug' => 'zuhause'
-				]
-			]
-		]);
-
-		$this->assertSame('/en', $page->url());
-		$this->assertSame('home', $page->uri());
-
-		$this->assertSame('/en', $page->url('en'));
-		$this->assertSame('/de', $page->url('de'));
-
-		$this->assertSame('home', $page->uri('en'));
-		$this->assertSame('zuhause', $page->uri('de'));
-
-		$this->app->setCurrentLanguage('de');
-
-		$this->assertSame('/de', $page->url());
-		$this->assertSame('zuhause', $page->uri());
-	}
-
-	public function testHomeUrlAndUriInSingleLanguageMode(): void
-	{
-		$page = new Page([
-			'slug' => 'home'
-		]);
-
-		$this->assertSame('/', $page->url());
-		$this->assertSame('home', $page->uri());
-	}
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageUrl';
 
 	public function testHomeChildUrlAndUriInMultiLanguageMode(): void
 	{
@@ -110,6 +69,47 @@ class PageUrlAndUriTest extends ModelTestCase
 		$this->assertSame('home/child', $child->uri());
 	}
 
+	public function testHomeUrlAndUriInMultiLanguageMode(): void
+	{
+		$this->setUpMultiLanguage();
+
+		$page = new Page([
+			'slug' => 'home',
+			'translations' => [
+				[
+					'code' => 'de',
+					// Should not have an effect on the
+					// base url. Only used for child urls.
+					'slug' => 'zuhause'
+				]
+			]
+		]);
+
+		$this->assertSame('/en', $page->url());
+		$this->assertSame('home', $page->uri());
+
+		$this->assertSame('/en', $page->url('en'));
+		$this->assertSame('/de', $page->url('de'));
+
+		$this->assertSame('home', $page->uri('en'));
+		$this->assertSame('zuhause', $page->uri('de'));
+
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('/de', $page->url());
+		$this->assertSame('zuhause', $page->uri());
+	}
+
+	public function testHomeUrlAndUriInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug' => 'home'
+		]);
+
+		$this->assertSame('/', $page->url());
+		$this->assertSame('home', $page->uri());
+	}
+
 	public function testSetUrl(): void
 	{
 		$page = new Page([
@@ -151,6 +151,13 @@ class PageUrlAndUriTest extends ModelTestCase
 		$this->assertSame('test', $page->uri());
 	}
 
+	public function testUrlAndUriInSingleLanguageMode(): void
+	{
+		$page = new Page(['slug' => 'test']);
+		$this->assertSame('/test', $page->url());
+		$this->assertSame('test', $page->uri());
+	}
+
 	public function testUrlAndUriWithNestedPagesInMultiLanguageMode(): void
 	{
 		$this->setUpMultiLanguage();
@@ -178,25 +185,19 @@ class PageUrlAndUriTest extends ModelTestCase
 		$this->assertSame('grandma/mother/child', $child->uri());
 	}
 
-	public function testUrlWithOptionsInMultiLanguageMode(): void
+	public function testUrlAndUriWithNestedPagesInSingleLanguageMode(): void
 	{
-		$this->setUpMultiLanguage();
+		$grandma = new Page(['slug' => 'grandma']);
+		$mother  = new Page(['slug' => 'mother', 'parent' => $grandma]);
+		$child   = new Page(['slug' => 'child', 'parent' => $mother]);
 
-		$page = new Page([
-			'slug' => 'test',
-		]);
+		$this->assertSame('/grandma', $grandma->url());
+		$this->assertSame('/grandma/mother', $mother->url());
+		$this->assertSame('/grandma/mother/child', $child->url());
 
-		$this->assertSame('/en/test/foo:bar?q=search', $page->url([
-			'params' => 'foo:bar',
-			'query'  => 'q=search'
-		]));
-
-		$this->app->setCurrentLanguage('de');
-
-		$this->assertSame('/de/test/foo:bar?q=search', $page->url([
-			'params' => 'foo:bar',
-			'query'  => 'q=search'
-		]));
+		$this->assertSame('grandma', $grandma->uri());
+		$this->assertSame('grandma/mother', $mother->uri());
+		$this->assertSame('grandma/mother/child', $child->uri());
 	}
 
 	public function testUrlAndUriWithTranslatedSlugInMultiLanguageMode(): void
@@ -266,26 +267,25 @@ class PageUrlAndUriTest extends ModelTestCase
 		$this->assertSame('oma/mutter/kind', $child->uri());
 	}
 
-	public function testUrlAndUriInSingleLanguageMode(): void
+	public function testUrlWithOptionsInMultiLanguageMode(): void
 	{
-		$page = new Page(['slug' => 'test']);
-		$this->assertSame('/test', $page->url());
-		$this->assertSame('test', $page->uri());
-	}
+		$this->setUpMultiLanguage();
 
-	public function testUrlAndUriWithNestedPagesInSingleLanguageMode(): void
-	{
-		$grandma = new Page(['slug' => 'grandma']);
-		$mother  = new Page(['slug' => 'mother', 'parent' => $grandma]);
-		$child   = new Page(['slug' => 'child', 'parent' => $mother]);
+		$page = new Page([
+			'slug' => 'test',
+		]);
 
-		$this->assertSame('/grandma', $grandma->url());
-		$this->assertSame('/grandma/mother', $mother->url());
-		$this->assertSame('/grandma/mother/child', $child->url());
+		$this->assertSame('/en/test/foo:bar?q=search', $page->url([
+			'params' => 'foo:bar',
+			'query'  => 'q=search'
+		]));
 
-		$this->assertSame('grandma', $grandma->uri());
-		$this->assertSame('grandma/mother', $mother->uri());
-		$this->assertSame('grandma/mother/child', $child->uri());
+		$this->app->setCurrentLanguage('de');
+
+		$this->assertSame('/de/test/foo:bar?q=search', $page->url([
+			'params' => 'foo:bar',
+			'query'  => 'q=search'
+		]));
 	}
 
 	public function testUrlWithOptionsInSingleLanguageMode(): void

@@ -15,9 +15,6 @@ use Kirby\Toolkit\Str;
  * the correct base URL and a template asset
  * URL builder.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -30,6 +27,7 @@ class Url extends BaseUrl
 	 */
 	public static function home(): string
 	{
+		/** @var string */
 		return App::instance()->url();
 	}
 
@@ -37,11 +35,9 @@ class Url extends BaseUrl
 	 * Convert a string to a safe version to be used in a URL,
 	 * obeying the `slugs.maxlength` option
 	 *
-	 * @param string $string The unsafe string
-	 * @param string $separator To be used instead of space and
-	 *                          other non-word characters.
-	 * @param string $allowed List of all allowed characters (regex)
-	 * @return string The safe string
+	 * @param $separator To be used instead of space and
+	 *                  other non-word characters.
+	 * @param $allowed List of all allowed characters (regex)
 	 */
 	public static function slug(
 		string|null $string = null,
@@ -50,6 +46,19 @@ class Url extends BaseUrl
 	): string {
 		$maxlength = App::instance()->option('slugs.maxlength', 255);
 		return Str::slug($string, $separator, $allowed, $maxlength);
+	}
+
+	/**
+	 * Smart resolver for internal and external urls
+	 *
+	 * @param $options Either an array of options for the Uri class or a language string
+	 */
+	public static function to(
+		string|null $path = null,
+		array|string|null $options = null
+	): string {
+		$kirby = App::instance();
+		return ($kirby->component('url'))($kirby, $path, $options);
 	}
 
 	/**
@@ -68,18 +77,5 @@ class Url extends BaseUrl
 		$url   = $kirby->url('assets') . '/' . $path;
 
 		return F::exists($file, $root) === true ? $url : null;
-	}
-
-	/**
-	 * Smart resolver for internal and external urls
-	 *
-	 * @param array|string|null $options Either an array of options for the Uri class or a language string
-	 */
-	public static function to(
-		string|null $path = null,
-		array|string|null $options = null
-	): string {
-		$kirby = App::instance();
-		return ($kirby->component('url'))($kirby, $path, $options);
 	}
 }

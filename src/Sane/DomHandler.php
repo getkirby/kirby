@@ -5,25 +5,23 @@ namespace Kirby\Sane;
 use DOMAttr;
 use DOMDocumentType;
 use DOMElement;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Dom;
 
 /**
  * Base class for Sane handlers with DOM file types
- * @since 3.5.8
  *
- * @package   Kirby Sane
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
- *
- * @SuppressWarnings(PHPMD.LongVariable)
+ * @since     3.5.8
  */
 class DomHandler extends Handler
 {
 	/**
 	 * List of all MIME types that may
 	 * be used in data URIs
+	 *
+	 * @var list<string>
 	 */
 	public static array $allowedDataUris = [
 		'data:image/png',
@@ -40,8 +38,17 @@ class DomHandler extends Handler
 
 	/**
 	 * Allowed hostnames for HTTP(S) URLs
+	 *
+	 * @var list<string>|true
 	 */
 	public static array|true $allowedDomains = true;
+
+	/**
+	 * Names of allowed XML processing instructions
+	 *
+	 * @var list<string>
+	 */
+	public static array $allowedPIs = [];
 
 	/**
 	 * Whether URLs that begin with `/` should be allowed even if the
@@ -51,101 +58,19 @@ class DomHandler extends Handler
 	public static bool $allowHostRelativeUrls = true;
 
 	/**
-	 * Names of allowed XML processing instructions
-	 */
-	public static array $allowedPIs = [];
-
-	/**
 	 * The document type (`'HTML'` or `'XML'`)
 	 * (to be set in child classes)
 	 */
 	protected static string $type = 'XML';
 
 	/**
-	 * Sanitizes the given string
-	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
-	 */
-	public static function sanitize(
-		string $string,
-		bool $isExternal = false
-	): string {
-		$dom = static::parse($string);
-		$dom->sanitize(static::options($isExternal));
-		return $dom->toString();
-	}
-
-	/**
-	 * Validates file contents
-	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 */
-	public static function validate(
-		string $string,
-		bool $isExternal = false
-	): void {
-		$dom    = static::parse($string);
-		$errors = $dom->sanitize(static::options($isExternal));
-
-		// there may be multiple errors, we can only throw one of them at a time
-		if (count($errors) > 0) {
-			throw $errors[0];
-		}
-	}
-
-	/**
-	 * Custom callback for additional attribute sanitization
-	 * @internal
-	 *
-	 * @return array Array with exception objects for each modification
-	 */
-	public static function sanitizeAttr(
-		DOMAttr $attr,
-		array $options
-	): array {
-		// to be extended in child classes
-		return [];
-	}
-
-	/**
-	 * Custom callback for additional element sanitization
-	 * @internal
-	 *
-	 * @return array Array with exception objects for each modification
-	 */
-	public static function sanitizeElement(
-		DOMElement $element,
-		array $options
-	): array {
-		// to be extended in child classes
-		return [];
-	}
-
-	/**
-	 * Custom callback for additional doctype validation
-	 * @internal
-	 */
-	public static function validateDoctype(
-		DOMDocumentType $doctype,
-		array $options
-	): void {
-		// to be extended in child classes
-	}
-
-	/**
 	 * Returns the sanitization options for the handler
 	 * (to be extended in child classes)
 	 * @internal
 	 *
-	 * @param bool $isExternal Whether the string is from an external file
-	 *                         that may be accessed directly
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 * @return array<string, mixed>
 	 */
 	public static function options(bool $isExternal): array
 	{
@@ -171,10 +96,88 @@ class DomHandler extends Handler
 	/**
 	 * Parses the given string into a `Toolkit\Dom` object
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
+	 * @throws InvalidArgumentException If the file couldn't be parsed
 	 */
 	protected static function parse(string $string): Dom
 	{
 		return new Dom($string, static::$type);
+	}
+
+	/**
+	 * Sanitizes the given string
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 */
+	public static function sanitize(
+		string $string,
+		bool $isExternal = false
+	): string {
+		$dom = static::parse($string);
+		$dom->sanitize(static::options($isExternal));
+		return $dom->toString();
+	}
+
+	/**
+	 * Custom callback for additional attribute sanitization
+	 * @internal
+	 *
+	 * @return list<InvalidArgumentException> Exceptions for each modification
+	 */
+	public static function sanitizeAttr(
+		DOMAttr $attr,
+		array $options
+	): array {
+		// to be extended in child classes
+		return [];
+	}
+
+	/**
+	 * Custom callback for additional element sanitization
+	 * @internal
+	 *
+	 * @return list<InvalidArgumentException> Exceptions for each modification
+	 */
+	public static function sanitizeElement(
+		DOMElement $element,
+		array $options
+	): array {
+		// to be extended in child classes
+		return [];
+	}
+
+	/**
+	 * Validates file contents
+	 *
+	 * @param $isExternal Whether the string is from an external file
+	 *                   that may be accessed directly
+	 *
+	 * @throws InvalidArgumentException If the file couldn't be parsed
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 */
+	public static function validate(
+		string $string,
+		bool $isExternal = false
+	): void {
+		$dom    = static::parse($string);
+		$errors = $dom->sanitize(static::options($isExternal));
+
+		// there may be multiple errors, we can only throw one of them at a time
+		if ($errors !== []) {
+			throw $errors[0];
+		}
+	}
+
+	/**
+	 * Custom callback for additional doctype validation
+	 * @internal
+	 */
+	public static function validateDoctype(
+		DOMDocumentType $doctype,
+		array $options
+	): void {
+		// to be extended in child classes
 	}
 }

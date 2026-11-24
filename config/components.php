@@ -19,7 +19,7 @@ use Kirby\Filesystem\Filename;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
-use Kirby\Session\SessionStore;
+use Kirby\Session\Store;
 use Kirby\Template\Snippet;
 use Kirby\Template\Template;
 use Kirby\Text\Markdown;
@@ -169,9 +169,16 @@ return [
 			'fields'    => [],
 			'minlength' => 2,
 			'score'     => [],
+			'stopwords' => [],
 			'words'     => false,
 			...$params
 		];
+
+		if (is_int($options['minlength']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The "minlength" search option must be an integer'
+			);
+		}
 
 		// empty or too short search query
 		if (Str::length($query) < $options['minlength']) {
@@ -181,12 +188,18 @@ return [
 		$words = preg_replace('/(\s)/u', ',', $query);
 		$words = Str::split($words, ',', $options['minlength']);
 
-		if (empty($options['stopwords']) === false) {
+		if (is_array($options['stopwords']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The "stopwords" search option must be an array'
+			);
+		}
+
+		if ($options['stopwords'] !== []) {
 			$words = array_diff($words, $options['stopwords']);
 		}
 
 		// returns an empty collection if there is no search word
-		if (empty($words) === true) {
+		if ($words === []) {
 			return $collection->limit(0);
 		}
 
@@ -197,6 +210,12 @@ return [
 
 		$exact = preg_quote($query);
 
+		if (is_bool($options['words']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The "words" search option must be a boolean'
+			);
+		}
+
 		if ($options['words']) {
 			$exact = '(\b' . $exact . '\b)';
 		}
@@ -204,6 +223,18 @@ return [
 		$query   = Str::lower($query);
 		$preg    = '!(' . implode('|', $words) . ')!iu';
 		$scores  = [];
+
+		if (is_array($options['score']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The "score" search option must be an array'
+			);
+		}
+
+		if (is_array($options['fields']) === false) {
+			throw new InvalidArgumentException(
+				message: 'The "fields" search option must be an array'
+			);
+		}
 
 		$results = $collection->filter(function ($item) use ($query, $exact, $preg, $options, &$scores) {
 			$data   = $item->content()->toArray();
@@ -223,8 +254,8 @@ return [
 				];
 			}
 
-			if (empty($options['fields']) === false) {
-				$fields = array_map('strtolower', $options['fields']);
+			if ($options['fields'] !== []) {
+				$fields = array_map(strtolower(...), $options['fields']);
 				$keys   = array_intersect($keys, $fields);
 			}
 
@@ -279,8 +310,10 @@ return [
 	/**
 	 * Add your own session store
 	 */
-	'session::store' => function (App $kirby): string|SessionStore {
-		return $kirby->root('sessions');
+	'session::store' => function (App $kirby): string|Store {
+		/** @var string $root */
+		$root = $kirby->root('sessions');
+		return $root;
 	},
 
 	/**
@@ -462,7 +495,10 @@ return [
 			$path !== null &&
 			Uuid::is($path, ['page', 'file']) === true
 		) {
-			$model = Uuid::for($path)->model();
+			/**
+			 * @var \Kirby\Cms\Page|\Kirby\Cms\File|null $model
+			 */
+			$model = Uuid::from($path)?->model();
 
 			if ($model === null) {
 				throw new NotFoundException(

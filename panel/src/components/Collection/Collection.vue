@@ -8,7 +8,7 @@
 				v-if="items.length === 0"
 				v-bind="empty"
 				:layout="layout"
-				v-on="listeners"
+				v-on="listeners()"
 			/>
 
 			<k-items
@@ -21,6 +21,8 @@
 					layout,
 					link,
 					selecting,
+					selectmode,
+					selected,
 					size,
 					sortable,
 					theme
@@ -31,14 +33,14 @@
 				@select="onSelect"
 				@sort="$emit('sort', $event)"
 			>
-				<template #options="{ item, index }">
+				<template v-if="$slots.options" #options="{ item, index }">
 					<slot name="options" v-bind="{ item, index }" />
 				</template>
 			</k-items>
 		</component>
 
 		<footer v-if="help || hasPagination" class="k-collection-footer">
-			<k-text class="k-help k-collection-help" :html="help" />
+			<k-text class="k-help k-collection-help" :text="help" />
 			<!--
 				Emitted when the pagination changes
 				@event paginate
@@ -59,6 +61,9 @@ import { props as ItemsProps } from "./Items.vue";
 /**
  * The `k-collection` component is a wrapper around `k-items`
  * that adds sortabilty and pagination to the items.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [ItemsProps],
@@ -88,7 +93,16 @@ export default {
 		 */
 		scrollable: Boolean
 	},
-	emits: ["action", "change", "empty", "item", "option", "paginate", "sort"],
+	emits: [
+		"action",
+		"change",
+		"empty",
+		"item",
+		"option",
+		"paginate",
+		"select",
+		"sort"
+	],
 	computed: {
 		hasPagination() {
 			if (this.pagination === false) {
@@ -104,14 +118,6 @@ export default {
 			}
 
 			return true;
-		},
-		listeners() {
-			if (this.$listeners["empty"]) {
-				return {
-					click: this.onEmpty
-				};
-			}
-			return {};
 		},
 		resolvedIndex() {
 			return (this.paginationOptions.offset ?? this.index - 1) + 1;
@@ -129,12 +135,22 @@ export default {
 			};
 		}
 	},
-	watch: {
-		$props() {
-			this.$forceUpdate();
-		}
-	},
 	methods: {
+		/**
+		 * Only make the empty state clickable when there is
+		 * an empty listener. This needs to be a method instead
+		 * of a computed property, as vnode props are not reactive
+		 * and the listener might be added after the first render.
+		 */
+		listeners() {
+			if (this.$.vnode.props?.onEmpty !== undefined) {
+				return {
+					click: this.onEmpty
+				};
+			}
+
+			return {};
+		},
 		onEmpty(e) {
 			e.stopPropagation();
 			this.$emit("empty");

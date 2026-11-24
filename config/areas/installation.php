@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Panel\Controller\View\InstallationViewController;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\I18n;
 
@@ -11,24 +12,7 @@ return function ($kirby) {
 			'installation' => [
 				'pattern' => 'installation',
 				'auth'    => false,
-				'action'  => function () use ($kirby) {
-					$system = $kirby->system();
-					return [
-						'component' => 'k-installation-view',
-						'props'     => [
-							'isInstallable' => $system->isInstallable(),
-							'isInstalled'   => $system->isInstalled(),
-							'isOk'          => $system->isOk(),
-							'requirements'  => $system->status(),
-							'translations'  => $kirby->translations()->values(function ($translation) {
-								return [
-									'text'  => $translation->name(),
-									'value' => $translation->code(),
-								];
-							}),
-						]
-					];
-				}
+				'action'  => InstallationViewController::class
 			],
 			'installation.fallback' => [
 				'pattern' => '(:all)',

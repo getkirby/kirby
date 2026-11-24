@@ -6,12 +6,10 @@ use Kirby\TestCase;
 
 class LayoutColumnTest extends TestCase
 {
-	public function testConstruct(): void
+	protected function tearDown(): void
 	{
-		$column = new LayoutColumn();
-		$this->assertInstanceOf(Blocks::class, $column->blocks());
-		$this->assertSame('1/1', $column->width());
-		$this->assertSame(12, $column->span());
+		parent::tearDown();
+		LayoutColumn::$methods = [];
 	}
 
 	public function testBlocks(): void
@@ -27,6 +25,29 @@ class LayoutColumnTest extends TestCase
 		$this->assertSame('text', $column->blocks()->last()->type());
 	}
 
+	public function testCall(): void
+	{
+		// registered method
+		LayoutColumn::$methods['custom'] = fn () => 'method result';
+		LayoutColumn::$methods['echo']   = fn ($value) => $value;
+
+		$column = new LayoutColumn();
+
+		$this->assertSame('method result', $column->custom());
+		$this->assertSame('hello', $column->echo('hello'));
+
+		// unknown method returns null
+		$this->assertNull($column->unknown());
+	}
+
+	public function testConstruct(): void
+	{
+		$column = new LayoutColumn();
+		$this->assertInstanceOf(Blocks::class, $column->blocks());
+		$this->assertSame('1/1', $column->width());
+		$this->assertSame(12, $column->span());
+	}
+
 	public function testHiddenBlocks(): void
 	{
 		$column = new LayoutColumn([
@@ -40,25 +61,6 @@ class LayoutColumnTest extends TestCase
 		$this->assertTrue($column->isNotEmpty());
 		$this->assertCount(1, $column->blocks());
 		$this->assertCount(2, $column->blocks(true));
-	}
-
-	public function testSpan(): void
-	{
-		$column = new LayoutColumn([
-			'width' => '1/2'
-		]);
-
-		$this->assertSame(6, $column->span());
-		$this->assertSame(3, $column->span(6));
-	}
-
-	public function testWidth(): void
-	{
-		$column = new LayoutColumn([
-			'width' => '1/2'
-		]);
-
-		$this->assertSame('1/2', $column->width());
 	}
 
 	public function testIsEmpty(): void
@@ -82,5 +84,24 @@ class LayoutColumnTest extends TestCase
 
 		$this->assertFalse($column->isEmpty());
 		$this->assertTrue($column->isNotEmpty());
+	}
+
+	public function testSpan(): void
+	{
+		$column = new LayoutColumn([
+			'width' => '1/2'
+		]);
+
+		$this->assertSame(6, $column->span());
+		$this->assertSame(3, $column->span(6));
+	}
+
+	public function testWidth(): void
+	{
+		$column = new LayoutColumn([
+			'width' => '1/2'
+		]);
+
+		$this->assertSame('1/2', $column->width());
 	}
 }

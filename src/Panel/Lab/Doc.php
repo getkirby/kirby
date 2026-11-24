@@ -9,18 +9,17 @@ use Kirby\Panel\Lab\Doc\Method;
 use Kirby\Panel\Lab\Doc\Prop;
 use Kirby\Panel\Lab\Doc\Slot;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
  * Documentation for a single Vue component
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @internal
  * @codeCoverageIgnore
  */
@@ -31,9 +30,9 @@ class Doc
 	public function __construct(
 		public string $name,
 		public string $source,
-		public string|null $description = null,
-		public string|null $deprecated = null,
-		public string|null $docBlock = null,
+		public string|HtmlString|null $description = null,
+		public string|HtmlString|null $deprecated = null,
+		public string|HtmlString|null $docBlock = null,
 		public array $events = [],
 		public array $examples = [],
 		public bool $isUnstable = false,
@@ -54,7 +53,7 @@ class Doc
 	{
 		return
 			file_exists(static::file($name, 'dist')) ||
-			file_exists(static::file($name, 'dev'));
+			(Docs::isDev() === true && file_exists(static::file($name, 'dev')));
 	}
 
 	public static function factory(string $name): static|null
@@ -62,10 +61,10 @@ class Doc
 		// protect against path traversal
 		$name = basename($name);
 
-		// read data
+		// read data (dev server docs are only fresh in dev mode)
 		$file = static::file($name, 'dev');
 
-		if (file_exists($file) === false) {
+		if (Docs::isDev() === false || file_exists($file) === false) {
 			$file = static::file($name, 'dist');
 		}
 
@@ -74,7 +73,6 @@ class Doc
 		} catch (Throwable) {
 			return null;
 		}
-
 
 		// filter internal components
 		if (isset($data['tags']['internal']) === true) {
@@ -128,14 +126,14 @@ class Doc
 	/**
 	 * Helper to resolve KirbyText
 	 */
-	public static function kt(string $text, bool $inline = false): string
+	public static function kt(string $text, bool $inline = false): HtmlString
 	{
-		return App::instance()->kirbytext($text, [
+		return new HtmlString(App::instance()->kirbytext($text, [
 			'markdown' => [
 				'breaks' => false,
 				'inline' => $inline,
 			]
-		]);
+		]));
 	}
 
 	/**

@@ -7,13 +7,13 @@ use Kirby\Content\LockedContentException;
 use Kirby\Content\PlainTextStorage;
 use Kirby\Content\VersionId;
 use Kirby\Data\Data;
-use Kirby\Exception\PermissionException;
+use Kirby\Exception\AbilityException;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Page::class)]
 class PageChangeTemplateTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageChangeTemplate';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageChangeTemplate';
 
 	public function testChangeTemplateInMultiLanguageMode(): void
 	{
@@ -248,7 +248,7 @@ class PageChangeTemplateTest extends ModelTestCase
 		$modified = $page->changeTemplate('article');
 
 		$this->assertSame('article', $modified->intendedTemplate()->name());
-		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Caption', $modified->caption()->value(), 'The caption should be kept because the info field has no value');
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 		$this->assertFileExists($modified->root() . '/article.txt');
@@ -264,8 +264,8 @@ class PageChangeTemplateTest extends ModelTestCase
 			'slug' => 'error',
 		]);
 
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to change the template for "error"');
+		$this->expectException(AbilityException::class);
+		$this->expectExceptionMessage('The template for the error page cannot be changed');
 
 		$page->changeTemplate('article');
 	}

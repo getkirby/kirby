@@ -1,0 +1,262 @@
+import fs from "fs";
+import os from "os";
+import path from "path";
+
+import {
+	type AliasOptions,
+	defineConfig,
+	loadEnv,
+	type Plugin,
+	type ProxyOptions,
+	type ServerOptions
+} from "vite";
+import vue from "@vitejs/plugin-vue";
+import copy from "./scripts/vite-copy.ts";
+import kirby from "./scripts/vite-kirby.ts";
+
+type ProxyConfig = ProxyOptions & { target: string };
+
+/**
+ * Get custom server config, if present
+ */
+let customServer = {};
+
+try {
+	const module = await import("./vite.config.custom.js");
+	customServer = module.default ?? {};
+} catch (error) {
+	const custom = path.resolve(import.meta.dirname, "vite.config.custom.js");
+
+	// don't hide errors of an existing custom config
+	if (fs.existsSync(custom) === true) {
+		throw error;
+	}
+}
+
+/**
+ * Returns all aliases used in the project
+ */
+function createAliases(proxy: ProxyConfig): AliasOptions {
+	const aliases: Record<string, string> = {
+		"@": path.resolve(import.meta.dirname, "src")
+	};
+
+	if (process.env.VITEST) {
+		aliases["@test"] = path.resolve(import.meta.dirname, "tests");
+	} else {
+		// use absolute proxied url to avoid Vue being loaded twice
+		aliases.vue =
+			proxy.target + ":3000/node_modules/vue/dist/vue.esm-browser.js";
+	}
+
+	return aliases;
+}
+
+/**
+ * Returns the Herd/Valet certificate for the host, if present
+ */
+function createHttps(host: string): ServerOptions["https"] {
+	const dirs = [
+		// Herd on macOS
+		["Library", "Application Support", "Herd", "config", "valet"],
+		// Herd on Windows
+		[".config", "herd", "config", "valet"],
+		// Valet
+		[".config", "valet"]
+	];
+
+	for (const dir of dirs) {
+		const root = path.resolve(os.homedir(), ...dir, "Certificates", host);
+
+		if (
+			fs.existsSync(root + ".crt") === true &&
+			fs.existsSync(root + ".key") === true
+		) {
+			return {
+				cert: fs.readFileSync(root + ".crt"),
+				key: fs.readFileSync(root + ".key")
+			};
+		}
+	}
+}
+
+/**
+ * Returns the server configuration
+ */
+function createServer(proxy: ProxyConfig): ServerOptions {
+	const { hostname: host, protocol } = new URL(proxy.target);
+
+	return {
+		allowedHosts: [host],
+		cors: { origin: proxy.target },
+		host,
+		https: protocol === "https:" ? createHttps(host) : undefined,
+		proxy: {
+			"/api": proxy,
+			"/env": proxy,
+			"/media": proxy
+		},
+		open: proxy.target + "/panel",
+		port: 3000,
+		strictPort: true,
+		...(customServer ?? {})
+	};
+}
+
+/**
+ * Returns an array of plugins used
+ */
+function createPlugins(): Plugin[] {
+	return [
+		vue({
+			template: {
+				compilerOptions: {
+					isCustomElement: (tag) =>
+						["k-input-validator", "k-validator"].includes(tag)
+				}
+			}
+		}),
+		...kirby(),
+		// Kirby loads Vue from the dist directory via import map
+		copy(
+			[
+				"node_modules/vue/dist/vue.esm-browser.js",
+				"node_modules/vue/dist/vue.esm-browser.prod.js"
+			],
+			"js"
+		)
+	];
+}
+
+/**
+ * Returns the build target, based on `.browserslistrc`
+ */
+function createTarget(): string[] {
+	const engines: Record<string, string> = {
+		Chrome: "chrome",
+		Edge: "edge",
+		Firefox: "firefox",
+		iOS: "ios",
+		Opera: "opera",
+		Safari: "safari"
+	};
+
+	const file = fs.readFileSync(
+		path.resolve(import.meta.dirname, ".browserslistrc"),
+		"utf-8"
+	);
+
+	const target: string[] = [];
+
+	for (const raw of file.split("\n")) {
+		// strip comments, browserslist allows them at the end of a line
+		const line = raw.replace(/#.*$/, "").trim();
+		const match = line.match(/^(\w+)\s*>=\s*([\d.]+)$/);
+
+		if (match !== null && engines[match[1]] !== undefined) {
+			target.push(engines[match[1]] + match[2]);
+		}
+	}
+
+	if (target.length === 0) {
+		throw new Error("No build target could be read from .browserslistrc");
+	}
+
+	return target;
+}
+
+/**
+ * Returns vitest configuration
+ */
+function createTest() {
+	return {
+		css: false,
+		environment: "happy-dom",
+		environmentOptions: {
+			happyDOM: {
+				// happy-dom 21+ disables iframe windows by default,
+				// but k-fatal writes into the iframe document
+				settings: { enableIframePageLoading: true }
+			}
+		},
+		include: ["**/*.test.{js,ts}"],
+		isolate: false,
+		pool: "threads",
+		setupFiles: ["tests/unit/setup.ts"],
+		// restore stubbed globals before each test, as files share one scope
+		unstubGlobals: true,
+		coverage: {
+			provider: "v8",
+			include: ["src/**/*.{js,ts,vue}"],
+			exclude: ["src/**/*.test.{js,ts}", "src/**/index.{js,ts}"],
+			// local: html report for browsing; CI: lcov for the Codecov upload
+			reporter: process.env.CI ? ["lcov"] : ["text", "html"],
+			reportsDirectory: "./tests/coverage"
+		}
+	};
+}
+
+/**
+ * Returns the Vite configuration
+ */
+export default defineConfig(({ mode }) => {
+	// Load env file based on `mode` in the current working directory.
+	// Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+	process.env = {
+		...process.env,
+		...loadEnv(mode, process.cwd(), "")
+	};
+
+	const proxy: ProxyConfig = {
+		target: process.env.SERVER ?? "https://sandbox.test",
+		changeOrigin: true,
+		secure: false
+	};
+
+	const alias = createAliases(proxy);
+	const plugins = createPlugins();
+	const server = createServer(proxy);
+	const test = createTest();
+
+	return {
+		plugins,
+		base: "./",
+		build: {
+			target: createTarget(),
+			cssCodeSplit: false,
+			rolldownOptions: {
+				checks: { pluginTimings: false },
+				external: ["vue"],
+				output: {
+					entryFileNames: "js/[name].min.js",
+					chunkFileNames: (chunk) =>
+						"js/" +
+						chunk.name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase() +
+						".min.js",
+					assetFileNames: "[ext]/[name].min.[ext]",
+					codeSplitting: {
+						groups: [
+							{
+								name: "sortable",
+								test: /node_modules\/sortablejs\//
+							},
+							{
+								name: "vendor",
+								test: /node_modules\/(?!sortablejs\/)|plugin-vue:export-helper|vite\/preload-helper/
+							}
+						]
+					}
+				}
+			}
+		},
+		input: "./src/index.ts",
+		optimizeDeps: {
+			exclude: ["vue"]
+		},
+		resolve: {
+			alias
+		},
+		server,
+		test
+	};
+});

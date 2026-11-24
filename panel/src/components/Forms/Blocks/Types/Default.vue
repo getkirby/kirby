@@ -4,7 +4,7 @@
 		:content="content"
 		:fieldset="fieldset"
 		:style="$attrs.style"
-		@dblclick.native="$emit('open')"
+		@dblclick="$emit('open')"
 	/>
 </template>
 
@@ -17,7 +17,7 @@ export const props = {
 	props: {
 		/**
 		 * API endpoints
-		 * @value { field, model, section }
+		 * @value { field, model }
 		 */
 		endpoints: {
 			default: () => ({}),
@@ -32,10 +32,42 @@ export const props = {
 
 /**
  * @displayName BlockTypeDefault
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	/**
+	 * All events that `k-block` listens to need to be declared.
+	 * Otherwise, the listeners end up as native DOM listeners on
+	 * the root element (see `preserveListeners` mixin) and
+	 * e.g. native `copy` or `paste` events from inputs within the
+	 * block would trigger the block's copy/paste actions.
+	 */
+	emits: [
+		"append",
+		"chooseToAppend",
+		"chooseToConvert",
+		"chooseToPrepend",
+		"close",
+		"copy",
+		"duplicate",
+		"focus",
+		"hide",
+		"merge",
+		"open",
+		"paste",
+		"prepend",
+		"remove",
+		"removeSelected",
+		"show",
+		"sortDown",
+		"sortUp",
+		"split",
+		"update"
+	],
 	methods: {
 		field(name, fallback = null) {
 			let field = null;

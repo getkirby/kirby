@@ -5,15 +5,14 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\TestCase as BaseTestCase;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Str;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
 	protected Page|null $page = null;
 
 	protected function setUp(): void
 	{
-		App::destroy();
+		parent::setUp();
 
 		$this->app = new App([
 			'roots' => [
@@ -21,52 +20,18 @@ class TestCase extends BaseTestCase
 			]
 		]);
 
-		Blueprint::$loaded = [];
-
-		I18n::$locale       = null;
-		I18n::$fallback     = 'en';
-		I18n::$translations = [];
-		Str::$language      = [];
+		I18n::$locale = null;
 	}
 
 	protected function tearDown(): void
 	{
 		parent::tearDown();
 		App::destroy();
-		Blueprint::$loaded = [];
 
 		$this->tearDownTmp();
 
 		// mock class
 		ErrorLog::$log = '';
-	}
-
-	public function kirby($props = [])
-	{
-		return new App($props);
-	}
-
-	public function site()
-	{
-		return $this->kirby()->site();
-	}
-
-	public function pages()
-	{
-		return $this->site()->children();
-	}
-
-	public function page(string|null $id = null)
-	{
-		if ($id !== null) {
-			return $this->site()->find($id);
-		}
-
-		if ($this->page !== null) {
-			return $this->site()->find($this->page);
-		}
-
-		return $this->site()->homePage();
 	}
 
 	public function assertHooks(
@@ -101,5 +66,33 @@ class TestCase extends BaseTestCase
 
 		$action->call($this, $app);
 		$this->assertSame(count($hooks), $triggered);
+	}
+
+	public function kirby($props = [])
+	{
+		return new App($props);
+	}
+
+	public function page(string|null $id = null)
+	{
+		if ($id !== null) {
+			return $this->site()->find($id);
+		}
+
+		if ($this->page !== null) {
+			return $this->site()->find($this->page);
+		}
+
+		return $this->site()->homePage();
+	}
+
+	public function pages()
+	{
+		return $this->site()->children();
+	}
+
+	public function site()
+	{
+		return $this->kirby()->site();
 	}
 }

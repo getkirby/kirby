@@ -6,11 +6,7 @@
 			:dropdown="true"
 			@click="$refs.dropdown.toggle()"
 		/>
-		<k-dropdown-content
-			ref="dropdown"
-			:options="$dropdown(options)"
-			align-x="end"
-		>
+		<k-dropdown ref="dropdown" :options="$dropdown(options)" align-x="end">
 			<template #item="{ item: language, index }">
 				<k-button
 					:key="'item-' + index"
@@ -36,7 +32,7 @@
 					</span>
 				</k-button>
 			</template>
-		</k-dropdown-content>
+		</k-dropdown>
 	</div>
 </template>
 
@@ -45,8 +41,12 @@ import { props as ButtonProps } from "@/components/Navigation/Button.vue";
 
 /**
  * View header button to switch between content languages
+ *
  * @displayName LanguagesViewButton
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  * @unstable
  */
 export default {
@@ -61,11 +61,7 @@ export default {
 	},
 	computed: {
 		changesBadge() {
-			// `hasDiff` provides the state for all other than the current
-			// translation from the backend; for the current translation we need to
-			// check `content.diff` as this state can change dynamically without
-			// any other backend request that would update `hasDiff`
-			if (this.hasDiff || this.$panel.content.hasDiff()) {
+			if (this.hasDiff) {
 				return {
 					theme: this.$panel.content.isLocked() ? "red" : "orange"
 				};
@@ -93,7 +89,7 @@ export default {
 				return;
 			}
 
-			this.$reload({
+			this.$panel.reload({
 				query: {
 					language: language.code
 				}

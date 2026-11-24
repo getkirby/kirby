@@ -8,7 +8,62 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PagePreviewUrlTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePreviewUrl';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePreviewUrl';
+
+	public function testPreviewUrl(): void
+	{
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertSame('/test', $page->previewUrl());
+	}
+
+	public function testPreviewUrlMissingPermission(): void
+	{
+		$this->app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'role'  => 'editor'
+				]
+			],
+			'roles' => [
+				[
+					'id'          => 'editor',
+					'name'        => 'editor',
+					'permissions' => [
+						'pages' => [
+							'preview' => false
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertNull($page->previewUrl());
+		$this->assertNull($page->previewUrl('latest'));
+		$this->assertNull($page->previewUrl('changes'));
+	}
+
+	public function testPreviewUrlUnauthenticated(): void
+	{
+		// log out
+		$this->app->impersonate();
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertNull($page->previewUrl());
+	}
 
 	public static function providerForBlueprintSettings(): array
 	{
@@ -26,15 +81,6 @@ class PagePreviewUrlTest extends ModelTestCase
 			[false, null, null, true],
 			[null, null, null, false, false],
 		];
-	}
-
-	public function testPreviewUrl(): void
-	{
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$this->assertSame('/test', $page->previewUrl());
 	}
 
 	#[DataProvider('providerForBlueprintSettings')]
@@ -94,51 +140,5 @@ class PagePreviewUrlTest extends ModelTestCase
 		}
 
 		$this->assertSame($expected, $page->previewUrl());
-	}
-
-	public function testPreviewUrlMissingPermission(): void
-	{
-		$this->app = $this->app->clone([
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'test@getkirby.com',
-					'role'  => 'editor'
-				]
-			],
-			'roles' => [
-				[
-					'id'          => 'editor',
-					'name'        => 'editor',
-					'permissions' => [
-						'pages' => [
-							'preview' => false
-						]
-					]
-				]
-			]
-		]);
-
-		$this->app->impersonate('test@getkirby.com');
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$this->assertNull($page->previewUrl());
-		$this->assertNull($page->previewUrl('latest'));
-		$this->assertNull($page->previewUrl('changes'));
-	}
-
-	public function testPreviewUrlUnauthenticated(): void
-	{
-		// log out
-		$this->app->impersonate();
-
-		$page = new Page([
-			'slug' => 'test'
-		]);
-
-		$this->assertNull($page->previewUrl());
 	}
 }

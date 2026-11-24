@@ -4,12 +4,13 @@ namespace Kirby\Panel\Ui\Item;
 
 use Kirby\Cms\File;
 use Kirby\Cms\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileItem::class)]
 class FileItemTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Ui.FileItem';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Ui.FileItem';
 
 	protected File $model;
 
@@ -30,15 +31,16 @@ class FileItemTest extends TestCase
 		$item = new FileItem(file: $this->model);
 
 		$expected = [
-			'id'       => 'test.jpg',
 			'image'    => $this->model->panel()->image(),
-			'info'     => '',
+			'info'     => new HtmlString(''),
+			'layout'   => 'list',
+			'text'     => new HtmlString('test.jpg'),
+			'id'       => 'test.jpg',
 			'link'     => '/site/files/test.jpg',
 			'permissions' => [
 				'delete'       => false,
 				'sort'         => false,
 			],
-			'text'      => 'test.jpg',
 			'uuid'      => $this->model->uuid()?->toString(),
 			'dragText'  => '(image: ' . $this->model->uuid() . ')',
 			'extension' => 'jpg',
@@ -49,6 +51,6 @@ class FileItemTest extends TestCase
 			'url'       => $this->model->url(),
 		];
 
-		$this->assertSame($expected, $item->props());
+		$this->assertEquals($expected, $item->props()); // -ignore-line
 	}
 }

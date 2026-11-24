@@ -26,10 +26,14 @@ import counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-tags-input>` for additional information.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, TagsInput, counter],
 	inheritAttrs: false,
+	emits: ["input"],
 	computed: {
 		/**
 		 * The options with an `[unknown]` option for each value without one,

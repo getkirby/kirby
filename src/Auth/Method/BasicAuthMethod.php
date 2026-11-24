@@ -1,0 +1,185 @@
+<?php
+
+namespace Kirby\Auth\Method;
+
+use Kirby\Auth\Auth;
+use Kirby\Auth\Method;
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Http\Request\Auth\BasicAuth;
+use SensitiveParameter;
+
+/**
+ * HTTP basic authentication
+ *
+ * Validates the same email + password credentials as `PasswordMethod`.
+ * As it cannot run a challenge, it defers the 2FA policy
+ * to `PasswordMethod::has2FA()` and rejects users that would be
+ * challenged there instead of skipping their second factor.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class BasicAuthMethod extends Method
+{
+	/**
+	 * Basic auth authenticates on every request,
+	 * so `$long` isn't relevant here
+	 *
+	 * @throws InvalidArgumentException If the password is missing
+	 * @throws PermissionException If the user has a second factor set up
+	 */
+	public function authenticate(
+		string|null $email,
+		#[SensitiveParameter]
+		string|null $password = null,
+		bool $long = false
+	): User {
+		if ($password === null) {
+			throw new InvalidArgumentException(
+				message: 'Missing password'
+			);
+		}
+
+		$user = $this->auth->validatePassword($email, $password)
+			?? throw new PermissionException(message: 'Invalid password'); // @codeCoverageIgnore
+
+		/** @var PasswordMethod $method */
+		$method = $this->auth->methods()->get('password');
+
+		// users without a second factor (e.g. dedicated
+		// API accounts) can keep using basic auth
+		if ($method->has2FA($user) === true) {
+			throw new PermissionException(
+				message: 'Basic authentication cannot be used with 2FA'
+			);
+		}
+
+		return $user;
+	}
+
+	/**
+	 * Checks whether the current request attempts
+	 * to use HTTP basic authentication, regardless of
+	 * whether all gating conditions are met.
+	 */
+	public static function isAttempted(Auth $auth): bool
+	{
+		$kirby = $auth->kirby();
+
+		if ($kirby->option('api.basicAuth', false) !== true) {
+			return false;
+		}
+
+		return $kirby->request()->auth() instanceof BasicAuth;
+	}
+
+	/**
+	 * Checks whether the current request attempts
+	 * to use HTTP basic authentication
+	 *
+	 * @throws InvalidArgumentException if the authorization header is invalid
+	 * @throws PermissionException if basic authentication is not allowed
+	 */
+	public function isEnabled(
+		BasicAuth|null $header = null,
+		bool $fail = false
+	): bool {
+		$kirby   = $this->auth->kirby();
+		$request = $kirby->request();
+
+		if ($kirby->option('api.basicAuth', false) !== true) {
+			if ($fail === true) {
+				throw new PermissionException(
+					message: 'Basic authentication is not activated'
+				);
+			}
+
+			return false;
+		}
+
+		$header ??= $request->auth();
+
+		if ($header instanceof BasicAuth === false) {
+			if ($fail === true) {
+				throw new InvalidArgumentException(
+					message: 'Invalid authorization header'
+				);
+			}
+
+			return false;
+		}
+
+		// if logging in with password is disabled,
+		// basic auth cannot be possible either
+		$methods = $this->auth->methods()->config();
+
+		if (array_key_exists('password', $methods) !== true) {
+			if ($fail === true) {
+				throw new PermissionException(
+					message: 'Login with password is not enabled'
+				);
+			}
+
+			return false;
+		}
+
+		// if any login method requires 2FA,
+		// basic auth without 2FA would be a weakness
+		//
+		// without enforced 2FA this general gate stays open, as it
+		// cannot know which user is authenticating; users who set
+		// up a second factor are rejected in `::authenticate()`
+		if ($this->auth->methods()->hasAnyRequiring2FA() === true) {
+			if ($fail === true) {
+				throw new PermissionException(
+					message: 'Basic authentication cannot be used with required 2FA'
+				);
+			}
+
+			return false;
+		}
+
+		// only allow basic auth when https is enabled or
+		// insecure requests permitted
+		if (
+			$request->ssl() === false &&
+			$kirby->option('api.allowInsecure', false) !== true
+		) {
+			if ($fail === true) {
+				throw new PermissionException(
+					message: 'Basic authentication is only allowed over HTTPS'
+				);
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Returns the user resolved from the basic auth header
+	 */
+	public function user(
+		BasicAuth|null $auth = null
+	): User|null {
+		// ensure basic auth method is actually enabled
+		// with the provided header
+		if ($this->isEnabled($auth, fail: true) === true) {
+			/**
+			 * @var BasicAuth $auth
+			 */
+			$auth ??= $this->auth->kirby()->request()->auth();
+
+			return $this->authenticate(
+				$auth->username(),
+				$auth->password(),
+			);
+		}
+
+		return null;
+	}
+}

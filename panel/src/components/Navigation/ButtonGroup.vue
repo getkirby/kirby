@@ -19,12 +19,18 @@
 
 <script>
 /**
- * The Button Group should always be used when two or more buttons are positioned next to each other. The Button Group takes care of consistent margins between buttons.
+ * The Button Group should always be used when two or more buttons
+ * are positioned next to each other. The Button Group takes care of
+ * consistent margins between buttons.
  *
- * @example <k-button-group>
-  <k-button icon="edit">Edit</k-button>
-  <k-button icon="trash">Delete</k-button>
-</k-button-group>
+ * @example
+ * <k-button-group>
+ * 	<k-button icon="edit">Edit</k-button>
+ * 	<k-button icon="trash">Delete</k-button>
+ * </k-button-group>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

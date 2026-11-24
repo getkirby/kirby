@@ -2,24 +2,11 @@
 
 namespace Kirby\Form\Field;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 
+#[CoversClass(TogglesField::class)]
 class TogglesFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('toggles');
-
-		$this->assertSame('toggles', $field->type());
-		$this->assertSame('toggles', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertTrue($field->grow());
-		$this->assertTrue($field->labels());
-		$this->assertTrue($field->reset());
-		$this->assertSame([], $field->options());
-		$this->assertTrue($field->save());
-	}
-
 	public function testGrow(): void
 	{
 		$field = $this->field('toggles', [
@@ -33,6 +20,27 @@ class TogglesFieldTest extends TestCase
 		]);
 
 		$this->assertTrue($field->grow());
+	}
+
+	public function testIsResettable(): void
+	{
+		$field = $this->field('toggles', [
+			'reset' => true
+		]);
+
+		$this->assertTrue($field->isResettable());
+
+		$field = $this->field('toggles', [
+			'options' => ['a', 'b'],
+			'reset'   => false,
+			'value'   => 'a'
+		]);
+
+		$this->assertFalse($field->isResettable());
+
+		// exporting the prop must not call `ValueField::reset()`
+		$this->assertFalse($field->props()['reset']);
+		$this->assertSame('a', $field->toFormValue());
 	}
 
 	public function testLabels(): void
@@ -50,43 +58,32 @@ class TogglesFieldTest extends TestCase
 		$this->assertTrue($field->labels());
 	}
 
-	public function testReset(): void
+	public function testProps(): void
 	{
-		$field = $this->field('toggles', [
-			'reset' => false
-		]);
+		$field = $this->field('toggles');
+		$props = $field->props();
 
-		$this->assertFalse($field->reset());
+		ksort($props);
 
-		$field = $this->field('toggles', [
-			'reset' => true
-		]);
-
-		$this->assertTrue($field->reset());
-	}
-
-	public static function valueInputProvider(): array
-	{
-		return [
-			['a', 'a'],
-			['b', 'b'],
-			['c', 'c'],
-			['d', '']
+		$expected = [
+			'autofocus'  => false,
+			'disabled'   => false,
+			'grow'       => true,
+			'help'       => null,
+			'hidden'     => false,
+			'label'      => 'Toggles',
+			'labels'     => true,
+			'name'       => 'toggles',
+			'options'    => [],
+			'required'   => false,
+			'reset'      => true,
+			'saveable'   => true,
+			'translate'  => true,
+			'type'       => 'toggles',
+			'when'       => null,
+			'width'      => '1/1',
 		];
-	}
 
-	#[DataProvider('valueInputProvider')]
-	public function testValue($input, $expected): void
-	{
-		$field = $this->field('toggles', [
-			'options' => [
-				'a',
-				'b',
-				'c'
-			],
-			'value' => $input
-		]);
-
-		$this->assertTrue($expected === $field->value());
+		$this->assertSame($expected, $props);
 	}
 }

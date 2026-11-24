@@ -5,6 +5,9 @@
  * color("red") // => "var(--color-red)"
  * color("#ff0000") // => "#ff0000"
  * color("pattern") // => "var(--pattern)"
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default function (input: unknown): string | undefined {
 	if (typeof input !== "string") {

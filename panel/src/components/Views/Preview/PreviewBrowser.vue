@@ -1,12 +1,13 @@
 <template>
 	<div class="k-preview-browser">
-		<header class="k-preview-browser-header">
-			<k-headline>
-				<k-icon type="git-branch" />
+		<header v-if="label" class="k-preview-browser-header">
+			<k-headline class="k-preview-headline">
+				<k-icon :type="isLoading ? 'loader' : 'git-branch'" />
 				{{ label }}
 			</k-headline>
+
 			<k-button-group>
-				<template v-if="versionId === 'changes'">
+				<template v-if="mode === 'changes'">
 					<p v-if="hasDiff === false" class="k-preview-browser-message">
 						{{ $t("lock.unsaved.empty") }}
 					</p>
@@ -15,54 +16,289 @@
 						:editor="editor"
 						:has-diff="hasDiff"
 						:is-locked="isLocked"
-						:is-processing="isSaving"
+						:is-processing="isProcessing"
 						:modified="modified"
 						size="xs"
 						@discard="$emit('discard', $event)"
 						@submit="$emit('submit', $event)"
 					/>
 				</template>
-				<k-button :link="src" icon="open" size="xs" target="_blank" />
+
+				<k-button
+					v-if="mode === 'form'"
+					:aria-checked="isPinned"
+					:title="$t('preview.browser.pin')"
+					:theme="isPinned ? 'info' : 'passive'"
+					:variant="isPinned ? 'filled' : 'none'"
+					icon="pushpin"
+					role="switch"
+					size="sm"
+					@click="$emit('pin')"
+				/>
+				<k-button
+					v-if="open"
+					:link="open"
+					icon="open"
+					size="xs"
+					target="_blank"
+					@click="$emit('open')"
+				/>
 			</k-button-group>
 		</header>
 
-		<iframe ref="browser" :src="srcWithPreviewParam" @load="onLoad" />
+		<div class="k-preview-browser-frame">
+			<iframe
+				ref="browserA"
+				:class="['k-preview-browser-iframe', active === 0 ? 'is-active' : null]"
+				:inert="active !== 0"
+				:src="srcs[0]"
+				:title="label ?? $t('preview')"
+				@load="onLoad(0)"
+			/>
+			<iframe
+				ref="browserB"
+				:class="['k-preview-browser-iframe', active === 1 ? 'is-active' : null]"
+				:inert="active !== 1"
+				:src="srcs[1]"
+				:title="label ?? $t('preview')"
+				@load="onLoad(1)"
+			/>
+		</div>
 	</div>
 </template>
 
 <script>
 import { props } from "@/components/Forms/FormControls.vue";
 
+/**
+ * Checks if a link points to the (relative) URL or a path below it
+ */
+function isLinkBelow(link, url) {
+	const base = new URL(url, location.origin);
+	const path = base.pathname.replace(/\/$/, "");
+
+	return (
+		link.origin === base.origin &&
+		(link.pathname === path || link.pathname.startsWith(path + "/"))
+	);
+}
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	props: {
+		isPinned: Boolean,
 		label: String,
 		src: String,
-		versionId: String
+		mode: String,
+		open: String
 	},
-	emits: ["discard", "scroll", "submit"],
+	emits: ["discard", "navigate", "open", "pin", "scroll", "submit"],
+	data() {
+		return {
+			isLoading: false,
+			active: 0,
+			pending: null,
+			pendingScroll: null,
+			srcs: [this.src, null]
+		};
+	},
 	computed: {
-		srcWithPreviewParam() {
-			const uri = new URL(this.src, this.$panel.urls.site);
-			uri.searchParams.append("_preview", true);
-			return uri.toString();
+		window() {
+			return this.activeIframe()?.contentWindow;
 		}
 	},
-	mounted() {
-		this.$events.on("content.discard", this.reload);
-		this.$events.on("content.publish", this.reload);
-	},
-	destroyed() {
-		this.$events.off("content.discard", this.reload);
-		this.$events.off("content.publish", this.reload);
+	watch: {
+		src(value) {
+			this.loadSrc(value);
+		}
 	},
 	methods: {
-		onLoad() {
-			const document = this.$refs.browser.contentDocument;
+		/**
+		 * Returns the currently visible iframe element
+		 */
+		activeIframe() {
+			return this.getIframe(this.active);
+		},
+		/**
+		 * Adds a cache-busting param to force an iframe reload
+		 */
+		addReloadParam(src) {
+			const url = new URL(src, window.location.origin);
+			url.searchParams.set("_reload", Date.now());
+			return url.toString();
+		},
+		/**
+		 * Returns iframe element by index (0 = A, 1 = B)
+		 */
+		getIframe(index) {
+			return this.$refs[index === 0 ? "browserA" : "browserB"];
+		},
+		/**
+		 * Checks if a link points to the Panel
+		 */
+		isPanelLink(link) {
+			return isLinkBelow(link, this.$panel.urls.panel);
+		},
+		/**
+		 * Checks if a link points to the site, which also
+		 * requires it to be inside the site's install subfolder
+		 */
+		isSiteLink(link) {
+			return isLinkBelow(link, this.$panel.urls.site);
+		},
+		/**
+		 * Double-buffered load:
+		 * - set src on the inactive iframe
+		 * - swap to it once the load finishes
+		 */
+		loadSrc(src, { force = false } = {}) {
+			this.pending = this.active === 0 ? 1 : 0;
+			const iframe = this.getIframe(this.pending);
+			this.isLoading = true;
+
+			this.srcs[this.pending] = force ? this.addReloadParam(src) : src;
+
+			// If the target iframe already has the src loaded, swap immediately
+			if (
+				iframe?.src === this.srcs[this.pending] &&
+				iframe.contentDocument?.readyState === "complete"
+			) {
+				this.active = this.pending;
+				this.pending = null;
+				this.isLoading = false;
+			}
+		},
+		/**
+		 * Handle link clicks inside the iframe
+		 */
+		onClick(e) {
+			const link = e.target.closest("a");
+
+			if (!link) {
+				return;
+			}
+
+			if (!link.href || link.onclick) {
+				return;
+			}
+
+			// open external links and Panel links in new tab
+			if (this.isSiteLink(link) === false || this.isPanelLink(link) === true) {
+				link.target = "_blank";
+				return true;
+			}
+
+			// catch internal links and emit navigate event
+			e.preventDefault(e);
+
+			if (this.isPinned) {
+				// we only want to refresh the browser for the target
+				this.$emit("navigate", { browser: link.href });
+			} else {
+				// we want to refresh the whole view for the target
+				this.$emit("navigate", { view: link.href });
+			}
+		},
+		/**
+		 * Handles iframe load events for both buffers
+		 */
+		onLoad(index) {
+			const iframe = this.getIframe(index);
+			const document = iframe?.contentDocument;
+
+			if (!document) {
+				return;
+			}
+
+			if (this.pending === index) {
+				// restore the scroll position before the swap,
+				// so that the iframe is already in place when it becomes
+				// visible and a reload triggered right after the swap
+				// doesn't pick up a scroll position of 0
+				if (this.pendingScroll !== null) {
+					iframe.contentWindow.scrollTo({
+						top: this.pendingScroll,
+						behavior: "instant"
+					});
+					this.pendingScroll = null;
+				}
+
+				// Only swap when the preloaded iframe finishes loading
+				this.pending = null;
+				this.active = index;
+				this.isLoading = false;
+			}
+
+			if (index !== this.active) {
+				return;
+			}
+
+			// if the browser got redirected during load
+			// navigate to the proper preview URL for this new URL
+			// (but only if the new URL doesn't already contain _version and _token)
+			if (this.srcs[index] !== document.URL) {
+				const url = new URL(document.URL);
+
+				if (
+					url.searchParams.has("_token") === false ||
+					url.searchParams.has("_version") === false
+				) {
+					return this.$emit("navigate", { browser: url });
+				}
+			}
+
+			// capture all link clicks inside the iframe, also of links
+			// added later or whose own handlers stop the propagation
+			document.addEventListener("click", this.onClick, { capture: true });
+
 			document.addEventListener("scroll", (e) => this.$emit("scroll", e));
 		},
+		/**
+		 * Refresh the iframe (e.g. for content updates)
+		 */
 		reload() {
-			this.$refs.browser.contentWindow.location.reload();
+			// keep scroll in place when swapping buffers
+			this.pendingScroll = this.window?.scrollY ?? 0;
+			this.loadSrc(this.src, { force: true });
+		},
+		/**
+		 * Restore an iframe URL and scroll position
+		 * (only when iframe browser is pinned)
+		 */
+		restore({ src, scroll }) {
+			// if the browser isn't pinned, we keep it as loaded with the view
+			if (!this.isPinned) {
+				return;
+			}
+
+			// restore scroll position once the iframe finished loading
+			const target = this.active === 0 ? 1 : 0;
+			this.pendingScroll = scroll ?? null;
+
+			// load restored URL in iframe
+			this.srcs[target] = src;
+			this.pending = target;
+			this.isLoading = true;
+		},
+		/**
+		 * Scrolls the active iframe to a given position
+		 */
+		scrollTo(y) {
+			this.window?.scrollTo(0, y);
+		},
+		/**
+		 * Returns the current iframe URL and scroll position,
+		 * so that these can be restored, if needed
+		 */
+		store() {
+			return {
+				src: this.activeIframe()?.src,
+				scroll: this.window?.scrollY
+			};
 		}
 	}
 };
@@ -76,6 +312,7 @@ export default {
 	container-type: inline-size;
 	display: flex;
 	flex-direction: column;
+	position: relative;
 	border-radius: var(--rounded-lg);
 	box-shadow: var(--shadow-xl);
 	background: var(--preview-browser-color-background);
@@ -93,18 +330,8 @@ export default {
 	padding-inline: var(--spacing-2);
 	height: var(--input-height);
 }
-.k-preview-browser header .k-headline {
-	display: flex;
-	align-items: center;
-	gap: var(--spacing-1);
-	font-weight: var(--font-normal);
+.k-preview-browser-header .k-preview-headline {
 	font-size: var(--text-xs);
-	padding-inline: var(--spacing-1);
-}
-.k-preview-browser-header .k-form-controls-button {
-	font-size: var(--text-xs);
-	--button-rounded: 3px;
-	--icon-size: 1rem;
 }
 .k-preview-browser-message {
 	font-size: var(--text-xs);
@@ -112,9 +339,27 @@ export default {
 	margin-inline-end: var(--spacing-1);
 	color: var(--color-text-dimmed);
 }
-.k-preview-browser iframe {
+.k-preview-browser-frame {
 	width: 100%;
 	flex-grow: 1;
+	position: relative;
+}
+.k-preview-browser-iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+/* keep the active iframe on top of the stack,
+   Safari doesn't pass scroll events through an iframe
+   with `pointer-events: none` to the one below */
+.k-preview-browser-iframe.is-active {
+	z-index: 1;
+	opacity: 1;
+	pointer-events: auto;
 }
 @container (max-width: 30rem) {
 	.k-preview-browser-message {

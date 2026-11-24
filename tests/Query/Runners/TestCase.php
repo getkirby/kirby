@@ -4,8 +4,75 @@ namespace Kirby\Query\Runners;
 
 use Kirby\TestCase as BaseTestCase;
 
-class TestCase extends BaseTestCase
+abstract class TestCase extends BaseTestCase
 {
+	public static function interceptProvider(): array
+	{
+		return [
+			'field' => [
+				'user.name', // query
+				['user' => $user = ['name' => 'Homer']], // context
+				[$user], // intercept
+			],
+
+			'nested field' => [
+				'user.name.first', // query
+				[
+					'user' => $user = [
+						'name' => $name = ['first' => 'Homer']
+					]
+				], // context
+				[$user, $name] // intercept
+			],
+
+			'method result' => (function () {
+				$closureResult = ['age' => 42];
+				$user = ['get' => fn () => $closureResult];
+
+				return [
+					'user.get("arg").age', // query
+					['user' => $user], // context
+					[$user, $closureResult] // intercept
+				];
+			})(),
+
+			'closure result' => (function () {
+				$result = ['field' => 'value'];
+				$thing = ['call' => fn ($callback) => $callback()];
+
+				return [
+					'thing.call(() => result).field', // query
+					['thing' => $thing, 'result' => $result], // context
+					[$thing, $result] // intercept
+				];
+			})(),
+
+			'function result for explicit global function' => (function () {
+				$result = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
+
+				return [
+					'foo("arg").bar', // query
+					[], // context
+					[$result], // intercept
+					$functions // functions
+				];
+			})(),
+
+			'global function result when function looks like variable - a' => (function () {
+				$result    = ['bar' => 'baz'];
+				$functions = ['foo' => fn () => $result];
+
+				return [
+					'foo.bar', // query
+					[], // context
+					[$result], // intercept
+					$functions // functions
+				];
+			})()
+		];
+	}
+
 	public static function resultProvider(): array
 	{
 		return [
@@ -40,6 +107,12 @@ class TestCase extends BaseTestCase
 					'page'   => ['id' => 'another key']
 				], // context
 				'yes' // result
+			],
+
+			'string argument keeps backslashes' => [
+				'a.f("say \"hi\"", \'\d+\')', // query
+				['a' => ['f' => fn ($a, $b) => $a . ' ' . $b]], // context
+				'say "hi" \d+', // result
 			],
 
 			'method result' => [
@@ -186,11 +259,91 @@ class TestCase extends BaseTestCase
 				true, // result
 			],
 
+			'logical precedence' => [
+				'true || false && false', // query
+				[], // context
+				true, // result
+			],
+
 			'logical operations with member access' => [
 				'user.isAdmin && user.hasPermission', // query
 				['user' => ['isAdmin' => true, 'hasPermission' => true]], // context
 				true, // result
 			],
+
+			'logical NOT' => [
+				'!false', // query
+				[], // context
+				true, // result
+			],
+
+			'logical NOT with truthy value' => [
+				'!"foo"', // query
+				[], // context
+				false, // result
+			],
+
+			'logical NOT with member access' => [
+				'!user.isAdmin', // query
+				['user' => ['isAdmin' => false]], // context
+				true, // result
+			],
+
+			'logical NOT with grouping' => [
+				'!(a && b)', // query
+				['a' => true, 'b' => false], // context
+				true, // result
+			],
+
+			'logical NOT combined with AND' => [
+				'a && !b', // query
+				['a' => true, 'b' => false], // context
+				true, // result
+			],
+
+			'logical NOT with ternary' => [
+				'!user.isAdmin ? "guest" : "admin"', // query
+				['user' => ['isAdmin' => true]], // context
+				'admin', // result
+			],
+
+			// Short-circuit: the unused operand must not be resolved
+			'coalesce skips the right side' => [
+				'a ?? b.c', // query
+				['a' => 'A', 'b' => null], // context
+				'A', // result
+			],
+
+			'ternary default skips the false side' => [
+				'a ?: b.c', // query
+				['a' => 'A', 'b' => null], // context
+				'A', // result
+			],
+
+			'ternary skips the false side' => [
+				'a ? "T" : b.c', // query
+				['a' => true, 'b' => null], // context
+				'T', // result
+			],
+
+			'ternary skips the true side' => [
+				'a ? b.c : "F"', // query
+				['a' => false, 'b' => null], // context
+				'F', // result
+			],
+
+			'logical AND skips the right side' => [
+				'a && a.b', // query
+				['a' => null], // context
+				false, // result
+			],
+
+			'logical OR skips the right side' => [
+				'a || b.c', // query
+				['a' => true, 'b' => null], // context
+				true, // result
+			],
+
 			// Arithmetic operations
 			'basic addition' => [
 				'2 + 3', // query
@@ -202,6 +355,30 @@ class TestCase extends BaseTestCase
 				'5 - 3', // query
 				[], // context
 				2, // result
+			],
+
+			'subtraction without whitespace' => [
+				'a-1', // query
+				['a' => 5], // context
+				4, // result
+			],
+
+			'negative variable' => [
+				'-a', // query
+				['a' => 2.5], // context
+				-2.5, // result
+			],
+
+			'negative grouping' => [
+				'-(1 + 2)', // query
+				[], // context
+				-3, // result
+			],
+
+			'negative argument' => [
+				'a.f(-1)', // query
+				['a' => ['f' => fn ($x) => $x]], // context
+				-1, // result
 			],
 
 			'basic multiplication' => [
@@ -245,74 +422,6 @@ class TestCase extends BaseTestCase
 				['x' => 10, 'y' => 3, 'z' => 2], // context
 				26, // result
 			],
-		];
-	}
-
-
-	public static function interceptProvider(): array
-	{
-		return [
-			'field' => [
-				'user.name', // query
-				['user' => $user = ['name' => 'Homer']], // context
-				[$user], // intercept
-			],
-
-			'nested field' => [
-				'user.name.first', // query
-				[
-					'user' => $user = [
-						'name' => $name = ['first' => 'Homer']
-					]
-				], // context
-				[$user, $name] // intercept
-			],
-
-			'method result' => (function () {
-				$closureResult = ['age' => 42];
-				$user = ['get' => fn () => $closureResult];
-
-				return [
-					'user.get("arg").age', // query
-					['user' => $user], // context
-					[$user, $closureResult] // intercept
-				];
-			})(),
-
-			'closure result' => (function () {
-				$result = ['field' => 'value'];
-				$thing = ['call' => fn ($callback) => $callback()];
-
-				return [
-					'thing.call(() => result).field', // query
-					['thing' => $thing, 'result' => $result], // context
-					[$thing, $result] // intercept
-				];
-			})(),
-
-			'function result for explicit global function' => (function () {
-				$result = ['bar' => 'baz'];
-				$functions = ['foo' => fn () => $result];
-
-				return [
-					'foo("arg").bar', // query
-					[], // context
-					[$result], // intercept
-					$functions // functions
-				];
-			})(),
-
-			'global function result when function looks like variable - a' => (function () {
-				$result    = ['bar' => 'baz'];
-				$functions = ['foo' => fn () => $result];
-
-				return [
-					'foo.bar', // query
-					[], // context
-					[$result], // intercept
-					$functions // functions
-				];
-			})()
 		];
 	}
 }

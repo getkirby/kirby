@@ -39,7 +39,10 @@ export const props = {
 
 /**
  * @displayName DialogFields
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],
@@ -56,6 +59,9 @@ export default {
 .k-dialog-fields {
 	padding-bottom: 0.5rem;
 	container-type: inline-size;
+}
+.k-dialog-text + .k-dialog-fields {
+	margin-top: var(--spacing-6);
 }
 /** The line field is creating a huge gap, which is too much in dialogs **/
 .k-dialog-fields .k-line-field {

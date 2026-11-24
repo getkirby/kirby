@@ -11,35 +11,63 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(QrCode::class)]
 class QrCodeTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/qr';
-	public const TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
+	public const string FIXTURES = __DIR__ . '/fixtures/qr';
+	public const string TMP      = KIRBY_TMP_DIR . '/Image.QrCode';
 
 	protected function tearDown(): void
 	{
 		Dir::remove(static::TMP);
 	}
 
+	protected function assertSameDataUri(string $expected, string $actual): void
+	{
+		$prefix = 'data:image/png;base64,';
+		$this->assertStringStartsWith($prefix, $actual);
+		$this->assertSame(
+			$this->png(base64_decode(substr($expected, strlen($prefix)))),
+			$this->png(base64_decode(substr($actual, strlen($prefix))))
+		);
+	}
+
+	protected function imageContent(GdImage $image): string
+	{
+		ob_start();
+		imagepng($image);
+		$data = ob_get_contents();
+		ob_end_clean();
+		return $data;
+	}
+
+	/**
+	 * Re-encodes PNG data with the installed GD version, as the
+	 * PNG compression differs between versions (e.g. PHP 8.6)
+	 */
+	protected function png(string $data): string
+	{
+		return $this->imageContent(imagecreatefromstring($data));
+	}
+
 	public function testToDataUri(): void
 	{
 		$qr = new QrCode('12345678');
 		$expected = F::read(static::FIXTURES . '/num.txt');
-		$this->assertSame($expected, $qr->toDataUri());
+		$this->assertSameDataUri($expected, $qr->toDataUri());
 
 		$qr = new QrCode('ABCDEF12345');
 		$expected = F::read(static::FIXTURES . '/alphanum.txt');
-		$this->assertSame($expected, $qr->toDataUri());
+		$this->assertSameDataUri($expected, $qr->toDataUri());
 
 		$qr = new QrCode('https://getkirby.com');
 		$expected = F::read(static::FIXTURES . '/url.txt');
-		$this->assertSame($expected, $qr->toDataUri());
+		$this->assertSameDataUri($expected, $qr->toDataUri());
 
 		$qr = new QrCode('🥳🐨🏳️‍🌈');
 		$expected = F::read(static::FIXTURES . '/emoji.txt');
-		$this->assertSame($expected, $qr->toDataUri());
+		$this->assertSameDataUri($expected, $qr->toDataUri());
 
 		$qr = new QrCode('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.');
 		$expected = F::read(static::FIXTURES . '/lorem.txt');
-		$this->assertSame($expected, $qr->toDataUri());
+		$this->assertSameDataUri($expected, $qr->toDataUri());
 	}
 
 	public function testToImage(): void
@@ -50,25 +78,7 @@ class QrCodeTest extends TestCase
 		$expected = F::read(static::FIXTURES . '/image.png');
 
 		$this->assertInstanceOf(GdImage::class, $image);
-		$this->assertSame($expected, $data);
-	}
-
-	public function testToImageSize(): void
-	{
-		$qr       = new QrCode('https://getkirby.com');
-		$image    = $qr->toImage(750);
-		$data     = $this->imageContent($image);
-		$expected = F::read(static::FIXTURES . '/image-size.png');
-		$this->assertSame($expected, $data);
-	}
-
-	public function testToImageColors(): void
-	{
-		$qr       = new QrCode('https://getkirby.com');
-		$image    = $qr->toImage(null, '#00ff00', '#0000ff');
-		$data     = $this->imageContent($image);
-		$expected = F::read(static::FIXTURES . '/image-colors.png');
-		$this->assertSame($expected, $data);
+		$this->assertSame($this->png($expected), $data);
 	}
 
 	public function testToImageBorder(): void
@@ -77,7 +87,31 @@ class QrCodeTest extends TestCase
 		$image    = $qr->toImage(null, '#000000', '#ffffff', 0);
 		$data     = $this->imageContent($image);
 		$expected = F::read(static::FIXTURES . '/image-border.png');
-		$this->assertSame($expected, $data);
+		$this->assertSame($this->png($expected), $data);
+	}
+
+	public function testToImageColors(): void
+	{
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage(null, '#00ff00', '#0000ff');
+		$data     = $this->imageContent($image);
+		$expected = F::read(static::FIXTURES . '/image-colors.png');
+		$this->assertSame($this->png($expected), $data);
+	}
+
+	public function testToImageSize(): void
+	{
+		$qr       = new QrCode('https://getkirby.com');
+		$image    = $qr->toImage(750);
+		$data     = $this->imageContent($image);
+		$expected = F::read(static::FIXTURES . '/image-size.png');
+		$this->assertSame($this->png($expected), $data);
+	}
+
+	public function testToString(): void
+	{
+		$qr = new QrCode('https://getkirby.com');
+		$this->assertSame($qr->toSvg(), (string)$qr);
 	}
 
 	public function testToSvg(): void
@@ -140,12 +174,6 @@ class QrCodeTest extends TestCase
 		$this->assertStringContainsString('fill="hsl(120, 100%, 50%)"', $svg);
 	}
 
-	public function testToString(): void
-	{
-		$qr = new QrCode('https://getkirby.com');
-		$this->assertSame($qr->toSvg(), (string)$qr);
-	}
-
 	public function testVersionDataExceedsCapacity(): void
 	{
 		// binary mode caps at 2953 bytes
@@ -167,7 +195,10 @@ class QrCodeTest extends TestCase
 
 		$qr->write($file = static::TMP . '/test.png');
 		$this->assertFileExists($file);
-		$this->assertFileEquals(static::FIXTURES . '/test.png', $file);
+		$this->assertSame(
+			$this->png(F::read(static::FIXTURES . '/test.png')),
+			$this->png(F::read($file))
+		);
 
 		// TODO: We are currently skipping this test because of an
 		// unexplainable, failed comparison in CI. We should replace
@@ -207,12 +238,18 @@ class QrCodeTest extends TestCase
 		$qr->write('test.docx');
 	}
 
-	protected function imageContent(GdImage $image): string
+	public function testWriteWithStringSize(): void
 	{
-		ob_start();
-		imagepng($image);
-		$data = ob_get_contents();
-		ob_end_clean();
-		return $data;
+		Dir::make(static::TMP);
+
+		$qr = new QrCode('https://getkirby.com');
+
+		// SVG keeps the CSS width
+		$qr->write($file = static::TMP . '/test.svg', '50%');
+		$this->assertStringContainsString('style="width: 50%"', F::read($file));
+
+		// raster formats need a pixel size
+		$qr->write($file = static::TMP . '/test.png', '100');
+		$this->assertSame(100, getimagesize($file)[0]);
 	}
 }

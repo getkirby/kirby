@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use InvalidArgumentException;
-use Kirby\Exception\NotFoundException;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\I18n;
@@ -11,323 +11,98 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 class RouterTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Router';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Router';
 
-	public function testHomeRoute(): void
+	public function testBadMethodRoute(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'home']
-				]
-			]
-		]);
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid routing method: WURST');
+		$this->expectExceptionCode(400);
 
-		$page = $app->call('');
-		$this->assertIsPage($page);
-		$this->assertSame('home', $page->id());
+		$this->app->call('/', 'WURST');
 	}
 
-	public function testHomeFolderRoute(): void
+	public function testCorsRequest(): void
 	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'home']
-				]
-			]
-		]);
+		$server = $_SERVER;
 
-		$response = $app->call('home');
-		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertSame(302, $response->code());
-	}
-
-	public function testHomeCustomFolderRoute(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'home' => 'homie'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'homie'
-					]
-				]
-			]
-		]);
-
-		$response = $app->call('homie');
-		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertSame(302, $response->code());
-	}
-
-	public function testHomeRouteWithoutHomePage(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => []
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The home page does not exist');
-
-		$app->call('/');
-	}
-
-	public function testPageRoute(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'projects'
-					]
-				]
-			]
-		]);
-
-		$page = $app->call('projects');
-		$this->assertIsPage($page);
-		$this->assertSame('projects', $page->id());
-	}
-
-	public function testPageRepresentationRoute(): void
-	{
-		F::write($template = static::TMP . '/test.php', 'html');
-		F::write($template = static::TMP . '/test.xml.php', 'xml');
+		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
 
 		$app = new App([
+			'options' => [
+				'cors' => true
+			]
+		]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertInstanceOf(Response::class, $response);
+		$this->assertSame(204, $response->code());
+		$this->assertSame([
+			'Access-Control-Allow-Origin'  => '*',
+			'Access-Control-Allow-Methods' => 'GET, HEAD, PUT, POST, DELETE, PATCH'
+		], $response->headers());
+
+		$_SERVER = $server;
+	}
+
+	public function testCorsRequestDisabled(): void
+	{
+		$server = $_SERVER;
+
+		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
+
+		$app = new App([]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertNull($response);
+
+		$_SERVER = $server;
+	}
+
+	public function testCorsRequestWithoutRequestMethod(): void
+	{
+		$app = new App([]);
+
+		$response = $app->call('/some/url', 'OPTIONS');
+
+		$this->assertNull($response);
+	}
+
+	public function testCustomMediaFolder(): void
+	{
+		$app = new App([
 			'roots' => [
-				'index'     => '/dev/null',
-				'templates' => static::TMP
+				'index' => '/dev/null'
 			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'test',
-						'template' => 'test'
-					]
-				],
+			'urls' => [
+				'index' => 'https://getkirby.com',
+				'media' => $media = 'https://getkirby.com/thumbs'
 			]
 		]);
 
-		// missing representation
-		$result = $app->call('test.json');
-		$this->assertNull($result);
+		$this->assertSame($media, $app->url('media'));
 
-		// xml presentation
-		$result = $app->call('test.xml');
+		// call custom media route
+		$route = $app->router()->find('thumbs/pages/a/b/1234-5678/test.jpg', 'GET');
+		$this->assertStringContainsString('thumbs/pages/(.*)', $route->pattern());
 
-		$this->assertInstanceOf(Responder::class, $result);
-		$this->assertSame('xml', $result->body());
-	}
+		$route = $app->router()->find('thumbs/site/1234-5678/test.jpg', 'GET');
+		$this->assertStringContainsString('thumbs/site/([a-z', $route->pattern());
 
-	public function testPageFileRouteDefault(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'projects',
-						'files' => [
-							[
-								'filename' => 'cover.jpg'
-							]
-						]
-					]
-				]
-			]
-		]);
+		$route = $app->router()->find('thumbs/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
+		$this->assertStringContainsString('thumbs/users/([a-z', $route->pattern());
 
-		$file = $app->call('projects/cover.jpg');
-		$this->assertNull($file);
-	}
+		// default media route should result in the fallback route
+		$route = $app->router()->find('media/pages/a/b/1234-5678/test.jpg', 'GET');
+		$this->assertSame('(.*)', $route->pattern());
 
-	public function testPageFileRouteEnabled(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'projects',
-						'files' => [
-							[
-								'filename' => 'cover.jpg'
-							]
-						]
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
+		$route = $app->router()->find('media/site/1234-5678/test.jpg', 'GET');
+		$this->assertSame('(.*)', $route->pattern());
 
-		$file = $app->call('projects/cover.jpg');
-		$this->assertIsFile($file);
-		$this->assertSame('projects/cover.jpg', $file->id());
-	}
-
-	public function testSiteFileRouteDefault(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'background.jpg'
-					]
-				]
-			]
-		]);
-
-		$file = $app->call('background.jpg');
-		$this->assertNull($file);
-	}
-
-	public function testSiteFileRouteEnabled(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'background.jpg'
-					]
-				]
-			],
-			'options' => [
-				'content' => [
-					'fileRedirects' => true
-				]
-			]
-		]);
-
-		$file = $app->call('background.jpg');
-		$this->assertIsFile($file);
-		$this->assertSame('background.jpg', $file->id());
-	}
-
-	public function testNestedPageRoute(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'projects',
-						'children' => [
-							[
-								'slug' => 'project-a'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $app->call('projects/project-a');
-		$this->assertIsPage($page);
-		$this->assertSame('projects/project-a', $page->id());
-	}
-
-	public function testNotFoundRoute(): void
-	{
-		$page = $this->app->call('not-found');
-		$this->assertNull($page);
-	}
-
-	public function testPageMediaRoute(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug'  => 'projects',
-						'files' => [
-							[
-								'filename' => 'cover.jpg'
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$mediaHash = $app->file('projects/cover.jpg')->mediaHash();
-
-		$response = $app->call('media/pages/projects/' . $mediaHash . '/cover.jpg');
-		$this->assertInstanceOf(Response::class, $response);
-	}
-
-	public function testSiteMediaRoute(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'files' => [
-					[
-						'filename' => 'background.jpg'
-					]
-				]
-			]
-		]);
-
-		$mediaHash = $app->file('background.jpg')->mediaHash();
-
-		$response = $app->call('media/site/' . $mediaHash . '/background.jpg');
-		$this->assertInstanceOf(Response::class, $response);
-	}
-
-	public function testUserMediaRoute(): void
-	{
-		$app = $this->app->clone([
-			'users' => [
-				[
-					'id'    => 'test',
-					'email' => 'admin@getkirby.com',
-					'files' => [
-						[
-							'filename' => 'test.jpg'
-						]
-					]
-				]
-			]
-		]);
-
-		$mediaHash = $app->user('test')->file('test.jpg')->mediaHash();
-
-		$response = $app->call('media/users/test/' . $mediaHash . '/test.jpg');
-		$this->assertInstanceOf(Response::class, $response);
-	}
-
-	public function testDisabledApi(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'api' => false
-			]
-		]);
-
-		$this->assertNull($app->call('api'));
-		$this->assertNull($app->call('api/something'));
-
-		// the api route should still be there (after CORS preflight route)
-		$patterns = array_column($app->routes(), 'pattern');
-		$this->assertSame('api/(:all)', $patterns[1]);
-	}
-
-	public function testDisabledPanel(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'panel' => false
-			]
-		]);
-
-		$this->assertNull($app->call('panel'));
-		$this->assertNull($app->call('panel/something'));
+		$route = $app->router()->find('media/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
+		$this->assertSame('(.*)', $route->pattern());
 	}
 
 	public static function customRouteProvider(): array
@@ -368,13 +143,120 @@ class RouterTest extends TestCase
 		$this->assertSame('test', $app->call($path));
 	}
 
-	public function testBadMethodRoute(): void
+	public function testDisabledApi(): void
 	{
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid routing method: WURST');
-		$this->expectExceptionCode(400);
+		$app = $this->app->clone([
+			'options' => [
+				'api' => false
+			]
+		]);
 
-		$this->app->call('/', 'WURST');
+		$this->assertNull($app->call('api'));
+		$this->assertNull($app->call('api/something'));
+
+		// the api route should still be there (after CORS preflight route)
+		$patterns = array_column($app->routes(), 'pattern');
+		$this->assertSame('api/(:all)', $patterns[1]);
+	}
+
+	public function testDisabledPanel(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'panel' => false
+			]
+		]);
+
+		$this->assertNull($app->call('panel'));
+		$this->assertNull($app->call('panel/something'));
+	}
+
+	public function testHomeCustomFolderRoute(): void
+	{
+		$app = $this->app->clone([
+			'options' => [
+				'home' => 'homie'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'homie'
+					]
+				]
+			]
+		]);
+
+		$response = $app->call('homie');
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(302, $response->code());
+	}
+
+	public function testHomeFolderRoute(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		$response = $app->call('home');
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(302, $response->code());
+	}
+
+	public function testHomeFolderRouteWithQueryAndParams(): void
+	{
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/home/tag:foo?bar=baz'],
+			'site'    => ['children' => [['slug' => 'home']]],
+			'urls'    => ['index' => 'https://getkirby.com']
+		]);
+
+		$response = $app->call('home');
+		$this->assertSame(
+			'https://getkirby.com/tag:foo?bar=baz',
+			$response->header('Location')
+		);
+
+		// params must not turn into a host with a relative index URL
+		$app = $app->clone([
+			'request' => ['url' => 'https://getkirby.com/home/evil.com:443'],
+			'urls'    => ['index' => '/']
+		]);
+
+		$response = $app->call('home');
+		$this->assertSame('/evil.com:443/', $response->header('Location'));
+	}
+
+	public function testHomeRoute(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'home']
+				]
+			]
+		]);
+
+		$page = $app->call('');
+		$this->assertIsPage($page);
+		$this->assertSame('home', $page->id());
+	}
+
+	public function testHomeRouteWithoutHomePage(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => []
+			]
+		]);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The home page does not exist');
+
+		$app->call('/');
 	}
 
 	public function testMultiLangHomeRoute(): void
@@ -401,7 +283,6 @@ class RouterTest extends TestCase
 			]
 		]);
 
-
 		// fr
 		$page = $app->call('fr');
 
@@ -422,6 +303,33 @@ class RouterTest extends TestCase
 		$result = $app->call('/');
 
 		$this->assertInstanceOf(Responder::class, $result);
+	}
+
+	public function testMultiLangHomeRouteWithoutHomePage(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => []
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'fr',
+					'default' => true,
+					'url'     => '/'
+				],
+				[
+					'code' => 'en',
+				]
+			]
+		]);
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The home page does not exist');
+
+		$app->call('/');
 	}
 
 	public function testMultiLangHomeRouteWithoutLanguageCode(): void
@@ -465,6 +373,56 @@ class RouterTest extends TestCase
 		$this->assertSame('home', $page->id());
 		$this->assertSame('en', $app->language()->code());
 		$this->assertSame('en', I18n::locale());
+	}
+
+	public static function acceptedLanguageProvider(): array
+	{
+		return [
+			['fr,en;q=0.8', '/fr'],
+			['en', '/en'],
+			['de', '/fr']
+		];
+	}
+
+	#[DataProvider('acceptedLanguageProvider')]
+	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'home'
+					]
+				]
+			],
+			'options' => [
+				'languages' => true,
+				'languages.detect' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'fr',
+					'default' => true,
+				],
+				[
+					'code' => 'en',
+				]
+			]
+		]);
+
+		$acceptedLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
+
+		// set the accepted visitor language
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+		$app = $app->clone();
+
+		$response = $app->call('/');
+
+		$this->assertInstanceOf(Responder::class, $response);
+		$this->assertSame(['Location' => $redirect], $response->headers());
+
+		// reset the accepted visitor language
+		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
 	}
 
 	public static function multiDomainProvider(): array
@@ -555,124 +513,6 @@ class RouterTest extends TestCase
 		$this->assertSame('home', $page->id());
 		$this->assertSame($language, $app->language()->code());
 		$this->assertSame($language, I18n::locale());
-	}
-
-	public static function acceptedLanguageProvider(): array
-	{
-		return [
-			['fr,en;q=0.8', '/fr'],
-			['en', '/en'],
-			['de', '/fr']
-		];
-	}
-
-	#[DataProvider('acceptedLanguageProvider')]
-	public function testMultiLangHomeRouteWithoutLanguageCodeAndLanguageDetection($accept, $redirect): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'home'
-					]
-				]
-			],
-			'options' => [
-				'languages' => true,
-				'languages.detect' => true
-			],
-			'languages' => [
-				[
-					'code'    => 'fr',
-					'default' => true,
-				],
-				[
-					'code' => 'en',
-				]
-			]
-		]);
-
-		$acceptedLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
-
-		// set the accepted visitor language
-		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
-		$app = $app->clone();
-
-		$response = $app->call('/');
-
-		$this->assertInstanceOf(Responder::class, $response);
-		$this->assertSame(['Location' => $redirect], $response->headers());
-
-		// reset the accepted visitor language
-		$_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptedLanguage;
-	}
-
-	public function testMultiLangHomeRouteWithoutHomePage(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => []
-			],
-			'options' => [
-				'languages' => true
-			],
-			'languages' => [
-				[
-					'code'    => 'fr',
-					'default' => true,
-					'url'     => '/'
-				],
-				[
-					'code' => 'en',
-				]
-			]
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The home page does not exist');
-
-		$app->call('/');
-	}
-
-	public function testMultiLangPageRoute(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'projects'
-					]
-				]
-			],
-			'options' => [
-				'languages' => true
-			],
-			'languages' => [
-				[
-					'code'    => 'fr',
-					'default' => true
-				],
-				[
-					'code' => 'en',
-				]
-			]
-		]);
-
-		// en
-		$page = $app->call('en/projects');
-
-		$this->assertIsPage($page);
-		$this->assertSame('projects', $page->id());
-		$this->assertSame('en', $app->language()->code());
-		$this->assertSame('en', I18n::locale());
-
-		// fr
-		$page = $app->call('fr/projects');
-
-		$this->assertIsPage($page);
-		$this->assertSame('projects', $page->id());
-		$this->assertSame('fr', $app->language()->code());
-		$this->assertSame('fr', I18n::locale());
 	}
 
 	public static function multiLangNotFoundLanguageProvider(): array
@@ -847,86 +687,307 @@ class RouterTest extends TestCase
 		$this->assertSame('en', I18n::locale());
 	}
 
-	public function testCustomMediaFolder(): void
+	public function testMultiLangPageRoute(): void
 	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'projects'
+					]
+				]
+			],
+			'options' => [
+				'languages' => true
+			],
+			'languages' => [
+				[
+					'code'    => 'fr',
+					'default' => true
+				],
+				[
+					'code' => 'en',
+				]
+			]
+		]);
+
+		// en
+		$page = $app->call('en/projects');
+
+		$this->assertIsPage($page);
+		$this->assertSame('projects', $page->id());
+		$this->assertSame('en', $app->language()->code());
+		$this->assertSame('en', I18n::locale());
+
+		// fr
+		$page = $app->call('fr/projects');
+
+		$this->assertIsPage($page);
+		$this->assertSame('projects', $page->id());
+		$this->assertSame('fr', $app->language()->code());
+		$this->assertSame('fr', I18n::locale());
+	}
+
+	public function testNestedPageRoute(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'children' => [
+							[
+								'slug' => 'project-a'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $app->call('projects/project-a');
+		$this->assertIsPage($page);
+		$this->assertSame('projects/project-a', $page->id());
+	}
+
+	public function testNotFoundRoute(): void
+	{
+		$page = $this->app->call('not-found');
+		$this->assertNull($page);
+	}
+
+	public function testPageFileRouteDefault(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'files' => [
+							[
+								'filename' => 'cover.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$file = $app->call('projects/cover.jpg');
+		$this->assertNull($file);
+	}
+
+	public function testPageFileRouteEnabled(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'files' => [
+							[
+								'filename' => 'cover.jpg'
+							]
+						]
+					]
+				]
+			],
+			'options' => [
+				'content' => [
+					'fileRedirects' => true
+				]
+			]
+		]);
+
+		$file = $app->call('projects/cover.jpg');
+		$this->assertIsFile($file);
+		$this->assertSame('projects/cover.jpg', $file->id());
+	}
+
+	public function testPageMediaRoute(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'projects',
+						'files' => [
+							[
+								'filename' => 'cover.jpg'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$mediaHash = $app->file('projects/cover.jpg')->mediaHash();
+
+		$response = $app->call('media/pages/projects/' . $mediaHash . '/cover.jpg');
+		$this->assertInstanceOf(Response::class, $response);
+	}
+
+	public function testPageRepresentationRoute(): void
+	{
+		F::write($template = static::TMP . '/test.php', 'html');
+		F::write($template = static::TMP . '/test.xml.php', 'xml');
+
 		$app = new App([
 			'roots' => [
-				'index' => '/dev/null'
+				'index'     => '/dev/null',
+				'templates' => static::TMP
 			],
-			'urls' => [
-				'index' => 'https://getkirby.com',
-				'media' => $media = 'https://getkirby.com/thumbs'
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test'
+					]
+				],
 			]
 		]);
 
-		$this->assertSame($media, $app->url('media'));
+		// missing representation
+		$result = $app->call('test.json');
+		$this->assertNull($result);
 
-		// call custom media route
-		$route = $app->router()->find('thumbs/pages/a/b/1234-5678/test.jpg', 'GET');
-		$this->assertStringContainsString('thumbs/pages/(.*)', $route->pattern());
+		// xml presentation
+		$result = $app->call('test.xml');
 
-		$route = $app->router()->find('thumbs/site/1234-5678/test.jpg', 'GET');
-		$this->assertStringContainsString('thumbs/site/([a-z', $route->pattern());
-
-		$route = $app->router()->find('thumbs/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
-		$this->assertStringContainsString('thumbs/users/([a-z', $route->pattern());
-
-		// default media route should result in the fallback route
-		$route = $app->router()->find('media/pages/a/b/1234-5678/test.jpg', 'GET');
-		$this->assertSame('(.*)', $route->pattern());
-
-		$route = $app->router()->find('media/site/1234-5678/test.jpg', 'GET');
-		$this->assertSame('(.*)', $route->pattern());
-
-		$route = $app->router()->find('media/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
-		$this->assertSame('(.*)', $route->pattern());
+		$this->assertInstanceOf(Responder::class, $result);
+		$this->assertSame('xml', $result->body());
 	}
 
-	public function testCorsRequest(): void
+	public function testPageRoute(): void
 	{
-		$server = $_SERVER;
+		$app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'projects'
+					]
+				]
+			]
+		]);
 
-		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
+		$page = $app->call('projects');
+		$this->assertIsPage($page);
+		$this->assertSame('projects', $page->id());
+	}
 
-		$app = new App([
+	public function testSiteFileRouteDefault(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			]
+		]);
+
+		$file = $app->call('background.jpg');
+		$this->assertNull($file);
+	}
+
+	public function testSiteFileRouteEnabled(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			],
 			'options' => [
-				'cors' => true
+				'content' => [
+					'fileRedirects' => true
+				]
 			]
 		]);
 
-		$response = $app->call('/some/url', 'OPTIONS');
+		$file = $app->call('background.jpg');
+		$this->assertIsFile($file);
+		$this->assertSame('background.jpg', $file->id());
+	}
 
+	public function testSiteMediaRoute(): void
+	{
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					[
+						'filename' => 'background.jpg'
+					]
+				]
+			]
+		]);
+
+		$mediaHash = $app->file('background.jpg')->mediaHash();
+
+		$response = $app->call('media/site/' . $mediaHash . '/background.jpg');
 		$this->assertInstanceOf(Response::class, $response);
-		$this->assertSame(204, $response->code());
-		$this->assertSame([
-			'Access-Control-Allow-Origin'  => '*',
-			'Access-Control-Allow-Methods' => 'GET, HEAD, PUT, POST, DELETE, PATCH'
-		], $response->headers());
-
-		$_SERVER = $server;
 	}
 
-	public function testCorsRequestWithoutRequestMethod(): void
+	public function testUserMediaRoute(): void
 	{
-		$app = new App([]);
+		$app = $this->app->clone([
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'admin@getkirby.com',
+					'files' => [
+						[
+							'filename' => 'test.jpg'
+						]
+					]
+				]
+			]
+		]);
 
-		$response = $app->call('/some/url', 'OPTIONS');
+		$mediaHash = $app->user('test')->file('test.jpg')->mediaHash();
 
-		$this->assertNull($response);
+		$response = $app->call('media/users/test/' . $mediaHash . '/test.jpg');
+		$this->assertInstanceOf(Response::class, $response);
 	}
 
-	public function testCorsRequestDisabled(): void
+	public function testUUIDRouteWithQueryAndParams(): void
 	{
-		$server = $_SERVER;
+		$app = $this->app->clone([
+			'request' => ['url' => 'https://getkirby.com/@/page/notes/tag:foo?bar=baz'],
+			'site'    => [
+				'children' => [
+					[
+						'slug'    => 'notes',
+						'content' => ['uuid' => 'notes'],
+						'files'   => [
+							[
+								'filename' => 'test.jpg',
+								'content'  => ['uuid' => 'test']
+							]
+						]
+					]
+				]
+			],
+			'urls' => ['index' => 'https://getkirby.com']
+		]);
 
-		$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'] = 'GET';
+		$page = $app->page('notes');
+		$page->uuid()->populate();
 
-		$app = new App([]);
+		$response = $app->call('@/page/notes');
+		$this->assertSame(
+			'https://getkirby.com/notes/tag:foo?bar=baz',
+			$response->header('Location')
+		);
 
-		$response = $app->call('/some/url', 'OPTIONS');
+		// files point to the media folder and don't inherit
+		$file = $page->file('test.jpg');
+		$file->uuid()->populate();
 
-		$this->assertNull($response);
-
-		$_SERVER = $server;
+		$response = $app->call('@/file/test');
+		$this->assertSame($file->url(), $response->header('Location'));
 	}
 }

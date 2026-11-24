@@ -1,0 +1,102 @@
+<?php
+
+namespace Kirby\Panel\Controller\Drawer;
+
+use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Panel\Ui\Drawer;
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ * @unstable
+ */
+class UserEmailChallengeDrawerController extends UserCredentialDrawerController
+{
+	public function __construct(User $user)
+	{
+		parent::__construct($user, 'email');
+
+		// ensure user has the necessary permissions
+		$user->guards()->ensureExecutable('changeSecret', 'email', null);
+	}
+
+	protected function create(): User
+	{
+		parent::create();
+
+		// completing the challenge proves that the address is
+		// actually reachable, so that nobody can lock themselves
+		// out of their account with undeliverable emails
+		$this->authorizeCurrentUser();
+
+		return $this->user->changeSecret('email', true);
+	}
+
+	protected function isEnabled(): bool
+	{
+		return $this->user->secret('email') === true;
+	}
+
+	public function load(): Drawer
+	{
+		return new Drawer(
+			component: 'k-user-email-challenge-drawer',
+			icon:      $this->challenge()->icon(),
+			title:     $this->challenge()->label(),
+			isAccount: $this->isCurrentUser(),
+			isEnabled: $this->isEnabled(),
+			size:      'tiny',
+			user:      $this->user->panel()->info()
+		);
+	}
+
+	protected function remove(): User
+	{
+		$this->authorize();
+		return $this->user->changeSecret('email', null);
+	}
+
+	/**
+	 * Sends a one-time code to the user's email address and
+	 * remembers it for the following create/remove action.
+	 *
+	 * @throws PermissionException If the code is not for the current user
+	 */
+	protected function send(): User
+	{
+		// only the account owner can prove that their own inbox is
+		// reachable; an admin manages the challenge with their password
+		if ($this->isCurrentUser() === false) {
+			throw new PermissionException(
+				message: 'You cannot send a login code for ' . $this->user->email()
+			);
+		}
+
+		$limits = $this->kirby->auth()->limits();
+		$email  = $this->user->email();
+
+		$limits->ensure($email);
+		$limits->track($email, triggerHook: false);
+
+		$this->authorization();
+
+		return $this->user;
+	}
+
+	public function submit(): bool
+	{
+		$this->user = match ($action = $this->request->get('action')) {
+			'code'   => $this->send(),
+			'create' => $this->create(),
+			'remove' => $this->remove(),
+			default  => throw new InvalidArgumentException(
+				message: 'Invalid action: ' . $action
+			)
+		};
+
+		return true;
+	}
+}

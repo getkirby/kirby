@@ -10,12 +10,9 @@ use Kirby\Query\Runners\Scope;
 /**
  * Processes a query AST
  *
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 class DefaultVisitor extends Visitor
@@ -35,14 +32,14 @@ class DefaultVisitor extends Visitor
 		int|float $left,
 		string $operator,
 		int|float $right
-	): mixed {
+	): int|float {
 		return match ($operator) {
 			'+'     => $left + $right,
 			'-'     => $left - $right,
 			'*'     => $left * $right,
 			'/'     => $left / $right,
 			'%'     => $left % $right,
-			default => throw new Exception("Unknown arithmetic operator: $operator")
+			default => throw new Exception('Unknown arithmetic operator: ' . $operator)
 		};
 	}
 
@@ -63,11 +60,13 @@ class DefaultVisitor extends Visitor
 
 		return function (...$params) use ($self, $node) {
 			// [key1, key2] + [value1, value2] =>
-			// [key1 => value1, key2 => value2]
-			$arguments = array_combine(
-				$node->arguments,
-				$params
-			);
+			// [key1 => value1, key2 => value2],
+			// missing values are null, extra values are ignored
+			$arguments = [];
+
+			foreach ($node->arguments as $index => $name) {
+				$arguments[$name] = $params[$index] ?? null;
+			}
 
 			// Create new nested visitor with combined
 			// data context for resolving the closure body
@@ -84,9 +83,9 @@ class DefaultVisitor extends Visitor
 	/**
 	 * Processes coalescence operator
 	 */
-	public function coalescence(mixed $left, mixed $right): mixed
+	public function coalescence(mixed $left, Closure $right): mixed
 	{
-		return $left ?? $right;
+		return $left ?? $right();
 	}
 
 	/**
@@ -106,7 +105,7 @@ class DefaultVisitor extends Visitor
 			'<='    => $left <= $right,
 			'>'     => $left > $right,
 			'>='    => $left >= $right,
-			default => throw new Exception("Unknown comparison operator: $operator")
+			default => throw new Exception('Unknown comparison operator: ' . $operator)
 		};
 	}
 
@@ -118,7 +117,7 @@ class DefaultVisitor extends Visitor
 		$function = $this->global[$name] ?? null;
 
 		if ($function === null) {
-			throw new Exception("Invalid global function in query: $name");
+			throw new Exception('Invalid global function in query: ' . $name);
 		}
 
 		return $function(...$arguments);
@@ -138,12 +137,12 @@ class DefaultVisitor extends Visitor
 	public function logical(
 		mixed $left,
 		string $operator,
-		mixed $right
+		Closure $right
 	): bool {
 		return match ($operator) {
-			'&&', 'AND' => $left && $right,
-			'||', 'OR'  => $left || $right,
-			default     => throw new Exception("Unknown logical operator: $operator")
+			'&&', 'AND' => $left && $right(),
+			'||', 'OR'  => $left || $right(),
+			default     => throw new Exception('Unknown logical operator: ' . $operator)
 		};
 	}
 
@@ -164,18 +163,27 @@ class DefaultVisitor extends Visitor
 	}
 
 	/**
+	 * Processes logical negation
+	 * @since 6.0.0
+	 */
+	public function not(mixed $value): bool
+	{
+		return !$value;
+	}
+
+	/**
 	 * Processes ternary operator
 	 */
 	public function ternary(
 		mixed $condition,
-		mixed $true,
-		mixed $false
+		Closure|null $true,
+		Closure $false
 	): mixed {
 		if ($true === null) {
-			return $condition ?: $false;
+			return $condition ?: $false();
 		}
 
-		return $condition ? $true : $false;
+		return $condition ? $true() : $false();
 	}
 
 	/**

@@ -3,6 +3,7 @@
 namespace Kirby\Data;
 
 use Exception;
+use JsonException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -11,6 +12,38 @@ use stdClass;
 #[CoversClass(Json::class)]
 class JsonTest extends TestCase
 {
+	public function testDecodeCorrupted1(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('JSON string is invalid');
+
+		Json::decode('some gibberish');
+	}
+
+	public function testDecodeCorrupted2(): void
+	{
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('JSON string is invalid');
+
+		Json::decode('true');
+	}
+
+	public function testDecodeInvalid1(): void
+	{
+		// pass invalid object
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
+		Json::decode(new stdClass());
+	}
+
+	public function testDecodeInvalid2(): void
+	{
+		// pass invalid int
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
+		Json::decode(1);
+	}
+
 	public function testEncodeDecode(): void
 	{
 		$array = [
@@ -31,36 +64,12 @@ class JsonTest extends TestCase
 		$this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
 	}
 
-	public function testDecodeInvalid1(): void
+	public function testEncodeInvalid(): void
 	{
-		// pass invalid object
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
-		Json::decode(new stdClass());
-	}
+		$this->expectException(JsonException::class);
 
-	public function testDecodeInvalid2(): void
-	{
-		// pass invalid int
-		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('Invalid JSON data; please pass a string');
-		Json::decode(1);
-	}
-
-	public function testDecodeCorrupted1(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('JSON string is invalid');
-
-		Json::decode('some gibberish');
-	}
-
-	public function testDecodeCorrupted2(): void
-	{
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('JSON string is invalid');
-
-		Json::decode('true');
+		// invalid UTF-8 sequence makes json_encode fail
+		Json::encode("\xb1\x31");
 	}
 
 	public function testEncodePretty(): void

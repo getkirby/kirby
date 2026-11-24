@@ -22,9 +22,9 @@
 		</k-lab-example>
 		<k-lab-example label="Options Slot">
 			<k-section label="Label">
-				<k-button icon="add" size="xs" slot="options" variant="filled">
-					Add
-				</k-button>
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<p>Nice Section</p>
 			</k-section>
 		</k-lab-example>
@@ -32,9 +32,9 @@
 			<k-section
 				label="This is a very very long label that could push the options aside and break stuff"
 			>
-				<k-button icon="add" size="xs" slot="options" variant="filled">
-					Add
-				</k-button>
+				<template #options>
+					<k-button icon="add" size="xs" variant="filled">Add</k-button>
+				</template>
 				<p>Nice Section</p>
 			</k-section>
 		</k-lab-example>

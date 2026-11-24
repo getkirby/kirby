@@ -18,14 +18,16 @@ use Kirby\Toolkit\Str;
  * a simple API to inspect incoming
  * requests.
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Request
 {
+	/**
+	 * Available auth types and their classes
+	 *
+	 * @var array<string, class-string<Auth>>
+	 */
 	public static array $authTypes = [
 		'basic'   => BasicAuth::class,
 		'bearer'  => BearerAuth::class,
@@ -77,12 +79,12 @@ class Request
 	 *
 	 * `$request->query()->get('foo')`
 	 */
-	protected Query $query;
+	protected Query|null $query = null;
 
 	/**
 	 * Request URL object
 	 */
-	protected Uri $url;
+	protected Uri|null $url = null;
 
 	/**
 	 * Creates a new Request object
@@ -93,7 +95,7 @@ class Request
 	public function __construct(
 		protected array $options = []
 	) {
-		$this->method  = $this->detectRequestMethod($options['method'] ?? null);
+		$this->method = $this->detectRequestMethod($options['method'] ?? null);
 
 		if (isset($options['body']) === true) {
 			$this->body =
@@ -159,21 +161,44 @@ class Request
 		// https://github.com/getkirby/kirby/issues/4423#issuecomment-1166300526
 		$kirby?->response()->usesAuth(true);
 
-		if ($auth = $this->authString()) {
-			$type = Str::lower(Str::before($auth, ' '));
-			$data = Str::after($auth, ' ');
+		$auth = $this->authString();
 
-			$class = static::$authTypes[$type] ?? null;
-			if (!$class || class_exists($class) === false) {
-				return $this->auth = false;
-			}
-
-			$object = new $class($data);
-
-			return $this->auth = $object;
+		if ($auth === null) {
+			return $this->auth = false;
 		}
 
-		return $this->auth = false;
+		$type  = Str::lower(Str::before($auth, ' '));
+		$class = static::$authTypes[$type] ?? null;
+
+		if (!$class || class_exists($class) === false) {
+			return $this->auth = false;
+		}
+
+		return $this->auth = new $class(Str::after($auth, ' '));
+	}
+
+	/**
+	 * Returns the raw auth string from the `auth` option
+	 * or `Authorization` header unless both are empty
+	 */
+	protected function authString(): string|null
+	{
+		// both variants need to be checked separately
+		// because empty strings are treated as invalid
+		// but the `??` operator wouldn't do the fallback
+		$option = $this->options['auth'] ?? null;
+
+		if (is_string($option) === true && $option !== '') {
+			return $option;
+		}
+
+		$header = $this->header('authorization');
+
+		if (is_string($header) === true && $header !== '') {
+			return $header;
+		}
+
+		return null;
 	}
 
 	/**
@@ -243,7 +268,6 @@ class Request
 		// final chain of options to detect the method
 		$method ??= Environment::getGlobally('REQUEST_METHOD', 'GET');
 
-		// uppercase the shit out of it
 		$method = strtoupper($method);
 
 		// sanitize the method
@@ -257,7 +281,7 @@ class Request
 	/**
 	 * Returns the domain
 	 */
-	public function domain(): string
+	public function domain(): string|null
 	{
 		return $this->url()->domain();
 	}
@@ -310,6 +334,8 @@ class Request
 	/**
 	 * Return all headers with polyfill for
 	 * missing getallheaders function
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function headers(): array
 	{
@@ -323,20 +349,10 @@ class Request
 				continue;
 			}
 
-			// remove the prefix
+			// e.g. `HTTP_X_CSRF` becomes `X-Csrf`
 			$key = preg_replace('/^(REDIRECT_)?HTTP_/', '', $key);
-
-			// convert to lowercase
-			$key = strtolower($key);
-
-			// replace _ with spaces
-			$key = str_replace('_', ' ', $key);
-
-			// uppercase first char in each word
-			$key = ucwords($key);
-
-			// convert spaces to dashes
-			$key = str_replace(' ', '-', $key);
+			$key = ucwords(strtolower($key), '_');
+			$key = str_replace('_', '-', $key);
 
 			$headers[$key] = $value;
 		}
@@ -406,29 +422,5 @@ class Request
 		}
 
 		return $this->url ??= Uri::current();
-	}
-
-	/**
-	 * Returns the raw auth string from the `auth` option
-	 * or `Authorization` header unless both are empty
-	 */
-	protected function authString(): string|null
-	{
-		// both variants need to be checked separately
-		// because empty strings are treated as invalid
-		// but the `??` operator wouldn't do the fallback
-		$option = $this->options['auth'] ?? null;
-
-		if (is_string($option) === true && $option !== '') {
-			return $option;
-		}
-
-		$header = $this->header('authorization');
-
-		if (is_string($header) === true && $header !== '') {
-			return $header;
-		}
-
-		return null;
 	}
 }

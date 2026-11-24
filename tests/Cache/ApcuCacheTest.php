@@ -25,6 +25,48 @@ class ApcuCacheTest extends TestCase
 		$this->assertTrue($cache->enabled());
 	}
 
+	public function testFlush(): void
+	{
+		$cache = new ApcuCache([]);
+
+		$cache->set('a', 'A basic value');
+		$cache->set('b', 'A basic value');
+		$cache->set('c', 'A basic value');
+		$this->assertTrue($cache->exists('a'));
+		$this->assertTrue($cache->exists('b'));
+		$this->assertTrue($cache->exists('c'));
+
+		$this->assertTrue($cache->flush());
+		$this->assertFalse($cache->exists('a'));
+		$this->assertFalse($cache->exists('b'));
+		$this->assertFalse($cache->exists('c'));
+	}
+
+	public function testFlushWithPrefix(): void
+	{
+		$cache1 = new ApcuCache([
+			'prefix' => 'test1'
+		]);
+		$cache2 = new ApcuCache([
+			'prefix' => 'test2'
+		]);
+
+		$cache1->set('a', 'A basic value');
+		$cache1->set('b', 'A basic value');
+		$cache2->set('a', 'A basic value');
+		$cache2->set('b', 'A basic value');
+		$this->assertTrue($cache1->exists('a'));
+		$this->assertTrue($cache1->exists('b'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+
+		$this->assertTrue($cache1->flush());
+		$this->assertFalse($cache1->exists('a'));
+		$this->assertFalse($cache1->exists('b'));
+		$this->assertTrue($cache2->exists('a'));
+		$this->assertTrue($cache2->exists('b'));
+	}
+
 	public function testOperations(): void
 	{
 		$cache = new ApcuCache([]);
@@ -73,45 +115,17 @@ class ApcuCacheTest extends TestCase
 		$this->assertSame('Another basic value', $cache2->retrieve('foo')->value());
 	}
 
-	public function testFlush(): void
+	public function testSetInvalidValue(): void
 	{
 		$cache = new ApcuCache([]);
 
-		$cache->set('a', 'A basic value');
-		$cache->set('b', 'A basic value');
-		$cache->set('c', 'A basic value');
-		$this->assertTrue($cache->exists('a'));
-		$this->assertTrue($cache->exists('b'));
-		$this->assertTrue($cache->exists('c'));
+		// existing entry gets overwritten with an empty entry
+		// when the new value cannot be encoded
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertTrue($cache->exists('foo'));
 
-		$this->assertTrue($cache->flush());
-		$this->assertFalse($cache->exists('a'));
-		$this->assertFalse($cache->exists('b'));
-		$this->assertFalse($cache->exists('c'));
-	}
-
-	public function testFlushWithPrefix(): void
-	{
-		$cache1 = new ApcuCache([
-			'prefix' => 'test1'
-		]);
-		$cache2 = new ApcuCache([
-			'prefix' => 'test2'
-		]);
-
-		$cache1->set('a', 'A basic value');
-		$cache1->set('b', 'A basic value');
-		$cache2->set('a', 'A basic value');
-		$cache2->set('b', 'A basic value');
-		$this->assertTrue($cache1->exists('a'));
-		$this->assertTrue($cache1->exists('b'));
-		$this->assertTrue($cache2->exists('a'));
-		$this->assertTrue($cache2->exists('b'));
-
-		$this->assertTrue($cache1->flush());
-		$this->assertFalse($cache1->exists('a'));
-		$this->assertFalse($cache1->exists('b'));
-		$this->assertTrue($cache2->exists('a'));
-		$this->assertTrue($cache2->exists('b'));
+		$this->assertTrue($cache->set('foo', "\xC3"));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertNull($cache->get('foo'));
 	}
 }

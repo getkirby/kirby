@@ -1,6 +1,10 @@
 <script>
 import TextFieldPreview from "./TextFieldPreview.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: TextFieldPreview,
 	props: {

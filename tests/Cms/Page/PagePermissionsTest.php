@@ -2,15 +2,14 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use ReflectionProperty;
 
+#[CoversClass(ModelPermissions::class)]
 #[CoversClass(PagePermissions::class)]
 class PagePermissionsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PagePermissions';
 
 	protected function setUp(): void
 	{
@@ -26,251 +25,6 @@ class PagePermissionsTest extends ModelTestCase
 				['id' => 'editor', 'role' => 'editor']
 			],
 		]);
-	}
-
-	protected function tearDown(): void
-	{
-		$prop = new ReflectionProperty(PagePermissions::class, 'cache');
-		$prop->setValue(null, []);
-	}
-
-	public static function actionProvider(): array
-	{
-		return [
-			['access'],
-			['changeSlug'],
-			['changeStatus'],
-			// ['changeTemplate'], Tested separately because of the needed blueprints
-			['changeTitle'],
-			['create'],
-			['delete'],
-			['duplicate'],
-			['list'],
-			['move'],
-			['preview'],
-			['sort'],
-			['update'],
-		];
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithAdmin(string $action): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1
-		]);
-
-		$this->assertTrue($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithAdminButDisabledOption(string $action): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => false
-				]
-			]
-		]);
-
-		$this->assertFalse($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithEditorAndPositiveWildcard(string $action): void
-	{
-		$this->app->impersonate('editor');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'*' => true
-					]
-				]
-			]
-		]);
-
-		$this->assertTrue($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithEditorAndPositivePermission(string $action): void
-	{
-		$this->app->impersonate('editor');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'*' => false,
-						'editor' => true
-					]
-				]
-			]
-		]);
-
-		$this->assertTrue($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithEditorAndNegativeWildcard(string $action): void
-	{
-		$this->app->impersonate('editor');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'*' => false
-					]
-				]
-			]
-		]);
-
-		$this->assertFalse($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithEditorAndNegativePermission(string $action): void
-	{
-		$this->app->impersonate('editor');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'*' => true,
-						'editor' => false
-					]
-				]
-			]
-		]);
-
-		$this->assertFalse($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithAdminAndNegativeOptionForOtherRole(
-		string $action
-	): void {
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'visitor' => false
-					]
-				]
-			]
-		]);
-
-		$this->assertTrue($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback(
-		string $action
-	): void {
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug' => 'test',
-			'num'  => 1,
-			'blueprint' => [
-				'name' => 'test',
-				'options' => [
-					$action => [
-						'*'       => false,
-						'visitor' => false
-					]
-				]
-			]
-		]);
-
-		$this->assertFalse($page->permissions()->can($action));
-	}
-
-	#[DataProvider('actionProvider')]
-	public function testWithNobody(string $action): void
-	{
-		$page  = new Page(['slug' => 'test']);
-		$perms = $page->permissions();
-
-		$this->assertFalse($perms->can($action));
-	}
-
-	public function testCanFromCache(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug'      => 'test',
-			'num'       => 1,
-			'template'  => 'some-template',
-			'blueprint' => [
-				'name' => 'some-template',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'access'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
-		$this->assertFalse(PagePermissions::canFromCache($page, 'list'));
-	}
-
-	public function testCanFromCacheDynamic(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$page = new Page([
-			'slug'     => 'test',
-			'num'      => 1,
-			'template' => 'some-template',
-		]);
-
-		PagePermissions::canFromCache($page, 'changeTemplate');
-	}
-
-	public function testCannotChangeTemplate(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->assertFalse($page->permissions()->can('changeTemplate'));
 	}
 
 	public function testCanChangeTemplate(): void
@@ -350,16 +104,15 @@ class PagePermissionsTest extends ModelTestCase
 		$this->assertFalse($error->permissions()->can('changeTemplate'));
 	}
 
-	public function testCanSortListedPages(): void
+	public function testCannotChangeTemplate(): void
 	{
 		$this->app->impersonate('admin');
 
 		$page = new Page([
 			'slug' => 'test',
-			'num'  => 1
 		]);
 
-		$this->assertTrue($page->permissions()->can('sort'));
+		$this->assertFalse($page->permissions()->can('changeTemplate'));
 	}
 
 	public function testCanNotFoundDefault(): void
@@ -375,15 +128,17 @@ class PagePermissionsTest extends ModelTestCase
 		$this->assertTrue($page->permissions()->can('foo', true));
 	}
 
-	public function testCannotSortUnlistedPages(): void
+	public function testCannotNotFoundDefault(): void
 	{
 		$this->app->impersonate('admin');
 
 		$page = new Page([
-			'slug' => 'test'
+			'slug' => 'test',
+			'num'  => 1
 		]);
 
-		$this->assertFalse($page->permissions()->can('sort'));
+		$this->assertTrue($page->permissions()->cannot('foo'));
+		$this->assertFalse($page->permissions()->cannot('foo', false));
 	}
 
 	public function testCannotSortErrorPage(): void
@@ -442,7 +197,18 @@ class PagePermissionsTest extends ModelTestCase
 		$this->assertFalse($page->permissions()->can('sort'));
 	}
 
-	public function testCannotNotFoundDefault(): void
+	public function testCannotSortUnlistedPages(): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page([
+			'slug' => 'test'
+		]);
+
+		$this->assertFalse($page->permissions()->can('sort'));
+	}
+
+	public function testCanSortListedPages(): void
 	{
 		$this->app->impersonate('admin');
 
@@ -451,7 +217,234 @@ class PagePermissionsTest extends ModelTestCase
 			'num'  => 1
 		]);
 
-		$this->assertTrue($page->permissions()->cannot('foo'));
-		$this->assertFalse($page->permissions()->cannot('foo', false));
+		$this->assertTrue($page->permissions()->can('sort'));
+	}
+
+	public static function actionProvider(): array
+	{
+		return [
+			['access'],
+			['changeSlug'],
+			['changeStatus'],
+			// ['changeTemplate'], Tested separately because of the needed blueprints
+			['changeTitle'],
+			['create'],
+			['delete'],
+			['duplicate'],
+			['list'],
+			['move'],
+			['preview'],
+			['sort'],
+			['update'],
+		];
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdmin(string $action): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdminAndNegativeOptionForOtherRole(
+		string $action
+	): void {
+		$this->app->impersonate('admin');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'visitor' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdminAndNegativeOptionForOtherRoleAndNegativeFallback(
+		string $action
+	): void {
+		$this->app->impersonate('admin');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*'       => false,
+						'visitor' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithAdminButDisabledOption(string $action): void
+	{
+		$this->app->impersonate('admin');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => false
+				]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndNegativePermission(string $action): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*' => true,
+						'editor' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndNegativeWildcard(string $action): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndPositivePermission(string $action): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*' => false,
+						'editor' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithEditorAndPositiveWildcard(string $action): void
+	{
+		$this->app->impersonate('editor');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name' => 'test',
+				'options' => [
+					$action => [
+						'*' => true
+					]
+				]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithKirbyAndNegativeOption(string $action): void
+	{
+		// the almighty `kirby` user is not affected by any rule
+		$this->app->impersonate('kirby');
+
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [$action => false]
+			]
+		]);
+
+		$this->assertTrue($page->permissions()->can($action));
+		$this->assertTrue($page->guards()->isAvailable($action, default: false));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithNobody(string $action): void
+	{
+		$page  = new Page(['slug' => 'test']);
+		$perms = $page->permissions();
+
+		$this->assertFalse($perms->can($action));
+	}
+
+	#[DataProvider('actionProvider')]
+	public function testWithNobodyAndPositiveOption(string $action): void
+	{
+		// a blueprint option must never grant a permission
+		// to a user with the `nobody` role
+		$page = new Page([
+			'slug' => 'test',
+			'num'  => 1,
+			'blueprint' => [
+				'name'    => 'test',
+				'options' => [$action => true]
+			]
+		]);
+
+		$this->assertFalse($page->permissions()->can($action));
+		$this->assertFalse($page->guards()->isAvailable($action, default: false));
 	}
 }

@@ -34,15 +34,22 @@
  * Sticky header containing headline (with optional edit button)
  * and optional buttons
  *
- * @example <k-header :editable="true">Headline</k-header>
- * @example <k-header>
+ * @example
+ * <k-header :editable="true">Headline</k-header>
+ *
+ * <k-header>
  * 	Headline
  *
- * 	<k-button-group slot="buttons">
- * 		<k-button icon="open" variant="filled" />
- * 		<k-button icon="cog" variant="filled" />
- * 	</k-button-group>
+ * 	<template #buttons>
+ * 		<k-button-group>
+ * 			<k-button icon="open" variant="filled" />
+ * 			<k-button icon="cog" variant="filled" />
+ * 		</k-button-group>
+ * 	</template>
  * </k-header>
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -59,7 +66,7 @@ export default {
 :root {
 	--header-color-back: var(--panel-color-back);
 	--header-padding-block: var(--spacing-4);
-	--header-sticky-offset: var(--scroll-top);
+	--header-sticky-offset: 0rem;
 }
 
 .k-header {
@@ -137,11 +144,11 @@ export default {
 }
 .k-header:has(.k-header-buttons) {
 	position: sticky;
-	top: var(--scroll-top);
+	top: 0;
 	z-index: var(--z-toolbar);
 }
 :root:has(.k-header .k-header-buttons) {
-	--header-sticky-offset: calc(var(--scroll-top) + 4rem);
+	--header-sticky-offset: 4rem;
 }
 
 .k-header .k-header-title-placeholder {

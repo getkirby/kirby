@@ -9,5 +9,10 @@
   "[vue]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "oxc.path.oxfmt": "panel/node_modules/.bin/oxfmt"
+  "oxc.path.oxfmt": "panel/node_modules/.bin/oxfmt",
+  "eslint.workingDirectories": ["./panel"],
+  "phpunit.command": "composer test -- ${phpunitargs}",
+  "phpunit.environment": {
+    "COMPOSER_PROCESS_TIMEOUT": "0"
+  }
 }

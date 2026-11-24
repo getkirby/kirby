@@ -10,7 +10,7 @@
 					class="k-file-preview-frame-dropdown-toggle"
 					@click="$refs.dropdown.toggle()"
 				/>
-				<k-dropdown-content
+				<k-dropdown
 					ref="dropdown"
 					:options="options"
 					theme="light"
@@ -23,7 +23,9 @@
 
 <script>
 /**
- * @since 5.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  */
 export default {
 	props: {
@@ -31,7 +33,8 @@ export default {
 			default: () => [],
 			type: Array
 		}
-	}
+	},
+	emits: ["action"]
 };
 </script>
 
@@ -48,7 +51,7 @@ export default {
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	padding: var(--spacing-10);
+	padding: var(--spacing-8);
 	container-type: size;
 }
 .k-file-preview-frame :where(img, audio, video) {

@@ -1,0 +1,16 @@
+# The single source of truth for Panel browser support.
+# Read by vite.config.ts (build target) and views/browser.php.
+#
+# Policy: Baseline "widely available" (roughly 30 months after a feature
+# has landed in all core browsers) when the major version is released.
+# Recompute for the next major and paste the result below:
+# npx baseline-browser-mapping --widely-available-on-date YYYY-MM-DD --include-downstream-browsers
+#
+Chrome >= 124
+ChromeAndroid >= 124
+Edge >= 124
+Firefox >= 125
+Opera >= 110
+Safari >= 17.5
+iOS >= 17.5
+Android >= 124

@@ -3,14 +3,12 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Auth\Auth;
 use Throwable;
 
 /**
  * AppUsers
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -31,16 +29,16 @@ trait AppUsers
 	/**
 	 * Become any existing user or disable the current user
 	 *
-	 * @param string|null $who User ID or email address,
-	 *                         `null` to use the actual user again,
-	 *                         `'kirby'` for a virtual admin user or
-	 *                         `'nobody'` to disable the actual user
-	 * @param Closure|null $callback Optional action function that will be run with
-	 *                               the permissions of the impersonated user; the
-	 *                               impersonation will be reset afterwards
+	 * @param $who User ID or email address,
+	 *            `null` to use the actual user again,
+	 *            `'kirby'` for a virtual admin user or
+	 *            `'nobody'` to disable the actual user
+	 * @param $callback Optional action function that will be run with
+	 *                 the permissions of the impersonated user; the
+	 *                 impersonation will be reset afterwards
 	 * @return mixed If called without callback: User that was impersonated;
 	 *               if called with callback: Return value from the callback
-	 * @throws \Throwable
+	 * @throws Throwable
 	 */
 	public function impersonate(
 		string|null $who = null,
@@ -48,39 +46,29 @@ trait AppUsers
 	): mixed {
 		$auth = $this->auth();
 
-		$userBefore = $auth->currentUserFromImpersonation();
-		$userAfter  = $auth->impersonate($who);
+		$before = $auth->currentUserFromImpersonation();
+		$after  = $auth->impersonate($who);
 
 		if ($callback === null) {
-			return $userAfter;
+			return $after;
 		}
 
 		try {
-			return $callback($userAfter);
-		} catch (Throwable $e) {
-			throw $e;
+			return $callback($after);
 		} finally {
 			// ensure that the impersonation is *always* reset
 			// to the original value, even if an error occurred
-			$auth->impersonate($userBefore?->id());
+			$auth->impersonate($before?->id());
 		}
-	}
-
-	/**
-	 * Returns all user roles
-	 */
-	public function roles(): Roles
-	{
-		return $this->roles ??= Roles::load($this->root('roles'));
 	}
 
 	/**
 	 * Returns a specific user role by id
 	 * or the role of the current user if no id is given
 	 *
-	 * @param bool $allowImpersonation If set to false, only the role of the
-	 *                                 actually logged in user will be returned
-	 *                                 (when `$id` is passed as `null`)
+	 * @param $allowImpersonation If set to false, only the role of the
+	 *                           actually logged in user will be returned
+	 *                           (when `$id` is passed as `null`)
 	 */
 	public function role(
 		string|null $id = null,
@@ -91,6 +79,14 @@ trait AppUsers
 		}
 
 		return $this->user(null, $allowImpersonation)?->role();
+	}
+
+	/**
+	 * Returns all user roles
+	 */
+	public function roles(): Roles
+	{
+		return $this->roles ??= Roles::load($this->root('roles'));
 	}
 
 	/**
@@ -122,9 +118,9 @@ trait AppUsers
 	 * Returns a specific user by id
 	 * or the current user if no id is given
 	 *
-	 * @param bool $allowImpersonation If set to false, only the actually
-	 *                                 logged in user will be returned
-	 *                                 (when `$id` is passed as `null`)
+	 * @param $allowImpersonation If set to false, only the actually
+	 *                           logged in user will be returned
+	 *                           (when `$id` is passed as `null`)
 	 */
 	public function user(
 		string|null $id = null,
@@ -134,7 +130,10 @@ trait AppUsers
 			return $this->users()->find($id);
 		}
 
-		if ($allowImpersonation === true && is_string($this->user) === true) {
+		if (
+			$allowImpersonation === true &&
+			is_string($this->user) === true
+		) {
 			return $this->auth()->impersonate($this->user);
 		}
 

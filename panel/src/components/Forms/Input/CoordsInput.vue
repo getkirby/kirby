@@ -25,6 +25,7 @@
 			:name="name"
 			:required="required"
 			:value="value ? [value.x, value.y] : null"
+			aria-hidden="true"
 			class="input-hidden"
 			tabindex="-1"
 			type="text"
@@ -55,11 +56,16 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-coords-input :value="value" @input="value = $event" />
+ * @example
+ * <k-coords-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			x: 0,

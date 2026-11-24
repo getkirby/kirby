@@ -5,8 +5,10 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\Exception;
 use Kirby\Http\Response;
+use Kirby\Http\Url;
 use Kirby\Toolkit\I18n;
 use Throwable;
+use WeakReference;
 use Whoops\Handler\CallbackHandler;
 use Whoops\Handler\Handler;
 use Whoops\Handler\HandlerInterface;
@@ -17,9 +19,6 @@ use Whoops\Run as Whoops;
 /**
  * PHP error handling using the Whoops library
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -35,11 +34,11 @@ trait AppErrors
 	/**
 	 * Whoops instance cache
 	 */
-	protected Whoops $whoops;
+	protected Whoops|null $whoops = null;
 
 	/**
 	 * Replaces absolute file paths with placeholders such as
-	 * {kirby_folder}, {site_folder} or {index_folder} to avoid
+	 * `{kirby}`, `{site}` or `{index}` to avoid
 	 * exposing too many details about the filesystem and keeping
 	 * error responses short and readable in debug mode.
 	 *
@@ -54,7 +53,43 @@ trait AppErrors
 			$this->root('index') => '{index}'
 		];
 
-		return str_replace(array_keys($disguise), array_values($disguise), $file);
+		return str_replace(
+			array_keys($disguise),
+			array_values($disguise),
+			$file
+		);
+	}
+
+	/**
+	 * Whoops callback handler for additional error handling
+	 * (`system.exception` hook and output to error log)
+	 */
+	protected function getAdditionalWhoopsHandler(): CallbackHandler
+	{
+		// Whoops keeps every `Run` instance alive for the rest of the process
+		// via `register_shutdown_function()`. A handler closure that captured
+		// `$this` strongly would pin $app, potentially incl. site tree forever.
+		// Referencing the app weakly allows it to be garbage collected.
+		$app = WeakReference::create($this);
+
+		return new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
+			/** @var App $kirby */
+			$kirby    = $app->get() ?? App::instance();
+			$isLogged = true;
+
+			// allow hook to modify whether the exception should be logged
+			$isLogged = $kirby->apply(
+				'system.exception',
+				compact('exception', 'isLogged'),
+				'isLogged'
+			);
+
+			if ($isLogged !== false) {
+				error_log($exception);
+			}
+
+			return Handler::DONE;
+		});
 	}
 
 	/**
@@ -122,13 +157,19 @@ trait AppErrors
 				}
 			}
 		} else {
-			$handler = new CallbackHandler(function ($exception, $inspector, $run) {
-				$fatal = $this->option('fatal');
+			// the app must only be referenced weakly,
+			// see `::getAdditionalWhoopsHandler()`
+			$app = WeakReference::create($this);
+
+			$handler = new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
+				/** @var App $kirby */
+				$kirby = $app->get() ?? App::instance();
+				$fatal = $kirby->option('fatal');
 
 				if ($fatal instanceof Closure) {
-					echo $fatal($this, $exception);
+					echo $fatal($kirby, $exception);
 				} else {
-					include $this->root('kirby') . '/views/fatal.php';
+					include $kirby->root('kirby') . '/views/fatal.php';
 				}
 
 				return Handler::QUIT;
@@ -147,7 +188,11 @@ trait AppErrors
 	 */
 	protected function handleJsonErrors(): void
 	{
-		$handler = new CallbackHandler(function ($exception, $inspector, $run) {
+		// the app must only be referenced weakly,
+		// see `getAdditionalWhoopsHandler()`
+		$app = WeakReference::create($this);
+
+		$handler = new CallbackHandler(static function ($exception, $inspector, $run) use ($app) {
 			if ($exception instanceof Exception) {
 				$httpCode = $exception->getHttpCode();
 				$code     = $exception->getCode();
@@ -162,24 +207,36 @@ trait AppErrors
 				$details  = null;
 			}
 
-			if ($this->option('debug') === true) {
-				echo Response::json([
+			/** @var App $kirby */
+			$kirby  = $app->get() ?? App::instance();
+			$editor = $kirby->option('editor', false);
+
+			if ($kirby->option('debug') === true) {
+				$data = [
 					'status'    => 'error',
 					'exception' => $exception::class,
 					'code'      => $code,
 					'message'   => $exception->getMessage(),
 					'details'   => $details,
-					'file'      => $this->disguiseFilePath($exception->getFile()),
-					'line'      => $exception->getLine(),
-				], $httpCode);
+					'file'      => $kirby->disguiseFilePath($file = $exception->getFile()),
+					'line'      => $line = $exception->getLine(),
+					'editor'    => Url::editor($editor, $file, $line),
+					'trace'     => $kirby->trace($exception, $editor),
+				];
 			} else {
-				echo Response::json([
+				$data = [
 					'status'  => 'error',
 					'code'    => $code,
 					'details' => $details,
 					'message' => I18n::translate('error.unexpected'),
-				], $httpCode);
+				];
 			}
+
+			// the error response itself must never fail to encode,
+			// e.g. for a message with invalid UTF-8
+			$json = json_encode($data, JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+			echo Response::json($json, $httpCode);
 
 			return Handler::QUIT;
 		});
@@ -201,27 +258,25 @@ trait AppErrors
 	}
 
 	/**
-	 * Whoops callback handler for additional error handling
-	 * (`system.exception` hook and output to error log)
+	 * Returns the exception's stack trace with disguised
+	 * file paths, editor URLs and without arguments
+	 * @since 6.0.0
+	 *
+	 * @return list<array<string, mixed>>
 	 */
-	protected function getAdditionalWhoopsHandler(): CallbackHandler
+	protected function trace(Throwable $exception, string|false $editor): array
 	{
-		return new CallbackHandler(function ($exception, $inspector, $run) {
-			$isLogged = true;
-
-			// allow hook to modify whether the exception should be logged
-			$isLogged = $this->apply(
-				'system.exception',
-				compact('exception', 'isLogged'),
-				'isLogged'
-			);
-
-			if ($isLogged !== false) {
-				error_log($exception);
+		return array_map(function ($item) use ($editor) {
+			if (isset($item['file']) === true) {
+				$item['url']  = Url::editor($editor, $item['file'], $item['line']);
+				$item['file'] = $this->disguiseFilePath($item['file']);
 			}
 
-			return Handler::DONE;
-		});
+			$item['function'] = $this->disguiseFilePath($item['function']);
+
+			unset($item['args']);
+			return $item;
+		}, $exception->getTrace());
 	}
 
 	/**

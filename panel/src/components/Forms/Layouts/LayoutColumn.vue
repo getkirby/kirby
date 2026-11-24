@@ -17,7 +17,7 @@
 				value: blocks
 			}"
 			@input="$emit('input', $event)"
-			@dblclick.native.stop
+			@dblclick.stop
 		/>
 	</div>
 </template>
@@ -30,7 +30,7 @@ export const props = {
 	props: {
 		/**
 		 * API endpoints
-		 * @value { field, model, section }
+		 * @value { field, model }
 		 */
 		endpoints: Object,
 		fieldsetGroups: Object,
@@ -44,6 +44,8 @@ export const props = {
 };
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {

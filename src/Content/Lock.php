@@ -15,14 +15,11 @@ use Kirby\Toolkit\Str;
  * locking state of a content version, depending
  * on the timestamp and locked user id
  *
- * @since 5.0.0
- * @unstable
- *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     5.0.0
+ *
+ * @unstable
  */
 class Lock
 {
@@ -42,11 +39,6 @@ class Lock
 		Version $version,
 		Language|string $language = 'default'
 	): static {
-
-		if ($legacy = static::legacy($version->model())) {
-			return $legacy;
-		}
-
 		// wildcard to search for a lock in any language
 		// the first locked one will be preferred
 		if ($language === '*') {
@@ -108,6 +100,8 @@ class Lock
 
 	/**
 	 * Checks if the lock is coming from an old .lock file
+	 *
+	 * @deprecated 6.0.0 Old .lock files are no longer supported
 	 */
 	public function isLegacy(): bool
 	{
@@ -147,6 +141,9 @@ class Lock
 	/**
 	 * Looks for old .lock files and tries to create a
 	 * usable lock instance from them
+	 *
+	 * @deprecated 6.0.0 Old .lock files are no longer supported
+	 * and are ignored by `Lock::for()`. They can be safely deleted.
 	 */
 	public static function legacy(ModelWithContent $model): static|null
 	{
@@ -180,6 +177,8 @@ class Lock
 
 	/**
 	 * Returns the absolute path to a legacy lock file
+	 *
+	 * @deprecated 6.0.0 Old .lock files are no longer supported
 	 */
 	public static function legacyFile(ModelWithContent $model): string
 	{

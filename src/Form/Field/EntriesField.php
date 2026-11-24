@@ -4,119 +4,103 @@ namespace Kirby\Form\Field;
 
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Form\FieldClass;
 use Kirby\Form\Form;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Form\Mixin\EmptyState;
 use Kirby\Form\Mixin\Max;
 use Kirby\Form\Mixin\Min;
+use Kirby\Form\Mixin\Sortable;
+use Kirby\Reflection\Attributes\Prop;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
-use Kirby\Toolkit\Str;
 
 /**
- * Main class file of the entries field
+ * Allows editors to add a list of entries,
+ * which all use the same type of field
  *
- * @package   Kirby Field
- * @author    Ahmet Bora <ahmet@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
  */
-class EntriesField extends FieldClass
+class EntriesField extends InputField implements ProvidesNestedForm
 {
 	use EmptyState;
 	use Max;
 	use Min;
+	use Sortable;
 
-	protected array $field;
-	protected Form $form;
-	protected bool  $sortable = true;
-	protected mixed $value = [];
+	/**
+	 * Field options for the field to be used and repeated.
+	 * Supported field types are `color`, `date`, `email`, `number`, `select`,
+	 * `slug`, `tel`, `text`, `time`, `url`.
+	 */
+	#[Prop(getter: 'fieldProps')]
+	protected array|string $field = ['type' => 'text'];
+	protected Form|null $form = null;
+	protected array $value = [];
 
-	public function __construct(array $params = [])
-	{
-		parent::__construct($params);
-
-		$this->setEmpty($params['empty'] ?? null);
-		$this->setField($params['field'] ?? null);
-		$this->setMax($params['max'] ?? null);
-		$this->setMin($params['min'] ?? null);
-		$this->setSortable($params['sortable'] ?? true);
-	}
-
+	/**
+	 * Returns the props of the field that is
+	 * used and repeated for each entry
+	 *
+	 * @return array<string, mixed>
+	 * @throws InvalidArgumentException If the field type is not supported
+	 */
 	public function field(): array
 	{
-		return $this->field;
-	}
+		$props = $this->field;
 
-	public function fieldProps(): array
-	{
-		return $this->form()->fields()->first()->toArray();
+		if (is_string($props) === true) {
+			$props = ['type' => $props];
+		}
+
+		if (in_array($props['type'], $this->supports(), true) === false) {
+			throw new InvalidArgumentException(
+				key: 'entries.supports',
+				data: ['type' => $props['type']]
+			);
+		}
+
+		// remove the unsupported props from the entry field
+		unset($props['counter'], $props['label']);
+
+		return $props;
 	}
 
 	/**
-	 * @psalm-suppress MethodSignatureMismatch
-	 * @todo Remove psalm suppress after https://github.com/vimeo/psalm/issues/8673 is fixed
+	 * @return array<string, mixed>
 	 */
+	public function fieldProps(): array
+	{
+		$form = $this->form()->reset()->fill(defaults: true);
+
+		return [
+			...$form->fields()->first()->toArray(),
+			'default' => A::first($form->toFormValues())
+		];
+	}
+
 	#[BlockCollectionAccess]
 	public function fill(mixed $value): static
 	{
-		$this->value = Data::decode($value ?? '', 'yaml');
-		return $this;
+		return parent::fill(
+			value: Data::decode($value ?? '', 'yaml')
+		);
 	}
 
 	public function form(): Form
 	{
 		return $this->form ??= new Form(
 			fields: [$this->field()],
-			model: $this->model
+			model:  $this->model()
 		);
 	}
 
-	public function props(): array
-	{
-		return [
-			...parent::props(),
-			'empty'    => $this->empty(),
-			'field'    => $this->fieldProps(),
-			'max'      => $this->max(),
-			'min'      => $this->min(),
-			'sortable' => $this->sortable(),
-		];
-	}
-
-	protected function setField(array|string|null $attrs = null): void
-	{
-		if (is_string($attrs) === true) {
-			$attrs = ['type' => $attrs];
-		}
-
-		$attrs ??= ['type' => 'text'];
-
-		if (in_array($attrs['type'], $this->supports()) === false) {
-			throw new InvalidArgumentException(
-				key: 'entries.supports',
-				data: ['type' => $attrs['type']]
-			);
-		}
-
-		// remove the unsupported props from the entry field
-		unset($attrs['counter'], $attrs['label']);
-
-		$this->field = $attrs;
-	}
-
-	protected function setSortable(bool|null $sortable = true): void
-	{
-		$this->sortable = $sortable;
-	}
-
-	public function sortable(): bool
-	{
-		return $this->sortable;
-	}
-
+	/**
+	 * Returns the field types that can be used for the entries
+	 *
+	 * @return list<string>
+	 */
 	public function supports(): array
 	{
 		return [
@@ -133,22 +117,25 @@ class EntriesField extends FieldClass
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toFormValue(): mixed
 	{
 		$form  = $this->form();
-		$value = parent::toFormValue() ?? $this->emptyValue();
+		$value = parent::toFormValue();
 
 		return A::map(
 			$value,
-			fn ($value) => $form
-				->reset()
-				->fill(input: [$value])
-				->fields()
-				->first()
-				->toFormValue()
+			fn ($value) => A::first(
+				$form->reset()->fill(input: [$value])->toFormValues()
+			)
 		);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function toStoredValue(): mixed
 	{
 		$form  = $this->form();
@@ -156,12 +143,9 @@ class EntriesField extends FieldClass
 
 		return A::map(
 			$value,
-			fn ($value) => $form
-				->reset()
-				->submit(input: [$value])
-				->fields()
-				->first()
-				->toStoredValue()
+			fn ($value) => A::first(
+				$form->reset()->submit(input: [$value])->toStoredValues()
+			)
 		);
 	}
 
@@ -201,7 +185,7 @@ class EntriesField extends FieldClass
 							throw new InvalidArgumentException(
 								key: 'entries.validation',
 								data: [
-									'field' => $this->label() ?? Str::ucfirst($this->name()),
+									'field' => $this->label(),
 									'index' => $index + 1
 								]
 							);

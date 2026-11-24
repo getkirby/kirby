@@ -31,11 +31,11 @@ describe("panel.system", () => {
 
 			expect(system.state()).toStrictEqual({
 				ascii: {},
-				csrf: null,
+				csrf: "",
 				isLocal: false,
 				locales: {},
 				slugs: [],
-				title: null
+				title: ""
 			});
 		});
 	});

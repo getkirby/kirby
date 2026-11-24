@@ -31,9 +31,13 @@ export const props = {
 
 /**
  * Use <k-icon-frame> to display an icon in a fixed ratio with background etc.
- * @since 4.0.0
  *
- * @example <k-icon-frame icon="home" ratio="1/1" back="black" />
+ * @example
+ * <k-icon-frame icon="home" ratio="1/1" back="black" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [props],

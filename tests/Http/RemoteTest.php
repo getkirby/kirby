@@ -2,23 +2,27 @@
 
 namespace Kirby\Http;
 
+use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 #[CoversClass(Remote::class)]
 class RemoteTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Http.Remote';
+	public const string TMP = KIRBY_TMP_DIR . '/Http.Remote';
 
 	protected string|false $cwd;
 	protected array $defaults;
 
 	protected function setUp(): void
 	{
+		parent::setUp();
+
 		$this->cwd = getcwd();
 
 		$this->defaults = Remote::$defaults;
@@ -41,20 +45,98 @@ class RemoteTest extends TestCase
 		unset(IniStore::$data['curl.cainfo']);
 
 		Dir::remove(static::TMP);
+
+		parent::tearDown();
 	}
 
-	public function testOptionsHeaders(): void
+	public function testCode(): void
+	{
+		$request = Remote::put('https://getkirby.com');
+		$this->assertNull($request->code());
+	}
+
+	public function testContent(): void
+	{
+		$request = Remote::put('https://getkirby.com');
+		$this->assertNull($request->content());
+	}
+
+	public function testDelete(): void
+	{
+		$request = Remote::delete('https://getkirby.com');
+		$this->assertSame('DELETE', $request->method());
+	}
+
+	public function testFetchStripsCRLFFromHeaders(): void
 	{
 		$request = Remote::get('https://getkirby.com', [
 			'headers' => [
-				'Accept' => 'application/json',
-				'Accept-Charset: utf8'
-			]
+				// associative form: "X-Foo: bar\r\nX-Injected: evil"
+				'X-Foo' => "bar\r\nX-Injected: evil",
+				// indexed form: prebuilt header string
+				"X-Bar: bar\r\nX-Other: evil",
+			],
 		]);
+
 		$this->assertSame([
-			'Accept: application/json',
-			'Accept-Charset: utf8'
+			'X-Foo: barX-Injected: evil',
+			'X-Bar: barX-Other: evil',
 		], $request->curlopt[CURLOPT_HTTPHEADER]);
+	}
+
+	public function testGet(): void
+	{
+		// default
+		$request = Remote::get('https://getkirby.com');
+		$this->assertSame('GET', $request->method());
+
+		// url without query string + query options
+		$request = Remote::get('https://getkirby.com/a', ['data' => ['b' => 'foo']]);
+		$this->assertSame('GET', $request->method());
+		$this->assertSame('https://getkirby.com/a?b=foo', $request->url());
+
+		// url with query string + query options
+		$request = Remote::get('https://getkirby.com/a?b=c', ['data' => ['d' => 'foo']]);
+		$this->assertSame('GET', $request->method());
+		$this->assertSame('https://getkirby.com/a?b=c&d=foo', $request->url());
+	}
+
+	public function testHead(): void
+	{
+		$request = Remote::head('https://getkirby.com');
+		$this->assertSame('HEAD', $request->method());
+	}
+
+	public function testHeaders(): void
+	{
+		$request = new Remote('https://getkirby.com');
+		$this->assertSame([], $request->headers());
+	}
+
+	public function testInfo(): void
+	{
+		$request = new Remote('https://getkirby.com');
+		$this->assertSame([], $request->info());
+	}
+
+	public function testJson(): void
+	{
+		$request = new Remote('https://getkirby.com');
+		$this->assertNull($request->json());
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '{"foo":"bar"}';
+		$this->assertSame(['foo' => 'bar'], $request->json(array: true));
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '{"foo":"bar"}';
+		$json = $request->json(array: false);
+		$this->assertInstanceOf(stdClass::class, $json);
+		$this->assertSame('bar', $json->foo);
+
+		$request = new Remote('https://getkirby.com');
+		$request->content = '5';
+		$this->assertNull($request->json());
 	}
 
 	public function testOptionsBasicAuth(): void
@@ -170,8 +252,9 @@ class RemoteTest extends TestCase
 		new App([
 			'options' => [
 				'remote' => [
-					'key'  => 'different-value',
-					'body' => false
+					'key'       => 'different-value',
+					'body'      => false,
+					'protocols' => CURLPROTO_FILE
 				]
 			]
 		]);
@@ -181,6 +264,8 @@ class RemoteTest extends TestCase
 		$options = $request->options();
 		$this->assertSame('different-value', $options['key']);
 		$this->assertFalse($options['body']);
+		$this->assertSame(CURLPROTO_FILE, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_FILE, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
 
 		// reset app options
 		new App(
@@ -192,94 +277,181 @@ class RemoteTest extends TestCase
 		);
 	}
 
-	public function testContent(): void
-	{
-		$request = Remote::put('https://getkirby.com');
-		$this->assertNull($request->content());
-	}
-
-	public function testCode(): void
-	{
-		$request = Remote::put('https://getkirby.com');
-		$this->assertNull($request->code());
-	}
-
-	public function testDelete(): void
-	{
-		$request = Remote::delete('https://getkirby.com');
-		$this->assertSame('DELETE', $request->method());
-	}
-
-	public function testFetchStripsCRLFFromHeaders(): void
+	public function testOptionsHeaders(): void
 	{
 		$request = Remote::get('https://getkirby.com', [
 			'headers' => [
-				// associative form: "X-Foo: bar\r\nX-Injected: evil"
-				'X-Foo' => "bar\r\nX-Injected: evil",
-				// indexed form: prebuilt header string
-				"X-Bar: bar\r\nX-Other: evil",
-			],
+				'Accept' => 'application/json',
+				'Accept-Charset: utf8'
+			]
 		]);
-
 		$this->assertSame([
-			'X-Foo: barX-Injected: evil',
-			'X-Bar: barX-Other: evil',
+			'Accept: application/json',
+			'Accept-Charset: utf8'
 		], $request->curlopt[CURLOPT_HTTPHEADER]);
 	}
 
-	public function testGet(): void
+	public function testOptionsProtocols(): void
 	{
-		// default
+		// default: only HTTP and HTTPS
 		$request = Remote::get('https://getkirby.com');
-		$this->assertSame('GET', $request->method());
+		$this->assertSame(CURLPROTO_HTTP | CURLPROTO_HTTPS, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_HTTP | CURLPROTO_HTTPS, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
 
-		// url without query string + query options
-		$request = Remote::get('https://getkirby.com/a', ['data' => ['b' => 'foo']]);
-		$this->assertSame('GET', $request->method());
-		$this->assertSame('https://getkirby.com/a?b=foo', $request->url());
-
-		// url with query string + query options
-		$request = Remote::get('https://getkirby.com/a?b=c', ['data' => ['d' => 'foo']]);
-		$this->assertSame('GET', $request->method());
-		$this->assertSame('https://getkirby.com/a?b=c&d=foo', $request->url());
+		// custom protocols are applied to redirects as well
+		$request = Remote::get('https://getkirby.com', [
+			'protocols' => CURLPROTO_HTTPS
+		]);
+		$this->assertSame(CURLPROTO_HTTPS, $request->curlopt[CURLOPT_PROTOCOLS]);
+		$this->assertSame(CURLPROTO_HTTPS, $request->curlopt[CURLOPT_REDIR_PROTOCOLS]);
 	}
 
-	public function testHead(): void
+	public function testOptionsProtocolsDisallowedScheme(): void
 	{
-		$request = Remote::head('https://getkirby.com');
-		$this->assertSame('HEAD', $request->method());
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode(CURLE_UNSUPPORTED_PROTOCOL);
+
+		// `file://` is supported by cURL,
+		// but default Remote protocols do not allow it
+		Remote::get('file://' . __FILE__, ['test' => false]);
 	}
 
-	public function testHeaders(): void
+	public function testOptionsSafe(): void
 	{
-		$request = new Remote('https://getkirby.com');
-		$this->assertSame([], $request->headers());
+		// disabled by default: redirects are followed, nothing pinned
+		$request = Remote::get('https://getkirby.com');
+		$this->assertTrue($request->curlopt[CURLOPT_FOLLOWLOCATION]);
+		$this->assertArrayNotHasKey(CURLOPT_RESOLVE, $request->curlopt);
+
+		// enabled: the resolved addresses are pinned to the host
+		// and port, and redirects are refused
+		$request = new class ('https://api.example.com/data', [
+			'safe' => true,
+			'test' => true
+		]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['93.184.216.34', '2606:2800:220:1::1'];
+			}
+		};
+
+		$this->assertSame(
+			['api.example.com:443:93.184.216.34,2606:2800:220:1::1'],
+			$request->curlopt[CURLOPT_RESOLVE]
+		);
+		$this->assertFalse($request->curlopt[CURLOPT_FOLLOWLOCATION]);
 	}
 
-	public function testInfo(): void
+	public static function addressProvider(): array
 	{
-		$request = new Remote('https://getkirby.com');
-		$this->assertSame([], $request->info());
+		return [
+			// private and reserved ranges are rejected
+			['127.0.0.1', false],
+			['127.1.2.3', false],
+			['10.0.0.5', false],
+			['172.16.9.9', false],
+			['192.168.1.1', false],
+			['169.254.169.254', false],
+			['0.0.0.0', false],
+			['0.1.2.3', false],
+			['240.0.0.1', false],
+			['255.255.255.255', false],
+			['[::]', false],
+			['[::1]', false],
+			['[fc00::1]', false],
+			['[fd12:3456::1]', false],
+			['[fe80::1]', false],
+			['[::ffff:127.0.0.1]', false],
+			['[::ffff:169.254.169.254]', false],
+
+			// public addresses are allowed
+			['1.2.3.4', true],
+			['8.8.8.8', true],
+			['99.255.255.255', true],
+			['223.255.255.255', true],
+			['[2606:4700:4700::1111]', true],
+
+			// deliberately out of scope, in line with
+			// what other SSRF guards cover
+			['100.64.0.1', true],      // shared address space (CGNAT)
+			['100.100.100.200', true], // Alibaba Cloud metadata service
+			['198.18.0.1', true],      // benchmarking
+			['192.0.0.1', true],       // IETF protocol assignments
+			['[2001:db8::1]', true],   // documentation
+			['224.0.0.1', true],       // multicast, unreachable over TCP
+			['[ff02::1]', true],       // multicast, unreachable over TCP
+		];
 	}
 
-	public function testJson(): void
+	#[DataProvider('addressProvider')]
+	public function testOptionsSafeAddresses(string $host, bool $allowed): void
 	{
-		$request = new Remote('https://getkirby.com');
-		$this->assertNull($request->json());
+		$url = 'http://' . $host . '/metadata';
 
-		$request = new Remote('https://getkirby.com');
-		$request->content = '{"foo":"bar"}';
-		$this->assertSame(['foo' => 'bar'], $request->json(array: true));
+		if ($allowed === false) {
+			$this->expectException(InvalidArgumentException::class);
+			$this->expectExceptionMessage('The URL "' . $url . '" is not allowed in safe mode');
+		}
 
-		$request = new Remote('https://getkirby.com');
-		$request->content = '{"foo":"bar"}';
-		$json = $request->json(array: false);
-		$this->assertInstanceOf(stdClass::class, $json);
-		$this->assertSame('bar', $json->foo);
+		$request = Remote::get($url, ['safe' => true]);
 
-		$request = new Remote('https://getkirby.com');
-		$request->content = '5';
-		$this->assertNull($request->json());
+		// an IP address is validated directly, so nothing is pinned
+		$this->assertArrayNotHasKey(CURLOPT_RESOLVE, $request->curlopt);
+		$this->assertFalse($request->curlopt[CURLOPT_FOLLOWLOCATION]);
+	}
+
+	public function testOptionsSafeBlocksResolvedHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		new class ('https://internal.example.com', ['safe' => true, 'test' => true]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['10.0.0.5'];
+			}
+		};
+	}
+
+	public function testOptionsSafePort(): void
+	{
+		// the port is taken from the URL, and the scheme is
+		// matched case-insensitively for the default port
+		foreach ([
+			'HTTPS://api.example.com/x'      => 'api.example.com:443:1.2.3.4',
+			'http://api.example.com/x'       => 'api.example.com:80:1.2.3.4',
+			'https://api.example.com:8443/x' => 'api.example.com:8443:1.2.3.4',
+		] as $url => $expected) {
+			$request = new class ($url, ['safe' => true, 'test' => true]) extends Remote {
+				protected function resolveHost(string $host): array
+				{
+					return ['1.2.3.4'];
+				}
+			};
+
+			$this->assertSame([$expected], $request->curlopt[CURLOPT_RESOLVE]);
+		}
+	}
+
+	public function testOptionsSafeRejectsNonAsciiHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('is not allowed in safe mode');
+
+		new class ('https://faß.example.com', ['safe' => true, 'test' => true]) extends Remote {
+			protected function resolveHost(string $host): array
+			{
+				return ['1.2.3.4'];
+			}
+		};
+	}
+
+	public function testOptionsSafeRequiresHost(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The "safe" option can only be used with an absolute URL');
+
+		Remote::get('/relative/path', ['safe' => true]);
 	}
 
 	public function testPatch(): void

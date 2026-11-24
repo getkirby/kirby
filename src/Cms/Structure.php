@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+
 /**
  * The Structure class wraps
  * array data into a nicely chainable
@@ -10,25 +12,24 @@ namespace Kirby\Cms;
  * is the heart and soul of our yaml conversion
  * method for pages.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Items<\Kirby\Cms\StructureObject>
+ * @extends Items<StructureObject>
  */
 class Structure extends Items
 {
-	public const ITEM_CLASS = StructureObject::class;
+	public const string ITEM_CLASS = StructureObject::class;
 
 	/**
 	 * All registered structure methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
 	/**
-	 * Creates a new structure collection from a
+	 * Creates a new structure collection from
 	 * an array of item props
 	 */
 	public static function factory(

@@ -3,35 +3,31 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Uuid;
+use Throwable;
 
 /**
  * The Collection class serves as foundation
  * for the Pages, Files, Users and Structure
  * classes. It handles object validation and sets
  * the parent collection property for each object.
- * The `getAttribute` method is also adjusted to
- * handle values from Field objects correctly, so
- * those can be used in filters as well.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
  * @template TValue
- * @extends \Kirby\Toolkit\Collection<TValue>
+ * @extends BaseCollection<TValue>
  */
 class Collection extends BaseCollection
 {
 	use HasMethods;
 
 	/**
-	 * @var \Kirby\Cms\Pagination|null
+	 * @var Pagination|null
 	 */
 	protected $pagination;
 
@@ -39,9 +35,9 @@ class Collection extends BaseCollection
 	 * Creates a new Collection with the given objects
 	 *
 	 * @param iterable<TValue> $objects
-	 * @param object|null $parent Stores the parent object,
-	 *                            which is needed in some collections
-	 *                            to get the finder methods right
+	 * @param $parent Stores the parent object,
+	 *               which is needed in some collections
+	 *               to get the finder methods right
 	 */
 	public function __construct(
 		iterable $objects = [],
@@ -89,7 +85,7 @@ class Collection extends BaseCollection
 	 * an entire second collection to the
 	 * current collection
 	 *
-	 * @param \Kirby\Cms\Collection<TValue>|array<TValue>|TValue $object
+	 * @param Collection<TValue>|TValue $object
 	 * @return $this
 	 */
 	public function add($object): static
@@ -121,16 +117,22 @@ class Collection extends BaseCollection
 	 */
 	public function append(...$args): static
 	{
-		if (count($args) === 1) {
-			// try to determine the key from the provided item
-			if (
-				is_object($args[0]) === true &&
-				is_callable([$args[0], 'id']) === true
-			) {
-				return parent::append($args[0]->id(), $args[0]);
+		// try to determine the key from the provided item
+		if (
+			count($args) === 1 &&
+			is_object($args[0]) === true &&
+			is_callable([$args[0], 'id']) === true
+		) {
+			try {
+				$id = $args[0]->id();
+			} catch (Throwable) {
+				// is_callable might be true when the object implements
+				// the magic __call method, but __call can still throw
+				// an exception
+				return parent::append($args[0]);
 			}
 
-			return parent::append($args[0]);
+			return parent::append($id, $args[0]);
 		}
 
 		return parent::append(...$args);
@@ -156,9 +158,11 @@ class Collection extends BaseCollection
 	 * Groups the items by a given field or callback. Returns a collection
 	 * with an item for each group and a collection for each group.
 	 *
-	 * @param string|\Closure $field
-	 * @param bool $caseInsensitive Ignore upper/lowercase for group names
-	 * @throws \Kirby\Exception\Exception
+	 * @param string|Closure $field
+	 * @param $caseInsensitive Ignore upper/lowercase for group names
+	 * @return Collection<static>
+	 * @throws InvalidArgumentException If an item has no value for the `$field` name
+	 * @throws Exception For an invalid `$field` or closure result
 	 */
 	public function group(
 		$field,
@@ -171,7 +175,7 @@ class Collection extends BaseCollection
 				$value = $this->getAttribute($item, $field);
 
 				// make sure that there's always a proper value to group by
-				if (!$value) {
+				if ($value === null || $value === false || $value === []) {
 					throw new InvalidArgumentException(
 						message: 'Invalid grouping value for key: ' . $key
 					);
@@ -180,7 +184,7 @@ class Collection extends BaseCollection
 				$value = (string)$value;
 
 				// ignore upper/lowercase for group names
-				if ($caseInsensitive) {
+				if ($caseInsensitive === true) {
 					$value = Str::lower($value);
 				}
 
@@ -236,8 +240,8 @@ class Collection extends BaseCollection
 	/**
 	 * Returns a Collection without the given element(s)
 	 *
-	 * @param string|array|object ...$keys any number of keys,
-	 *                                     passed as individual arguments
+	 * @param ...$keys Any number of keys, objects or collections,
+	 *                as individual arguments or in arrays
 	 */
 	public function not(string|array|object ...$keys): static
 	{
@@ -355,7 +359,8 @@ class Collection extends BaseCollection
 	/**
 	 * Removes an object
 	 *
-	 * @param string|TValue $key the name of the key
+	 * @param string|TValue $key Key or object to remove
+	 * @return $this
 	 */
 	public function remove(string|object $key): static
 	{
@@ -391,6 +396,8 @@ class Collection extends BaseCollection
 	/**
 	 * Updates an object in the collection
 	 *
+	 * @param string|TValue $key Key or object to update
+	 * @param TValue|null $object New object for the key
 	 * @return $this
 	 */
 	public function update(string|object $key, $object = null): static

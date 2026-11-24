@@ -5,7 +5,7 @@
 		</header>
 
 		<k-box theme="text">
-			<k-text :html="docBlock" />
+			<k-text :text="docBlock" />
 		</k-box>
 	</section>
 </template>
@@ -17,6 +17,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props]
 };

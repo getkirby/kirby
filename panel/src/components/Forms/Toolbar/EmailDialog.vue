@@ -1,6 +1,12 @@
 <script>
 import EmailDialog from "@/components/Dialogs/EmailDialog.vue";
 
+/**
+ * @displayName ToolbarEmailDialog
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: EmailDialog,
 	props: {
@@ -16,6 +22,7 @@ export default {
 			}
 		}
 	},
+	emits: ["cancel", "submit"],
 	methods: {
 		submit() {
 			const email = this.values.href ?? "";

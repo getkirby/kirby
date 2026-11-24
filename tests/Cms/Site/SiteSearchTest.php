@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class SiteSearchTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SiteSearch';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SiteSearch';
 
 	public function testSearch(): void
 	{
@@ -63,40 +63,6 @@ class SiteSearchTest extends ModelTestCase
 		$this->assertCount(2, $collection);
 	}
 
-	public function testSearchWords(): void
-	{
-		$site = new Site([
-			'children' => [
-				[
-					'slug'    => 'mtb',
-					'content' => ['title' => 'Mountainbike']
-				],
-				[
-					'slug'    => 'mountain',
-					'content' => ['title' => 'Mountain']
-				],
-				[
-					'slug'    => 'everest-mountain',
-					'content' => ['title' => 'Everest Mountain']
-				],
-				[
-					'slug'    => 'mount',
-					'content' => ['title' => 'Mount']
-				],
-				[
-					'slug'    => 'lakes',
-					'content' => ['title' => 'Lakes']
-				]
-			]
-		]);
-
-		$result = $site->search('mountain', ['words' => true]);
-		$this->assertCount(2, $result);
-
-		$result = $site->search('mount', ['words' => false]);
-		$this->assertCount(4, $result);
-	}
-
 	public function testSearchStopWords(): void
 	{
 		$site = new Site([
@@ -135,5 +101,39 @@ class SiteSearchTest extends ModelTestCase
 		]);
 
 		$this->assertCount(0, $collection);
+	}
+
+	public function testSearchWords(): void
+	{
+		$site = new Site([
+			'children' => [
+				[
+					'slug'    => 'mtb',
+					'content' => ['title' => 'Mountainbike']
+				],
+				[
+					'slug'    => 'mountain',
+					'content' => ['title' => 'Mountain']
+				],
+				[
+					'slug'    => 'everest-mountain',
+					'content' => ['title' => 'Everest Mountain']
+				],
+				[
+					'slug'    => 'mount',
+					'content' => ['title' => 'Mount']
+				],
+				[
+					'slug'    => 'lakes',
+					'content' => ['title' => 'Lakes']
+				]
+			]
+		]);
+
+		$result = $site->search('mountain', ['words' => true]);
+		$this->assertCount(2, $result);
+
+		$result = $site->search('mount', ['words' => false]);
+		$this->assertCount(4, $result);
 	}
 }

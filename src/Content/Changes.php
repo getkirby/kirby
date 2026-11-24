@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\Files;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Pages;
+use Kirby\Cms\Site;
 use Kirby\Cms\Users;
 use Kirby\Toolkit\A;
 
@@ -14,9 +15,6 @@ use Kirby\Toolkit\A;
  * The Changes class tracks changed models
  * in the Site's changes field.
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -57,7 +55,7 @@ class Changes
 	 * Verify that the tracked model still really has changes.
 	 * If not, untrack and remove from collection.
 	 *
-	 * @template T of \Kirby\Cms\Files|\Kirby\Cms\Pages|\Kirby\Cms\Users
+	 * @template T of Files|Pages|Users
 	 * @param T $tracked
 	 * @return T
 	 */
@@ -97,6 +95,7 @@ class Changes
 		$models = [
 			'files' => [],
 			'pages' => [],
+			'sites' => [],
 			'users' => []
 		];
 
@@ -116,17 +115,8 @@ class Changes
 	 */
 	public function pages(): Pages
 	{
-		/**
-		 * @var \Kirby\Cms\Pages $pages
-		 *
-		 * Always pass at least two arguments even if the
-		 * data is empty so that `$site->find()` always
-		 * returns a collection, not a single page
-		 */
 		$pages = $this->kirby->site()->find(
-			false,
-			false,
-			...$this->read('pages')
+			$this->read('pages')
 		);
 
 		return $this->ensure($pages);
@@ -138,6 +128,25 @@ class Changes
 	public function read(string $key): array
 	{
 		return $this->cache()->get($key) ?? [];
+	}
+
+	/**
+	 * Return the site if it has unsaved changes
+	 */
+	public function site(): Site|null
+	{
+		if ($this->read('sites') === []) {
+			return null;
+		}
+
+		$site = $this->kirby->site();
+
+		if ($site->version('changes')->exists('*') === false) {
+			$this->untrack($site);
+			return null;
+		}
+
+		return $site;
 	}
 
 	/**
@@ -187,17 +196,8 @@ class Changes
 	 */
 	public function users(): Users
 	{
-		/**
-		 * @var \Kirby\Cms\Users $users
-		 *
-		 * Always pass at least two arguments even if the
-		 * data is empty so that `$users->find()` always
-		 * returns a collection, not a single user
-		 */
 		$users = $this->kirby->users()->find(
-			false,
-			false,
-			...$this->read('users')
+			$this->read('users')
 		);
 
 		return $this->ensure($users);

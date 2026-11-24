@@ -1,49 +1,66 @@
 <template>
-	<portal v-if="visible" to="dialog">
+	<Teleport v-if="visible" to=".k-dialog-portal">
 		<form
-			:class="[
-				'k-dialog',
-				$vnode.data.class,
-				$vnode.data.staticClass,
-				$attrs.class
-			]"
+			:class="['k-dialog', $attrs.class]"
 			:data-size="size"
 			method="dialog"
 			@click.stop
 			@submit.prevent="$emit('submit')"
 		>
-			<slot name="header">
-				<k-dialog-notification />
-			</slot>
+			<k-dropzone :disabled="!hasDropzone()" @drop="$emit('drop', $event)">
+				<slot name="header">
+					<k-dialog-notification />
+				</slot>
 
-			<k-dialog-body v-if="$slots.default">
-				<slot />
-			</k-dialog-body>
+				<k-dialog-body v-if="$slots.default">
+					<slot />
+				</k-dialog-body>
 
-			<slot name="footer">
-				<k-dialog-footer v-if="cancelButton || submitButton">
-					<k-dialog-buttons
-						:cancel-button="cancelButton"
-						:disabled="disabled"
-						:icon="icon"
-						:submit-button="submitButton"
-						:theme="theme"
-						@cancel="$emit('cancel')"
-					/>
-				</k-dialog-footer>
-			</slot>
+				<slot name="footer">
+					<k-dialog-footer v-if="cancelButton || submitButton">
+						<k-dialog-buttons
+							:cancel-button="cancelButton"
+							:disabled="disabled"
+							:icon="icon"
+							:submit-button="submitButton"
+							:theme="theme"
+							@cancel="$emit('cancel')"
+						/>
+					</k-dialog-footer>
+				</slot>
+			</k-dropzone>
 		</form>
-	</portal>
+	</Teleport>
 </template>
 
 <script>
 import Dialog from "@/mixins/dialog.js";
 
 /**
- * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
+ * Modal dialogs are used in Kirby's Panel in many places
+ * for quick actions like adding new pages, changing titles, etc.
+ * that don't necessarily need a full new view.
+ *
+ * You can create your own modals for your fields and
+ * other plugins or reuse our existing modals to
+ * invoke typical Panel actions.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [Dialog]
+	mixins: [Dialog],
+	emits: ["cancel", "drop", "submit"],
+	methods: {
+		/**
+		 * This needs to be a method instead of a computed property,
+		 * as vnode props are not reactive and the drop listener
+		 * might be added after the first render.
+		 */
+		hasDropzone() {
+			return this.$.vnode.props?.onDrop !== undefined;
+		}
+	}
 };
 </script>
 
@@ -113,5 +130,16 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+/* Dropzone */
+.k-dialog > .k-dropzone {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+.k-dialog > .k-dropzone::after {
+	border-radius: var(--dialog-rounded);
+	outline-offset: -2px;
 }
 </style>

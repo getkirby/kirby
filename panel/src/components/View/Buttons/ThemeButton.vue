@@ -9,8 +9,12 @@
 <script>
 /**
  * View header button to toggle the Panel theme
+ *
  * @displayName ThemeViewButton
- * @since 5.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  * @unstable
  */
 export default {

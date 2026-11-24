@@ -27,7 +27,7 @@
 								title="Deprecated"
 								:text="method.deprecated"
 							/>
-							<k-text :html="method.description" />
+							<k-text :text="method.description" />
 						</td>
 						<td>
 							<k-lab-docs-params :params="method.params" />
@@ -52,6 +52,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props]
 };

@@ -1,0 +1,1411 @@
+<?php
+
+namespace Kirby\Panel\Controller\Dialog;
+
+use Kirby\Cms\Page;
+use Kirby\Cms\Site;
+use Kirby\Content\MemoryStorage;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Panel\Redirect;
+use Kirby\Panel\TestCase;
+use Kirby\Uuid\PageUuid;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+#[CoversClass(ModelCreateDialogController::class)]
+#[CoversClass(PageCreateDialogController::class)]
+class PageCreateDialogControllerTest extends TestCase
+{
+	public function testConstructWithBlueprints(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/album'  => ['title' => 'Album'],
+				'pages/broken' => [
+					'title'  => 'Not used',
+					// a scalar instead of a list of fields
+					// breaks the blueprint
+					'fields' => 'text'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController(
+			blueprints: ['album', 'broken', 'does-not-exist']
+		);
+
+		// blueprints that cannot be created or loaded
+		// still get an entry, based on their name
+		$this->assertSame([
+			['name' => 'album', 'title' => 'Album'],
+			['name' => 'broken', 'title' => 'Broken'],
+			['name' => 'does-not-exist', 'title' => 'Does-not-exist']
+		], $controller->blueprints());
+	}
+
+	public function testConstructWithoutBlueprints(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('No new pages can be created here');
+
+		new PageCreateDialogController(blueprints: []);
+	}
+
+	public function testCoreFieldInvalidTitleSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => false
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Page create dialog: title and slug must not be false');
+
+		$controller->coreFields();
+	}
+
+	public function testCoreFields(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$fields     = $controller->coreFields();
+
+		$this->assertCount(5, $fields);
+		$this->assertSame('Title', $fields['title']['label']);
+		$this->assertSame('/', $fields['slug']['path']);
+		$this->assertTrue($fields['uuid']['hidden']);
+	}
+
+	public function testCoreFieldsUuidDisabled(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$fields     = $controller->coreFields();
+
+		$this->assertCount(4, $fields);
+		$this->assertSame('Title', $fields['title']['label']);
+		$this->assertSame('/', $fields['slug']['path']);
+	}
+
+	public function testCoreFieldWithoutTitleSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => 'A simple title',
+						'slug'  => 'a-simple-slug'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$fields     = $controller->coreFields();
+
+		$this->assertArrayNotHasKey('title', $fields);
+		$this->assertArrayNotHasKey('slug', $fields);
+	}
+
+	public function testCustomFieldWithForbiddenField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'slug'
+						]
+					],
+					'fields' => [
+						'slug' => [
+							'type' => 'text',
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field name "slug" not allowed as custom field in create dialog');
+
+		$controller->customFields();
+	}
+
+	public function testCustomFieldWithUnknownField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'notthere'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Unknown field  "notthere" in create dialog');
+
+		$controller->customFields();
+	}
+
+	public function testCustomFieldWithUnsupportedField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'filepicker',
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('Field type "filepicker" not supported in create dialog');
+
+		$controller->customFields();
+	}
+
+	public function testFactory(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'pages/test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$this->assertSame('test', $controller->parent->id());
+	}
+
+	public function testFactoryWithField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent' => [
+					'fields' => [
+						'kids' => [
+							'type'       => 'pagelist',
+							'blueprints' => ['child']
+						]
+					]
+				],
+				'pages/child' => ['title' => 'Child']
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'parent']
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'pages/test',
+					'field'  => 'kids'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+
+		// the templates are narrowed down to those
+		// accepted by the list field
+		$this->assertSame('test', $controller->parent->id());
+		$this->assertSame(
+			['child'],
+			array_column($controller->blueprints(), 'name')
+		);
+	}
+
+	public function testFactoryWithoutParent(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$this->assertInstanceOf(Site::class, $controller->parent);
+	}
+
+	public function testFactoryWithUnknownField(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			],
+			'request' => [
+				'query' => [
+					'parent' => 'pages/test',
+					'field'  => 'does-not-exist'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The field "does-not-exist" does not accept new pages');
+
+		PageCreateDialogController::factory();
+	}
+
+	public function testLoad(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$dialog     = $controller->load();
+		$this->assertSame('k-page-create-dialog', $dialog->component);
+
+		$props = $dialog->props();
+		$this->assertSame('Title', $props['fields']['title']['label']);
+		$this->assertTrue($props['fields']['title']['preselect']);
+		$this->assertSame('URL appendix', $props['fields']['slug']['label']);
+		$this->assertFalse($props['fields']['slug']['preselect']);
+		$this->assertSame('title', $props['fields']['slug']['sync']);
+
+		// there's only the default template for now
+		$this->assertTrue($props['fields']['template']['hidden']);
+
+		$this->assertSame('Create as Draft', $props['submitButton']);
+
+		$this->assertSame('', $props['value']->slug);
+		$this->assertSame('default', $props['value']->template);
+		$this->assertSame('', $props['value']->title);
+	}
+
+	public function testLoadImmediatelySubmitsWithoutEditableFields(): void
+	{
+		// title and slug come from the blueprint, so no editable field
+		// remains and there is only the single default blueprint
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => 'Auto title',
+						'slug'  => 'auto-slug'
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertNull($this->app->page('auto-slug'));
+
+		$controller = new PageCreateDialogController();
+
+		// the dialog is submitted right away and redirects
+		// to the newly created page
+		try {
+			$controller->load();
+			$this->fail('Expected Redirect exception was not thrown');
+
+		} catch (Redirect $e) {
+			$this->assertStringContainsString('pages/auto-slug', $e->location());
+		}
+
+		$page = $this->app->page('auto-slug');
+		$this->assertSame('auto-slug', $page->slug());
+		$this->assertSame('Auto title', $page->title()->value());
+	}
+
+	public function testLoadImmediatelySubmitsWithUuidTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => 'Test {{ page.uuid.id }}',
+						'slug'  => '{{ page.uuid.id }}'
+					],
+					'fields' => [
+						'test' => [
+							'type'    => 'text',
+							'default' => '{{ page.uuid.id }}'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		try {
+			(new PageCreateDialogController())->load();
+			$this->fail('Expected Redirect exception was not thrown');
+		} catch (Redirect) {
+		}
+
+		$page = $this->app->site()->drafts()->first();
+		$uuid = $page->uuid()->id();
+
+		$this->assertSame($uuid, $page->slug());
+		$this->assertSame('Test ' . $uuid, $page->title()->value());
+		$this->assertSame($uuid, $page->test()->value());
+	}
+
+	public function testLoadWithCustomFields(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'select',
+							'options' => [
+								'type' => 'array',
+								'options' => [
+									'a' => 'A',
+									'b' => 'B'
+								],
+								'width' => '1/2'
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$props      = $controller->load()->props();
+
+		$this->assertArrayHasKey('foo', $props['fields']);
+		$this->assertSame('1/1', $props['fields']['foo']['width']);
+	}
+
+	public function testLoadWithCustomTitleLabel(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => [
+							'label' => $label = 'Just a simple label'
+						]
+					]
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$props      = $controller->load()->props();
+
+		$this->assertSame($label, $props['fields']['title']['label']);
+	}
+
+	public function testLoadWithI18nTitleLabel(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'title' => [
+							'label' => [
+								'en' => $label = 'English label',
+								'de' => 'German label'
+							]
+						]
+					]
+				],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$props      = $controller->load()->props();
+
+		$this->assertSame($label, $props['fields']['title']['label']);
+	}
+
+	public function testLoadWithMultipleBlueprints(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/a' => ['title' => 'A'],
+				'pages/b' => ['title' => 'B'],
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$props      = $controller->load()->props();
+
+		// a + b + default
+		$this->assertCount(3, $props['blueprints']);
+	}
+
+	public function testModel(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$model      = $controller->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertInstanceOf(PageUuid::class, $model->uuid());
+	}
+
+	public function testModelSlugFallsBackToNewWhenEmpty(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'slug' => ''
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$model      = $controller->model();
+		$this->assertSame('__temp__', $model->slug());
+	}
+
+	public function testModelSlugFallsBackToNewWhenNull(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'slug' => null
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$model      = $controller->model();
+		$this->assertSame('__temp__', $model->slug());
+	}
+
+	public function testModelSlugUsesProvidedSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'slug' => 'my-article'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$model      = $controller->model();
+		$this->assertSame('my-article', $model->slug());
+	}
+
+	public function testModelUuidDisabled(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$model      = $controller->model();
+
+		$this->assertInstanceOf(Page::class, $model);
+		$this->assertInstanceOf(MemoryStorage::class, $model->storage());
+		$this->assertNull($model->uuid());
+	}
+
+	public function testResolveFieldTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => 'This is a {{ page.foo }}',
+						'slug'  => 'page-{{ page.bar }}'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->resolveFieldTemplates([
+			'foo' => 'Foo',
+			'bar' => 'foo',
+		], ['title', 'slug']);
+
+		$this->assertSame([
+			'foo'   => 'Foo',
+			'bar'   => 'foo',
+			'title' => 'This is a Foo',
+			'slug'  => 'page-foo',
+		], $input);
+	}
+
+	public function testResolveFieldTemplatesDoesNotEscape(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }} — {{ page.city }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->resolveFieldTemplates([
+			'name' => 'Tom & Jerry',
+			'city' => '<b>Köln</b>',
+		], ['title', 'slug']);
+
+		$this->assertSame('Tom & Jerry — <b>Köln</b>', $input['title']);
+		$this->assertSame('Tom & Jerry', $input['slug']);
+	}
+
+	public function testResolveFieldTemplatesDoesNotResolveInput(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'content' => ['secret' => 'S3CRET']
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'title' => '{{ page.name }}',
+						'slug'  => '{{ page.name }}'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->resolveFieldTemplates([
+			'name' => '{{ site.secret }} {< site.secret >}',
+		], ['title', 'slug']);
+
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['title']);
+		$this->assertSame('{{ site.secret }} {< site.secret >}', $input['slug']);
+	}
+
+	public function testSanitize(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						],
+						'bar' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$input      = $controller->sanitize([
+			'slug'  => 'foo',
+			'title' => 'Foo',
+			'foo'   => 'bar',
+			'uuid'  => 'test-uuid'
+		]);
+
+		$this->assertSame([
+			'content'  => [
+				'foo'   => 'bar',
+				'bar'   => 'bar',
+				'title' => 'Foo',
+				'uuid'  => 'test-uuid',
+			],
+			'slug'     => 'foo',
+			'template' => 'test',
+		], $input);
+	}
+
+	public function testSanitizeWithEmptyFields(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo', 'bar']
+					],
+					'fields' => [
+						'foo' => [
+							'type'    => 'text',
+							'default' => 'foo'
+						],
+						'bar' => [
+							'type'    => 'text',
+							'default' => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		// the dialog submits an empty string for each field
+		// that has been left untouched
+		$controller = new PageCreateDialogController();
+		$input      = $controller->sanitize([
+			'slug'  => 'foo',
+			'title' => 'Foo',
+			'foo'   => 'custom',
+			'bar'   => ''
+		]);
+
+		$this->assertSame([
+			'content'  => [
+				'foo'   => 'custom',
+				'bar'   => 'bar',
+				'title' => 'Foo',
+				'uuid'  => null,
+			],
+			'slug'     => 'foo',
+			'template' => 'test',
+		], $input);
+	}
+
+	public function testSubmit(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertNull($this->app->page('test'));
+
+		$controller = new PageCreateDialogController();
+		$response   = $controller->submit();
+
+		$this->assertSame('page.create', $response['event']);
+		$this->assertSame('test', $this->app->page('test')->slug());
+		$this->assertSame('Test', $this->app->page('test')->title()->value());
+		$this->assertSame('draft', $this->app->page('test')->status());
+	}
+
+	public function testSubmitDefault(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'text' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'slug'     => 'my-article',
+					'title'    => 'My Article'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('my-article');
+
+		$this->assertSame('my-article', $page->slug());
+		$this->assertSame('My Article', $page->title()->value());
+		$this->assertSame('', $page->text()->value());
+	}
+
+	public function testSubmitDoesNotLeakParentContent(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/parent-page' => [
+					'fields' => [
+						'summary' => ['type' => 'text']
+					]
+				],
+				'pages/article' => [
+					'create' => [
+						'slug' => 'child-{{ page.category }}'
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'slug'     => '',    // empty string – simulates hidden slug field
+					'title'    => 'Child',
+					'category' => 'test'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug'     => 'parent',
+			'template' => 'parent-page',
+			'content'  => ['title' => 'Parent', 'summary' => 'Parent content']
+		]);
+
+		$controller = new PageCreateDialogController(parent: $this->app->page('parent'));
+		$controller->submit();
+
+		$child = $this->app->page('parent/child-test');
+
+		$this->assertSame('child-test', $child->slug());
+		$this->assertSame('Child', $child->title()->value());
+		$this->assertFalse($child->summary()->exists());
+
+		// read the content file directly to verify no parent data was written to disk
+		$contentFile = $child->version('latest')->contentFile();
+		$content = file_get_contents($contentFile);
+
+		$this->assertStringNotContainsString('Summary', $content);
+		$this->assertStringNotContainsString('Parent content', $content);
+	}
+
+	public function testSubmitWithCustomField(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'fields' => [
+							'foo'
+						]
+					],
+					'fields' => [
+						'foo' => [
+							'type' => 'text',
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test',
+					'foo'   => 'bar',
+					'homer' => 'simpson'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$response   = $controller->submit();
+
+		$this->assertSame('/pages/test', $response['redirect']);
+		$this->assertSame('bar', $this->app->page('test')->foo()->value());
+		$this->assertNull($this->app->page('test')->homer()->value());
+	}
+
+	public function testSubmitWithCustomStatus(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'create' => [
+						'status' => 'unlisted'
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$response   = $controller->submit();
+
+		$this->assertSame('page.create', $response['event']);
+		$this->assertSame('unlisted', $this->app->page('test')->status());
+	}
+
+	public function testSubmitWithoutTitle(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'slug' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeTitle.empty');
+
+		$controller = PageCreateDialogController::factory();
+		$controller->submit();
+	}
+
+	public function testSubmitWithParent(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					['slug' => 'test']
+				]
+			],
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test-child'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test/test-child');
+		$this->assertNull($page);
+
+		$parent     = $this->app->page('test');
+		$controller = new PageCreateDialogController(parent: $parent);
+		$response   = $controller->submit();
+
+		$this->assertSame('page.create', $response['event']);
+
+		$page = $this->app->page('test/test-child');
+		$this->assertSame('test-child', $page->slug());
+		$this->assertSame('Test', $page->title()->value());
+	}
+
+	public function testSubmitWithSlugFromTemplate(): void
+	{
+		// slug field is hidden when create.slug is set; Panel submits slug: ''
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'slug' => 'art-{{ page.category }}'
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'slug'     => '',           // empty string – simulates hidden slug field
+					'title'    => 'My Article',
+					'category' => 'photo'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('art-photo');
+
+		$this->assertSame('art-photo', $page->slug());
+		$this->assertSame('My Article', $page->title()->value());
+	}
+
+	public function testSubmitWithTitleAndSlugFromTemplate(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'title'  => 'New: {{ page.category }}',
+						'slug'   => 'cat-{{ page.category }}',
+						'fields' => ['category']
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'title'    => '',           // hidden – title comes from template
+					'slug'     => '',           // hidden – slug comes from template
+					'category' => 'photo'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('cat-photo');
+
+		$this->assertSame('cat-photo', $page->slug());
+		$this->assertSame('New: photo', $page->title()->value());
+		$this->assertSame('photo', $page->category()->value());
+	}
+
+	public function testSubmitWithTitleAndSlugFromTemplateWithSpecialChars(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'create' => [
+						'title'  => 'New: {{ page.category }}',
+						'slug'   => 'cat-{{ page.category }}',
+						'fields' => ['category']
+					],
+					'fields' => [
+						'category' => ['type' => 'text']
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'article',
+					'title'    => '',
+					'slug'     => '',
+					'category' => 'Tom & Jerry'
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('cat-tom-jerry');
+
+		$this->assertSame('cat-tom-jerry', $page->slug());
+		$this->assertSame('New: Tom & Jerry', $page->title()->value());
+		$this->assertSame('Tom & Jerry', $page->category()->value());
+	}
+
+	public function testSubmitWithTitleSlugFieldsTemplates(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/default' => [
+					'fields' => [
+						'foo' => [
+							'type'    => 'text',
+							'default' => '{{ page.title }}'
+						],
+						'bar' => [
+							'type'    => 'text',
+							'default' => '{{ page.slug }}'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'title' => 'Foo title',
+					'slug'  => 'bar-slug'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = PageCreateDialogController::factory();
+		$controller->submit();
+
+		$page = $this->app->page('bar-slug');
+
+		$this->assertSame('Foo title', $page->title()->value());
+		$this->assertSame('Foo title', $page->foo()->value());
+		$this->assertSame('bar-slug', $page->slug());
+		$this->assertSame('bar-slug', $page->bar()->value());
+	}
+
+	public function testSubmitWithUuidFromValue(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$uuid = (new PageCreateDialogController())->value()['uuid'];
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'title' => 'Test',
+					'slug'  => 'test',
+					'uuid'  => $uuid
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->submit();
+
+		$page = $this->app->page('test');
+
+		$this->assertStringNotContainsString('://', $page->content()->get('uuid')->value());
+		$this->assertSame('test', $this->app->page('page://' . $uuid)?->id());
+	}
+
+	public function testValidateInvalidFields(): void
+	{
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeStatus.incomplete');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'foo' => [
+							'type' => 'text',
+							'required' => true
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$controller->validate([
+			'slug'    => 'foo',
+			'content' => ['title' => 'Foo']
+		], 'listed');
+	}
+
+	public function testValidateInvalidSlug(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.slug.invalid');
+
+		$controller = new PageCreateDialogController();
+		$controller->validate([
+			'slug'    => '',
+			'content' => ['title' => 'Foo']
+		]);
+	}
+
+	public function testValidateInvalidTitle(): void
+	{
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionCode('error.page.changeTitle.empty');
+
+		$controller = new PageCreateDialogController();
+		$controller->validate(['content' => ['title' => '']]);
+	}
+
+	public function testValidateValidFields(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$valid      = $controller->validate([
+			'slug'    => 'foo',
+			'content' => ['title' => 'Foo', 'foo' => 'bar']
+		], 'listed');
+
+		$this->assertTrue($valid);
+	}
+
+	public function testValue(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'create' => [
+						'fields' => ['foo']
+					],
+					'fields' => [
+						'foo' => [
+							'type'     => 'text',
+							'required' => true,
+							'default'  => 'bar'
+						]
+					]
+				]
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$value      = $controller->value();
+
+		$this->assertSame('', $value['slug']);
+		$this->assertSame('test', $value['template']);
+		$this->assertSame('', $value['title']);
+		$this->assertSame($controller->model()->uuid()->id(), $value['uuid']);
+		$this->assertStringNotContainsString('://', $value['uuid']);
+		$this->assertSame('bar', $value['foo']);
+	}
+
+	public function testValueUuidDisabled(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'content.uuid' => false
+			],
+			'request' => [
+				'query' => [
+					'template' => 'test'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$controller = new PageCreateDialogController();
+		$value      = $controller->value();
+
+		$this->assertNull($value['uuid']);
+	}
+}

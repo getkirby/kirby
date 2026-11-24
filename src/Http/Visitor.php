@@ -12,18 +12,15 @@ use Kirby\Toolkit\Str;
  * like the ip address, language, user agent and more
  * of the current visitor
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Visitor
 {
-	protected string|null $ip = null;
-	protected string|null $userAgent = null;
 	protected string|null $acceptedLanguage = null;
 	protected string|null $acceptedMimeType = null;
+	protected string|null $ip = null;
+	protected string|null $userAgent = null;
 
 	/**
 	 * Creates a new visitor object.
@@ -54,7 +51,7 @@ class Visitor
 	 * provided or returns the user's
 	 * accepted language otherwise
 	 *
-	 * @return $this|\Kirby\Toolkit\Obj|null
+	 * @return $this|Obj|null
 	 */
 	public function acceptedLanguage(
 		string|null $acceptedLanguage = null
@@ -71,7 +68,7 @@ class Visitor
 	 * Returns an array of all accepted languages
 	 * including their quality and locale
 	 *
-	 * @return \Kirby\Toolkit\Collection<\Kirby\Toolkit\Obj>
+	 * @return Collection<Obj>
 	 */
 	public function acceptedLanguages(): Collection
 	{
@@ -81,8 +78,8 @@ class Visitor
 		foreach ($accepted as $language) {
 			$value  = $language['value'];
 			$parts  = Str::split($value, '-');
-			$code   = isset($parts[0]) ? Str::lower($parts[0]) : null;
-			$region = isset($parts[1]) ? Str::upper($parts[1]) : null;
+			$code   = isset($parts[0]) === true ? Str::lower($parts[0]) : null;
+			$region = isset($parts[1]) === true ? Str::upper($parts[1]) : null;
 			$locale = $region ? $code . '_' . $region : $code;
 
 			$languages[$locale] = new Obj([
@@ -95,6 +92,44 @@ class Visitor
 		}
 
 		return new Collection($languages);
+	}
+
+	/**
+	 * Sets the accepted mime type if
+	 * provided or returns the user's
+	 * accepted mime type otherwise
+	 *
+	 * @return $this|Obj|null
+	 */
+	public function acceptedMimeType(
+		string|null $acceptedMimeType = null
+	): static|Obj|null {
+		if ($acceptedMimeType === null) {
+			return $this->acceptedMimeTypes()->first();
+		}
+
+		$this->acceptedMimeType = $acceptedMimeType;
+		return $this;
+	}
+
+	/**
+	 * Returns a collection of all accepted mime types
+	 *
+	 * @return Collection<Obj>
+	 */
+	public function acceptedMimeTypes(): Collection
+	{
+		$accepted = Str::accepted($this->acceptedMimeType);
+		$mimes    = [];
+
+		foreach ($accepted as $mime) {
+			$mimes[$mime['value']] = new Obj([
+				'type'    => $mime['value'],
+				'quality' => $mime['quality'],
+			]);
+		}
+
+		return new Collection($mimes);
 	}
 
 	/**
@@ -111,42 +146,6 @@ class Visitor
 		}
 
 		return false;
-	}
-
-	/**
-	 * Sets the accepted mime type if
-	 * provided or returns the user's
-	 * accepted mime type otherwise
-	 *
-	 * @return $this|\Kirby\Toolkit\Obj|null
-	 */
-	public function acceptedMimeType(
-		string|null $acceptedMimeType = null
-	): static|Obj|null {
-		if ($acceptedMimeType === null) {
-			return $this->acceptedMimeTypes()->first();
-		}
-
-		$this->acceptedMimeType = $acceptedMimeType;
-		return $this;
-	}
-
-	/**
-	 * Returns a collection of all accepted mime types
-	 */
-	public function acceptedMimeTypes(): Collection
-	{
-		$accepted = Str::accepted($this->acceptedMimeType);
-		$mimes    = [];
-
-		foreach ($accepted as $mime) {
-			$mimes[$mime['value']] = new Obj([
-				'type'     => $mime['value'],
-				'quality'  => $mime['quality'],
-			]);
-		}
-
-		return new Collection($mimes);
 	}
 
 	/**
@@ -187,7 +186,7 @@ class Visitor
 	 * is most accepted (= preferred) by the visitor
 	 * @since 3.3.0
 	 *
-	 * @param string ...$mimeTypes MIME types to query for
+	 * @param ...$mimeTypes MIME types to query for
 	 * @return string|null Preferred MIME type
 	 */
 	public function preferredMimeType(string ...$mimeTypes): string|null

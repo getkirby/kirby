@@ -10,9 +10,6 @@ use Kirby\Toolkit\BlockCollectionAccess;
 /**
  * Trait for image resizing, blurring etc.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -98,7 +95,7 @@ trait FileModifications
 	 * Resizes the file with the given width and height
 	 * while keeping the aspect ratio.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	#[BlockCollectionAccess]
 	public function resize(
@@ -176,7 +173,7 @@ trait FileModifications
 	 * could potentially also be a CDN or any other
 	 * place.
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	#[BlockCollectionAccess]
 	public function thumb(
@@ -196,10 +193,8 @@ trait FileModifications
 		// fallback to content file options
 		if (($options['crop'] ?? false) === true) {
 			$options['crop'] = match (true) {
-				$this instanceof ModelWithContent
-					=> $this->focus()->value() ?? 'center',
-				default
-				=> 'center'
+				$this instanceof File => $this->focus()->value() ?? 'center',
+				default               => 'center'
 			};
 		}
 

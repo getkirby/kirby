@@ -10,9 +10,6 @@ use Michelf\SmartyPantsTypographer;
  * of the parser with default options and
  * a simple way to set your own options.
  *
- * @package   Kirby Text
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -21,6 +18,8 @@ class SmartyPants
 	/**
 	 * Array with all configured options
 	 * for the parser
+	 *
+	 * @var array<string, mixed>
 	 */
 	protected array $options = [];
 
@@ -28,44 +27,6 @@ class SmartyPants
 	 * Michelf's parser object
 	 */
 	protected SmartyPantsTypographer $parser;
-
-	/**
-	 * Returns default values for all
-	 * available parser options
-	 */
-	public function defaults(): array
-	{
-		return [
-			'attr'                       => 1,
-			'convert.quot'               => true,
-			'doublequote.open'           => '“',
-			'doublequote.close'          => '”',
-			'doublequote.low'            => '„',
-			'singlequote.open'           => '‘',
-			'singlequote.close'          => '’',
-			'backtick.doublequote.open'  => '“',
-			'backtick.doublequote.close' => '”',
-			'backtick.singlequote.open'  => '‘',
-			'backtick.singlequote.close' => '’',
-			'emdash'                     => '—',
-			'endash'                     => '–',
-			'ellipsis'                   => '…',
-			'space'                      => '(?: | |&nbsp;|&#0*160;|&#x0*[aA]0;)',
-			'space.emdash'               => ' ',
-			'space.endash'               => ' ',
-			'space.colon'                => "\u{00A0}",
-			'space.semicolon'            => "\u{00A0}",
-			'space.marks'                => "\u{00A0}",
-			'space.frenchquote'          => "\u{00A0}",
-			'space.thousand'             => "\u{00A0}",
-			'space.unit'                 => "\u{00A0}",
-			'guillemet.leftpointing'     => '«',
-			'guillemet.rightpointing'    => '»',
-			'geresh'                     => '׳',
-			'gershayim'                  => '״',
-			'skip'                       => 'pre|code|kbd|script|style|math',
-		];
-	}
 
 	/**
 	 * Creates a new SmartyPants parser
@@ -107,14 +68,50 @@ class SmartyPants
 	}
 
 	/**
+	 * Returns default values for all
+	 * available parser options
+	 *
+	 * @return array<string, bool|int|string>
+	 */
+	public function defaults(): array
+	{
+		return [
+			'attr'                       => 1,
+			'convert.quot'               => true,
+			'doublequote.open'           => '“',
+			'doublequote.close'          => '”',
+			'doublequote.low'            => '„',
+			'singlequote.open'           => '‘',
+			'singlequote.close'          => '’',
+			'backtick.doublequote.open'  => '“',
+			'backtick.doublequote.close' => '”',
+			'backtick.singlequote.open'  => '‘',
+			'backtick.singlequote.close' => '’',
+			'emdash'                     => '—',
+			'endash'                     => '–',
+			'ellipsis'                   => '…',
+			'space'                      => '(?: | |&nbsp;|&#0*160;|&#x0*[aA]0;)',
+			'space.emdash'               => ' ',
+			'space.endash'               => ' ',
+			'space.colon'                => "\u{00A0}",
+			'space.semicolon'            => "\u{00A0}",
+			'space.marks'                => "\u{00A0}",
+			'space.frenchquote'          => "\u{00A0}",
+			'space.thousand'             => "\u{00A0}",
+			'space.unit'                 => "\u{00A0}",
+			'guillemet.leftpointing'     => '«',
+			'guillemet.rightpointing'    => '»',
+			'geresh'                     => '׳',
+			'gershayim'                  => '״',
+			'skip'                       => 'pre|code|kbd|script|style|math',
+		];
+	}
+
+	/**
 	 * Parses the given text
 	 */
 	public function parse(string|null $text = null): string
 	{
-		// prepare the text
-		$text ??= '';
-
-		// parse the text
-		return $this->parser->transform($text);
+		return $this->parser->transform($text ?? '');
 	}
 }

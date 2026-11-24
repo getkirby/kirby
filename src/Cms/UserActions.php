@@ -7,6 +7,7 @@ use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\MemoryStorage;
 use Kirby\Data\Data;
 use Kirby\Data\Json;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -20,11 +21,10 @@ use Throwable;
 /**
  * UserActions
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ *
+ * @mixin User
  */
 trait UserActions
 {
@@ -36,12 +36,30 @@ trait UserActions
 	{
 		$email = trim($email);
 
-		return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
-			$user = $user->clone(['email' => $email]);
-			$user->updateCredentials(['email' => $email]);
+		return $this->commit(
+			action:    'changeEmail',
+			arguments: [
+				'user'  => $this,
+				'email' => Idn::decodeEmail($email)
+			],
+			callback: function (User $user, string $email): User {
+				$user = $user->clone(['email' => $email]);
+				$user->updateCredentials(['email' => $email]);
 
-			return $user;
-		});
+				// the email challenge was confirmed for the old address,
+				// so the opt-in must not carry over to the new one
+				if ($user->secret('email') === true) {
+					$user->writeSecret('email', null);
+
+					// keep the user logged in to the current browser
+					if ($user->isLoggedIn() === true) {
+						$user->loginPasswordless();
+					}
+				}
+
+				return $user;
+			}
+		);
 	}
 
 	/**
@@ -50,12 +68,16 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function changeLanguage(string $language): static
 	{
-		return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
-			$user = $user->clone(['language' => $language]);
-			$user->updateCredentials(['language' => $language]);
+		return $this->commit(
+			action:    'changeLanguage',
+			arguments: ['user' => $this, 'language' => $language],
+			callback:  function (User $user, string $language): User {
+				$user = $user->clone(['language' => $language]);
+				$user->updateCredentials(['language' => $language]);
 
-			return $user;
-		});
+				return $user;
+			}
+		);
 	}
 
 	/**
@@ -66,12 +88,16 @@ trait UserActions
 	{
 		$name = trim(strip_tags($name));
 
-		return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
-			$user = $user->clone(['name' => $name]);
-			$user->updateCredentials(['name' => $name]);
+		return $this->commit(
+			action:    'changeName',
+			arguments: ['user' => $this, 'name' => $name],
+			callback:  function (User $user, string $name): User {
+				$user = $user->clone(['name' => $name]);
+				$user->updateCredentials(['name' => $name]);
 
-			return $user;
-		});
+				return $user;
+			}
+		);
 	}
 
 	/**
@@ -85,22 +111,30 @@ trait UserActions
 		#[SensitiveParameter]
 		string $password
 	): static {
-		return $this->commit('changePassword', ['user' => $this, 'password' => $password], function ($user, $password) {
-			$user = $user->clone([
-				'password' => $password = static::hashPassword($password)
-			]);
+		return $this->commit(
+			action:    'changePassword',
+			arguments: ['user' => $this, 'password' => $password],
+			callback:  function (
+				User $user,
+				#[SensitiveParameter]
+				string $password
+			): User {
+				$user = $user->clone([
+					'password' => $password = static::hashPassword($password)
+				]);
 
-			$user->writePassword($password);
+				$user->writePassword($password);
 
-			// keep the user logged in to the current browser
-			// if they changed their own password
-			// (regenerate the session token, update the login timestamp)
-			if ($user->isLoggedIn() === true) {
-				$user->loginPasswordless();
+				// keep the user logged in to the current browser
+				// if they changed their own password
+				// (regenerate the session token, update the login timestamp)
+				if ($user->isLoggedIn() === true) {
+					$user->loginPasswordless();
+				}
+
+				return $user;
 			}
-
-			return $user;
-		});
+		);
 	}
 
 	/**
@@ -109,47 +143,79 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function changeRole(string $role): static
 	{
-		return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
-			$user = $user->clone(['role' => $role]);
-			$user->updateCredentials(['role' => $role]);
+		return $this->commit(
+			action:    'changeRole',
+			arguments: ['user' => $this, 'role' => $role],
+			callback:  function (User $user, string $role): User {
+				$user = $user->clone(['role' => $role]);
+				$user->updateCredentials(['role' => $role]);
 
-			return $user;
-		});
+				return $user;
+			}
+		);
+	}
+
+	/**
+	 * Stores secrets for the user
+	 * @since 6.0.0
+	 */
+	#[BlockCollectionAccess]
+	public function changeSecret(
+		string $secret,
+		#[SensitiveParameter]
+		mixed $content
+	): static {
+		return $this->commit(
+			action:    'changeSecret',
+			arguments: [
+				'user'        => $this,
+				'secret'      => $secret,
+				'credentials' => $content
+			],
+			callback: function (
+				User $user,
+				string $secret,
+				mixed $credentials
+			): User {
+				$this->writeSecret($secret, $credentials);
+
+				// keep the user logged in to the current browser
+				// (regenerate the session token, update the login timestamp)
+				if ($user->isLoggedIn() === true) {
+					$user->loginPasswordless();
+				}
+
+				return $user;
+			}
+		);
 	}
 
 	/**
 	 * Changes the user's TOTP secret
 	 * @since 4.0.0
+	 * @deprecated 6.0.0 Use `self::changeSecret('totp')` instead
 	 */
 	#[BlockCollectionAccess]
 	public function changeTotp(
 		#[SensitiveParameter]
 		string|null $secret
 	): static {
-		return $this->commit('changeTotp', ['user' => $this, 'secret' => $secret], function ($user, $secret) {
-			$this->writeSecret('totp', $secret);
-
-			// keep the user logged in to the current browser
-			// if they changed their own TOTP secret
-			// (regenerate the session token, update the login timestamp)
-			if ($user->isLoggedIn() === true) {
-				$user->loginPasswordless();
-			}
-
-			return $user;
-		});
+		$this->guards()->ensureExecutable('changeSecret', 'totp', $secret);
+		return $this->changeSecret('totp', $secret);
 	}
 
 	/**
 	 * Commits a user action, by following these steps
 	 *
-	 * 1. applies the `before` hook
-	 * 2. checks the action rules
-	 * 3. commits the action
-	 * 4. applies the `after` hook
-	 * 5. returns the result
+	 * 1. checks the action guards
+	 * 2. applies the `before` hook
+	 * 3. checks the action guards again
+	 * 4. runs the action callback
+	 * 5. updates the app-wide model state
+	 * 6. applies the `after` hook, flushes the pages cache
+	 *    and returns the result of the hook
 	 *
-	 * @throws \Kirby\Exception\PermissionException
+	 * @throws PermissionException If the user is the almighty Kirby user
 	 */
 	protected function commit(
 		string $action,
@@ -189,7 +255,7 @@ trait UserActions
 
 		// check the rules before any user input is passed
 		// through the field classes
-		UserRules::create($user, $input);
+		$user->guards()->ensureExecutable('create', $input);
 
 		// merge the content with the defaults and run it through
 		// the fields to apply their save handlers
@@ -211,20 +277,24 @@ trait UserActions
 		);
 
 		// run the hook
-		return $user->commit('create', ['user' => $user, 'input' => $input], function ($user) use ($storage) {
-			$user->writeCredentials([
-				'email'    => $user->email(),
-				'language' => $user->language(),
-				'name'     => $user->name()->value(),
-				'role'     => $user->role()->id(),
-			]);
+		return $user->commit(
+			action:    'create',
+			arguments: ['user' => $user, 'input' => $input],
+			callback:  function (User $user) use ($storage): User {
+				$user->writeCredentials([
+					'email'    => $user->email(),
+					'language' => $user->language(),
+					'name'     => $user->name()->value(),
+					'role'     => $user->role()->id(),
+				]);
 
-			$user->writePassword($user->password());
-			$user->changeStorage($storage);
+				$user->writePassword($user->password());
+				$user->changeStorage($storage);
 
-			// write the user data
-			return $user;
-		});
+				// write the user data
+				return $user;
+			}
+		);
 	}
 
 	/**
@@ -233,18 +303,30 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function createAvatar(string $source, string $extension, bool $move = false): static
 	{
-		return $this->commit('createAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
-			$user->createFile(
-				props: [
-					'filename' => 'profile.' . $extension,
-					'template' => 'avatar',
-					'source'   => $source
-				],
-				move: $move
-			);
+		return $this->commit(
+			action:    'createAvatar',
+			arguments: [
+				'user'      => $this,
+				'source'    => $source,
+				'extension' => $extension
+			],
+			callback: function (
+				User $user,
+				string $source,
+				string $extension
+			) use ($move): User {
+				$user->createFile(
+					props: [
+						'filename' => 'profile.' . $extension,
+						'template' => 'avatar',
+						'source'   => $source
+					],
+					move: $move
+				);
 
-			return $user;
-		});
+				return $user;
+			}
+		);
 	}
 
 	/**
@@ -258,7 +340,7 @@ trait UserActions
 		do {
 			try {
 				$id = Str::random($length);
-				UserRules::validId($this, $id);
+				$this->guards()->validators()->validateId($id);
 				return $id;
 
 				// we can't really test for a random match
@@ -273,36 +355,40 @@ trait UserActions
 	/**
 	 * Deletes the user
 	 *
-	 * @throws \Kirby\Exception\LogicException
+	 * @throws LogicException
 	 */
 	#[BlockCollectionAccess]
 	public function delete(): bool
 	{
-		return $this->commit('delete', ['user' => $this], function ($user) {
-			$old = $user->clone();
+		return $this->commit(
+			action:    'delete',
+			arguments: ['user' => $this],
+			callback:  function (User $user): bool {
+				$old = $user->clone();
 
-			// keep the content in iummtable memory storage
-			// to still have access to it in after hooks
-			$user->changeStorage(ImmutableMemoryStorage::class);
+				// keep the content in iummtable memory storage
+				// to still have access to it in after hooks
+				$user->changeStorage(ImmutableMemoryStorage::class);
 
-			// delete all files individually
-			foreach ($old->files() as $file) {
-				$file->delete();
+				// delete all files individually
+				foreach ($old->files() as $file) {
+					$file->delete();
+				}
+
+				// delete all versions,
+				// the plain text storage handler will then clean
+				// up the directory if it's empty
+				$old->versions()->delete();
+
+				// delete the user directory to get rid
+				// of the .htpasswd and index.php files.
+				// we need to solve this at a later point with
+				// something like a credential storage
+				Dir::remove($old->root());
+
+				return true;
 			}
-
-			// delete all versions,
-			// the plain text storage handler will then clean
-			// up the directory if it's empty
-			$old->versions()->delete();
-
-			// delete the user directory to get rid
-			// of the .htpasswd and index.php files.
-			// we need to solve this at a later point with
-			// something like a credential storage
-			Dir::remove($old->root());
-
-			return true;
-		});
+		);
 	}
 
 	/**
@@ -311,9 +397,11 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function deleteAvatar(): bool
 	{
-		return $this->commit('deleteAvatar', ['user' => $this], function ($user) {
-			return $user->avatar()->delete();
-		});
+		return $this->commit(
+			action:    'deleteAvatar',
+			arguments: ['user' => $this],
+			callback:  fn (User $user): bool => $user->avatar()->delete()
+		);
 	}
 
 	protected static function normalizeProps(array $props): array
@@ -323,7 +411,7 @@ trait UserActions
 		// never directly be supplied by the caller
 		unset($props['blueprint']);
 
-		$content = $props['content'] ?? [];
+		$content = (array)($props['content'] ?? []);
 		$role    = $props['role']    ?? 'default';
 
 		if (isset($props['email']) === true) {
@@ -399,42 +487,53 @@ trait UserActions
 	#[BlockCollectionAccess]
 	public function replaceAvatar(string $source, string $extension, bool $move = false): static
 	{
-		return $this->commit('replaceAvatar', ['user' => $this, 'source' => $source, 'extension' => $extension], function ($user, $source, $extension) use ($move) {
+		return $this->commit(
+			action:    'replaceAvatar',
+			arguments: [
+				'user'      => $this,
+				'source'    => $source,
+				'extension' => $extension
+			],
+			callback: function (
+				User $user,
+				string $source,
+				string $extension
+			) use ($move): User {
+				$oldAvatar = $user->avatar();
 
-			$oldAvatar = $user->avatar();
+				// if the file type stayed the same, we can fall back to the
+				// replace method, which is the cleanest solution here.
+				if ($oldAvatar->extension() === $extension) {
+					$oldAvatar->replace(
+						source: $source,
+						move: $move
+					);
 
-			// if the file type stayed the same, we can fall back to the
-			// replace method, which is the cleanest solution here.
-			if ($oldAvatar->extension() === $extension) {
-				$oldAvatar->replace(
-					source: $source,
+					return $user;
+				}
+
+				// check if the user can delete the old avatar,
+				// but don't delete it yet. If creating the new one fails
+				// we can still keep the old one around
+				$oldAvatar->guards()->ensureExecutable('delete');
+
+				// try to create the new avatar
+				$user->createFile(
+					props: [
+						'filename' => 'profile.' . $extension,
+						'template' => 'avatar',
+						'source'   => $source,
+					],
 					move: $move
 				);
 
+				// if the new avatar was successfully created,
+				// delete the old one to make sure that we don't have two.
+				$oldAvatar->delete();
+
 				return $user;
 			}
-
-			// check if the user can delete the old avatar,
-			// but don't delete it yet. If creating the new one fails
-			// we can still keep the old one around
-			FileRules::delete($oldAvatar);
-
-			// try to create the new avatar
-			$user->createFile(
-				props: [
-					'filename' => 'profile.' . $extension,
-					'template' => 'avatar',
-					'source'   => $source,
-				],
-				move: $move
-			);
-
-			// if the new avatar was successfully created,
-			// delete the old one to make sure that we don't have two.
-			$oldAvatar->delete();
-
-			return $user;
-		});
+		);
 	}
 
 	/**
@@ -446,6 +545,7 @@ trait UserActions
 		string|null $languageCode = null,
 		bool $validate = false
 	): static {
+		/** @var User $user */
 		$user = parent::update($input, $languageCode, $validate);
 
 		// set auth user data only if the current user is this user
@@ -476,6 +576,38 @@ trait UserActions
 			...$this->credentials(),
 			...$credentials
 		]);
+	}
+
+	/**
+	 * Writes a secret without guards and hooks and keeps the password
+	 * timestamp, for state that must not end the user's sessions
+	 * (e.g. the signature counter of a passkey after a login)
+	 *
+	 * @internal
+	 * @throws LogicException If the key is the password
+	 * @since 6.0.0
+	 */
+	#[BlockCollectionAccess]
+	public function updateSecret(
+		string $key,
+		#[SensitiveParameter]
+		mixed $secret
+	): bool {
+		// a new password must always end the other sessions
+		if ($key === 'password') {
+			throw new LogicException(
+				message: 'The password cannot be updated without ending the sessions'
+			);
+		}
+
+		$timestamp = $this->passwordTimestamp();
+		$result    = $this->writeSecret($key, $secret);
+
+		if ($timestamp !== null) {
+			touch($this->secretsFile(), $timestamp);
+		}
+
+		return $result;
 	}
 
 	/**

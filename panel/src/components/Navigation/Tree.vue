@@ -3,7 +3,7 @@
 		:is="scrollable ? 'k-scrollable' : 'ul'"
 		v-bind="scrollable ? { element: 'ul' } : {}"
 		:class="['k-tree', $options.name, $attrs.class]"
-		:style="{ '--tree-level': level, ...$attrs.style }"
+		:style="[{ '--tree-level': level }, $attrs.style]"
 	>
 		<li
 			v-for="item in state"
@@ -51,17 +51,14 @@
 
 <script>
 /**
- * @displayName Tree
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	name: "k-tree",
 	inheritAttrs: false,
 	props: {
-		element: {
-			type: String,
-			default: "k-tree"
-		},
 		current: {
 			type: String
 		},
@@ -91,14 +88,14 @@ export default {
 			return item.open ? "angle-down" : "angle-right";
 		},
 		close(item) {
-			this.$set(item, "open", false);
+			item.open = false;
 			this.$emit("close", item);
 		},
 		isItem(item, target) {
 			return item.value === target;
 		},
 		open(item) {
-			this.$set(item, "open", true);
+			item.open = true;
 			this.$emit("open", item);
 		},
 		select(item) {

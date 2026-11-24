@@ -11,7 +11,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageDeleteTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageDelete';
 
 	protected function setUp(): void
 	{
@@ -73,6 +73,57 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertSame(2, $calls);
 	}
 
+	public function testDeleteHookWithUUIDAccess(): void
+	{
+		$phpunit = $this;
+		$uuid    = null;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$uuid) {
+					$phpunit->assertSame($uuid, $page->uuid()->id());
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page        = Page::create(['slug' => 'test']);
+		$uuid        = $page->uuid()->id();
+		$contentFile = $page->root() . '/default.txt';
+
+		$this->assertFileExists($contentFile);
+
+		$page->delete();
+
+		$this->assertFileDoesNotExist($contentFile);
+	}
+
+	public function testDeleteMultipleSortedPages(): void
+	{
+		$range = range(1, 10);
+		$site  = $this->site();
+
+		foreach ($range as $num) {
+			$page = Page::create([
+				'slug' => Str::random(),
+				'num'  => $num
+			]);
+
+			$this->assertTrue($page->exists());
+			$this->assertTrue($site->children()->has($page));
+		}
+
+		foreach ($site->children() as $page) {
+			$page->delete();
+
+			$this->assertFalse($page->exists());
+			$this->assertFalse($site->children()->has($page));
+		}
+
+		$this->assertCount(0, $site->children());
+	}
+
 	public function testDeletePage(): void
 	{
 		$parent = Page::create(['slug' => 'test']);
@@ -101,31 +152,6 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertTrue($parent->children()->has($unlisted));
 	}
 
-	public function testDeleteMultipleSortedPages(): void
-	{
-		$range = range(1, 10);
-		$site  = $this->site();
-
-		foreach ($range as $num) {
-			$page = Page::create([
-				'slug' => Str::random(),
-				'num'  => $num
-			]);
-
-			$this->assertTrue($page->exists());
-			$this->assertTrue($site->children()->has($page));
-		}
-
-		foreach ($site->children() as $page) {
-			$page->delete();
-
-			$this->assertFalse($page->exists());
-			$this->assertFalse($site->children()->has($page));
-		}
-
-		$this->assertCount(0, $site->children());
-	}
-
 	public function testDeletePageWithChildrenAndDrafts(): void
 	{
 		$page = Page::create([
@@ -146,6 +172,42 @@ class PageDeleteTest extends ModelTestCase
 		$page->delete(force: true);
 
 		$this->assertFalse($page->exists());
+	}
+
+	public function testDeletePageWithFailingFileDelete(): void
+	{
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'file.delete:before' => function () {
+					throw new Exception('The file could not be deleted');
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		F::write($source = static::TMP . '/source.md', '');
+
+		$page = Page::create([
+			'slug'    => 'test',
+			'content' => ['title' => 'Test']
+		]);
+
+		$file = $page->createFile([
+			'filename' => 'test.md',
+			'source'   => $source
+		]);
+
+		try {
+			$page->delete();
+			$this->fail('The page should not have been deleted');
+		} catch (Exception $e) {
+			$this->assertSame('The file could not be deleted', $e->getMessage());
+		}
+
+		// the page content survives a failure during the deletion
+		$this->assertStringContainsString('Title: Test', F::read($page->root() . '/default.txt'));
+		$this->assertFileExists($file->root());
 	}
 
 	public function testDeletePageWithSortedChildren(): void
@@ -224,67 +286,5 @@ class PageDeleteTest extends ModelTestCase
 		$this->assertFileExists($file->root());
 		$this->assertDirectoryExists($a->root());
 		$this->assertDirectoryExists($b->root());
-	}
-
-	public function testDeletePageWithFailingFileDelete(): void
-	{
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'file.delete:before' => function () {
-					throw new Exception('The file could not be deleted');
-				}
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		F::write($source = static::TMP . '/source.md', '');
-
-		$page = Page::create([
-			'slug'    => 'test',
-			'content' => ['title' => 'Test']
-		]);
-
-		$file = $page->createFile([
-			'filename' => 'test.md',
-			'source'   => $source
-		]);
-
-		try {
-			$page->delete();
-			$this->fail('The page should not have been deleted');
-		} catch (Exception $e) {
-			$this->assertSame('The file could not be deleted', $e->getMessage());
-		}
-
-		// the page content survives a failure during the deletion
-		$this->assertStringContainsString('Title: Test', F::read($page->root() . '/default.txt'));
-		$this->assertFileExists($file->root());
-	}
-
-	public function testDeleteHookWithUUIDAccess(): void
-	{
-		$phpunit = $this;
-		$uuid    = null;
-
-		$this->app = $this->app->clone([
-			'hooks' => [
-				'page.delete:after' => function ($status, Page $page) use ($phpunit, &$uuid) {
-					$phpunit->assertSame($uuid, $page->uuid()->id());
-				}
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page        = Page::create(['slug' => 'test']);
-		$uuid        = $page->uuid()->id();
-		$contentFile = $page->root() . '/default.txt';
-
-		$this->assertFileExists($contentFile);
-
-		$page->delete();
-
-		$this->assertFileDoesNotExist($contentFile);
 	}
 }

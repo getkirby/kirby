@@ -15,8 +15,14 @@
 
 <script>
 /**
- * The dropzone component helps to simplify creating areas, where files can be dropped and uploaded or displayed. You simply wrap it around any other element to create the zone. The dropzone will also create a focus ring around the area when the user drags files over it.
-
+ * The dropzone component helps to simplify creating areas,
+ * where files can be dropped and uploaded or displayed.
+ * You simply wrap it around any other element to create the zone.
+ * The dropzone will also create a focus ring around the area
+ * when the user drags files over it.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {
@@ -52,8 +58,6 @@ export default {
 				return this.reset();
 			}
 
-			this.$events.emit("dropzone.drop");
-
 			this.files = $event.dataTransfer.files;
 			/**
 			 * The drop event is triggered when files are being dropped into the dropzone.
@@ -61,6 +65,7 @@ export default {
 			 * @property {array} files The event receives the files list as argument, which can then be used to start an upload for example.
 			 */
 			this.$emit("drop", this.files);
+			this.$events.emit("dropzone.drop");
 			this.reset();
 		},
 		onEnter($event) {
@@ -96,7 +101,7 @@ export default {
 }
 .k-dropzone[data-over="true"]::after {
 	display: block;
-	background: hsla(var(--color-blue-hs), var(--color-blue-l-300), 0.6);
+	background: hsla(var(--color-blue-hs), var(--color-blue-l-300), 0.65);
 	outline: var(--outline);
 }
 </style>

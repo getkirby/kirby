@@ -1,0 +1,248 @@
+<?php
+
+namespace Kirby\Panel\Controller\View;
+
+use Kirby\Cms\Language;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Content\VersionId;
+use Kirby\Data\Json;
+use Kirby\Data\Yaml;
+use Kirby\Panel\Response\JsonResponse;
+use Kirby\Panel\TestCase;
+use Kirby\Panel\Ui\View;
+use PHPUnit\Framework\Attributes\CoversClass;
+
+class TestModelViewController extends ModelViewController
+{
+	public function title(): string
+	{
+		return 'Foo';
+	}
+}
+
+#[CoversClass(ModelViewController::class)]
+class ModelViewControllerTest extends TestCase
+{
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Controller.View.ModelViewController';
+
+	protected ModelWithContent $model;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'     => 'test',
+						'template' => 'test',
+						'content'  => [
+							'title' => 'Test Page'
+						]
+					]
+				]
+			],
+			'blueprints' => [
+				'pages/test' => [
+					'columns' => [
+						[
+							'width'  => '1/3',
+							'fields' => []
+						],
+						[
+							'width'  => '2/3',
+							'fields' => []
+						]
+					]
+				]
+			]
+		]);
+
+		$this->model = $this->app->page('test');
+		$this->app->impersonate('kirby');
+	}
+
+	public function testBreadcrumb(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$breadcrumb = $controller->breadcrumb();
+		$this->assertSame([], $breadcrumb);
+	}
+
+	public function testComponent(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$this->assertSame('k-page-view', $controller->component());
+	}
+
+	public function testLoad(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$view       = $controller->load();
+		$this->assertInstanceOf(View::class, $view);
+		$this->assertSame('k-page-view', $view->component);
+	}
+
+	public function testModel(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$this->assertSame($this->model, $controller->model());
+	}
+
+	public function testNext(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$next       = $controller->next();
+		$this->assertNull($next);
+	}
+
+	public function testPrev(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$prev       = $controller->prev();
+		$this->assertNull($prev);
+	}
+
+	public function testPropsDropsFakeMarkedKeys(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'columns' => [
+						1 => [
+							'fields' => [
+								'rows' => [
+									'type'   => 'structure',
+									'fields' => [
+										'text' => ['type' => 'text']
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$model = $this->app->page('test');
+		$model->version('latest')->save([
+			'rows' => Yaml::encode([
+				['text' => 'Row', '<text>' => '<b>x</b>']
+			])
+		]);
+
+		$controller = new TestModelViewController($model);
+		$response   = new JsonResponse($controller->props());
+		$versions   = Json::decode($response->body())['response']['versions'];
+
+		// the versions are objects, which the frontend walks as well
+		$this->assertSame([['text' => 'Row']], $versions['latest']['rows']);
+		$this->assertSame([['text' => 'Row']], $versions['changes']['rows']);
+	}
+
+	public function testTab(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$tab        = $controller->tab();
+
+		$this->assertSame('main', $tab['name']);
+
+		// the active tab is sent with all columns
+		$this->assertCount(2, $tab['columns']);
+
+		$this->app = $this->app->clone([
+			'request' => [
+				'query' => [
+					'tab' => 'foo'
+				]
+			]
+		]);
+
+		// fall back to the first tab for an unknown tab name
+		$controller = new TestModelViewController($this->model);
+		$this->assertSame('main', $controller->tab()['name']);
+	}
+
+	public function testTabs(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$tabs       = $controller->tabs();
+
+		$this->assertCount(1, $tabs);
+		$this->assertSame('main', $tabs[0]['name']);
+
+		// the tab bar only needs the reduced props
+		$this->assertSame(
+			['fields', 'icon', 'label', 'link', 'name'],
+			array_keys($tabs[0])
+		);
+	}
+
+	public function testTitle(): void
+	{
+		$controller = new TestModelViewController($this->model);
+		$this->assertSame('Foo', $controller->title());
+	}
+
+	public function testVersions(): void
+	{
+		$this->model->version('latest')->save($latest = [
+			'foo' => 'bar'
+		]);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('bar', $versions['changes']['foo']);
+
+		$this->model->version('changes')->save($changes = [
+			'foo' => 'baz'
+		]);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('baz', $versions['changes']['foo']);
+	}
+
+	public function testVersionsWithEmptyChanges(): void
+	{
+		$this->model->version('latest')->save([
+			'foo' => 'bar'
+		]);
+
+		// a changes version that exists but reads back empty must not
+		// be sent to the Panel as if every field had been cleared
+		$this->model->storage()->create(
+			VersionId::changes(),
+			Language::ensure('default'),
+			[]
+		);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('bar', $versions['changes']['foo']);
+	}
+
+	public function testVersionsWithLockOnlyChanges(): void
+	{
+		$this->model->version('latest')->save([
+			'foo' => 'bar'
+		]);
+
+		$this->model->storage()->create(
+			VersionId::changes(),
+			Language::ensure('default'),
+			['lock' => 'kirby']
+		);
+
+		$controller = new TestModelViewController($this->model);
+		$versions   = $controller->versions();
+		$this->assertSame('bar', $versions['latest']['foo']);
+		$this->assertSame('bar', $versions['changes']['foo']);
+	}
+}

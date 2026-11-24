@@ -10,12 +10,10 @@ use Kirby\Exception\NotFoundException;
  * The VersionRules class handles the validation for all
  * modification actions on a single version
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class VersionRules
@@ -47,11 +45,25 @@ class VersionRules
 		}
 	}
 
+	public static function delete(
+		Version $version,
+		Language $language
+	): void {
+		$lock = $version->lock('*');
+
+		if ($lock->isLocked() === true) {
+			throw new LockedContentException(
+				lock: $lock,
+				key: 'content.lock.delete'
+			);
+		}
+	}
+
 	/**
 	 * Checks if a version/language combination exists and otherwise
 	 * will throw a `NotFoundException`
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the version does not exist
+	 * @throws NotFoundException If the version does not exist
 	 */
 	public static function ensure(Version $version, Language $language): void
 	{
@@ -65,20 +77,6 @@ class VersionRules
 		};
 
 		throw new NotFoundException($message);
-	}
-
-	public static function delete(
-		Version $version,
-		Language $language
-	): void {
-		$lock = $version->lock('*');
-
-		if ($lock->isLocked() === true) {
-			throw new LockedContentException(
-				lock: $lock,
-				key: 'content.lock.delete'
-			);
-		}
 	}
 
 	public static function move(

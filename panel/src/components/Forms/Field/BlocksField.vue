@@ -25,14 +25,11 @@
 					size="xs"
 					@click="$refs.options.toggle()"
 				/>
-				<k-dropdown-content ref="options" :options="options" align-x="end" />
+				<k-dropdown ref="options" :options="options" align-x="end" />
 			</k-button-group>
 		</template>
 
-		<k-input-validator
-			v-bind="{ min, max, required }"
-			:value="JSON.stringify(value)"
-		>
+		<k-validator v-bind="{ min, max, required }" :count="value.length">
 			<k-blocks
 				ref="blocks"
 				v-bind="$props"
@@ -40,7 +37,7 @@
 				@open="opened = $event"
 				@input="$emit('input', $event)"
 			/>
-		</k-input-validator>
+		</k-validator>
 
 		<footer v-if="!disabled && !isEmpty && !isFull && hasFieldsets">
 			<k-button
@@ -58,9 +55,14 @@
 import { props as FieldProps } from "../Field.vue";
 import { props as BlocksProps } from "@/components/Forms/Blocks/Blocks.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [FieldProps, BlocksProps],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			opened: []

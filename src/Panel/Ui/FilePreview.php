@@ -5,15 +5,11 @@ namespace Kirby\Panel\Ui;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Panel\Ui\FilePreviews\DefaultFilePreview;
-use Kirby\Toolkit\I18n;
+use Kirby\Panel\Ui\FilePreview\DefaultFilePreview;
 
 /**
  * Defines a component that implements a file preview
  *
- * @package   Kirby Panel
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
@@ -39,20 +35,20 @@ abstract class FilePreview extends Component
 	{
 		return [
 			[
-				'title' => I18n::translate('template'),
+				'title' => $this->i18n('template'),
 				'text'  => $this->file->template() ?? '—'
 			],
 			[
-				'title' => I18n::translate('mime'),
+				'title' => $this->i18n('mime'),
 				'text'  => $this->file->mime()
 			],
 			[
-				'title' => I18n::translate('url'),
+				'title' => $this->i18n('url'),
 				'link'  => $link = $this->file->previewUrl(),
 				'text'  => $link,
 			],
 			[
-				'title' => I18n::translate('size'),
+				'title' => $this->i18n('size'),
 				'text'  => $this->file->niceSize()
 			],
 		];

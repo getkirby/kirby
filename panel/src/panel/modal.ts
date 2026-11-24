@@ -1,0 +1,322 @@
+import { reactive } from "vue";
+import { isObject } from "@/helpers/object";
+import Feature, {
+	defaults as featureDefaults,
+	type FeatureState
+} from "./feature";
+import History from "@/helpers/history";
+import focus from "@/helpers/focus";
+import { uuid } from "@/helpers/string";
+import { type Listener } from "./listeners";
+import Panel, { type PanelResponseActions } from "./panel";
+
+export type ModalState = FeatureState & {
+	id: string | null;
+	props: Record<string, unknown>;
+};
+
+type ModalSubmitResponse = PanelResponseActions & {
+	emit?: false;
+	route?: PanelResponseActions["redirect"];
+};
+
+/**
+ * Additional default values for modals
+ */
+export function defaults(): ModalState {
+	return {
+		...featureDefaults(),
+		id: null,
+		props: {}
+	};
+}
+
+/**
+ * Submits the modal like its submit button would. The form is
+ * looked up in the portal and not via the event target, because
+ * the focus can be outside of it. Modals without a form are
+ * submitted directly.
+ */
+export function save(panel: Panel, key: "dialog" | "drawer"): void {
+	const forms = document.querySelectorAll<HTMLFormElement>(
+		`.k-${key}-portal form.k-${key}`
+	);
+	// the last form belongs to the topmost modal
+	const form = forms[forms.length - 1];
+
+	if (form === undefined) {
+		panel[key].submit();
+		return;
+	}
+
+	form.requestSubmit();
+}
+
+/**
+ * A modal is a feature that can be opened and closed
+ * and will be placed in the Panel by the matching Modal component.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
+ */
+export default function Modal<T extends ModalState>(
+	panel: Panel,
+	key: string,
+	defaults: T
+) {
+	const parent = Feature(panel, key, defaults);
+
+	return reactive({
+		...parent,
+
+		/**
+		 * Dialogs and drawers can be cancelled. This could
+		 * later be connected with a backend endpoint to
+		 * run an action based on cancellation. Maybe delete an
+		 * entry or something.
+		 */
+		async cancel(): Promise<void> {
+			if (this.isOpen) {
+				this.emit("cancel");
+			}
+
+			this.close();
+		},
+
+		/**
+		 * Closes the modal and goes back to the
+		 * parent one if it has been stored
+		 *
+		 * @param id - Which modal to close, true for all
+		 */
+		async close(id?: string | true): Promise<void> {
+			if (this.isOpen === false) {
+				return;
+			}
+
+			// Compare the modal id to avoid closing the wrong modal.
+			// This is particularly useful in nested modals.
+			if (id !== undefined && id !== true && id !== this.id) {
+				return;
+			}
+
+			if (id === true) {
+				this.history.clear();
+			} else {
+				this.history.removeLast();
+			}
+
+			// store the closed listener
+			const closed = this.on.closed ?? (() => {});
+
+			// history not empty, open previous modal
+			if (this.history.isEmpty() === false) {
+				const previous = this.history.last()!;
+				this.open(previous);
+				closed();
+				return;
+			}
+
+			// no more items in the history,
+			// all modals shall be closed
+			this.isOpen = false;
+			this.emit("close");
+			this.reset();
+			closed();
+		},
+
+		/**
+		 * Set the focus to the first focusable input
+		 * or button in the modal. The input can also
+		 * be set manually.
+		 */
+		focus(input?: string): void {
+			focus(`.k-${this.key()}-portal`, input);
+		},
+
+		goTo(id: string): void {
+			const state = this.history.goto(id);
+
+			if (state !== undefined) {
+				this.open(state);
+			}
+		},
+
+		history: new History<T & { id: string }>(),
+
+		/**
+		 * Form drawers and dialogs can use this
+		 * to update their value property and also
+		 * fire an input event.
+		 */
+		input(value: Record<string, unknown>) {
+			if (this.isOpen === false) {
+				return;
+			}
+
+			this.props.value = value;
+			this.emit("input", value);
+		},
+
+		isOpen: false,
+
+		/**
+		 * Define the default listeners
+		 * for the State component
+		 */
+		listeners(): Record<string, Listener> {
+			return {
+				...this.on,
+				cancel: this.cancel.bind(this),
+				close: this.close.bind(this),
+				input: this.input.bind(this),
+				submit: this.submit.bind(this),
+				success: this.success.bind(this)
+			};
+		},
+
+		/**
+		 * Customized setter for the active state, which
+		 * will make sure to close unwanted notifications
+		 * before a modal is opened. It also sets the
+		 * isOpen state.
+		 */
+		async open(
+			modal: string | URL | Partial<Prettify<T>>,
+			options: Partial<Prettify<T>> | Listener = {}
+		): Promise<Prettify<T>> {
+			// close previous notifications from other
+			// contexts, if the modal wasn't open so far
+			if (this.isOpen === false) {
+				panel.notification.close();
+			}
+
+			// open the modal feature via url or with a state object
+			await parent.open.call(this, modal, options);
+
+			// only mark this as open if a component has been defined
+			if (this.component) {
+				this.isOpen = true;
+			}
+
+			return this.state();
+		},
+
+		/**
+		 * If the feature has a path, it can be reloaded
+		 * with this method to replace the current modal
+		 *
+		 * @example
+		 * panel.dialog.reload();
+		 */
+		async reload(options?: Partial<Prettify<T>>): Promise<Prettify<T> | false> {
+			if (!this.path) {
+				return false;
+			}
+
+			const url = this.url();
+
+			await this.close();
+			return this.open(url, options);
+		},
+
+		/**
+		 * Sets a new active state for the modal
+		 * This is done whenever the state is an object
+		 * and not undefined or null
+		 */
+		set(state: Partial<Prettify<T>>): Prettify<T> {
+			parent.set.call(this, state);
+
+			// create a unique ID for the drawer if it does not have one
+			this.id ??= uuid();
+
+			return this.state();
+		},
+
+		/**
+		 * Custom submitter for the dialog/drawer
+		 * It will automatically close the modal
+		 * if there's no submit listener or backend route.
+		 */
+		async submit(
+			value?: Record<string, unknown>,
+			options: Partial<Prettify<T>> = {}
+		): Promise<unknown> {
+			if (this.isLoading === true) {
+				return;
+			}
+
+			value ??= this.value;
+
+			if (this.hasEventListener("submit")) {
+				return this.emit("submit", value, options);
+			}
+
+			// close the drawer or dialog if there's no submitter
+			// and no connection to the backend
+			if (!this.path) {
+				return this.close();
+			}
+
+			// send a request to the backend
+			const response = await this.post(value, options);
+
+			// the request failed and should have raised an error
+			if (isObject(response) === false) {
+				return response;
+			}
+
+			// Get details from the response object,
+			// i.e. { dialog: { ... } }
+			// pass it forward to the success handler
+			// to react on elements in the response
+			return this.success(response[this.key()] ?? {});
+		},
+
+		/**
+		 * This is rebuilding the previous
+		 * behaviors from the dialog mixin.
+		 * Most of the response handling should
+		 * be redone. But we keep it for compatibility
+		 */
+		success(success: ModalSubmitResponse | string): unknown {
+			if (this.hasEventListener("success")) {
+				return this.emit("success", success);
+			}
+
+			// close the modal
+			this.close();
+
+			if (typeof success === "string") {
+				panel.notification.success(success);
+				return;
+			}
+
+			// dialogs and drawers reload the view unless redirected
+			panel.act({
+				...success,
+				redirect: success.route ?? success.redirect,
+				reload: success.reload ?? true
+			});
+
+			// emit a success event
+			if (success.emit !== false) {
+				panel.events.emit("success", success);
+			}
+
+			return success;
+		},
+
+		/**
+		 * Quick access to the value prop.
+		 * Drawers and dialogs might likely have forms
+		 * so this seems useful.
+		 */
+		get value(): Record<string, unknown> {
+			const value = this.props.value as Record<string, unknown> | undefined;
+			return value ?? {};
+		}
+	});
+}

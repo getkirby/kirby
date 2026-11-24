@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(FilesCollector::class)]
 class FilesCollectorTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Collector.FilesCollector';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Collector.FilesCollector';
 
 	public function setUpFiles()
 	{
@@ -46,6 +46,60 @@ class FilesCollectorTest extends TestCase
 		$this->assertCollectByQuery(FilesCollector::class, 'site.files.template("hero")', ['image-b.jpg', 'image-c.jpg']);
 	}
 
+	public function testCollectByQueryInvalid(): void
+	{
+		$this->setUpFiles();
+		$this->app->impersonate('kirby');
+		$this->assertCollectByQuery(FilesCollector::class, 'site.title', []);
+	}
+
+	public function testCollectByQueryModel(): void
+	{
+		$this->setUpFiles();
+
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug'  => 'a',
+						'files' => [
+							['filename' => 'page-b.jpg', 'content' => ['sort' => 2]],
+							['filename' => 'page-a.jpg', 'content' => ['sort' => 1]]
+						]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'test',
+					'email' => 'test@getkirby.com',
+					'files' => [
+						['filename' => 'avatar.jpg']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$this->assertCollectByQuery(FilesCollector::class, 'site', ['image-a.jpg', 'image-b.jpg', 'image-c.jpg']);
+		$this->assertCollectByQuery(FilesCollector::class, 'kirby.page("a")', ['a/page-a.jpg', 'a/page-b.jpg']);
+		$this->assertCollectByQuery(FilesCollector::class, 'kirby.user("test")', ['test/avatar.jpg']);
+	}
+
+	public function testCollectByQueryOrder(): void
+	{
+		$this->setUpFiles();
+		$this->app->impersonate('kirby');
+
+		$this->app->site()->files()->find('image-c.jpg')->changeSort(1);
+		$this->app->site()->files()->find('image-a.jpg')->changeSort(2);
+		$this->app->site()->files()->find('image-b.jpg')->changeSort(3);
+
+		$this->assertCollectByQuery(FilesCollector::class, 'site.files.flip', ['image-c.jpg', 'image-b.jpg', 'image-a.jpg']);
+		$this->assertCollectByQuery(FilesCollector::class, 'site.files.sorted', ['image-c.jpg', 'image-a.jpg', 'image-b.jpg']);
+	}
+
 	public function testCollectSorted(): void
 	{
 		$this->setUpFiles();
@@ -64,16 +118,16 @@ class FilesCollectorTest extends TestCase
 		$this->assertCollectUnauthenticated(FilesCollector::class);
 	}
 
-	public function testFilterByTemplates(): void
+	public function testFilterByBlueprint(): void
 	{
 		$this->setUpFiles();
 		$this->app->impersonate('kirby');
 
 		$collector = new FilesCollector(
-			template: 'hero'
+			blueprint: 'hero'
 		);
 
-		$this->assertModelsInCollector($collector, ['image-b.jpg', 'image-c.jpg'], );
+		$this->assertModelsInCollector($collector, ['image-b.jpg', 'image-c.jpg']);
 	}
 
 	public function testFlip(): void
@@ -101,25 +155,7 @@ class FilesCollectorTest extends TestCase
 
 	public function testIsSorting(): void
 	{
-		$collector = new FilesCollector();
-
-		// The files collector is always sorting.
-		// Either by the sortBy parameter or by the default sort order.
-		$this->assertTrue($collector->isSorting());
-
-		$collector = new FilesCollector(
-			sortBy: 'filename desc'
-		);
-
-		$this->assertTrue($collector->isSorting());
-
-		// the collector is even sorting when the search is active
-		$collector = new FilesCollector(
-			sortBy: 'filename desc',
-			search: 'test'
-		);
-
-		$this->assertTrue($collector->isSorting());
+		$this->assertIsSorting(FilesCollector::class);
 	}
 
 	public function testModels(): void
@@ -138,8 +174,9 @@ class FilesCollectorTest extends TestCase
 	{
 		$this->setUpFiles();
 		$this->app->impersonate('kirby');
+		// a lower score than image-b.jpg
 		$this->app->site()->files()->find('image-c.jpg')->update([
-			'alt' => 'Searchword'
+			'alt' => 'Searchword and more'
 		]);
 
 		$this->assertSearch(FilesCollector::class, 'Searchword', ['image-c.jpg']);
@@ -154,8 +191,9 @@ class FilesCollectorTest extends TestCase
 			'alt' => 'Searchword'
 		]);
 
+		// a lower score than image-b.jpg
 		$this->app->site()->files()->find('image-c.jpg')->update([
-			'alt' => 'Searchword'
+			'alt' => 'Searchword and more'
 		]);
 
 		// flipping should be ignored for the search
@@ -171,8 +209,9 @@ class FilesCollectorTest extends TestCase
 			'alt' => 'Searchword'
 		]);
 
+		// a lower score than image-b.jpg
 		$this->app->site()->files()->find('image-c.jpg')->update([
-			'alt' => 'Searchword'
+			'alt' => 'Searchword and more'
 		]);
 
 		// the sorting should be ignored for the search

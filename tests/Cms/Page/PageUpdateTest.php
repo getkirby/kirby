@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Page::class)]
 class PageUpdateTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageUpdate';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageUpdate';
 
 	public function assertCorrectlyUpdatedPage(
 		Page $modified,
@@ -24,6 +24,106 @@ class PageUpdateTest extends ModelTestCase
 
 		$this->assertSame($modified, $drafts->find('test'));
 		$this->assertSame($modified, $childrenAndDrafts->find('test'));
+	}
+
+	public function testUpdateFailsForStalePageAfterConcurrentMove(): void
+	{
+		Page::create([
+			'slug' => 'a',
+			'num'  => 1,
+		]);
+
+		Page::create([
+			'slug' => 'b',
+			'num'  => 2,
+		]);
+
+		Page::create([
+			'slug' => 'c',
+			'num'  => 3,
+		]);
+
+		$stalePage = $this->app->site()->find('b')->clone();
+		$freshPage = $this->app->site()->find('b');
+
+		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
+
+		$freshPage = $freshPage->changeSort(3);
+
+		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
+		$this->assertDirectoryExists(static::TMP . '/content/3_b');
+		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The page was moved during a concurrent operation.');
+
+		try {
+			$stalePage->update(['headline' => 'Test']);
+		} finally {
+			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
+			$this->assertDirectoryExists(static::TMP . '/content/3_b');
+			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
+		}
+	}
+
+	public function testUpdateHooks(): void
+	{
+		$phpunit = $this;
+		$calls = 0;
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'page.update:before' => function (Page $page, $values, $strings) use (&$calls, $phpunit) {
+					$calls++;
+					// the value is not updated yet
+					$phpunit->assertSame('foo', $page->category()->value());
+
+					// parent collections are not updated yet
+					$phpunit->assertSame('foo', $page->siblings()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $page->siblings()->pluck('category')[1]->toString());
+					$phpunit->assertSame('foo', $page->parent()->children()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $page->parent()->children()->pluck('category')[1]->toString());
+				},
+				'page.update:after' => function (Page $newPage, Page $oldPage) use (&$calls, $phpunit) {
+					$calls++;
+					// the value should now be updated
+					$phpunit->assertSame('homer', $newPage->category()->value());
+
+					// check if parent collections are updated
+					$phpunit->assertSame('homer', $newPage->siblings()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $newPage->siblings()->pluck('category')[1]->toString());
+					$phpunit->assertSame('homer', $newPage->parent()->children()->pluck('category')[0]->toString());
+					$phpunit->assertSame('bar', $newPage->parent()->children()->pluck('category')[1]->toString());
+				}
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$parent = Page::create([
+			'slug'  => 'test',
+			'draft' => false,
+		]);
+
+		$a = $parent->createChild([
+			'slug'  => 'a',
+			'draft' => false,
+			'content' => [
+				'category' => 'foo'
+			]
+		]);
+
+		$b = $parent->createChild([
+			'slug'  => 'b',
+			'draft' => false,
+			'content' => [
+				'category' => 'bar'
+			]
+		]);
+
+		$a->update(['category' => 'homer']);
+
+		$this->assertSame(2, $calls);
 	}
 
 	public static function languageProvider(): array
@@ -114,6 +214,72 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertIsPage($page, $childrenAndDrafts->find('test'));
 	}
 
+	public function testUpdateInMultiLanguageModeWithSectionOfSameName(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'    => 'Test',
+					'sections' => [
+						'views' => [
+							'type' => 'info',
+							'text' => '{{ page.views }}'
+						],
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$page = $page->update(
+			input: ['views' => '1234'],
+			languageCode: 'en'
+		);
+
+		$page = $page->update(
+			input: ['views' => '5678'],
+			languageCode: 'de'
+		);
+
+		// updating another field in the primary language
+		// must keep the values in both languages
+		$page = $page->update(
+			input: ['text' => 'Text (en)'],
+			languageCode: 'en'
+		);
+
+		$this->assertSame('1234', $page->content('en')->views()->value());
+		$this->assertSame('5678', $page->content('de')->views()->value());
+
+		// updating another field in the secondary language
+		// must keep the values in both languages
+		$page = $page->update(
+			input: ['text' => 'Text (de)'],
+			languageCode: 'de'
+		);
+
+		$this->assertSame('1234', $page->content('en')->views()->value());
+		$this->assertSame('5678', $page->content('de')->views()->value());
+		$this->assertSame('Text (en)', $page->content('en')->text()->value());
+		$this->assertSame('Text (de)', $page->content('de')->text()->value());
+	}
+
 	public function testUpdateInSingleLanguageMode(): void
 	{
 		$page = Page::create([
@@ -129,64 +295,43 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertCorrectlyUpdatedPage($modified, $page, $drafts, $childrenAndDrafts);
 	}
 
-	public function testUpdateHooks(): void
+	public function testUpdateWithArrayBasedPluginField(): void
 	{
-		$phpunit = $this;
-		$calls = 0;
-
 		$this->app = $this->app->clone([
-			'hooks' => [
-				'page.update:before' => function (Page $page, $values, $strings) use (&$calls, $phpunit) {
-					$calls++;
-					// the value is not updated yet
-					$phpunit->assertSame('foo', $page->category()->value());
-
-					// parent collections are not updated yet
-					$phpunit->assertSame('foo', $page->siblings()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $page->siblings()->pluck('category')[1]->toString());
-					$phpunit->assertSame('foo', $page->parent()->children()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $page->parent()->children()->pluck('category')[1]->toString());
-				},
-				'page.update:after' => function (Page $newPage, Page $oldPage) use (&$calls, $phpunit) {
-					$calls++;
-					// the value should now be updated
-					$phpunit->assertSame('homer', $newPage->category()->value());
-
-					// check if parent collections are updated
-					$phpunit->assertSame('homer', $newPage->siblings()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $newPage->siblings()->pluck('category')[1]->toString());
-					$phpunit->assertSame('homer', $newPage->parent()->children()->pluck('category')[0]->toString());
-					$phpunit->assertSame('bar', $newPage->parent()->children()->pluck('category')[1]->toString());
-				}
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'location' => ['type' => 'test-array-based'],
+						'text'     => ['type' => 'text']
+					]
+				]
+			],
+			// array-based definitions have been removed in Kirby 6
+			// and are replaced with an error field without a value
+			'fields' => [
+				'test-array-based' => [
+					'props' => [
+						'value' => fn (string|null $value = null) => $value
+					]
+				]
 			]
 		]);
 
 		$this->app->impersonate('kirby');
 
-		$parent = Page::create([
-			'slug'  => 'test',
-			'draft' => false,
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['location' => 'Neckargemünd']
 		]);
 
-		$a = $parent->createChild([
-			'slug'  => 'a',
-			'draft' => false,
-			'content' => [
-				'category' => 'foo'
-			]
-		]);
+		$this->assertSame('Neckargemünd', $page->location()->value());
 
-		$b = $parent->createChild([
-			'slug'  => 'b',
-			'draft' => false,
-			'content' => [
-				'category' => 'bar'
-			]
-		]);
+		// updating another field must keep the value
+		$modified = $page->update(['text' => 'Test']);
 
-		$a->update(['category' => 'homer']);
-
-		$this->assertSame(2, $calls);
+		$this->assertSame('Neckargemünd', $modified->location()->value());
+		$this->assertSame('Test', $modified->text()->value());
 	}
 
 	public function testUpdateWithDateBasedNumbering(): void
@@ -216,6 +361,64 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertSame(20161121, $modified->num());
 	}
 
+	public function testUpdateWithEmptyNumberInSecondaryLanguage(): void
+	{
+		$this->setupMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'number' => ['type' => 'number'],
+						'range'  => ['type' => 'range']
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test'
+		]);
+
+		$page = $page->update(['number' => 1, 'range' => 2], 'en');
+		$page = $page->update(['number' => 3, 'range' => 4], 'de');
+		$page = $page->update(['number' => '', 'range' => null], 'de');
+
+		$this->assertSame('', $page->content('de')->number()->value());
+		$this->assertSame('', $page->content('de')->range()->value());
+	}
+
+	public function testUpdateWithListFieldErrors(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'text'  => ['type' => 'text'],
+						'pages' => ['type' => 'pagelist', 'min' => 1],
+						'files' => ['type' => 'filelist', 'min' => 1]
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'test', 'template' => 'test']
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test')->update(['text' => 'Test'], validate: true);
+
+		$this->assertSame('Test', $page->text()->value());
+		$this->assertArrayHasKey('pages', $page->errors());
+		$this->assertArrayHasKey('files', $page->errors());
+	}
+
 	public function testUpdateWithNullValue(): void
 	{
 		$page = Page::create([
@@ -232,44 +435,90 @@ class PageUpdateTest extends ModelTestCase
 		$this->assertNull($updated->test()->value());
 	}
 
-	public function testUpdateFailsForStalePageAfterConcurrentMove(): void
+	public function testUpdateWithSectionBeforeFieldOfSameName(): void
 	{
-		Page::create([
-			'slug' => 'a',
-			'num'  => 1,
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'    => 'Test',
+					'sections' => [
+						'tags' => [
+							'type' => 'info',
+							'text' => '{{ page.tags }}'
+						],
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'tags' => [
+									'type' => 'tags'
+								],
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['tags' => 'a, b']
 		]);
 
-		Page::create([
-			'slug' => 'b',
-			'num'  => 2,
-		]);
+		$this->assertSame('a, b', $page->tags()->value());
 
-		Page::create([
-			'slug' => 'c',
-			'num'  => 3,
-		]);
+		$modified = $page->update(['text' => 'Test']);
 
-		$stalePage = $this->app->site()->find('b')->clone();
-		$freshPage = $this->app->site()->find('b');
-
-		$this->assertSame(static::TMP . '/content/2_b', $stalePage->root());
-
-		$freshPage = $freshPage->changeSort(3);
-
-		$this->assertSame(static::TMP . '/content/3_b', $freshPage->root());
-		$this->assertDirectoryExists(static::TMP . '/content/3_b');
-		$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
-
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('The page was moved during a concurrent operation.');
-
-		try {
-			$stalePage->update(['headline' => 'Test']);
-		} finally {
-			$this->assertDirectoryDoesNotExist(static::TMP . '/content/2_b');
-			$this->assertDirectoryExists(static::TMP . '/content/3_b');
-			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/default.txt');
-		}
+		$this->assertSame('a, b', $modified->tags()->value());
+		$this->assertSame('Test', $modified->text()->value());
 	}
 
+	public function testUpdateWithSectionOfSameName(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'title'    => 'Test',
+					'sections' => [
+						'views' => [
+							'type' => 'info',
+							'text' => '{{ page.views }}'
+						],
+						'content' => [
+							'type'   => 'fields',
+							'fields' => [
+								'text' => [
+									'type' => 'text'
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$page = Page::create([
+			'slug'     => 'test',
+			'template' => 'test',
+			'content'  => ['views' => '1234']
+		]);
+
+		$this->assertSame('1234', $page->views()->value());
+
+		// updating another field must keep the value
+		$modified = $page->update(['text' => 'Test']);
+
+		$this->assertSame('1234', $modified->views()->value());
+		$this->assertSame('Test', $modified->text()->value());
+
+		// the value can be updated directly
+		$modified = $modified->update(['views' => '1235']);
+
+		$this->assertSame('1235', $modified->views()->value());
+	}
 }

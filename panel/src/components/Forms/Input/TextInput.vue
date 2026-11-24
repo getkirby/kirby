@@ -2,6 +2,7 @@
 	<k-string-input
 		v-bind="$props"
 		:class="['k-text-input', $attrs.class]"
+		:style="$attrs.style"
 		type="text"
 		@input="$emit('input', $event)"
 	/>
@@ -15,9 +16,14 @@ export const props = {
 };
 
 /**
- * @example <k-text-input :value="text" @input="text = $event" name="text" />
+ * @example
+ * <k-text-input :value="text" @input="text = $event" name="text" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

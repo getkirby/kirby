@@ -2,21 +2,20 @@
 
 namespace Kirby\Panel\Ui;
 
+use Kirby\Cms\HasStringTemplate;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Url;
-use Kirby\Toolkit\I18n;
 
 /**
- * @package   Kirby Panel
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.1.0
  */
 class Stat extends Component
 {
+	use HasStringTemplate;
+
 	public function __construct(
 		public array|string $label,
 		public array|string $value,
@@ -33,16 +32,12 @@ class Stat extends Component
 
 	public function dialog(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->dialog)
-		);
+		return $this->stringTemplate($this->dialog, safe: false);
 	}
 
 	public function drawer(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->drawer)
-		);
+		return $this->stringTemplate($this->drawer, safe: false);
 	}
 
 	public static function from(
@@ -68,34 +63,36 @@ class Stat extends Component
 
 	public function icon(): string|null
 	{
-		return $this->stringTemplate($this->icon);
+		return $this->stringTemplate($this->icon, safe: false);
 	}
 
 	public function info(): string|null
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->info)
-		);
+		return $this->stringTemplateI18n($this->info, safe: false);
 	}
 
 	public function label(): string
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->label)
-		);
+		return $this->stringTemplateI18n($this->label, safe: false);
 	}
 
 	public function link(): string|null
 	{
-		$link = $this->stringTemplate(
-			$this->i18n($this->link)
-		);
+		$link = $this->stringTemplate($this->link, safe: false);
 
 		if (Url::hasDangerousScheme($link) === true) {
 			return null;
 		}
 
 		return $link;
+	}
+
+	/**
+	 * @since 6.0.0
+	 */
+	public function model(): ModelWithContent|null
+	{
+		return $this->model;
 	}
 
 	public function props(): array
@@ -112,37 +109,13 @@ class Stat extends Component
 		];
 	}
 
-	protected function stringTemplate(string|null $string = null): string|null
-	{
-		if ($this->model === null) {
-			return $string;
-		}
-
-		if ($string !== null) {
-			return $this->model->toString($string);
-		}
-
-		return null;
-	}
-
 	public function theme(): string|null
 	{
-		return $this->stringTemplate($this->theme);
-	}
-
-	protected function i18n(string|array|null $param = null): string|null
-	{
-		if ($param === null) {
-			return null;
-		}
-
-		return I18n::translate($param, $param);
+		return $this->stringTemplate($this->theme, safe: false);
 	}
 
 	public function value(): string
 	{
-		return $this->stringTemplate(
-			$this->i18n($this->value)
-		);
+		return $this->stringTemplateI18n($this->value, safe: false);
 	}
 }

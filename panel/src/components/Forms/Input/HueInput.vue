@@ -1,9 +1,10 @@
 <template>
 	<k-range-input
 		v-bind="$props"
+		:class="['k-hue-input', $attrs.class]"
 		:min="0"
 		:max="360"
-		class="k-hue-input"
+		:style="$attrs.style"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -31,11 +32,16 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
- * @example <k-hue-input :value="value" @input="value = $event" />
+ * @example
+ * <k-hue-input :value="value" @input="value = $event" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
-	mixins: [Input, props]
+	mixins: [Input, props],
+	emits: ["input"]
 };
 </script>
 

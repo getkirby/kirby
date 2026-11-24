@@ -11,8 +11,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(PHP::class)]
 class PHPTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/php';
-	public const TMP      = KIRBY_TMP_DIR . '/Data.PHP';
+	public const string FIXTURES = __DIR__ . '/fixtures/php';
+	public const string TMP      = KIRBY_TMP_DIR . '/Data.PHP';
+
+	public function testDecode(): void
+	{
+		$this->expectException(BadMethodCallException::class);
+		$this->expectExceptionMessage('The PHP::decode() method is not implemented');
+
+		$input  = include static::FIXTURES . '/input.php';
+		$result = PHP::decode($input);
+	}
 
 	public function testEncode(): void
 	{
@@ -25,15 +34,6 @@ class PHPTest extends TestCase
 		// scalar values
 		$this->assertSame("'test'", PHP::encode('test'));
 		$this->assertSame('123', PHP::encode(123));
-	}
-
-	public function testDecode(): void
-	{
-		$this->expectException(BadMethodCallException::class);
-		$this->expectExceptionMessage('The PHP::decode() method is not implemented');
-
-		$input  = include static::FIXTURES . '/input.php';
-		$result = PHP::decode($input);
 	}
 
 	public function testRead(): void

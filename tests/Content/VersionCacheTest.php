@@ -44,65 +44,6 @@ class VersionCacheTest extends TestCase
 		$this->assertNull(VersionCache::get($version, $language));
 	}
 
-	public function testGetSetAndRemoveWithDifferentModels(): void
-	{
-		$page = new Page(['slug' => 'test1']);
-		$file = new File(['filename' => 'test2.jpg', 'parent' => $page]);
-
-		$versionPage = $page->version();
-		$versionFile = $file->version();
-
-		$language = Language::ensure();
-
-		$this->assertNull(VersionCache::get($versionPage, $language));
-		$this->assertNull(VersionCache::get($versionFile, $language));
-
-		VersionCache::set($versionPage, $language, $fieldsPage = [
-			'foo' => 'bar'
-		]);
-
-		VersionCache::set($versionFile, $language, $fieldsFile = [
-			'foo' => 'baz'
-		]);
-
-		$this->assertSame($fieldsPage, VersionCache::get($versionPage, $language));
-		$this->assertSame($fieldsFile, VersionCache::get($versionFile, $language));
-
-		VersionCache::remove($versionPage, $language);
-
-		$this->assertNull(VersionCache::get($versionPage, $language));
-		$this->assertSame($fieldsFile, VersionCache::get($versionFile, $language));
-
-		VersionCache::remove($versionFile, $language);
-
-		$this->assertNull(VersionCache::get($versionPage, $language));
-		$this->assertNull(VersionCache::get($versionFile, $language));
-	}
-
-	public function testGetSetAndRemoveWithDifferentStorage(): void
-	{
-		$model    = new Page(['slug' => 'test']);
-		$version  = $model->version();
-		$language = Language::ensure();
-		$fields   = [
-			'foo' => 'bar'
-		];
-
-		$this->assertNull(VersionCache::get($version, $language));
-
-		VersionCache::set($version, $language, $fields);
-
-		$this->assertSame($fields, VersionCache::get($version, $language));
-
-		$model->changeStorage(MemoryStorage::class);
-
-		$this->assertSame($fields, VersionCache::get($version, $language));
-
-		VersionCache::remove($version, $language);
-
-		$this->assertNull(VersionCache::get($version, $language));
-	}
-
 	public function testGetSetAndRemoveWithClonedModel(): void
 	{
 		$model    = new Page(['slug' => 'test']);
@@ -164,6 +105,65 @@ class VersionCacheTest extends TestCase
 
 		$this->assertNull(VersionCache::get($version, $en));
 		$this->assertNull(VersionCache::get($version, $de));
+	}
+
+	public function testGetSetAndRemoveWithDifferentModels(): void
+	{
+		$page = new Page(['slug' => 'test1']);
+		$file = new File(['filename' => 'test2.jpg', 'parent' => $page]);
+
+		$versionPage = $page->version();
+		$versionFile = $file->version();
+
+		$language = Language::ensure();
+
+		$this->assertNull(VersionCache::get($versionPage, $language));
+		$this->assertNull(VersionCache::get($versionFile, $language));
+
+		VersionCache::set($versionPage, $language, $fieldsPage = [
+			'foo' => 'bar'
+		]);
+
+		VersionCache::set($versionFile, $language, $fieldsFile = [
+			'foo' => 'baz'
+		]);
+
+		$this->assertSame($fieldsPage, VersionCache::get($versionPage, $language));
+		$this->assertSame($fieldsFile, VersionCache::get($versionFile, $language));
+
+		VersionCache::remove($versionPage, $language);
+
+		$this->assertNull(VersionCache::get($versionPage, $language));
+		$this->assertSame($fieldsFile, VersionCache::get($versionFile, $language));
+
+		VersionCache::remove($versionFile, $language);
+
+		$this->assertNull(VersionCache::get($versionPage, $language));
+		$this->assertNull(VersionCache::get($versionFile, $language));
+	}
+
+	public function testGetSetAndRemoveWithDifferentStorage(): void
+	{
+		$model    = new Page(['slug' => 'test']);
+		$version  = $model->version();
+		$language = Language::ensure();
+		$fields   = [
+			'foo' => 'bar'
+		];
+
+		$this->assertNull(VersionCache::get($version, $language));
+
+		VersionCache::set($version, $language, $fields);
+
+		$this->assertSame($fields, VersionCache::get($version, $language));
+
+		$model->changeStorage(MemoryStorage::class);
+
+		$this->assertSame($fields, VersionCache::get($version, $language));
+
+		VersionCache::remove($version, $language);
+
+		$this->assertNull(VersionCache::get($version, $language));
 	}
 
 	public function testGetSetAndRemoveWithDifferentVersions(): void

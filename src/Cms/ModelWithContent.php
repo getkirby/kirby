@@ -3,6 +3,8 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\PageBlueprint;
 use Kirby\Content\Content;
 use Kirby\Content\ImmutableMemoryStorage;
 use Kirby\Content\Lock;
@@ -15,27 +17,25 @@ use Kirby\Content\Version;
 use Kirby\Content\VersionId;
 use Kirby\Content\Versions;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Fields;
 use Kirby\Form\Form;
-use Kirby\Panel\Model;
+use Kirby\Panel\Model as PanelModel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\BlockCollectionAccess;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 use Kirby\Uuid\Identifiable;
 use Kirby\Uuid\Uuid;
-use Stringable;
 use Throwable;
 
 /**
  * ModelWithContent
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-abstract class ModelWithContent implements Identifiable, Stringable
+abstract class ModelWithContent extends Model implements Identifiable
 {
 	/**
 	 * Each model must define a CLASS_ALIAS
@@ -43,22 +43,24 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * The CLASS_ALIAS is a short human-readable
 	 * version of the class name, i.e. page.
 	 */
-	public const CLASS_ALIAS = null;
+	public const string|null CLASS_ALIAS = null;
+
+	public static App|null $kirby = null;
 
 	/**
 	 * Cached array of valid blueprints
 	 * that could be used for the model
+	 *
+	 * @var list<array<string, mixed>>|null
 	 */
 	public array|null $blueprints = null;
 
-	public static App $kirby;
-	protected Site|null $site;
-	protected Storage $storage;
-
 	/**
-	 * Store values used to initilaize object
+	 * Store values used to initialize object
 	 */
 	protected array $propertyData = [];
+	protected Site|null $site;
+	protected Storage|null $storage = null;
 
 	public function __construct(array $props = [])
 	{
@@ -71,40 +73,71 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * Makes it possible to convert the entire model
+	 * to a string. Mostly useful for debugging
+	 */
+	public function __toString(): string
+	{
+		return (string)$this->id();
+	}
+
+	/**
+	 * Returns the url to the api endpoint
+	 */
+	abstract public function apiUrl(bool $relative = false): string;
+
+	/**
 	 * Returns the blueprint of the model
 	 */
 	abstract public function blueprint(): Blueprint;
 
 	/**
 	 * Returns an array with all blueprints that are available
+	 *
+	 * @return list<array<string, mixed>>
 	 */
-	public function blueprints(string|null $inSection = null): array
+	public function blueprints(string|null $inField = null): array
 	{
-		// helper function
-		$toBlueprints = static function (array $sections): array {
-			$blueprints = [];
-
-			foreach ($sections as $section) {
-				if ($section === null) {
-					continue;
-				}
-
-				foreach ((array)$section->blueprints() as $blueprint) {
-					$blueprints[$blueprint['name']] = $blueprint;
-				}
-			}
-
-			return array_values($blueprints);
-		};
-
-		$blueprint = $this->blueprint();
-
-		// no caching for when collecting for specific section
-		if ($inSection !== null) {
-			return $toBlueprints([$blueprint->section($inSection)]);
+		// no caching for when collecting for a specific field
+		if ($inField === null && $this->blueprints !== null) {
+			return $this->blueprints;
 		}
 
-		return $this->blueprints ??= $toBlueprints($blueprint->sections());
+		$names      = $this->blueprint()->acceptRules()->pageBlueprints($inField);
+		$blueprints = [];
+
+		foreach ($names as $name) {
+			// the full blueprint, so that a title inherited
+			// through `extends` is taken into account
+			try {
+				$blueprint = PageBlueprint::factory($this, 'pages/' . $name);
+			} catch (Throwable) {
+				$blueprint = null;
+			}
+
+			// a blueprint that cannot be loaded or
+			// created still needs an entry by its name
+			$blueprint = match ($blueprint) {
+				null    => [
+					'name'  => basename($name),
+					'title' => ucfirst($name),
+				],
+				default => [
+					'name'  => basename($blueprint->name()),
+					'title' => $blueprint->title(),
+				]
+			};
+
+			$blueprints[$blueprint['name']] = $blueprint;
+		}
+
+		$blueprints = array_values($blueprints);
+
+		if ($inField !== null) {
+			return $blueprints;
+		}
+
+		return $this->blueprints = $blueprints;
 	}
 
 	/**
@@ -169,7 +202,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Returns the content
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
+	 * @throws NotFoundException If the language for the given code does not exist
 	 */
 	public function content(string|null $languageCode = null): Content
 	{
@@ -189,6 +222,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Prepares the content that should be written
 	 * to the text file
 	 * @unstable
+	 *
+	 * @param array<string, mixed> $data
+	 * @return array<string, mixed>
 	 */
 	public function contentFileData(
 		array $data,
@@ -316,6 +352,9 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * converting all of them to their storable values
 	 *
 	 * @since 5.6.0
+	 *
+	 * @param array<string, mixed> $content
+	 * @return array<string, mixed>
 	 */
 	public function createContent(array $content = []): array
 	{
@@ -325,19 +364,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			->fill($fields->defaults())
 			->fill($content)
 			->toStoredValues();
-	}
-
-	/**
-	 * Creates default content for the model, by using our
-	 * Form class to generate the defaults, based on the
-	 * model's blueprint setup.
-	 *
-	 * @since 5.0.0
-	 * @deprecated 5.6.0 Use `::createContent()` instead
-	 */
-	public function createDefaultContent(): array
-	{
-		return $this->createContent();
 	}
 
 	/**
@@ -392,13 +418,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 */
 	public function errors(): array
 	{
-		$errors = [];
-
-		foreach ($this->blueprint()->sections() as $section) {
-			$errors = [...$errors, ...$section->errors()];
-		}
-
-		return $errors;
+		return Form::for($this)->errors();
 	}
 
 	/**
@@ -410,7 +430,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	{
 		$clone = $this->clone();
 
-		foreach (get_object_vars($clone) as $name => $default) {
+		foreach (array_keys(get_object_vars($clone)) as $name) {
 			if (method_exists($clone, $name) === true) {
 				$clone->$name();
 			}
@@ -446,15 +466,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
-	 * Checks if the model is locked for the current user
-	 * @deprecated 5.0.0 Use `->lock()->isLocked()` instead
-	 */
-	public function isLocked(): bool
-	{
-		return $this->lock()->isLocked() === true;
-	}
-
-	/**
 	 * Checks if the data has any errors
 	 */
 	public function isValid(): bool
@@ -482,7 +493,7 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	 * Returns the panel info of the model
 	 * @since 3.6.0
 	 */
-	abstract public function panel(): Model;
+	abstract public function panel(): PanelModel;
 
 	/**
 	 * Must return the permissions object for the model
@@ -502,6 +513,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 
 	/**
 	 * Creates a string query, starting from the model
+	 *
+	 * @param class-string|null $expect Class the result must be an instance of
 	 */
 	public function query(
 		string|null $query = null,
@@ -527,17 +540,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Read the content from the content file
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->read()` instead
-	 */
-	public function readContent(string|null $languageCode = null): array
-	{
-		Helpers::deprecated('$model->readContent() is deprecated. Use $model->version()->read() instead.', 'model-content-file'); // @codeCoverageIgnore
-		return $this->version()->read($languageCode ?? 'default') ?? [];
 	}
 
 	/**
@@ -581,29 +583,6 @@ abstract class ModelWithContent implements Identifiable, Stringable
 		);
 
 		return $clone;
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveContent(
-		array|null $data = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveContent() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, 'default', $overwrite);
-	}
-
-	/**
-	 * @deprecated 5.0.0 Use $model->save() instead
-	 */
-	protected function saveTranslation(
-		array|null $data = null,
-		string|null $languageCode = null,
-		bool $overwrite = false
-	): static {
-		Helpers::deprecated('$model->saveTranslation() is deprecated. Use $model->save() instead.', 'model-content-file');
-		return $this->save($data, $languageCode ?? 'default', $overwrite);
 	}
 
 	/**
@@ -673,12 +652,33 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	}
 
 	/**
+	 * String template builder with automatic HTML escaping,
+	 * marking the result as trusted HTML for the Panel.
+	 * Use this over `toSafeString()` whenever the result is
+	 * rendered as HTML rather than used as plain text.
+	 * @since 6.0.0
+	 *
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
+	 */
+	public function toSafeHtmlString(
+		string|null $template = null,
+		array $data = [],
+		string|null $fallback = ''
+	): HtmlString {
+		return new HtmlString(
+			$this->toSafeString($template, $data, $fallback)
+		);
+	}
+
+	/**
 	 * String template builder with automatic HTML escaping
 	 * @since 3.6.0
 	 *
-	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
-	 *                              (`null` to keep the original token)
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
 	 */
 	public function toSafeString(
 		string|null $template = null,
@@ -691,10 +691,10 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * String template builder
 	 *
-	 * @param string|null $template Template string or `null` to use the model ID
-	 * @param string|null $fallback Fallback for tokens in the template that cannot be replaced
-	 *                              (`null` to keep the original token)
-	 * @param string $handler For internal use
+	 * @param $template Template string or `null` to use the model ID
+	 * @param $fallback Fallback for tokens in the template that cannot be replaced
+	 *                 (`null` to keep the original token)
+	 * @param $handler For internal use
 	 */
 	public function toString(
 		string|null $template = null,
@@ -710,30 +710,19 @@ abstract class ModelWithContent implements Identifiable, Stringable
 			throw new InvalidArgumentException(message: 'Invalid toString handler'); // @codeCoverageIgnore
 		}
 
-		$result = Str::$handler($template, array_replace([
+		return Str::$handler($template, array_replace([
 			'kirby'             => $this->kirby(),
 			'site'              => $this instanceof Site ? $this : $this->site(),
 			'model'             => $this,
 			static::CLASS_ALIAS => $this,
 		], $data), ['fallback' => $fallback]);
-
-		return $result;
-	}
-
-	/**
-	 * Makes it possible to convert the entire model
-	 * to a string. Mostly useful for debugging
-	 */
-	public function __toString(): string
-	{
-		return (string)$this->id();
 	}
 
 	/**
 	 * Returns a single translation by language code
 	 * If no code is specified the current translation is returned
 	 *
-	 * @throws \Kirby\Exception\NotFoundException If the language does not exist
+	 * @throws NotFoundException If the language does not exist
 	 */
 	public function translation(
 		string|null $languageCode = null
@@ -761,7 +750,8 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	/**
 	 * Updates the model data
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
+	 * @param array<string, mixed>|null $input
+	 * @throws InvalidArgumentException If the input array contains invalid values
 	 */
 	#[BlockCollectionAccess]
 	public function update(
@@ -824,19 +814,5 @@ abstract class ModelWithContent implements Identifiable, Stringable
 	public function versions(): Versions
 	{
 		return Versions::load($this);
-	}
-
-	/**
-	 * Low level data writer method
-	 * to store the given data on disk or anywhere else
-	 * @internal
-	 * @deprecated 5.0.0 Use `->version()->save()` instead
-	 */
-	#[BlockCollectionAccess]
-	public function writeContent(array $data, string|null $languageCode = null): bool
-	{
-		Helpers::deprecated('$model->writeContent() is deprecated. Use $model->version()->save() instead.', 'model-content-file'); // @codeCoverageIgnore
-		$this->version()->save($data, $languageCode ?? 'default', true);
-		return true;
 	}
 }

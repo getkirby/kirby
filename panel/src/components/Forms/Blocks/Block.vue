@@ -36,7 +36,7 @@
 		</div>
 
 		<k-block-options
-			v-if="!isDisabled"
+			v-if="isLastSelected && !isDisabled"
 			ref="options"
 			v-bind="{
 				isBatched,
@@ -55,6 +55,10 @@
 import { props as BlockProps } from "./Types/Default.vue";
 import { props as BlockOptionsProps } from "./BlockOptions.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [BlockProps, BlockOptionsProps],
 	inheritAttrs: false,
@@ -206,7 +210,6 @@ export default {
 
 			for (const [tabName, tab] of Object.entries(tabs)) {
 				for (const [fieldName] of Object.entries(tab.fields ?? {})) {
-					tabs[tabName].fields[fieldName].section = this.name;
 					tabs[tabName].fields[fieldName].endpoints = {
 						field:
 							this.endpoints.field +
@@ -214,7 +217,6 @@ export default {
 							this.type +
 							"/fields/" +
 							fieldName,
-						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
 				}
@@ -333,8 +335,8 @@ export default {
 				props: {
 					hidden: this.isHidden,
 					icon: this.fieldset.icon ?? "box",
-					next: this.next,
-					prev: this.prev,
+					next: Boolean(this.next),
+					prev: Boolean(this.prev),
 					tabs: this.tabs,
 					title: this.fieldset.name,
 					value: this.content
@@ -402,14 +404,10 @@ export default {
 }
 
 .k-block-container .k-block-options {
-	display: none;
 	position: absolute;
 	top: 0;
 	inset-inline-end: var(--spacing-3);
 	margin-top: calc(-1.75rem + 2px);
-}
-.k-block-container[data-last-selected="true"] > .k-block-options {
-	display: flex;
 }
 .k-block-container[data-hidden="true"] .k-block {
 	opacity: 0.25;

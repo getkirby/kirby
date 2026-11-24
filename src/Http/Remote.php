@@ -11,20 +11,19 @@ use Kirby\Toolkit\Str;
 use stdClass;
 
 /**
- * A handy little class to handle
- * all kinds of remote requests
+ * A handy little class to handle all kinds of remote requests
  *
- * @package   Kirby Http
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Remote
 {
-	public const CA_INTERNAL = 1;
-	public const CA_SYSTEM   = 2;
+	public const int CA_INTERNAL = 1;
+	public const int CA_SYSTEM   = 2;
 
+	/**
+	 * @var array<string, mixed>
+	 */
 	public static array $defaults = [
 		'agent'     => null,
 		'basicAuth' => null,
@@ -36,6 +35,8 @@ class Remote
 		'headers'   => [],
 		'method'    => 'GET',
 		'progress'  => null,
+		'protocols' => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+		'safe'      => false,
 		'test'      => false,
 		'timeout'   => 10,
 	];
@@ -49,7 +50,7 @@ class Remote
 	public array $info = [];
 
 	/**
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public function __construct(
 		string $url,
@@ -68,8 +69,10 @@ class Remote
 
 		// update the defaults with App config if set;
 		// request the App instance lazily
-		if ($app = App::instance(null, true)) {
-			$defaults = [...$defaults, ...$app->option('remote', [])];
+		if ($app = App::instance(lazy: true)) {
+			/** @var array $remote */
+			$remote   = $app->option('remote', []);
+			$defaults = [...$defaults, ...$remote];
 		}
 
 		// set all options, incl. url
@@ -92,12 +95,15 @@ class Remote
 		string $method,
 		array $arguments = []
 	): static {
+		/** @var string $url */
+		$url = $arguments[0];
+
+		/** @var array $options */
+		$options = $arguments[1] ?? [];
+
 		return new static(
-			url:     $arguments[0],
-			options: [
-				'method' => strtoupper($method),
-				...$arguments[1] ?? []
-			]
+			url: $url,
+			options: ['method' => strtoupper($method), ...$options]
 		);
 	}
 
@@ -121,7 +127,7 @@ class Remote
 	 * Sets up all curl options and sends the request
 	 *
 	 * @return $this
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public function fetch(): static
 	{
@@ -135,6 +141,8 @@ class Remote
 			CURLOPT_RETURNTRANSFER   => $this->options['body'],
 			CURLOPT_FOLLOWLOCATION   => true,
 			CURLOPT_MAXREDIRS        => 10,
+			CURLOPT_PROTOCOLS        => $this->options['protocols'],
+			CURLOPT_REDIR_PROTOCOLS  => $this->options['protocols'],
 			CURLOPT_HEADER           => false,
 			CURLOPT_HEADERFUNCTION   => function ($curl, $header): int {
 				$parts = Str::split($header, ':');
@@ -184,6 +192,7 @@ class Remote
 		if (empty($this->options['headers']) === false) {
 			// convert associative arrays to strings
 			$headers = [];
+
 			foreach ($this->options['headers'] as $key => $value) {
 				if (is_string($key) === true) {
 					$value = $key . ': ' . $value;
@@ -239,6 +248,11 @@ class Remote
 				break;
 		}
 
+		// SSRF protection
+		if ($this->options['safe'] === true) {
+			$this->guard();
+		}
+
 		if ($this->options['test'] === true) {
 			return $this;
 		}
@@ -253,7 +267,7 @@ class Remote
 		$this->errorCode    = curl_errno($this->curl);
 		$this->errorMessage = curl_error($this->curl);
 
-		if ($this->errorCode) {
+		if ($this->errorCode !== 0) {
 			throw new Exception($this->errorMessage, $this->errorCode);
 		}
 
@@ -263,7 +277,7 @@ class Remote
 	/**
 	 * Static method to send a GET request
 	 *
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public static function get(string $url, array $params = []): static
 	{
@@ -289,7 +303,73 @@ class Remote
 	}
 
 	/**
+	 * Rejects the request for the `safe` option if the host is
+	 * not ASCII or resolves to a private or reserved address
+	 * @since 6.0.0
+	 *
+	 * @throws InvalidArgumentException when the URL is not allowed
+	 */
+	protected function guard(): void
+	{
+		$parts = parse_url($this->options['url']);
+		$host  = $parts['host'] ?? '';
+
+		if ($host === '') {
+			throw new InvalidArgumentException(
+				message: 'The "safe" option can only be used with an absolute URL'
+			);
+		}
+
+		$host = trim($host, '[]');
+
+		// curl converts a non-ASCII host with its own IDN engine, which
+		// can yield a different name than ours
+		if (mb_detect_encoding($host, 'ASCII', true) === false) {
+			throw new InvalidArgumentException(
+				message: 'The non-ASCII URL "' . $this->options['url'] . '" is not allowed in safe mode'
+			);
+		}
+
+		$host      = Idn::encode($host) ?: $host;
+		$addresses = $this->resolveHost($host);
+
+		foreach ($addresses as $address) {
+			$public = filter_var(
+				$address,
+				FILTER_VALIDATE_IP,
+				FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+			);
+
+			if ($public === false) {
+				throw new InvalidArgumentException(
+					message: 'The URL "' . $this->options['url'] . '" is not allowed in safe mode'
+				);
+			}
+		}
+
+		// a redirect target cannot be validated before the request
+		$this->curlopt[CURLOPT_FOLLOWLOCATION] = false;
+
+		// an IP address has nothing to pin
+		if ($addresses === [$host]) {
+			return;
+		}
+
+		$scheme = strtolower($parts['scheme'] ?? 'http');
+		$port   = $parts['port'] ?? match ($scheme) {
+			'https' => 443,
+			default => 80
+		};
+
+		$this->curlopt[CURLOPT_RESOLVE] = [
+			$host . ':' . $port . ':' . implode(',', $addresses)
+		];
+	}
+
+	/**
 	 * Returns all received headers
+	 *
+	 * @return array<string, string>
 	 */
 	public function headers(): array
 	{
@@ -307,7 +387,7 @@ class Remote
 	/**
 	 * Decode the response content
 	 *
-	 * @param bool $array decode as array or object
+	 * @param $array Decode as array or object
 	 * @psalm-return ($array is true ? array|null : stdClass|null)
 	 */
 	public function json(bool $array = true): array|stdClass|null
@@ -358,11 +438,42 @@ class Remote
 	/**
 	 * Static method to init this class and send a request
 	 *
-	 * @throws \Exception when the curl request failed
+	 * @throws Exception when the curl request failed
 	 */
 	public static function request(string $url, array $params = []): static
 	{
 		return new static($url, $params);
+	}
+
+	/**
+	 * Resolves a hostname to all of its IPv4 and IPv6 addresses
+	 * @since 6.0.0
+	 *
+	 * @return list<string>
+	 * @throws InvalidArgumentException when the host cannot be resolved
+	 */
+	protected function resolveHost(string $host): array
+	{
+		if (filter_var($host, FILTER_VALIDATE_IP) !== false) {
+			return [$host];
+		}
+
+		// A records; gethostbynamel() ignores AAAA records
+		$addresses = gethostbynamel($host) ?: [];
+
+		foreach (@dns_get_record($host, DNS_AAAA) ?: [] as $record) {
+			if (isset($record['ipv6']) === true) {
+				$addresses[] = $record['ipv6'];
+			}
+		}
+
+		if ($addresses === []) {
+			throw new InvalidArgumentException(
+				message: 'The host "' . $host . '" could not be resolved'
+			);
+		}
+
+		return array_values(array_unique($addresses));
 	}
 
 	/**

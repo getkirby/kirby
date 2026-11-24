@@ -18,7 +18,7 @@
 				variant="filled"
 				@click.stop="$refs.dropdown.toggle()"
 			/>
-			<k-dropdown-content ref="dropdown" align-x="end">
+			<k-dropdown ref="dropdown" align-x="end">
 				<dl class="k-plugin-info">
 					<dt>{{ $t("plugin") }}</dt>
 					<dd>{{ value.pluginName }}</dd>
@@ -35,16 +35,19 @@
 						{{ $t("versionInformation") }}
 					</k-button>
 				</template>
-			</k-dropdown-content>
+			</k-dropdown>
 		</template>
 	</div>
 </template>
 
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {
+	inheritAttrs: false,
 	props: {
 		value: [String, Object]
 	}

@@ -2,13 +2,47 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Asset;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileVersion::class)]
 class FileVersionTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/files';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
+	public const string FIXTURES = __DIR__ . '/fixtures/files';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.FileVersion';
+
+	public function testCall(): void
+	{
+		$page = new Page(['slug' => 'test']);
+
+		$original = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['title' => 'Test Title']
+		]);
+
+		$version = new FileVersion([
+			'original'      => $original,
+			'url'           => $url = 'https://example.com/test-200x200.jpg',
+			'modifications' => $mods = ['width' => 200]
+		]);
+
+		// public property access
+		$this->assertSame($mods, $version->modifications());
+
+		// asset method proxy
+		$this->assertSame($url, $version->url());
+
+		// content field via the original File
+		$this->assertSame('Test Title', $version->title()->value());
+
+		// fallback to null when original is not a File
+		$assetVersion = new FileVersion([
+			'original' => new Asset('test.jpg'),
+			'url'      => 'https://example.com/test.jpg'
+		]);
+		$this->assertNull($assetVersion->title());
+	}
 
 	public function testConstruct(): void
 	{

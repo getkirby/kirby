@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'source' => 'panel/src/panel/dropdown.js'
+	'source' => 'panel/src/panel/dropdown.ts'
 ];

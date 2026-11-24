@@ -1,0 +1,640 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Api\Api;
+use Kirby\Cms\Collection;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
+use Kirby\Form\Mixin;
+use Kirby\Panel\Collector\ModelsCollector;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
+
+/**
+ * Base class for fields that list models
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @template TModel of ModelWithContent
+ */
+abstract class ModelListField extends DisplayField
+{
+	use Mixin\Batch;
+	use Mixin\EmptyState;
+	use Mixin\ItemLayout;
+	use Mixin\ItemSize;
+	use Mixin\Limit;
+	use Mixin\Max;
+	use Mixin\Sortable;
+	use Mixin\SortBy;
+
+	/**
+	 * Type of the listed models, e.g. `files` or `pages`
+	 */
+	public const string|null TYPE = null;
+
+	protected ModelsCollector|null $collector = null;
+
+	/**
+	 * @var list<string>|null
+	 */
+	protected array|null $columnFieldsCache = null;
+
+	/**
+	 * Columns config for `layout: table`. `false` hides
+	 * a column, a string sets its label.
+	 */
+	#[Prop(computed: true, getter: 'defineColumns')]
+	protected array|null $columns = null;
+
+	/**
+	 * @var array<string, array<string, mixed>>|null
+	 */
+	protected array|null $columnsCache = null;
+
+	/**
+	 * If `true`, the order of the entries is reversed
+	 */
+	#[Prop(export: false)]
+	protected bool $flip = false;
+
+	/**
+	 * Image options for each entry, a query string for the preview
+	 * image or `false` to disable previews
+	 */
+	#[Prop(export: false)]
+	protected array|string|false $image = [];
+
+	/**
+	 * Info text shown next to or below the main text of each entry
+	 */
+	#[Prop(export: false)]
+	protected array|string|null $info = null;
+
+	/**
+	 * The number of entries that will be displayed at once. Afterwards pagination kicks in.
+	 */
+	#[Prop(export: false)]
+	protected int $limit = 20;
+
+	/**
+	 * Sets the minimum number of required entries
+	 */
+	#[Prop]
+	protected int|null $min = null;
+
+	/**
+	 * Sets the default page for the pagination
+	 */
+	#[Prop(export: false)]
+	protected int|null $page = null;
+
+	/**
+	 * Query for the parent model that holds the entries
+	 */
+	#[Prop(export: false)]
+	protected string|null $parent = null;
+
+	/**
+	 * Filters the entries by a query. Sorting will be disabled
+	 */
+	#[Prop(export: false)]
+	protected string|null $query = null;
+
+	/**
+	 * Enables/disables the search
+	 */
+	#[Prop(export: 'searchable', getter: 'searchable')]
+	protected bool $search = false;
+
+	/**
+	 * If `true`, entries are sortable via drag & drop
+	 */
+	#[Prop(export: false)]
+	protected bool $sortable = true;
+
+	/**
+	 * Sorts the entries by the given field and order (i.e. `title desc`)
+	 * Drag & drop is disabled in this case
+	 */
+	#[Prop(export: false)]
+	protected string|null $sortBy = null;
+
+	/**
+	 * Setup for the main text of each entry
+	 */
+	#[Prop(export: false)]
+	protected array|string|null $text = null;
+
+	/**
+	 * The list is not part of the form values, so it loads and
+	 * refreshes itself through its own endpoint
+	 */
+	public function api(): array
+	{
+		$field = $this;
+
+		return [
+			[
+				'pattern' => '',
+				'method'  => 'GET',
+				'action'  => fn (): array => $field->state()
+			],
+			[
+				'pattern' => 'delete',
+				'method'  => 'DELETE',
+				'action'  => function () use ($field): bool {
+					/** @var Api $api */
+					$api = $this;
+
+					return $field->deleteSelected(
+						ids: $api->requestBody('ids')
+					);
+				}
+			]
+		];
+	}
+
+	abstract public function collector(): ModelsCollector;
+
+	/**
+	 * Blueprint field names behind all columns that read their
+	 * value from the model instead of from their own query
+	 *
+	 * @return list<string>
+	 */
+	protected function columnFields(): array
+	{
+		if ($this->columnFieldsCache !== null) {
+			return $this->columnFieldsCache;
+		}
+
+		$fields = [];
+
+		foreach ($this->columns() as $column) {
+			// only columns from the `columns` prop carry an id;
+			// the built-in ones are filled by the item itself
+			if (($id = $column['id'] ?? null) === null) {
+				continue;
+			}
+
+			if (($column['value'] ?? '') === '') {
+				$fields[] = $id;
+			}
+		}
+
+		return $this->columnFieldsCache = $fields;
+	}
+
+	/**
+	 * Column definitions for `layout: table`, with the type of
+	 * each column resolved from the blueprint of the entries
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	public function columns(): array
+	{
+		if ($this->columnsCache !== null) {
+			return $this->columnsCache;
+		}
+
+		$columns = $this->defineColumns();
+
+		if ($columns === []) {
+			return $this->columnsCache = [];
+		}
+
+		if ($blueprint = $this->models()->first()?->blueprint()) {
+			foreach ($columns as $name => $column) {
+				if ($id = $column['id'] ?? null) {
+					$columns[$name]['type'] ??= $blueprint->field($id)['type'] ?? null;
+				}
+			}
+		}
+
+		return $this->columnsCache = $columns;
+	}
+
+	/**
+	 * Values of the column fields for a single entry.
+	 *
+	 * Only the blueprint fields the columns actually read are
+	 * instantiated. Building the full form for every row makes the
+	 * table layout scale with the size of the blueprint instead of
+	 * the number of columns.
+	 *
+	 * @param TModel $model
+	 * @return array<string, mixed>
+	 */
+	protected function columnValues(ModelWithContent $model): array
+	{
+		$blueprint = $model->blueprint();
+		$fields    = [];
+
+		foreach ($this->columnFields() as $name) {
+			if ($field = $blueprint->field($name)) {
+				$fields[] = $field;
+			}
+		}
+
+		$form = new Form(
+			fields: $fields,
+			model: $model
+		);
+
+		// values for columns without a matching field are passed through
+		$form->fill(input: $model->content($form->language())->toArray());
+
+		return $form->toFormValues();
+	}
+
+	/**
+	 * The props for all entries of the current page
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public function data(): array
+	{
+		$table = $this->layout() === 'table';
+		$data  = [];
+
+		foreach ($this->collector()->models(paginated: true) as $model) {
+			/** @var TModel $model */
+			$data[] = $table === true ? $this->row($model) : $this->toItem($model);
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Builds the column definitions for `layout: table`.
+	 * Subclasses extend this instead of `columns()`,
+	 * so that the cache holds the final set.
+	 *
+	 * @return array<string, array<string, mixed>>
+	 */
+	protected function defineColumns(): array
+	{
+		if ($this->layout() !== 'table') {
+			return [];
+		}
+
+		$columns = [];
+
+		if ($this->image() !== false) {
+			$columns['image'] = [
+				'label'  => ' ',
+				'mobile' => true,
+				'type'   => 'image',
+				'width'  => 'var(--table-row-height)'
+			];
+		}
+
+		// an empty text or info disables the column
+		if (($text = $this->text()) !== null && $text !== '') {
+			$columns['title'] = [
+				'label'  => I18n::translate('title'),
+				'mobile' => true,
+				'type'   => 'url',
+			];
+		}
+
+		if (($info = $this->info()) !== null && $info !== '') {
+			$columns['info'] = [
+				'label' => I18n::translate('info'),
+				'type'  => 'text',
+			];
+		}
+
+		foreach ($this->columns ?? [] as $name => $column) {
+			if ($column === false) {
+				continue;
+			}
+
+			// a string is a shorthand for the label
+			$column = match (true) {
+				is_array($column)  => $column,
+				is_string($column) => ['label' => $column],
+				default            => []
+			};
+
+			$column['label'] ??= Str::ucfirst($name);
+			$column['label']   = $this->i18n($column['label']);
+			$column['id']      = $name;
+
+			// allow to extend/overwrite the columns above
+			$columns[$name] = [...$columns[$name] ?? [], ...$column];
+		}
+
+		return $columns;
+	}
+
+	/**
+	 * @throws Exception if too few entries would be left
+	 * @throws PermissionException if batch mode is off
+	 */
+	public function deleteSelected(array $ids): bool
+	{
+		if ($ids === []) {
+			return true;
+		}
+
+		if ($this->batch() === false) {
+			throw new PermissionException(
+				message: 'The field does not support batch actions'
+			);
+		}
+
+		$min = $this->min() ?? 0;
+
+		if ($this->total() - count($ids) < $min) {
+			throw new Exception(
+				message: $this->i18n('error.field.' . $this->type() . '.min.' . I18n::form($min), [
+					'min'   => $min,
+					'field' => $this->label()
+				])
+			);
+		}
+
+		$this->models()->delete($ids);
+
+		return true;
+	}
+
+	/**
+	 * Errors are only reported for the publish gate. The entries
+	 * themselves are not stored in the content of the model.
+	 */
+	public function errors(): array
+	{
+		if ($this->isActive() === false) {
+			return [];
+		}
+
+		$errors = [];
+		$key    = 'error.field.' . $this->type();
+
+		if ($this->validateMax() === false) {
+			$errors['max'] = $this->i18n($key . '.max.' . I18n::form($this->max), [
+				'max'   => $this->max,
+				'field' => $this->label()
+			]);
+		}
+
+		if ($this->validateMin() === false) {
+			$errors['min'] = $this->i18n($key . '.min.' . I18n::form($this->min), [
+				'min'   => $this->min,
+				'field' => $this->label()
+			]);
+		}
+
+		return $errors;
+	}
+
+	public function flip(): bool
+	{
+		return $this->flip;
+	}
+
+	/**
+	 * @return array<string, mixed>|false
+	 */
+	public function image(): array|false
+	{
+		if (is_string($this->image) === true) {
+			return ['query' => $this->image];
+		}
+
+		return $this->image;
+	}
+
+	public function info(): string|null
+	{
+		return $this->i18n($this->info);
+	}
+
+	public function isFull(): bool
+	{
+		if ($this->max === null) {
+			return false;
+		}
+
+		return $this->total() >= $this->max;
+	}
+
+	/**
+	 * @return 'cardlets'|'cards'|'list'|'table'
+	 */
+	public function layout(): string
+	{
+		return match ($this->layout) {
+			'cardlets', 'cards', 'table' => $this->layout,
+			default                      => 'list'
+		};
+	}
+
+	/**
+	 * Panel link to the parent, unless it is the field's own model
+	 */
+	public function link(): string|null
+	{
+		$model  = $this->model()->panel()->url(true);
+		$parent = $this->parentModel()->panel()->url(true);
+
+		if ($model !== $parent) {
+			return $parent;
+		}
+
+		return null;
+	}
+
+	public function min(): int|null
+	{
+		return $this->min;
+	}
+
+	/**
+	 * All entries, without pagination
+	 */
+	public function models(): Collection
+	{
+		return $this->collector()->models();
+	}
+
+	/**
+	 * The page from the request, with the prop as fallback
+	 */
+	public function page(): int|string|null
+	{
+		return $this->kirby()->request()->get('page', $this->page);
+	}
+
+	/**
+	 * @return array{limit: int, offset: int, page: int, total: int}
+	 */
+	public function pagination(): array
+	{
+		$pagination = $this->collector()->pagination();
+
+		return [
+			'limit'  => $pagination->limit(),
+			'offset' => $pagination->offset(),
+			'page'   => $pagination->page(),
+			'total'  => $pagination->total()
+		];
+	}
+
+	/**
+	 * @throws InvalidArgumentException If the parent cannot be found or is no model
+	 */
+	public function parentModel(): ModelWithContent
+	{
+		if ($this->parent === null) {
+			return $this->model();
+		}
+
+		$parent = $this->model()->query($this->parent);
+
+		if ($parent === null) {
+			throw new InvalidArgumentException(
+				message: 'The parent for the query "' . $this->parent . '" cannot be found in the field "' . $this->name() . '"'
+			);
+		}
+
+		if ($parent instanceof ModelWithContent === false) {
+			throw new InvalidArgumentException(
+				message: 'The parent for the field "' . $this->name() . '" has to be a page, site, file or user object'
+			);
+		}
+
+		return $parent;
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'link' => $this->link(),
+		];
+	}
+
+	public function query(): string|null
+	{
+		return $this->query;
+	}
+
+	/**
+	 * The props for a single entry in `layout: table`
+	 *
+	 * @param TModel $model
+	 * @return array<string, mixed>
+	 */
+	protected function row(ModelWithContent $model): array
+	{
+		$item   = $this->toItem($model);
+		$values = null;
+
+		// the title cell carries the link to the model
+		$item['title'] = [
+			'text' => $item['text'],
+			'href' => $item['link']
+		];
+
+		foreach ($this->columns() as $name => $column) {
+			// a column query is resolved against the model;
+			// `type: html` keeps its markup but escapes its values
+			if (($query = $column['value'] ?? '') !== '') {
+				$item[$name] = match ($column['type'] ?? null) {
+					'html'  => $model->toSafeHtmlString($query),
+					default => $model->toString($query)
+				};
+				continue;
+			}
+
+			// otherwise fall back to the form value,
+			// without overwriting what the item already provides
+			if (isset($item[$name]) === false) {
+				$values ??= $this->columnValues($model);
+				// form values are keyed by the lowercased field name
+				$item[$name] = $values[strtolower($column['id'] ?? $name)] ?? null;
+			}
+		}
+
+		return $item;
+	}
+
+	public function searchable(): bool
+	{
+		return $this->search;
+	}
+
+	/**
+	 * The search term from the request, if the search is on
+	 */
+	public function searchterm(): string|null
+	{
+		if ($this->searchable() === false) {
+			return null;
+		}
+
+		return $this->kirby()->request()->get('searchterm');
+	}
+
+	public function sortable(): bool
+	{
+		if ($this->sortable === false) {
+			return false;
+		}
+
+		// manual sorting is impossible while the list is filtered
+		if ($this->collector()->isSearching() === true) {
+			return false;
+		}
+
+		return $this->query() === null &&
+			$this->sortBy() === null &&
+			$this->flip() === false;
+	}
+
+	public function state(): array
+	{
+		return [
+			'columns'    => $this->columns(),
+			'models'     => $this->data(),
+			'pagination' => $this->pagination(),
+			'sortable'   => $this->sortable(),
+		];
+	}
+
+	public function text(): string|null
+	{
+		return $this->i18n($this->text);
+	}
+
+	/**
+	 * @param TModel $model
+	 */
+	abstract public function toItem(ModelWithContent $model): array;
+
+	public function total(): int
+	{
+		return $this->models()->count();
+	}
+
+	public function validateMax(): bool
+	{
+		return $this->max === null || $this->total() <= $this->max;
+	}
+
+	public function validateMin(): bool
+	{
+		return $this->min === null || $this->total() >= $this->min;
+	}
+}

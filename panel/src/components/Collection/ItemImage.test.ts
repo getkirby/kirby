@@ -1,0 +1,81 @@
+import { describe, it, expect } from "@test/unit";
+import { mount as vueMount } from "@vue/test-utils";
+import ItemImage from "./ItemImage.vue";
+
+function mount(
+	props: Record<string, unknown> = {},
+	attrs: Record<string, unknown> = {}
+) {
+	return vueMount(ItemImage, {
+		props: { image: {}, ...props },
+		attrs
+	});
+}
+
+describe("k-item-image", () => {
+	// $el
+	describe("element", () => {
+		const component = (attrs?: Record<string, unknown>) => mount({}, attrs);
+
+		it.rendersAs(component, "K-ICON-FRAME", "k-item-image");
+		it.acceptsClass(component);
+		it.acceptsStyle(component);
+		it.inheritsNoAttrs(component);
+	});
+
+	// props
+	describe("image prop", () => {
+		it("passes through image props as attrs", () => {
+			const wrapper = mount({ image: { back: "black" } });
+			expect(wrapper.attributes("back")).toBe("black");
+		});
+
+		it("sets cover to true by default", () => {
+			const wrapper = mount({ image: {} });
+			expect(wrapper.attributes("cover")).toBe("true");
+		});
+
+		it("lets the image turn cover off", () => {
+			const wrapper = mount({ image: { cover: false } });
+			expect(wrapper.attributes("cover")).toBe("false");
+		});
+
+		it("passes the icon options to the icon frame", () => {
+			const wrapper = mount({ image: { color: "blue", icon: "page" } });
+			expect(wrapper.attributes()).toMatchObject({
+				color: "blue",
+				icon: "page"
+			});
+		});
+	});
+
+	describe("layout prop", () => {
+		it("sets ratio to auto in the default list layout", () => {
+			const wrapper = mount({ image: { ratio: "1/1" } });
+			expect(wrapper.attributes("ratio")).toBe("auto");
+		});
+
+		it("sets ratio to auto in list layout", () => {
+			const wrapper = mount({ image: { ratio: "1/1" }, layout: "list" });
+			expect(wrapper.attributes("ratio")).toBe("auto");
+		});
+
+		it("uses image ratio in non-list layout", () => {
+			const wrapper = mount({ image: { ratio: "16/9" }, layout: "cards" });
+			expect(wrapper.attributes("ratio")).toBe("16/9");
+		});
+	});
+
+	// computed
+	describe("component computed", () => {
+		it("renders k-icon-frame when image has no src", () => {
+			const wrapper = mount({ image: { icon: "file" } });
+			expect(wrapper.element.tagName).toBe("K-ICON-FRAME");
+		});
+
+		it("renders k-image-frame when image has a src", () => {
+			const wrapper = mount({ image: { src: "/image.jpg" } });
+			expect(wrapper.element.tagName).toBe("K-IMAGE-FRAME");
+		});
+	});
+});

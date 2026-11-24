@@ -39,8 +39,13 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
-	mixins: [props]
+	mixins: [props],
+	emits: ["cancel", "submit"]
 };
 </script>
 

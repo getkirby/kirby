@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(User::class)]
 class UserAvatarTest extends ModelTestCase
 {
-	public const FIXTURES = __DIR__ . '/../Api/routes/fixtures';
+	public const FIXTURES = __DIR__ . '/../../Api/Routes/fixtures';
 	public const TMP = KIRBY_TMP_DIR . '/Cms.UserAvatar';
 
 	public function setUp(): void
@@ -30,7 +30,7 @@ class UserAvatarTest extends ModelTestCase
 	protected function avatarSource(): string
 	{
 		$source = static::TMP . '/tmp-avatar.jpg';
-		F::copy(static::FIXTURES . '/avatar.jpg', $source);
+		$this->assertTrue(F::copy(static::FIXTURES . '/avatar.jpg', $source, true));
 		return $source;
 	}
 
@@ -137,9 +137,6 @@ class UserAvatarTest extends ModelTestCase
 
 	public function testDeleteAvatarWithoutPermission(): void
 	{
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-
 		$this->app = $this->app->clone([
 			'roles' => [
 				['name' => 'admin'],
@@ -150,11 +147,25 @@ class UserAvatarTest extends ModelTestCase
 					]
 				]
 			],
-			'user'  => 'editor@getkirby.com',
 			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin'],
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
 			]
+		]);
+
+		// the avatar has to exist to get past the ability check
+		$this->app->user('editor@getkirby.com')->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->app = $this->app->clone([
+			'user' => 'editor@getkirby.com'
 		]);
 
 		$this->expectException(PermissionException::class);
@@ -174,51 +185,6 @@ class UserAvatarTest extends ModelTestCase
 
 		$this->assertInstanceOf(User::class, $result);
 		$this->assertFileExists($user->root() . '/profile.jpg');
-	}
-
-	public function testReplaceAvatarWithDifferentExtension(): void
-	{
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-
-		$this->assertFileExists($user->root() . '/profile.jpg');
-
-		$source = static::TMP . '/tmp-avatar.png';
-		F::copy(static::FIXTURES . '/avatar.jpg', $source);
-
-		$result = $user->replaceAvatar($source, 'png');
-
-		$this->assertInstanceOf(User::class, $result);
-		$this->assertFileDoesNotExist($user->root() . '/profile.jpg');
-		$this->assertFileExists($user->root() . '/profile.png');
-	}
-
-	public function testReplaceAvatarWithoutPermission(): void
-	{
-		$user = $this->app->user('admin@getkirby.com');
-		$user->createAvatar($this->avatarSource(), 'jpg');
-
-		$this->app = $this->app->clone([
-			'roles' => [
-				['name' => 'admin'],
-				[
-					'name'        => 'editor',
-					'permissions' => [
-						'user' => ['update' => false]
-					]
-				]
-			],
-			'user'  => 'editor@getkirby.com',
-			'users' => [
-				['email' => 'admin@getkirby.com', 'role' => 'admin'],
-				['email' => 'editor@getkirby.com', 'role' => 'editor']
-			]
-		]);
-
-		$this->expectException(PermissionException::class);
-		$this->expectExceptionMessage('You are not allowed to update the user "editor@getkirby.com"');
-
-		$this->app->user('editor@getkirby.com')->replaceAvatar($this->avatarSource(), 'jpg');
 	}
 
 	public function testReplaceAvatarHooks(): void
@@ -247,5 +213,61 @@ class UserAvatarTest extends ModelTestCase
 		$user->replaceAvatar($this->avatarSource(), 'jpg');
 
 		$this->assertSame(2, $calls);
+	}
+
+	public function testReplaceAvatarWithDifferentExtension(): void
+	{
+		$user = $this->app->user('admin@getkirby.com');
+		$user->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->assertFileExists($user->root() . '/profile.jpg');
+
+		$source = static::TMP . '/tmp-avatar.png';
+		F::copy(static::FIXTURES . '/avatar.jpg', $source);
+
+		$result = $user->replaceAvatar($source, 'png');
+
+		$this->assertInstanceOf(User::class, $result);
+		$this->assertFileDoesNotExist($user->root() . '/profile.jpg');
+		$this->assertFileExists($user->root() . '/profile.png');
+	}
+
+	public function testReplaceAvatarWithoutPermission(): void
+	{
+		$this->app = $this->app->clone([
+			'roles' => [
+				['name' => 'admin'],
+				[
+					'name'        => 'editor',
+					'permissions' => [
+						'user' => ['update' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'id'    => 'admin',
+					'email' => 'admin@getkirby.com',
+					'role'  => 'admin'
+				],
+				[
+					'id'    => 'editor',
+					'email' => 'editor@getkirby.com',
+					'role'  => 'editor'
+				]
+			]
+		]);
+
+		// the avatar has to exist to get past the ability check
+		$this->app->user('editor@getkirby.com')->createAvatar($this->avatarSource(), 'jpg');
+
+		$this->app = $this->app->clone([
+			'user' => 'editor@getkirby.com'
+		]);
+
+		$this->expectException(PermissionException::class);
+		$this->expectExceptionMessage('You are not allowed to update the user "editor@getkirby.com"');
+
+		$this->app->user('editor@getkirby.com')->replaceAvatar($this->avatarSource(), 'jpg');
 	}
 }

@@ -5,7 +5,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<k-input
+		<k-toggle-input
 			v-bind="$props"
 			ref="input"
 			type="toggle"
@@ -22,11 +22,17 @@ import { props as ToggleInput } from "../Input/ToggleInput.vue";
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-input>`
  * for additional information.
- * @example <k-toggle-field :value="toggle" @input="toggle = $event" label="Toggle" name="toggle" />
+ *
+ * @example
+ * <k-toggle-field :value="toggle" @input="toggle = $event" label="Toggle" name="toggle" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, ToggleInput],
 	inheritAttrs: false,
+	emits: ["input"],
 	methods: {
 		focus() {
 			this.$refs.input.focus();

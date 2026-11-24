@@ -10,7 +10,7 @@ use TypeError;
 #[CoversClass(Page::class)]
 class PageContentTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageContent';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageContent';
 
 	public function testContent(): void
 	{
@@ -19,14 +19,42 @@ class PageContentTest extends ModelTestCase
 		$this->assertSame([], $page->content()->toArray());
 	}
 
-	public function testSetContentWithInvalidValue(): void
+	public function testSetContentInMultiLanguageMode(): void
 	{
-		$this->expectException(TypeError::class);
+		$this->setUpMultiLanguage();
 
-		new Page([
-			'slug'    => 'test',
-			'content' => 'content'
+		$page = new Page([
+			'slug' => 'test',
+			'content' => $content = [
+				'title'    => 'Title 1',
+				'subtitle' => 'Subtitle 1'
+			]
 		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
+
+		$this->assertSame($content, $page->content()->toArray());
+		$this->assertSame($content, $page->content('en')->toArray());
+		$this->assertSame($content, $page->content('de')->toArray());
+
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.en.txt');
+	}
+
+	public function testSetContentInSingleLanguageMode(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+			'content' => $content = [
+				'title'    => 'Title 1',
+				'subtitle' => 'Subtitle 1'
+			]
+		]);
+
+		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
+
+		$this->assertSame($content, $page->content()->toArray());
+
+		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.txt');
 	}
 
 	public function testSetContentWithChaoticFieldNames(): void
@@ -70,41 +98,13 @@ class PageContentTest extends ModelTestCase
 		], $page->content()->toArray());
 	}
 
-	public function testSetContentInSingleLanguageMode(): void
+	public function testSetContentWithInvalidValue(): void
 	{
-		$page = new Page([
-			'slug' => 'test',
-			'content' => $content = [
-				'title'    => 'Title 1',
-				'subtitle' => 'Subtitle 1'
-			]
+		$this->expectException(TypeError::class);
+
+		new Page([
+			'slug'    => 'test',
+			'content' => 'content'
 		]);
-
-		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
-
-		$this->assertSame($content, $page->content()->toArray());
-
-		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.txt');
-	}
-
-	public function testSetContentInMultiLanguageMode(): void
-	{
-		$this->setUpMultiLanguage();
-
-		$page = new Page([
-			'slug' => 'test',
-			'content' => $content = [
-				'title'    => 'Title 1',
-				'subtitle' => 'Subtitle 1'
-			]
-		]);
-
-		$this->assertInstanceOf(MemoryStorage::class, $page->storage());
-
-		$this->assertSame($content, $page->content()->toArray());
-		$this->assertSame($content, $page->content('en')->toArray());
-		$this->assertSame($content, $page->content('de')->toArray());
-
-		$this->assertFileDoesNotExist(static::TMP . '/content/test/default.en.txt');
 	}
 }

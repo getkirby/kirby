@@ -11,9 +11,6 @@ use Stringable;
  * to manage the asset file between the plugin
  * and media folder
  *
- * @package   Kirby Plugin
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -24,6 +21,14 @@ class Asset implements Stringable
 		protected string $root,
 		protected Plugin $plugin
 	) {
+	}
+
+	/**
+	 * @see self::url()
+	 */
+	public function __toString(): string
+	{
+		return $this->url();
 	}
 
 	public function extension(): string
@@ -118,13 +123,5 @@ class Asset implements Stringable
 	public function url(): string
 	{
 		return $this->mediaUrl();
-	}
-
-	/**
-	 * @see self::url()
-	 */
-	public function __toString(): string
-	{
-		return $this->url();
 	}
 }

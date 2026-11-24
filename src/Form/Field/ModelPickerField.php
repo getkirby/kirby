@@ -1,0 +1,298 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Cms\Collection;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Data\Data;
+use Kirby\Form\Mixin;
+use Kirby\Panel\Ui\Item\MissingItem;
+use Kirby\Panel\Ui\Item\ProtectedItem;
+use Kirby\Reflection\Attributes\Prop;
+use Kirby\Toolkit\A;
+use Kirby\Toolkit\Str;
+use Kirby\Uuid\Uuids;
+
+/**
+ * Input class for fields that pick models as value
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @template TModel of ModelWithContent
+ */
+abstract class ModelPickerField extends InputField
+{
+	use Mixin\ItemLayout;
+	use Mixin\ItemSize;
+	use Mixin\Max;
+	use Mixin\Min;
+
+	/**
+	 * The placeholder text if none have been selected yet
+	 */
+	#[Prop]
+	protected array|string|null $empty = null;
+
+	/**
+	 * Image settings for each item, a query string for the
+	 * preview image or `false` to disable previews
+	 */
+	#[Prop]
+	protected array|string|false|null $image = null;
+
+	/**
+	 * Info text for each item
+	 */
+	#[Prop]
+	protected string|null $info = null;
+
+	/**
+	 * Whether each item should be clickable
+	 */
+	#[Prop]
+	protected bool $link = true;
+
+	/**
+	 * If `false`, only a single one can be selected
+	 */
+	#[Prop]
+	protected bool $multiple = true;
+
+	/**
+	 * Additional picker dialog props { image, layout, size }
+	 * @since 6.0.0
+	 */
+	#[Prop(export: false)]
+	protected array $picker = [];
+
+	/**
+	 * Query for the items to be included in the picker
+	 */
+	#[Prop]
+	protected string|null $query = null;
+
+	/**
+	 * Enable/disable the search field in the picker
+	 */
+	#[Prop]
+	protected bool $search = true;
+
+	/**
+	 * Whether to store `uuid` or `id` in the content file of the model
+	 */
+	#[Prop(computed: true)]
+	protected string $store = 'uuid';
+
+	/**
+	 * Main text for each item
+	 */
+	#[Prop]
+	protected string|null $text = null;
+	protected array $value = [];
+
+	public function api(): array
+	{
+		$field = $this;
+
+		return [
+			[
+				'pattern' => 'items',
+				'action'  => function () use ($field): array {
+					$ids = $field->kirby()->request()->get('items', '');
+					$ids = Str::split($ids);
+
+					return A::map(
+						$ids,
+						function ($id) use ($field): array {
+							$model = $field->toModel($id);
+
+							// keep a model that does not exist (anymore)
+							// in the value, so that it can be removed
+							if ($model === null) {
+								return (new MissingItem(
+									$id,
+									layout: $field->layout()
+								))->props();
+							}
+
+							// never disclose a model the current user must not
+							// list, but keep its ID to not drop it from the value
+							return match ($model->isListable()) {
+								true  => $field->toItem($model),
+								false => (new ProtectedItem(
+									$id,
+									layout: $field->layout()
+								))->props()
+							};
+						}
+					);
+				}
+			]
+		];
+	}
+
+	public function default(): array
+	{
+		if ($this->default === false) {
+			return [];
+		}
+
+		return Data::decode(parent::default(), 'yaml');
+	}
+
+	public function empty(): string|null
+	{
+		return $this->i18n($this->empty);
+	}
+
+	public function fill(mixed $value): static
+	{
+		if ($value instanceof ModelWithContent) {
+			$value = [$value];
+		}
+
+		if ($value instanceof Collection) {
+			$value = $value->values();
+		}
+
+		$value = Data::decode($value, 'yaml');
+
+		// resolve models to an ID that `::toModel()` can find,
+		// models of another type (e.g. a page for files) are dropped
+		foreach ($value as $key => $item) {
+			if ($item instanceof ModelWithContent) {
+				$id = $item->uuid()?->toString() ?? $item->id();
+
+				if ($this->toModel($id) === null) {
+					unset($value[$key]);
+					continue;
+				}
+
+				$value[$key] = $id;
+			}
+		}
+
+		return parent::fill(value: $value);
+	}
+
+	public function image(): array|string|false|null
+	{
+		return $this->image;
+	}
+
+	public function info(): string|null
+	{
+		return $this->info;
+	}
+
+	/**
+	 * @return 'cardlets'|'cards'|'list'
+	 */
+	public function layout(): string
+	{
+		return match ($this->layout) {
+			'cards', 'cardlets' => $this->layout,
+			default             => 'list'
+		};
+	}
+
+	public function link(): bool
+	{
+		return $this->link;
+	}
+
+	public function multiple(): bool
+	{
+		return $this->multiple;
+	}
+
+	public function picker(): array
+	{
+		return $this->picker;
+	}
+
+	public function query(): string|null
+	{
+		return $this->query;
+	}
+
+	public function search(): bool
+	{
+		return $this->search;
+	}
+
+	/**
+	 * @param TModel|null $model
+	 */
+	public function store(ModelWithContent|null $model = null): string
+	{
+		if (Uuids::enabled() === false) {
+			return 'id';
+		}
+
+		return Str::lower($this->store);
+	}
+
+	public function text(): string|null
+	{
+		return $this->text;
+	}
+
+	/**
+	 * @return list<mixed>
+	 */
+	public function toFormValue(): array
+	{
+		$ids = [];
+
+		// models that do not exist (anymore) keep their stored ID
+		foreach ($this->value as $id) {
+			if ($model = $this->toModel($id)) {
+				$id = $model->uuid()?->toString() ?? $model->id();
+			}
+
+			$ids[] = $id;
+		}
+
+		return $ids;
+	}
+
+	/**
+	 * @param TModel $model
+	 */
+	abstract public function toItem(ModelWithContent $model): array;
+
+	/**
+	 * @return TModel|null
+	 */
+	abstract public function toModel(string $id): ModelWithContent|null;
+
+	/**
+	 * @return list<mixed>
+	 */
+	public function toStoredValue(): array
+	{
+		$ids = [];
+
+		// models that do not exist (anymore) keep their stored ID
+		foreach ($this->value as $id) {
+			if ($model = $this->toModel($id)) {
+				$id = (string)$model->{$this->store($model)}();
+			}
+
+			$ids[] = $id;
+		}
+
+		return $ids;
+	}
+
+	public function validations(): array
+	{
+		return [
+			'max',
+			'min'
+		];
+	}
+}

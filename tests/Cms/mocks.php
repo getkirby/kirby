@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Tests\MockTime;
 
 /**
  * Mock for the PHP error_log() function to ensure reliable testing
@@ -24,38 +25,20 @@ class ErrorLog
 }
 
 /**
- * Mock for the PHP time() function to ensure reliable testing
- *
- * @return int A fake timestamp
+ * Mock for the PHP password_hash() function to reduce the cost
+ * while testing
  */
+function password_hash(
+	string $password,
+	string|int|null $algo,
+	array $options = []
+): string|false {
+	\Kirby\Tests\ensureTesting('password_hash');
+	$options['cost'] ??= 4;
+	return \password_hash($password, $algo, $options);
+}
+
 function time(): int
 {
-	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-		throw new Exception('Mock time() function was loaded outside of the test environment. This should never happen.');
-	}
-
-	return MockTime::$time;
-}
-
-class MockTime
-{
-	public static int $time = 1337000000;
-
-	public static function reset(): void
-	{
-		static::$time = 1337000000;
-	}
-}
-
-/**
- * Mock for the PHP usleep() function to skip over
- * waiting times while testing
- */
-function usleep(int $microSeconds): void
-{
-	if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
-		throw new Exception('Mock usleep() function was loaded outside of the test environment. This should never happen.');
-	}
-
-	// do nothing
+	return \Kirby\Tests\time(MockTime::$time);
 }

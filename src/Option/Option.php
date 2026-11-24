@@ -3,37 +3,37 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\ModelWithContent;
-use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\HasI18n;
+use Kirby\Toolkit\HtmlString;
 
 /**
  * Option for select fields, radio fields, etc.
  *
- * @package   Kirby Option
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Option
 {
-	public string|array $text;
+	use HasI18n;
+
+	public HtmlString|string|array $text;
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public function __construct(
 		public string|int|float|null $value,
 		public bool $disabled = false,
 		public string|null $icon = null,
-		public string|array|null $info = null,
-		string|array|null $text = null,
+		public HtmlString|string|array|null $info = null,
+		HtmlString|string|array|null $text = null,
 		public bool $resolve = true
 	) {
 		$this->text = $text ?? ['en' => $this->value];
 	}
 
 	/**
-	 * @param bool $resolve Deprecated, will be removed in v6
+	 * @param $resolve Deprecated, will be removed in v7
 	 */
 	public static function factory(
 		string|int|float|array|null $props,
@@ -43,21 +43,25 @@ class Option
 			$props = ['value' => $props];
 		}
 
-		// Normalize info to be an array
+		// Normalize info to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['info']) === true) {
 			$props['info'] = match (true) {
-				is_array($props['info']) => $props['info'],
-				$props['info'] === null,
+				is_array($props['info']),
+				$props['info'] instanceof HtmlString => $props['info'],
 				$props['info'] === false => null,
 				default                  => ['en' => $props['info']]
 			};
 		}
 
-		// Normalize text to be an array
+		// Normalize text to be an array, unless it is trusted HTML:
+		// that is already resolved and `I18n::translate()` would
+		// cast it back to an untrusted string
 		if (isset($props['text']) === true) {
 			$props['text'] = match (true) {
-				is_array($props['text']) => $props['text'],
-				$props['text'] === null,
+				is_array($props['text']),
+				$props['text'] instanceof HtmlString => $props['text'],
 				$props['text'] === false => null,
 				default                  => ['en' => $props['text']]
 			};
@@ -66,21 +70,23 @@ class Option
 		return new static(...$props, resolve: $resolve);
 	}
 
-	public function id(): string|int|float
+	public function id(): string
 	{
-		return $this->value ?? '';
+		return (string)($this->value ?? '');
 	}
 
 	/**
 	 * Renders all data for the option
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function render(
 		ModelWithContent $model,
 		bool $safeMode = true
 	): array {
-		$info = I18n::translate($this->info, $this->info);
-		$text = I18n::translate($this->text, $this->text);
-		$method = $safeMode === true ? 'toSafeString' : 'toString';
+		$info = $this->i18n($this->info);
+		$text = $this->i18n($this->text);
+		$method = $safeMode === true ? 'toSafeHtmlString' : 'toString';
 
 		return [
 			'disabled' => $this->disabled,

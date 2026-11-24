@@ -1,24 +1,18 @@
 <template>
-	<!-- Layout: table -->
 	<k-table
 		v-if="layout === 'table'"
 		v-bind="table"
 		:class="$attrs.class"
 		:style="$attrs.style"
 		@change="$emit('change', $event)"
-		@select="onSelect"
+		@select="$emit('select', $event)"
 		@sort="$emit('sort', $event)"
 		@option="onOption"
 	>
-		<template
-			v-if="$scopedSlots.options"
-			#options="{ row: item, rowIndex: index }"
-		>
+		<template v-if="$slots.options" #options="{ row: item, rowIndex: index }">
 			<slot name="options" v-bind="{ item, index }" />
 		</template>
 	</k-table>
-
-	<!-- Layout: cards, cardlets, list -->
 	<k-draggable
 		v-else
 		:class="['k-items', 'k-' + layout + '-items', $attrs.class]"
@@ -40,18 +34,19 @@
 					:image="imageOptions(item)"
 					:layout="layout"
 					:link="link ? item.link : false"
+					:selectable="item.selectable !== false"
 					:selecting="selecting"
-					:selectable="item.selectable"
+					:selected="isSelected(item)"
+					:selectmode="selectmode"
 					:sortable="sortable && item.sortable !== false"
 					:theme="item.theme ?? theme"
-					:width="item.column"
 					@click="$emit('item', item, itemIndex)"
 					@drag="onDragStart($event, item.dragText)"
-					@mouseover.native="$emit('hover', $event, item, itemIndex)"
+					@mouseover="$emit('hover', $event, item, itemIndex)"
 					@option="onOption($event, item, itemIndex)"
-					@select="onSelect(item, itemIndex)"
+					@select="onSelect(item)"
 				>
-					<template #options>
+					<template v-if="$slots.options" #options>
 						<slot name="options" v-bind="{ item, index: itemIndex }" />
 					</template>
 				</k-item>
@@ -62,6 +57,7 @@
 
 <script>
 import { layout } from "@/mixins/props.js";
+
 /**
  * Collection items that can be displayed in various layouts
  */
@@ -107,8 +103,25 @@ export const props = {
 		},
 		/**
 		 * Whether items are in selecting mode
+		 * @since 5.0.0
 		 */
 		selecting: Boolean,
+		/**
+		 * Array of selected items
+		 * @since 6.0.0
+		 */
+		selected: {
+			type: Array,
+			default: () => []
+		},
+		/**
+		 * @since 6.0.0
+		 * @values "single", "multiple"
+		 */
+		selectmode: {
+			type: String,
+			default: "multiple"
+		},
 		/**
 		 * Whether items are generally sortable.
 		 * Each item can disable this individually.
@@ -130,6 +143,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	props: {
@@ -141,7 +158,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["change", "hover", "item", "option", "sort"],
+	emits: ["change", "hover", "item", "option", "select", "sort"],
 	computed: {
 		dragOptions() {
 			return {
@@ -167,19 +184,42 @@ export default {
 				index: this.index,
 				rows: this.items,
 				selecting: this.selecting,
+				selected: this.selected,
+				selectmode: this.selectmode,
 				sortable: this.sortable
 			};
 		}
 	},
 	methods: {
+		findSelectedIndex(item) {
+			return this.selected.findIndex(
+				(selected) => selected === (item._id ?? item.uuid ?? item.id)
+			);
+		},
+		isSelected(item) {
+			return this.findSelectedIndex(item) !== -1;
+		},
 		onDragStart($event, dragText) {
 			this.$panel.drag.start("text", dragText);
 		},
 		onOption(option, item, itemIndex) {
 			this.$emit("option", option, item, itemIndex);
 		},
-		onSelect(event, item, itemIndex) {
-			this.$emit("select", event, item, itemIndex);
+		onSelect(item) {
+			if (this.selectmode === "single") {
+				return this.$emit("select", [item._id ?? item.uuid ?? item.id]);
+			}
+
+			const index = this.findSelectedIndex(item);
+
+			if (index !== -1) {
+				return this.$emit("select", this.selected.toSpliced(index, 1));
+			}
+
+			return this.$emit("select", [
+				...this.selected,
+				item._id ?? item.uuid ?? item.id
+			]);
 		},
 		imageOptions(item) {
 			let globalOptions = this.image;

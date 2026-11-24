@@ -8,9 +8,6 @@ namespace Kirby\Cms;
  * state of the given model after the action has been
  * executed.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -18,6 +15,10 @@ class ModelState
 {
 	/**
 	 * Updates the state of the given model.
+	 *
+	 * @template TModel of ModelWithContent
+	 * @param TModel $current
+	 * @param TModel|bool|null $next
 	 */
 	public static function update(
 		string $method,
@@ -47,6 +48,8 @@ class ModelState
 
 	/**
 	 * Updates the state of the given file.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updateFile(
 		string $method,
@@ -61,6 +64,8 @@ class ModelState
 
 	/**
 	 * Updates the state of the given page.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updatePage(
 		string $method,
@@ -86,13 +91,16 @@ class ModelState
 	 */
 	protected static function updateSite(
 		Site $current,
-		Site|null $next = null
+		Site|bool|null $next = null
 	): void {
-		App::instance()->setSite($next ?? $current);
+		$next = $next instanceof Site ? $next : $current;
+		App::instance()->setSite($next);
 	}
 
 	/**
 	 * Updates the state of the given user.
+	 *
+	 * @param 'append'|'remove'|'update' $method
 	 */
 	protected static function updateUser(
 		string $method,

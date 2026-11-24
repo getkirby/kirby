@@ -2,6 +2,7 @@
 
 namespace Kirby\Cache;
 
+use JsonException;
 use Throwable;
 
 /**
@@ -9,43 +10,27 @@ use Throwable;
  * Stores the value, creation timestamp and expiration timestamp
  * and makes it possible to store all three with a single cache key
  *
- * @package   Kirby Cache
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Value
 {
-	/**
-	 * Cached value
-	 */
-	protected mixed $value;
-
-	/**
-	 * the number of minutes until the value expires
-	 * @todo Rename this property to $expiry to reflect
-	 *       both minutes and absolute timestamps
-	 */
-	protected int $minutes;
-
-	/**
-	 * Creation timestamp
-	 */
 	protected int $created;
 
 	/**
-	 * Constructor
+	 * @param $minutes The number of minutes until the value expires
+	 *                or an absolute UNIX timestamp
+	 * @param $created The UNIX timestamp when the value has been created
+	 *                (defaults to the current time)
 	 *
-	 * @param int $minutes the number of minutes until the value expires
-	 *                     or an absolute UNIX timestamp
-	 * @param int|null $created the UNIX timestamp when the value has been created
-	 *                          (defaults to the current time)
+	 * @todo Rename $minutes property to $expiry to reflect
+	 *       both minutes and absolute timestamps
 	 */
-	public function __construct($value, int $minutes = 0, int|null $created = null)
-	{
-		$this->value   = $value;
-		$this->minutes = $minutes;
+	public function __construct(
+		protected mixed $value,
+		protected int $minutes = 0,
+		int|null $created = null
+	) {
 		$this->created = $created ?? time();
 	}
 
@@ -108,15 +93,9 @@ class Value
 	}
 
 	/**
-	 * Converts the object to a JSON string
-	 */
-	public function toJson(): string
-	{
-		return json_encode($this->toArray());
-	}
-
-	/**
 	 * Converts the object to an array
+	 *
+	 * @return array{created: int, minutes: int, value: mixed}
 	 */
 	public function toArray(): array
 	{
@@ -125,6 +104,21 @@ class Value
 			'minutes' => $this->minutes,
 			'value'   => $this->value,
 		];
+	}
+
+	/**
+	 * Converts the object to a JSON string;
+	 * returns an empty string if the value cannot
+	 * be encoded (e.g. invalid UTF-8), which results
+	 * in an empty cache entry that is treated as a miss
+	 */
+	public function toJson(): string
+	{
+		try {
+			return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+		} catch (JsonException) {
+			return '';
+		}
 	}
 
 	/**

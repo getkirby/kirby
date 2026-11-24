@@ -1,0 +1,97 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Data\Data;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Interface\ProvidesNestedForm;
+use Kirby\Form\Mixin;
+
+/**
+ * Allows editors to fill in a structured set of fields as a single value object
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class ObjectField extends InputField implements ProvidesNestedForm
+{
+	use Mixin\EmptyState;
+	use Mixin\Fields;
+
+	protected array $value = [];
+
+	public function fill(mixed $value): static
+	{
+		return parent::fill(
+			value: Data::decode($value, 'yaml')
+		);
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public function toFormValue(): array
+	{
+		if ($this->isEmptyValue($this->value) === true) {
+			return [];
+		}
+
+		return $this->form()
+			->fill(
+				input: $this->value,
+				passthrough: true
+			)
+			->toFormValues();
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public function toStoredValue(): array
+	{
+		if ($this->isEmptyValue($this->value) === true) {
+			return [];
+		}
+
+		return $this->form()
+			->fill(defaults: true)
+			->submit(
+				input: $this->value,
+				passthrough: true
+			)
+			->toStoredValues();
+	}
+
+	protected function validateObject(array|string|null $value): void
+	{
+		if ($this->isEmptyValue($value) === true) {
+			return;
+		}
+
+		$errors = $this->form()->fill($value)->errors();
+
+		if ($errors === []) {
+			return;
+		}
+
+		// use the first error for details
+		$name  = array_key_first($errors);
+		$error = $errors[$name];
+
+		throw new InvalidArgumentException(
+			key: 'object.validation',
+			data: [
+				'label'   => $error['label'] ?? $name,
+				'message' => implode("\n", $error['message'])
+			]
+		);
+	}
+
+	protected function validations(): array
+	{
+		return [
+			'object' => fn ($value) => $this->validateObject($value)
+		];
+	}
+}

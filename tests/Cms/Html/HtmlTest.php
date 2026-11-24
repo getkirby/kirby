@@ -9,8 +9,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Html::class)]
 class HtmlTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.Html';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Html';
 
 	protected function setUp(): void
 	{
@@ -34,46 +34,6 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testCssWithMediaOption(): void
-	{
-		$result   = Html::css('assets/css/index.css', 'print');
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testCssWithAttrs(): void
-	{
-		$result   = Html::css('assets/css/index.css', ['integrity' => 'nope']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testCssWithValidRelAttr(): void
-	{
-		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testCssWithInvalidRelAttr(): void
-	{
-		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet" title="High contrast">';
-
-		$this->assertSame($expected, $result);
-	}
-
-	public function testCssWithRelAttrButNoTitle(): void
-	{
-		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
-		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testCssWithArray(): void
 	{
 		$result = Html::css([
@@ -87,11 +47,36 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testCssWithAttrs(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['integrity' => 'nope']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testCssWithInvalidRelAttr(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate', 'title' => 'High contrast']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet" title="High contrast">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testCssWithMediaOption(): void
+	{
+		$result   = Html::css('assets/css/index.css', 'print');
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
+
+		$this->assertSame($expected, $result);
+	}
+
 	public function testCssWithPluginAssets(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = static::TMP . '/plugin'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: $root = static::TMP . '/plugin'
+		);
 		touch($root . '/assets/styles.css', 1337000000);
 		$result = Html::css($plugin);
 
@@ -100,10 +85,39 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
+	public function testCssWithRelAttrButNoTitle(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testCssWithValidRelAttr(): void
+	{
+		$result   = Html::css('assets/css/index.css', ['rel' => 'alternate stylesheet', 'title' => 'High contrast']);
+		$expected = '<link href="https://getkirby.com/assets/css/index.css" rel="alternate stylesheet" title="High contrast">';
+
+		$this->assertSame($expected, $result);
+	}
+
 	public function testJs(): void
 	{
 		$result   = Html::js('assets/js/index.js');
 		$expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
+
+		$this->assertSame($expected, $result);
+	}
+
+	public function testJsWithArray(): void
+	{
+		$result = Html::js([
+			'assets/js/a.js',
+			'assets/js/b.js'
+		]);
+
+		$expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
+		$expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
 
 		$this->assertSame($expected, $result);
 	}
@@ -124,24 +138,12 @@ class HtmlTest extends TestCase
 		$this->assertSame($expected, $result);
 	}
 
-	public function testJsWithArray(): void
-	{
-		$result = Html::js([
-			'assets/js/a.js',
-			'assets/js/b.js'
-		]);
-
-		$expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
-		$expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
-
-		$this->assertSame($expected, $result);
-	}
-
 	public function testJsWithPluginAssets(): void
 	{
-		$plugin = new Plugin('getkirby/test-plugin', [
-			'root' => $root = static::TMP . '/plugin'
-		]);
+		$plugin = new Plugin(
+			name: 'getkirby/test-plugin',
+			root: $root = static::TMP . '/plugin'
+		);
 		touch($root . '/assets/scripts.js', 1337000000);
 		$result = Html::js($plugin);
 
@@ -162,6 +164,18 @@ class HtmlTest extends TestCase
 		$this->assertSame('<svg>test</svg>', trim($result));
 	}
 
+	public function testSvgWithFileObject(): void
+	{
+		$file = $this->createStub(File::class);
+		$file->method('__call')
+			->willReturnCallback(fn ($method) => match ($method) {
+				'extension' => 'svg',
+				default    => 'test'
+			});
+
+		$this->assertSame('test', Html::svg($file));
+	}
+
 	public function testSvgWithInvalidFileType(): void
 	{
 		$this->assertFalse(Html::svg(123));
@@ -170,21 +184,5 @@ class HtmlTest extends TestCase
 	public function testSvgWithMissingFile(): void
 	{
 		$this->assertFalse(Html::svg('somefile.svg'));
-	}
-
-	public function testSvgWithFileObject(): void
-	{
-		$file = $this->getMockBuilder(File::class)
-			->disableOriginalConstructor()
-			->onlyMethods(['__call'])
-			->getMock();
-
-		$file->method('__call')
-			->willReturnCallback(fn ($method) => match ($method) {
-				'extension' => 'svg',
-				default    => 'test'
-			});
-
-		$this->assertSame('test', Html::svg($file));
 	}
 }

@@ -37,14 +37,16 @@ class CoreTest extends TestCase
 	{
 		$authChallenges = $this->core->authChallenges();
 		$this->assertArrayHasKey('email', $authChallenges);
+		$this->assertArrayHasKey('totp', $authChallenges);
 	}
 
-	public function testBlueprintPresets(): void
+	public function testAuthMethods(): void
 	{
-		$blueprintPresets = $this->core->blueprintPresets();
-		$this->assertArrayHasKey('pages', $blueprintPresets);
-		$this->assertArrayHasKey('page', $blueprintPresets);
-		$this->assertArrayHasKey('files', $blueprintPresets);
+		$authMethods = $this->core->authMethods();
+		$this->assertArrayHasKey('code', $authMethods);
+		$this->assertArrayHasKey('basic-auth', $authMethods);
+		$this->assertArrayHasKey('password', $authMethods);
+		$this->assertArrayHasKey('password-reset', $authMethods);
 	}
 
 	public function testBlueprints(): void
@@ -103,91 +105,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('url', $components);
 	}
 
-	public function testFieldMethodAliases(): void
-	{
-		$aliases = $this->core->fieldMethodAliases();
-
-		$this->assertSame('toBool', $aliases['bool']);
-		$this->assertSame('escape', $aliases['esc']);
-		$this->assertSame('toExcerpt', $aliases['excerpt']);
-		$this->assertSame('toFloat', $aliases['float']);
-		$this->assertSame('html', $aliases['h']);
-		$this->assertSame('toInt', $aliases['int']);
-		$this->assertSame('kirbytext', $aliases['kt']);
-		$this->assertSame('kirbytextinline', $aliases['kti']);
-		$this->assertSame('toLink', $aliases['link']);
-		$this->assertSame('markdown', $aliases['md']);
-		$this->assertSame('smartypants', $aliases['sp']);
-		$this->assertSame('isValid', $aliases['v']);
-		$this->assertSame('xml', $aliases['x']);
-	}
-
-	public function testFieldMethods(): void
-	{
-		$methods = $this->core->fieldMethods();
-
-		$this->assertArrayHasKey('isFalse', $methods);
-		$this->assertArrayHasKey('isTrue', $methods);
-		$this->assertArrayHasKey('isValid', $methods);
-		$this->assertArrayHasKey('toBlocks', $methods);
-		$this->assertArrayHasKey('toBool', $methods);
-		$this->assertArrayHasKey('toData', $methods);
-		$this->assertArrayHasKey('toDate', $methods);
-		$this->assertArrayHasKey('toFile', $methods);
-		$this->assertArrayHasKey('toFiles', $methods);
-		$this->assertArrayHasKey('toFloat', $methods);
-		$this->assertArrayHasKey('toInt', $methods);
-		$this->assertArrayHasKey('toLayouts', $methods);
-		$this->assertArrayHasKey('toLink', $methods);
-		$this->assertArrayHasKey('toPage', $methods);
-		$this->assertArrayHasKey('toPages', $methods);
-		$this->assertArrayHasKey('toPages', $methods);
-		$this->assertArrayHasKey('toStructure', $methods);
-		$this->assertArrayHasKey('toTimestamp', $methods);
-		$this->assertArrayHasKey('toUrl', $methods);
-		$this->assertArrayHasKey('toUser', $methods);
-		$this->assertArrayHasKey('toUsers', $methods);
-		$this->assertArrayHasKey('length', $methods);
-		$this->assertArrayHasKey('words', $methods);
-		$this->assertArrayHasKey('words', $methods);
-		$this->assertArrayHasKey('callback', $methods);
-		$this->assertArrayHasKey('escape', $methods);
-		$this->assertArrayHasKey('excerpt', $methods);
-		$this->assertArrayHasKey('html', $methods);
-		$this->assertArrayHasKey('inline', $methods);
-		$this->assertArrayHasKey('kirbytext', $methods);
-		$this->assertArrayHasKey('kirbytextinline', $methods);
-		$this->assertArrayHasKey('kirbytags', $methods);
-		$this->assertArrayHasKey('lower', $methods);
-		$this->assertArrayHasKey('markdown', $methods);
-		$this->assertArrayHasKey('nl2br', $methods);
-		$this->assertArrayHasKey('query', $methods);
-		$this->assertArrayHasKey('replace', $methods);
-		$this->assertArrayHasKey('short', $methods);
-		$this->assertArrayHasKey('slug', $methods);
-		$this->assertArrayHasKey('smartypants', $methods);
-		$this->assertArrayHasKey('split', $methods);
-		$this->assertArrayHasKey('upper', $methods);
-		$this->assertArrayHasKey('widont', $methods);
-		$this->assertArrayHasKey('xml', $methods);
-		$this->assertArrayHasKey('yaml', $methods);
-	}
-
-	public function testFieldMixins(): void
-	{
-		$mixins = $this->core->fieldMixins();
-
-		$this->assertArrayHasKey('datetime', $mixins);
-		$this->assertArrayHasKey('filepicker', $mixins);
-		$this->assertArrayHasKey('min', $mixins);
-		$this->assertArrayHasKey('layout', $mixins);
-		$this->assertArrayHasKey('options', $mixins);
-		$this->assertArrayHasKey('pagepicker', $mixins);
-		$this->assertArrayHasKey('picker', $mixins);
-		$this->assertArrayHasKey('upload', $mixins);
-		$this->assertArrayHasKey('userpicker', $mixins);
-	}
-
 	public function testFields(): void
 	{
 		$fields = $this->core->fields();
@@ -196,7 +113,8 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('checkboxes', $fields);
 		$this->assertArrayHasKey('date', $fields);
 		$this->assertArrayHasKey('email', $fields);
-		$this->assertArrayHasKey('files', $fields);
+		$this->assertArrayHasKey('filelist', $fields);
+		$this->assertArrayHasKey('filepicker', $fields);
 		$this->assertArrayHasKey('gap', $fields);
 		$this->assertArrayHasKey('headline', $fields);
 		$this->assertArrayHasKey('hidden', $fields);
@@ -206,7 +124,8 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('list', $fields);
 		$this->assertArrayHasKey('multiselect', $fields);
 		$this->assertArrayHasKey('number', $fields);
-		$this->assertArrayHasKey('pages', $fields);
+		$this->assertArrayHasKey('pagelist', $fields);
+		$this->assertArrayHasKey('pagepicker', $fields);
 		$this->assertArrayHasKey('radio', $fields);
 		$this->assertArrayHasKey('range', $fields);
 		$this->assertArrayHasKey('select', $fields);
@@ -219,14 +138,41 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('time', $fields);
 		$this->assertArrayHasKey('toggle', $fields);
 		$this->assertArrayHasKey('url', $fields);
-		$this->assertArrayHasKey('users', $fields);
+		$this->assertArrayHasKey('userpicker', $fields);
 		$this->assertArrayHasKey('writer', $fields);
+
+		// the legacy picker types are mapped by the blueprint normalizer
+		$this->assertArrayNotHasKey('files', $fields);
+		$this->assertArrayNotHasKey('pages', $fields);
+		$this->assertArrayNotHasKey('users', $fields);
 	}
 
 	public function testFilePreviews(): void
 	{
 		$previews = $this->core->filePreviews();
 		$this->assertCount(4, $previews);
+	}
+
+	public function testKirbyTagAliases(): void
+	{
+		$aliases = $this->core->kirbyTagAliases();
+
+		$this->assertArrayHasKey('youtube', $aliases);
+		$this->assertArrayHasKey('vimeo', $aliases);
+	}
+
+	public function testKirbyTags(): void
+	{
+		$tags = $this->core->kirbyTags();
+
+		$this->assertArrayHasKey('date', $tags);
+		$this->assertArrayHasKey('email', $tags);
+		$this->assertArrayHasKey('file', $tags);
+		$this->assertArrayHasKey('gist', $tags);
+		$this->assertArrayHasKey('image', $tags);
+		$this->assertArrayHasKey('link', $tags);
+		$this->assertArrayHasKey('tel', $tags);
+		$this->assertArrayHasKey('video', $tags);
 	}
 
 	public function testLoad(): void
@@ -292,52 +238,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('blocks/table', $snippets);
 		$this->assertArrayHasKey('blocks/text', $snippets);
 		$this->assertArrayHasKey('blocks/video', $snippets);
-	}
-
-	public function testKirbyTagAliases(): void
-	{
-		$aliases = $this->core->kirbyTagAliases();
-
-		$this->assertArrayHasKey('youtube', $aliases);
-		$this->assertArrayHasKey('vimeo', $aliases);
-	}
-
-	public function testKirbyTags(): void
-	{
-		$tags = $this->core->kirbyTags();
-
-		$this->assertArrayHasKey('date', $tags);
-		$this->assertArrayHasKey('email', $tags);
-		$this->assertArrayHasKey('file', $tags);
-		$this->assertArrayHasKey('gist', $tags);
-		$this->assertArrayHasKey('image', $tags);
-		$this->assertArrayHasKey('link', $tags);
-		$this->assertArrayHasKey('tel', $tags);
-		$this->assertArrayHasKey('video', $tags);
-	}
-
-	public function testSectionMixins(): void
-	{
-		$mixins = $this->core->sectionMixins();
-
-		$this->assertArrayHasKey('empty', $mixins);
-		$this->assertArrayHasKey('headline', $mixins);
-		$this->assertArrayHasKey('help', $mixins);
-		$this->assertArrayHasKey('layout', $mixins);
-		$this->assertArrayHasKey('max', $mixins);
-		$this->assertArrayHasKey('min', $mixins);
-		$this->assertArrayHasKey('pagination', $mixins);
-		$this->assertArrayHasKey('parent', $mixins);
-	}
-
-	public function testSections(): void
-	{
-		$sections = $this->core->sections();
-
-		$this->assertArrayHasKey('fields', $sections);
-		$this->assertArrayHasKey('files', $sections);
-		$this->assertArrayHasKey('info', $sections);
-		$this->assertArrayHasKey('pages', $sections);
 	}
 
 	public function testTemplates(): void

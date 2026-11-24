@@ -105,18 +105,28 @@ class RangeTest extends TestCase
 		$this->assertFalse($result);
 	}
 
-	public function testResponseWithValidRange(): void
+	public function testResponseWithInvalidMimeType(): void
+	{
+		$file     = static::FIXTURES . '/download.xyz';
+		$response = Range::response($file, 'bytes=0-3');
+
+		$this->assertSame(206, $response->code());
+		$this->assertSame('text/plain', $response->type());
+		$this->assertSame('nosniff', $response->header('X-Content-Type-Options'));
+		$this->assertSame('test', $response->body());
+	}
+
+	public function testResponseWithInvalidRange(): void
 	{
 		$file = static::FIXTURES . '/download.json';
 		$size = filesize($file);
 
-		$response = Range::response($file, 'bytes=0-5');
+		// beyond file size
+		$response = Range::response($file, 'bytes=1000-2000');
 
-		$this->assertSame(206, $response->code());
-		$this->assertSame('bytes', $response->header('Accept-Ranges'));
-		$this->assertSame('bytes 0-5/' . $size, $response->header('Content-Range'));
-		$this->assertSame(6, (int)$response->header('Content-Length'));
-		$this->assertSame('{"foo"', $response->body());
+		$this->assertSame(416, $response->code());
+		$this->assertSame('bytes */' . $size, $response->header('Content-Range'));
+		$this->assertSame('Requested Range Not Satisfiable', $response->body());
 	}
 
 	public function testResponseWithOpenEndedRange(): void
@@ -145,27 +155,17 @@ class RangeTest extends TestCase
 		$this->assertSame('{"', $response->body());
 	}
 
-	public function testResponseWithInvalidRange(): void
+	public function testResponseWithValidRange(): void
 	{
 		$file = static::FIXTURES . '/download.json';
 		$size = filesize($file);
 
-		// beyond file size
-		$response = Range::response($file, 'bytes=1000-2000');
-
-		$this->assertSame(416, $response->code());
-		$this->assertSame('bytes */' . $size, $response->header('Content-Range'));
-		$this->assertSame('Requested Range Not Satisfiable', $response->body());
-	}
-
-	public function testResponseWithInvalidMimeType(): void
-	{
-		$file     = static::FIXTURES . '/download.xyz';
-		$response = Range::response($file, 'bytes=0-3');
+		$response = Range::response($file, 'bytes=0-5');
 
 		$this->assertSame(206, $response->code());
-		$this->assertSame('text/plain', $response->type());
-		$this->assertSame('nosniff', $response->header('X-Content-Type-Options'));
-		$this->assertSame('test', $response->body());
+		$this->assertSame('bytes', $response->header('Accept-Ranges'));
+		$this->assertSame('bytes 0-5/' . $size, $response->header('Content-Range'));
+		$this->assertSame(6, (int)$response->header('Content-Length'));
+		$this->assertSame('{"foo"', $response->body());
 	}
 }

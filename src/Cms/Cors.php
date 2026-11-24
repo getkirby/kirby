@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -9,17 +10,17 @@ use Kirby\Toolkit\Str;
  * Handles CORS (Cross-Origin Resource Sharing)
  * headers for HTTP responses
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.2.0
  */
 class Cors
 {
-	protected App $kirby;
+	/**
+	 * @var array<string, mixed>
+	 */
 	protected array $config;
+	protected App $kirby;
 
 	public function __construct()
 	{
@@ -30,11 +31,9 @@ class Cors
 			return;
 		}
 
-		// get and resolve config
 		$config = $this->kirby->option('cors', false);
 
-		// resolve closure
-		if ($config instanceof \Closure) {
+		if ($config instanceof Closure) {
 			$config = $config($this->kirby);
 		}
 
@@ -43,107 +42,43 @@ class Cors
 			$config = [];
 		}
 
-		$this->config = is_array($config) ? $config : [];
+		$this->config = is_array($config) === true ? $config : [];
 	}
 
 	/**
-	 * Returns CORS headers based on configuration
+	 * Adds headers to allow custom request headers
 	 *
-	 * @param bool $preflight Whether this is a preflight request
+	 * @param $headers Headers array (passed by reference)
 	 */
-	public static function headers(bool $preflight = false): array
+	protected function addAllowHeaders(array &$headers): void
 	{
-		return (new static())->toArray($preflight);
-	}
+		$allowHeaders = $this->config['allowHeaders'] ?? null;
 
-	/**
-	 * Converts the CORS configuration to an array of headers
-	 *
-	 * @param bool $preflight Whether this is a preflight request
-	 */
-	public function toArray(bool $preflight = false): array
-	{
-		// empty array if CORS is disabled
-		if ($this->kirby->isCorsEnabled() === false) {
-			return [];
+		// reflect request headers only when explicitly enabled via `true`
+		if ($allowHeaders === true) {
+			$requestHeaders = $this->kirby->request()->header('Access-Control-Request-Headers');
+			$allowHeaders   = $requestHeaders !== null ? Str::split($requestHeaders, ',') : [];
 		}
 
-		$headers = [];
+		if ($this->hasConfigValue($allowHeaders) === true) {
+			$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders) === true
+				? implode(', ', $allowHeaders)
+				: $allowHeaders;
 
-		// determine allowed origin
-		$allowOrigin = $this->allowOrigin();
-
-		// no origin match found
-		if ($allowOrigin === null) {
-			return [];
-		}
-
-		$headers['Access-Control-Allow-Origin'] = $allowOrigin;
-
-		$this->addVaryHeader($headers, $allowOrigin);
-		$this->addCredentialsHeader($headers, $allowOrigin);
-		$this->addExposeHeaders($headers);
-
-		// add preflight-specific headers
-		if ($preflight === true) {
-			$this->addPreflightHeaders($headers);
-		}
-
-		return $headers;
-	}
-
-	/**
-	 * Determines the allowed origin based on config and request
-	 */
-	protected function allowOrigin(): string|null
-	{
-		$requestOrigin = $this->kirby->request()->header('Origin');
-		$configOrigin  = $this->config['allowOrigin'] ?? '*';
-
-		return match (true) {
-			$configOrigin === '*' => '*',
-			$requestOrigin === null => null,
-			is_string($configOrigin) => strcasecmp($configOrigin, $requestOrigin) === 0 ? $requestOrigin : null,
-			default => $this->matchOriginFromArray($configOrigin, $requestOrigin)
-		};
-	}
-
-	/**
-	 * Matches the request origin against an array of allowed origins
-	 *
-	 * @param array $configOrigin Array of allowed origins
-	 * @param string $requestOrigin Origin from the request header
-	 */
-	protected function matchOriginFromArray(array $configOrigin, string $requestOrigin): string|null
-	{
-		foreach ($configOrigin as $origin) {
-			if (strcasecmp($origin, $requestOrigin) === 0) {
-				return $requestOrigin;
+			// preflight response varies by requested headers
+			if (isset($headers['Vary']) === true) {
+				$headers['Vary'] .= ', Access-Control-Request-Headers';
+			} else {
+				$headers['Vary'] = 'Access-Control-Request-Headers';
 			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Adds the Vary header for cache control
-	 *
-	 * @param array $headers Headers array (passed by reference)
-	 * @param string $allowOrigin Allowed origin value
-	 */
-	protected function addVaryHeader(array &$headers, string $allowOrigin): void
-	{
-		// response varies by origin for non-wildcard origins
-		if ($allowOrigin !== '*') {
-			$headers['Vary'] = 'Origin';
 		}
 	}
 
 	/**
 	 * Adds the credentials header if configured
 	 *
-	 * @param array $headers Headers array (passed by reference)
-	 * @param string $allowOrigin Allowed origin value
+	 * @param $headers Headers array (passed by reference)
+	 * @param $allowOrigin Allowed origin value
 	 */
 	protected function addCredentialsHeader(array &$headers, string $allowOrigin): void
 	{
@@ -164,14 +99,14 @@ class Cors
 	/**
 	 * Adds headers to expose custom headers to the client
 	 *
-	 * @param array $headers Headers array (passed by reference)
+	 * @param $headers Headers array (passed by reference)
 	 */
 	protected function addExposeHeaders(array &$headers): void
 	{
 		$exposeHeaders = $this->config['exposeHeaders'] ?? [];
 
 		if ($this->hasConfigValue($exposeHeaders) === true) {
-			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders)
+			$headers['Access-Control-Expose-Headers'] = is_array($exposeHeaders) === true
 				? implode(', ', $exposeHeaders)
 				: $exposeHeaders;
 		}
@@ -180,7 +115,7 @@ class Cors
 	/**
 	 * Adds preflight-specific headers
 	 *
-	 * @param array $headers Headers array (passed by reference)
+	 * @param $headers Headers array (passed by reference)
 	 */
 	protected function addPreflightHeaders(array &$headers): void
 	{
@@ -193,7 +128,7 @@ class Cors
 		// allowed methods
 		$methods = $this->config['allowMethods'] ?? ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH'];
 		if ($this->hasConfigValue($methods) === true) {
-			$headers['Access-Control-Allow-Methods'] = is_array($methods)
+			$headers['Access-Control-Allow-Methods'] = is_array($methods) === true
 				? implode(', ', $methods)
 				: $methods;
 		}
@@ -203,32 +138,33 @@ class Cors
 	}
 
 	/**
-	 * Adds headers to allow custom request headers
+	 * Adds the Vary header for cache control
 	 *
-	 * @param array $headers Headers array (passed by reference)
+	 * @param $headers Headers array (passed by reference)
+	 * @param $allowOrigin Allowed origin value
 	 */
-	protected function addAllowHeaders(array &$headers): void
+	protected function addVaryHeader(array &$headers, string $allowOrigin): void
 	{
-		$allowHeaders = $this->config['allowHeaders'] ?? null;
-
-		// reflect request headers only when explicitly enabled via `true`
-		if ($allowHeaders === true) {
-			$requestHeaders = $this->kirby->request()->header('Access-Control-Request-Headers');
-			$allowHeaders    = $requestHeaders !== null ? Str::split($requestHeaders, ',') : [];
+		// response varies by origin for non-wildcard origins
+		if ($allowOrigin !== '*') {
+			$headers['Vary'] = 'Origin';
 		}
+	}
 
-		if ($this->hasConfigValue($allowHeaders) === true) {
-			$headers['Access-Control-Allow-Headers'] = is_array($allowHeaders)
-				? implode(', ', $allowHeaders)
-				: $allowHeaders;
+	/**
+	 * Determines the allowed origin based on config and request
+	 */
+	protected function allowOrigin(): string|null
+	{
+		$requestOrigin = $this->kirby->request()->header('Origin');
+		$configOrigin  = $this->config['allowOrigin'] ?? '*';
 
-			// preflight response varies by requested headers
-			if (isset($headers['Vary']) === true) {
-				$headers['Vary'] .= ', Access-Control-Request-Headers';
-			} else {
-				$headers['Vary'] = 'Access-Control-Request-Headers';
-			}
-		}
+		return match (true) {
+			$configOrigin === '*' => '*',
+			$requestOrigin === null => null,
+			is_string($configOrigin) === true => strcasecmp($configOrigin, $requestOrigin) === 0 ? $requestOrigin : null,
+			default => $this->matchOriginFromArray($configOrigin, $requestOrigin)
+		};
 	}
 
 	/**
@@ -245,5 +181,68 @@ class Cors
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns CORS headers based on configuration
+	 *
+	 * @param $preflight Whether this is a preflight request
+	 * @return array<string, string>
+	 */
+	public static function headers(bool $preflight = false): array
+	{
+		return (new static())->toArray($preflight);
+	}
+
+	/**
+	 * Matches the request origin against an array of allowed origins
+	 *
+	 * @param $configOrigin Array of allowed origins
+	 * @param $requestOrigin Origin from the request header
+	 */
+	protected function matchOriginFromArray(array $configOrigin, string $requestOrigin): string|null
+	{
+		foreach ($configOrigin as $origin) {
+			if (strcasecmp($origin, $requestOrigin) === 0) {
+				return $requestOrigin;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Converts the CORS configuration to an array of headers
+	 *
+	 * @param $preflight Whether this is a preflight request
+	 * @return array<string, string>
+	 */
+	public function toArray(bool $preflight = false): array
+	{
+		// empty array if CORS is disabled
+		if ($this->kirby->isCorsEnabled() === false) {
+			return [];
+		}
+
+		$headers = [];
+
+		$allowOrigin = $this->allowOrigin();
+
+		// no origin match found
+		if ($allowOrigin === null) {
+			return [];
+		}
+
+		$headers['Access-Control-Allow-Origin'] = $allowOrigin;
+
+		$this->addVaryHeader($headers, $allowOrigin);
+		$this->addCredentialsHeader($headers, $allowOrigin);
+		$this->addExposeHeaders($headers);
+
+		if ($preflight === true) {
+			$this->addPreflightHeaders($headers);
+		}
+
+		return $headers;
 	}
 }

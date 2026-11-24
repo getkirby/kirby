@@ -10,12 +10,10 @@ use WeakMap;
  * to avoid multiple storage reads for the same
  * content.
  *
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
+ *
  * @unstable
  */
 class VersionCache
@@ -24,7 +22,7 @@ class VersionCache
 	 * All cache values for all versions
 	 * and language combinations
 	 */
-	protected static WeakMap $cache;
+	protected static WeakMap|null $cache = null;
 
 	/**
 	 * Tries to receive a fields for a version/language combination

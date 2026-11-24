@@ -13,10 +13,11 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(System::class)]
 class SystemTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/SystemTest';
-	public const TMP      = KIRBY_TMP_DIR . '/Cms.System';
+	public const string FIXTURES = __DIR__ . '/fixtures/SystemTest';
+	public const string TMP      = KIRBY_TMP_DIR . '/Cms.System';
 
 	protected static string $updateStatusHost;
+
 	protected string|null $subTmp = null;
 
 	public static function setUpBeforeClass(): void
@@ -35,6 +36,11 @@ class SystemTest extends TestCase
 		$this->app = new App([
 			'roots' => [
 				'index' => static::TMP
+			],
+			'options' => [
+				// the fixtures are served from the local filesystem,
+				// which the default protocol allowlist blocks
+				'remote' => ['protocols' => CURLPROTO_FILE]
 			]
 		]);
 	}
@@ -49,81 +55,6 @@ class SystemTest extends TestCase
 		parent::tearDown();
 	}
 
-	public static function providerForIndexUrls(): array
-	{
-		return [
-			['http://getkirby.com', 'getkirby.com'],
-			['https://getkirby.com', 'getkirby.com'],
-			['https://getkirby.com/test', 'getkirby.com/test'],
-			['/', '/'],
-			['/test', '/test']
-		];
-	}
-
-	public static function providerForLoginMethods(): array
-	{
-		return [
-			[
-				'password',
-				['password' => []]
-			],
-			[
-				'password-reset',
-				['password-reset' => []]
-			],
-			[
-				['password-reset'],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => true],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => []],
-				['password-reset' => []]
-			],
-			[
-				['password-reset' => ['option' => 'test']],
-				['password-reset' => ['option' => 'test']]
-			],
-			[
-				['password', 'password-reset'],
-				['password' => [], 'password-reset' => []]
-			],
-			[
-				['code', 'password'],
-				['code' => [], 'password' => []]
-			],
-			[
-				['code', 'password-reset'],
-				['password-reset' => []]
-			],
-			[
-				['password' => ['2fa' => true], 'code'],
-				['password' => ['2fa' => true]]
-			],
-			[
-				['password' => ['2fa' => true], 'password-reset'],
-				['password' => ['2fa' => true]]
-			],
-			[
-				['password' => ['2fa' => true], 'code', 'password-reset'],
-				['password' => ['2fa' => true]]
-			]
-		];
-	}
-
-	public static function providerForRoots(): array
-	{
-		return [
-			['accounts'],
-			['content'],
-			['media'],
-			['sessions'],
-		];
-	}
-
 	public static function providerForServerNames(): array
 	{
 		return [
@@ -133,6 +64,26 @@ class SystemTest extends TestCase
 			['mydomain.com', false],
 			['mydomain.dev', false],
 		];
+	}
+
+	public function testExtensions(): void
+	{
+		$system = new System($this->app);
+
+		$expected = [
+			'ctype'     => true,
+			'curl'      => true,
+			'dom'       => true,
+			'filter'    => true,
+			'hash'      => true,
+			'iconv'     => true,
+			'json'      => true,
+			'libxml'    => true,
+			'mbstring'  => true,
+			'openssl'   => true,
+			'SimpleXML' => true,
+		];
+		$this->assertSame($expected, $system->extensions());
 	}
 
 	public function testFolderUrlForContentFolder(): void
@@ -256,6 +207,17 @@ class SystemTest extends TestCase
 		$this->assertNull($system->exposedFileUrl('unknown'));
 	}
 
+	public static function providerForIndexUrls(): array
+	{
+		return [
+			['http://getkirby.com', 'getkirby.com'],
+			['https://getkirby.com', 'getkirby.com'],
+			['https://getkirby.com/test', 'getkirby.com/test'],
+			['/', '/'],
+			['/test', '/test']
+		];
+	}
+
 	#[DataProvider('providerForIndexUrls')]
 	public function testIndexUrl($indexUrl, $expected): void
 	{
@@ -265,6 +227,33 @@ class SystemTest extends TestCase
 			]
 		]));
 		$this->assertSame($expected, $system->indexUrl($indexUrl));
+	}
+
+	public function testInfo(): void
+	{
+		$app = $this->app->clone([
+			'languages' => [
+				'en' => [
+					'code' => 'en'
+				],
+				'de' => [
+					'code' => 'de'
+				]
+			],
+		]);
+		$system = new System($app);
+		$info   = $system->info();
+		$this->assertSame(['en', 'de'], $info['languages']);
+	}
+
+	public static function providerForRoots(): array
+	{
+		return [
+			['accounts'],
+			['content'],
+			['media'],
+			['sessions'],
+		];
 	}
 
 	/**
@@ -293,23 +282,6 @@ class SystemTest extends TestCase
 		$this->expectExceptionMessage('The ' . $root . ' directory could not be created');
 
 		new System($app);
-	}
-
-	public function testInfo(): void
-	{
-		$app = $this->app->clone([
-			'languages' => [
-				'en' => [
-					'code' => 'en'
-				],
-				'de' => [
-					'code' => 'de'
-				]
-			],
-		]);
-		$system = new System($app);
-		$info   = $system->info();
-		$this->assertSame(['en', 'de'], $info['languages']);
 	}
 
 	public function testIs2FA(): void
@@ -420,7 +392,8 @@ class SystemTest extends TestCase
 
 		$this->app->users()->create([
 			'email'    => 'test@getkirby.com',
-			'password' => 'test123456'
+			'password' => 'test123456',
+			'role'     => 'admin'
 		]);
 
 		$this->assertTrue($system->isInstalled());
@@ -523,11 +496,66 @@ class SystemTest extends TestCase
 		$this->assertSame(['password' => []], $this->app->system()->loginMethods());
 	}
 
+	public static function providerForLoginMethods(): array
+	{
+		return [
+			[
+				'password',
+				['password' => []]
+			],
+			[
+				'password-reset',
+				['password-reset' => []]
+			],
+			[
+				['password-reset'],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => true],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => []],
+				['password-reset' => []]
+			],
+			[
+				['password-reset' => ['option' => 'test']],
+				['password-reset' => ['option' => 'test']]
+			],
+			[
+				['password', 'password-reset'],
+				['password' => [], 'password-reset' => []]
+			],
+			[
+				['code', 'password'],
+				['code' => [], 'password' => []]
+			],
+			[
+				['code', 'password-reset'],
+				['password-reset' => []]
+			],
+			[
+				['password' => ['2fa' => true], 'code'],
+				['password' => ['2fa' => true]]
+			],
+			[
+				['password' => ['2fa' => true], 'password-reset'],
+				['password' => ['2fa' => true]]
+			],
+			[
+				['password' => ['2fa' => true], 'code', 'password-reset'],
+				['password' => ['2fa' => true]]
+			]
+		];
+	}
+
 	#[DataProvider('providerForLoginMethods')]
 	public function testLoginMethodsCustom($option, $expected): void
 	{
 		$app = $this->app->clone([
 			'options' => [
+				'auth.debug'   => false,
 				'auth.methods' => $option
 			]
 		]);
@@ -640,11 +668,8 @@ class SystemTest extends TestCase
 		$expected = [
 			'accounts' => true,
 			'content'  => true,
-			'curl'     => true,
-			'sessions' => true,
-			'mbstring' => true,
 			'media'    => true,
-			'php'      => true
+			'sessions' => true,
 		];
 		$this->assertSame($expected, $system->status());
 		$this->assertSame($expected, $system->toArray());
@@ -659,19 +684,7 @@ class SystemTest extends TestCase
 		$system = new System($this->app);
 
 		chmod($this->app->root('content'), 0o000);
-
-		$expected = [
-			'accounts' => true,
-			'content'  => false,
-			'curl'     => true,
-			'sessions' => true,
-			'mbstring' => true,
-			'media'    => true,
-			'php'      => true
-		];
-		$this->assertSame($expected, $system->status());
-		$this->assertSame($expected, $system->toArray());
-		$this->assertSame($expected, $system->__debugInfo());
+		$this->assertFalse($system->status()['content']);
 	}
 
 	public function testTitle(): void
@@ -711,6 +724,38 @@ class SystemTest extends TestCase
 		// suggest feature updates by default
 		$this->assertSame('update', $updateStatus->status());
 		$this->assertSame('88888.8.8', $updateStatus->targetVersion());
+	}
+
+	public function testUpdateStatusCustomData(): void
+	{
+		$system       = new System($this->app);
+		$updateStatus = $system->updateStatus([
+			'latest' => '87654.3.2',
+			'versions' => [
+				'*' => [
+					'latest' => $this->app->version(),
+					'status' => 'active-support'
+				]
+			],
+			'urls' => [
+				'*' => [
+					'changes' => 'https://other-domain.com/releases/{{ version }}',
+					'upgrade' => 'https://other-domain.com/releases/87654'
+				]
+			],
+			'incidents' => [],
+			'messages' => []
+		]);
+
+		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
+
+		// instance should be cached
+		$this->assertSame($updateStatus, $system->updateStatus());
+
+		// should use the passed data
+		$this->assertSame('upgrade', $updateStatus->status());
+		$this->assertSame('87654.3.2', $updateStatus->targetVersion());
+		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
 	}
 
 	public function testUpdateStatusDisabled1(): void
@@ -787,37 +832,5 @@ class SystemTest extends TestCase
 		// only suggest security updates
 		$this->assertSame('not-vulnerable', $updateStatus->status());
 		$this->assertNull($updateStatus->targetVersion());
-	}
-
-	public function testUpdateStatusCustomData(): void
-	{
-		$system       = new System($this->app);
-		$updateStatus = $system->updateStatus([
-			'latest' => '87654.3.2',
-			'versions' => [
-				'*' => [
-					'latest' => $this->app->version(),
-					'status' => 'active-support'
-				]
-			],
-			'urls' => [
-				'*' => [
-					'changes' => 'https://other-domain.com/releases/{{ version }}',
-					'upgrade' => 'https://other-domain.com/releases/87654'
-				]
-			],
-			'incidents' => [],
-			'messages' => []
-		]);
-
-		$this->assertInstanceOf(UpdateStatus::class, $updateStatus);
-
-		// instance should be cached
-		$this->assertSame($updateStatus, $system->updateStatus());
-
-		// should use the passed data
-		$this->assertSame('upgrade', $updateStatus->status());
-		$this->assertSame('87654.3.2', $updateStatus->targetVersion());
-		$this->assertSame('https://other-domain.com/releases/87654', $updateStatus->url());
 	}
 }

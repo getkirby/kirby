@@ -9,7 +9,7 @@ use Kirby\TestCase;
 
 class LanguagesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Languages';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Languages';
 
 	protected Languages $languages;
 
@@ -78,6 +78,26 @@ class LanguagesTest extends TestCase
 		$this->assertSame(['default'], $app->languages()->codes());
 	}
 
+	public function testCreate(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$language = $this->app->languages()->create([
+			'code' => 'tr'
+		]);
+
+		$this->assertSame('tr', $language->code());
+		$this->assertFalse($language->isDefault());
+		$this->assertSame('ltr', $language->direction());
+		$this->assertSame('tr', $language->name());
+		$this->assertSame('/tr', $language->url());
+	}
+
+	public function testDefault(): void
+	{
+		$this->assertSame('en', $this->languages->default()->code());
+	}
+
 	public function testEnsureInMultiLanguageMode(): void
 	{
 		$languages = Languages::ensure();
@@ -99,6 +119,15 @@ class LanguagesTest extends TestCase
 
 		$this->assertCount(1, $languages);
 		$this->assertSame('en', $languages->first()->code());
+	}
+
+	public function testFindByPath(): void
+	{
+		$this->assertSame('de', $this->languages->findByPath('de')->code());
+		$this->assertSame('de', $this->languages->findByPath('de/foo')->code());
+		$this->assertNull($this->languages->findByPath('deutsch'));
+		$this->assertNull($this->languages->findByPath('foo'));
+		$this->assertNull($this->languages->findByPath(null));
 	}
 
 	public function testLoad(): void
@@ -134,20 +163,6 @@ class LanguagesTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testDefault(): void
-	{
-		$this->assertSame('en', $this->languages->default()->code());
-	}
-
-	public function testFindByPath(): void
-	{
-		$this->assertSame('de', $this->languages->findByPath('de')->code());
-		$this->assertSame('de', $this->languages->findByPath('de/foo')->code());
-		$this->assertNull($this->languages->findByPath('deutsch'));
-		$this->assertNull($this->languages->findByPath('foo'));
-		$this->assertNull($this->languages->findByPath(null));
-	}
-
 	public function testMultipleDefault(): void
 	{
 		$this->expectException(DuplicateException::class);
@@ -170,20 +185,5 @@ class LanguagesTest extends TestCase
 				],
 			]
 		]);
-	}
-
-	public function testCreate(): void
-	{
-		$this->app->impersonate('kirby');
-
-		$language = $this->app->languages()->create([
-			'code' => 'tr'
-		]);
-
-		$this->assertSame('tr', $language->code());
-		$this->assertFalse($language->isDefault());
-		$this->assertSame('ltr', $language->direction());
-		$this->assertSame('tr', $language->name());
-		$this->assertSame('/tr', $language->url());
 	}
 }

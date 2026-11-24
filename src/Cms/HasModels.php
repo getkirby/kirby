@@ -7,9 +7,6 @@ use Kirby\Toolkit\BlockCollectionAccess;
 /**
  * HasModels
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     5.0.0
@@ -18,12 +15,17 @@ trait HasModels
 {
 	/**
 	 * Registry with all custom models
+	 *
+	 * @var array<string, class-string>
 	 */
 	public static array $models = [];
 
 	/**
 	 * Adds new models to the registry
 	 * @internal
+	 *
+	 * @param array<string, class-string> $models
+	 * @return array<string, class-string>
 	 */
 	#[BlockCollectionAccess]
 	public static function extendModels(array $models): array
@@ -36,6 +38,8 @@ trait HasModels
 
 	/**
 	 * Creates an object from model if it has been registered
+	 *
+	 * @param array<string, mixed> $props
 	 */
 	public static function model(string $name, array $props = []): static
 	{

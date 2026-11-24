@@ -1,0 +1,207 @@
+<?php
+
+namespace Kirby\Panel;
+
+use Closure;
+use Kirby\Panel\Routes\DialogRoutes;
+use Kirby\Panel\Routes\DrawerRoutes;
+use Kirby\Panel\Routes\DropdownRoutes;
+use Kirby\Panel\Routes\RequestRoutes;
+use Kirby\Panel\Routes\SearchRoutes;
+use Kirby\Panel\Routes\ViewRoutes;
+use Kirby\Toolkit\HasI18n;
+
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class Area
+{
+	use HasI18n;
+
+	public function __construct(
+		protected string $id,
+		protected array $breadcrumb = [],
+		protected Closure|array|string|null $breadcrumbLabel = null,
+		protected array $buttons = [],
+		protected Closure|bool|null $current = null,
+		protected array|string|null $dialog = null,
+		protected array $dialogs = [],
+		protected array|string|null $drawer = null,
+		protected array $drawers = [],
+		protected array $dropdowns = [],
+		protected string|null $icon = null,
+		protected Closure|array|string|null $label = null,
+		protected string|null $link = null,
+		protected Closure|array|bool|string $menu = false,
+		protected string|null $search = null,
+		protected array $searches = [],
+		protected array $requests = [],
+		protected string|null $target = null,
+		protected Closure|array|string|null $title = null,
+		protected array $views = [],
+	) {
+	}
+
+	public function __call(string $name, array $args = [])
+	{
+		return $this->{$name};
+	}
+
+	/**
+	 * A custom breadcrumb label that will be used for the
+	 * breadcrumb instead of the default label
+	 */
+	public function breadcrumbLabel(): string
+	{
+		return $this->i18n($this->breadcrumbLabel ?? $this->label());
+	}
+
+	/**
+	 * All view buttons of the area that have not been disabled
+	 */
+	public function buttons(): array
+	{
+		return $this->filterEnabled($this->buttons);
+	}
+
+	/**
+	 * All dialogs of the area that have not been disabled
+	 */
+	public function dialogs(): array
+	{
+		return $this->filterEnabled($this->dialogs);
+	}
+
+	/**
+	 * All drawers of the area that have not been disabled
+	 */
+	public function drawers(): array
+	{
+		return $this->filterEnabled($this->drawers);
+	}
+
+	/**
+	 * All dropdowns of the area that have not been disabled
+	 */
+	public function dropdowns(): array
+	{
+		return $this->filterEnabled($this->dropdowns);
+	}
+
+	/**
+	 * Removes all definitions that have been disabled
+	 * by setting them to `false`, e.g. by a plugin
+	 */
+	protected function filterEnabled(array $definitions): array
+	{
+		return array_filter(
+			$definitions,
+			fn ($definition) => $definition !== false
+		);
+	}
+
+	/**
+	 * The label is used for the menu item and the breadcrumb
+	 * unless a custom breadcrumb label is defined
+	 */
+	public function label(): string
+	{
+		return $this->i18n($this->label ?? $this->id);
+	}
+
+	/**
+	 * Returns properties that are used to create
+	 * the respective menu item for the area
+	 */
+	public function menuItem(): array
+	{
+		return [
+			'id'      => $this->id(),
+			'current' => $this->current(),
+			'dialog'  => $this->dialog(),
+			'drawer'  => $this->drawer(),
+			'icon'    => $this->icon(),
+			'label'   => $this->label(),
+			'link'    => $this->link(),
+			'menu'    => $this->menu(),
+			'target'  => $this->target(),
+			'title'   => $this->title()
+		];
+	}
+
+	/**
+	 * All requests of the area that have not been disabled
+	 */
+	public function requests(): array
+	{
+		return $this->filterEnabled($this->requests);
+	}
+
+	/**
+	 * Extract all routes for searches
+	 */
+	public function routes(): array
+	{
+		$viewRoutes     = new ViewRoutes($this, $this->views());
+		$searchRoutes   = new SearchRoutes($this, $this->searches());
+		$dialogRoutes   = new DialogRoutes($this, $this->dialogs());
+		$drawerRoutes   = new DrawerRoutes($this, $this->drawers());
+		$dropdownRoutes = new DropdownRoutes($this, $this->dropdowns());
+		$requestRoutes  = new RequestRoutes($this, $this->requests());
+
+		return [
+			...$viewRoutes->toArray(),
+			...$searchRoutes->toArray(),
+			...$dialogRoutes->toArray(),
+			...$drawerRoutes->toArray(),
+			...$dropdownRoutes->toArray(),
+			...$requestRoutes->toArray(),
+		];
+	}
+
+	/**
+	 * All searches of the area that have not been disabled
+	 */
+	public function searches(): array
+	{
+		return $this->filterEnabled($this->searches);
+	}
+
+	/**
+	 * The title is used for the browser title. It will fall back
+	 * to the label if no custom title is defined.
+	 */
+	public function title(): string
+	{
+		return $this->i18n($this->title ?? $this->label());
+	}
+
+	/**
+	 * Returns properties that will be added to the
+	 * view response (one level above the props) to
+	 * render the view component properly
+	 */
+	public function view(): array
+	{
+		return [
+			'breadcrumb'      => $this->breadcrumb(),
+			'breadcrumbLabel' => $this->breadcrumbLabel(),
+			'icon'            => $this->icon(),
+			'id'              => $this->id(),
+			'label'           => $this->label(),
+			'link'            => $this->link() ?? $this->id(),
+			'search'          => $this->search(),
+			'title'           => $this->title(),
+		];
+	}
+
+	/**
+	 * All views of the area that have not been disabled
+	 */
+	public function views(): array
+	{
+		return $this->filterEnabled($this->views);
+	}
+}

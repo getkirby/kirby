@@ -20,13 +20,13 @@
 					class="k-input-icon-button"
 					@click="$refs.times.toggle()"
 				/>
-				<k-dropdown-content ref="times" align-x="end">
+				<k-dropdown ref="times" align-x="end">
 					<k-timeoptions-input
 						:display="display"
 						:value="value"
 						@input="select"
 					/>
-				</k-dropdown-content>
+				</k-dropdown>
 			</template>
 		</k-input>
 	</k-field>
@@ -43,7 +43,11 @@ import { props as TimeInput } from "../Input/TimeInput.vue";
  * Have a look at `<k-field>`, `<k-input>`
  * and `<k-time-input>` for additional information.
  *
- * @example <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
+ * @example
+ * <k-time-field :value="time" @input="time = $event" name="time" label="Time" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, TimeInput],
@@ -64,6 +68,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input", "submit"],
 	methods: {
 		/**
 		 * Focuses the input element

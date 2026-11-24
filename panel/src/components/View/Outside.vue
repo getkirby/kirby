@@ -8,7 +8,11 @@
 <script>
 /**
  * Wrapper for views for signed-out users.
+ *
  * @displayName PanelOutside
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {};
 </script>

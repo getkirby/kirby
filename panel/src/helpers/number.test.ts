@@ -1,11 +1,7 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { format } from "./number";
 
 describe("$helper.number.format()", () => {
-	afterEach(() => {
-		document.documentElement.lang = "";
-	});
-
 	it("formats in English without an interface language", () => {
 		expect(format(1234.5)).toBe("1,234.5");
 	});

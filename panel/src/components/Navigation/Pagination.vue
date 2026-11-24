@@ -3,8 +3,8 @@
 		v-if="pages > 1"
 		layout="collapsed"
 		class="k-pagination"
-		@keydown.left.native="prev"
-		@keydown.right.native="next"
+		@keydown.left="prev"
+		@keydown.right="next"
 	>
 		<!-- prev -->
 		<k-button
@@ -28,12 +28,12 @@
 				@click="$refs.dropdown.toggle()"
 			/>
 
-			<k-dropdown-content
+			<k-dropdown
 				ref="dropdown"
 				align-x="end"
 				class="k-pagination-selector"
-				@keydown.left.native.stop
-				@keydown.right.native.stop
+				@keydown.left.stop
+				@keydown.right.stop
 			>
 				<form method="dialog" @click.stop @submit="goTo($refs.page.value)">
 					<label>
@@ -51,7 +51,7 @@
 					</label>
 					<k-button type="submit" icon="check" />
 				</form>
-			</k-dropdown-content>
+			</k-dropdown>
 		</template>
 
 		<!-- next -->
@@ -69,11 +69,16 @@
 
 <script>
 /**
- * @example <k-pagination
+ * @example
+ * <k-pagination
  *   :details="true"
  *   :page="5"
  *   :total="125"
- *   :limit="10" />
+ *   :limit="10"
+ * />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	props: {

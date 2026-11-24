@@ -16,4 +16,9 @@ describe("$helper.array.fromObject()", () => {
 
 		expect(fromObject(object)).toEqual(object);
 	});
+
+	it("should return an empty array for null or undefined", () => {
+		expect(fromObject(null)).toEqual([]);
+		expect(fromObject(undefined)).toEqual([]);
+	});
 });

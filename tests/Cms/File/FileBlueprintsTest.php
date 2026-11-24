@@ -7,86 +7,81 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(File::class)]
 class FileBlueprintsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FileBlueprints';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FileBlueprints';
 
 	public function testBlueprints(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						[
-							'type' => 'files',
-							'template' => 'for-section/a'
+					'fields' => [
+						'list-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
 						],
-						[
-							'type' => 'files',
-							'template' => 'for-section/b'
+						'list-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
 						],
-						[
-							'type' => 'files',
-							'template' => 'not-exist'
+						'list-c' => [
+							'type'      => 'filelist',
+							'blueprint' => 'not-exist'
 						],
-						[
-							'type' => 'fields',
-							'fields' => [
-								'a' => [
-									'type' => 'info'
+						'a' => [
+							'type' => 'info'
+						],
+						'b' => [
+							'type' => 'filepicker'
+						],
+						'c' => [
+							'type'    => 'filepicker',
+							'uploads' => 'for-fields/a'
+						],
+						'd' => [
+							'type'    => 'filepicker',
+							'uploads' => [
+								'blueprint' => 'for-fields/b'
+							]
+						],
+						'e' => [
+							'type'    => 'filepicker',
+							'uploads' => [
+								'parent'    => 'site',
+								'blueprint' => 'for-fields/c'
+							]
+						],
+						'f' => [
+							'type'    => 'filepicker',
+							'uploads' => 'for-fields/c'
+						],
+						'g' => [
+							'type'    => 'textarea',
+							'uploads' => 'for-fields/d'
+						],
+						'h' => [
+							'type'    => 'structure',
+							'fields'  => [
+								[
+									'type'    => 'filepicker',
+									'uploads' => 'for-fields/e'
 								],
-								'b' => [
-									'type' => 'files'
-								],
-								'c' => [
-									'type'    => 'files',
-									'uploads' => 'for-fields/a'
-								],
-								'd' => [
-									'type'    => 'files',
-									'uploads' => [
-										'template' => 'for-fields/b'
-									]
-								],
-								'e' => [
-									'type'    => 'files',
-									'uploads' => [
-										'parent'   => 'site',
-										'template' => 'for-fields/c'
-									]
-								],
-								'f' => [
-									'type'    => 'files',
-									'uploads' => 'for-fields/c'
-								],
-								'g' => [
-									'type'    => 'textarea',
-									'uploads' => 'for-fields/d'
-								],
-								'h' => [
+								[
 									'type'    => 'structure',
 									'fields'  => [
 										[
-											'type'    => 'files',
-											'uploads' => 'for-fields/e'
-										],
-										[
-											'type'    => 'structure',
-											'fields'  => [
-												[
-													'type'    => 'files',
-													'uploads' => 'for-fields/f'
-												]
-											]
+											'type'    => 'filepicker',
+											'uploads' => 'for-fields/f'
 										]
 									]
-								],
+								]
 							]
-						]
+						],
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-list/a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-list/b' => [
 					'title' => 'Type B'
 				],
 				'files/for-fields/a' => [
@@ -134,59 +129,54 @@ class FileBlueprintsTest extends ModelTestCase
 		$this->assertSame('for-fields/e', $blueprints[4]['name']);
 		$this->assertSame('for-fields/f', $blueprints[5]['name']);
 		$this->assertSame('current', $blueprints[6]['name']);
-		$this->assertSame('for-section/a', $blueprints[7]['name']);
-		$this->assertSame('for-section/b', $blueprints[8]['name']);
+		$this->assertSame('for-list/a', $blueprints[7]['name']);
+		$this->assertSame('for-list/b', $blueprints[8]['name']);
 	}
 
-	public function testBlueprintsInSection(): void
+	public function testBlueprintsInField(): void
 	{
 		$this->app = $this->app->clone([
 			'blueprints' => [
 				'pages/test' => [
-					'sections' => [
-						'section-a' => [
-							'type' => 'files',
-							'template' => 'for-section/a'
+					'fields' => [
+						'list-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
 						],
-						'section-b' => [
-							'type' => 'files',
-							'template' => 'for-section/b'
+						'list-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
 						],
-						'section-c' => [
-							'type' => 'fields',
-							'fields' => [
-								[
-									'type' => 'files'
-								],
-								[
-									'type'    => 'files',
-									'uploads' => 'for-fields/a'
-								],
-								[
-									'type'    => 'files',
-									'uploads' => [
-										'template' => 'for-fields/b'
-									]
-								],
-								[
-									'type'    => 'files',
-									'uploads' => [
-										'parent'   => 'site',
-										'template' => 'for-fields/c'
-									]
-								],
-								[
-									'type'    => 'files',
-									'uploads' => 'for-fields/c'
-								]
+						'field-a' => [
+							'type' => 'filepicker'
+						],
+						'field-b' => [
+							'type'    => 'filepicker',
+							'uploads' => 'for-fields/a'
+						],
+						'field-c' => [
+							'type'    => 'filepicker',
+							'uploads' => [
+								'blueprint' => 'for-fields/b'
 							]
+						],
+						'field-d' => [
+							'type'    => 'filepicker',
+							'uploads' => [
+								'parent'    => 'site',
+								'blueprint' => 'for-fields/c'
+							]
+						],
+						'field-e' => [
+							'type'    => 'filepicker',
+							'uploads' => 'for-fields/c'
 						]
 					]
 				],
-				'files/for-section/a' => [
+				'files/for-list/a' => [
 					'title' => 'Type A'
 				],
-				'files/for-section/b' => [
+				'files/for-list/b' => [
 					'title' => 'Type B'
 				],
 				'files/for-fields/a' => [
@@ -216,16 +206,31 @@ class FileBlueprintsTest extends ModelTestCase
 			'parent'   => $page
 		]);
 
-		$blueprints = $file->blueprints('section-a');
+		// a file list field only accepts its own template
+		$blueprints = $file->blueprints('list-a');
 		$this->assertCount(2, $blueprints);
 		$this->assertSame('current', $blueprints[0]['name']);
-		$this->assertSame('for-section/a', $blueprints[1]['name']);
+		$this->assertSame('for-list/a', $blueprints[1]['name']);
 
-		$blueprints = $file->blueprints('section-c');
-		$this->assertCount(4, $blueprints);
+		// fields with uploads have to be addressed individually
+		$blueprints = $file->blueprints('field-a');
+		$this->assertCount(2, $blueprints);
 		$this->assertSame('default', $blueprints[0]['name']);
-		$this->assertSame('for-fields/a', $blueprints[1]['name']);
-		$this->assertSame('for-fields/b', $blueprints[2]['name']);
-		$this->assertSame('current', $blueprints[3]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('field-b');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('for-fields/a', $blueprints[0]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		$blueprints = $file->blueprints('field-c');
+		$this->assertCount(2, $blueprints);
+		$this->assertSame('for-fields/b', $blueprints[0]['name']);
+		$this->assertSame('current', $blueprints[1]['name']);
+
+		// the uploads parent is not this model
+		$blueprints = $file->blueprints('field-d');
+		$this->assertCount(1, $blueprints);
+		$this->assertSame('current', $blueprints[0]['name']);
 	}
 }

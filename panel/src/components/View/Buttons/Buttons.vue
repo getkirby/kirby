@@ -22,7 +22,10 @@
  * respective view button components passed as `buttons` prop.
  *
  * @displayName ViewButtons
- * @since 5.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.0.0
  * @internal
  */
 export default {

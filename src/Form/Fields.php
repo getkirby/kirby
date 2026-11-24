@@ -4,29 +4,37 @@ namespace Kirby\Form;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
-use Kirby\Exception\InvalidArgumentException;
+use Kirby\Content\Field as ContentField;
+use Kirby\Exception\FormValidationException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
+use Kirby\Form\Interface\ProvidesAcceptedPageBlueprints;
+use Kirby\Form\Interface\ProvidesNestedForm;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * A collection of Field objects
  *
- * @package   Kirby Form
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  *
- * @extends \Kirby\Toolkit\Collection<\Kirby\Form\Field|\Kirby\Form\FieldClass>
+ * @extends Collection<Field>
  */
 class Fields extends Collection
 {
 	protected Language $language;
 	protected ModelWithContent $model;
+
+	/**
+	 * Values for fields that don't exist in the form
+	 *
+	 * @var array<string, mixed>
+	 */
 	protected array $passthrough = [];
 
 	public function __construct(
@@ -42,12 +50,21 @@ class Fields extends Collection
 		}
 	}
 
+	public function __call(string $key, $arguments)
+	{
+		if ($method = parent::__call($key, $arguments)) {
+			return $method;
+		}
+
+		return $this->__get($key);
+	}
+
 	/**
 	 * Internal setter for each object in the Collection.
 	 * This takes care of validation and of setting
 	 * the collection prop on each object correctly.
 	 *
-	 * @param \Kirby\Form\Field|\Kirby\Form\FieldClass|array $field
+	 * @param Field|array<string, mixed> $field
 	 */
 	public function __set(string $name, $field): void
 	{
@@ -55,24 +72,92 @@ class Fields extends Collection
 			// use the array key as name if the name is not set
 			$field['model'] ??= $this->model;
 			$field['name']  ??= $name;
-			$field = Field::factory($field['type'], $field, $this);
+
+			// a field that fails to be created must not take down
+			// the entire view. It is replaced by an error field.
+			try {
+				$class = Field::resolve($field['type'], $field['name']);
+				$field = new $class(...[...$field, 'siblings' => $this]);
+			} catch (Throwable $e) {
+				$field = Field::error(
+					name:     $field['name'],
+					message:  $e->getMessage(),
+					model:    $field['model'],
+					siblings: $this
+				);
+			}
 		}
 
 		parent::__set($field->name(), $field);
 	}
 
 	/**
+	 * Collects the accepted file blueprints of all fields
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedFileBlueprints(): array
+	{
+		$blueprints = [];
+
+		foreach ($this->data as $field) {
+			if ($field instanceof ProvidesAcceptedFileBlueprints) {
+				$blueprints = [...$blueprints, ...$field->acceptedFileBlueprints()];
+			}
+
+			// nested forms also accept what their fields accept
+			if ($field instanceof ProvidesNestedForm) {
+				$blueprints = [...$blueprints, ...$field->form()->fields()->acceptedFileBlueprints()];
+			}
+		}
+
+		return $blueprints;
+	}
+
+	/**
+	 * Collects the accepted page blueprints of all fields
+	 *
+	 * @return list<string>
+	 * @since 6.0.0
+	 */
+	public function acceptedPageBlueprints(): array
+	{
+		$blueprints = [];
+
+		foreach ($this->data as $field) {
+			if ($field instanceof ProvidesAcceptedPageBlueprints) {
+				$blueprints = [...$blueprints, ...$field->acceptedPageBlueprints()];
+			}
+
+			// nested forms also accept what their fields accept
+			if ($field instanceof ProvidesNestedForm) {
+				$blueprints = [...$blueprints, ...$field->form()->fields()->acceptedPageBlueprints()];
+			}
+		}
+
+		return $blueprints;
+	}
+
+	/**
 	 * Returns an array with the default value of each field
+	 * that stores a value
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function defaults(): array
 	{
-		return $this->toArray(fn ($field) => $field->default());
+		return $this
+			->filter('hasValue', true)
+			->toArray(fn ($field) => $field->default());
 	}
 
 	/**
 	 * An array of all found in all fields errors
+	 *
+	 * @return array<string, array{label: string, message: array<string, mixed>}>
 	 */
 	public function errors(): array
 	{
@@ -83,7 +168,7 @@ class Fields extends Collection
 
 			if ($fieldErrors !== []) {
 				$errors[$name] = [
-					'label'   => $field->label(),
+					'label'   => $field->label() ?? Str::label($field->name()),
 					'message' => $fieldErrors
 				];
 			}
@@ -97,11 +182,11 @@ class Fields extends Collection
 	 * and handle nested fields correctly
 	 *
 	 * @since 5.0.0
-	 * @throws \Kirby\Exception\NotFoundException
+	 * @throws NotFoundException
 	 */
-	public function field(string $name): Field|FieldClass
+	public function field(string $name): Field
 	{
-		if ($field = $this->find($name)) {
+		if ($field = $this->findByKey($name)) {
 			return $field;
 		}
 
@@ -116,8 +201,9 @@ class Fields extends Collection
 	 * @since 5.0.0
 	 */
 	public function fill(
-		array $input,
-		bool $passthrough = true
+		array $input = [],
+		bool $passthrough = true,
+		bool $defaults = false
 	): static {
 		if ($passthrough === true) {
 			$this->passthrough($input);
@@ -128,17 +214,31 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't change the value of non-value field
 			if ($field->hasValue() === false) {
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
 			}
 
+			// unwrap content fields, e.g. from another model
+			if ($value instanceof ContentField) {
+				$value = $value->value();
+			}
+
 			$field->fill($value);
+		}
+
+		// fall back to the default value for each field
+		// that is still empty after the input has been filled
+		if ($defaults === true) {
+			$this->fill(
+				input: $this
+					->filter(fn ($field) => $field->hasValue() === true && $field->isEmpty() === true)
+					->toArray(fn ($field) => $field->default()),
+				passthrough: false
+			);
 		}
 
 		return $this;
@@ -147,9 +247,9 @@ class Fields extends Collection
 	/**
 	 * Find a field by key/name
 	 */
-	public function findByKey(string $key): Field|FieldClass|null
+	public function findByKey(string $key): Field|null
 	{
-		if (str_contains($key, '+')) {
+		if (str_contains($key, '+') === true) {
 			return $this->findByKeyRecursive($key);
 		}
 
@@ -159,7 +259,7 @@ class Fields extends Collection
 	/**
 	 * Find fields in nested forms recursively
 	 */
-	public function findByKeyRecursive(string $key): Field|FieldClass|null
+	public function findByKeyRecursive(string $key): Field|null
 	{
 		$fields = $this;
 		$names  = Str::split($key, '+');
@@ -170,7 +270,6 @@ class Fields extends Collection
 		foreach ($names as $name) {
 			$index++;
 
-			// search for the field by name
 			$field = $fields->get($name);
 
 			// if the field cannot be found,
@@ -179,17 +278,14 @@ class Fields extends Collection
 				return null;
 			}
 
-			// there are more parts in the key
+			// there are more parts in the key, but the search
+			// can only continue for fields with a nested form
 			if ($index < $count) {
-				$form = $field->form();
-
-				// the search can only continue for
-				// fields with valid nested forms
-				if ($form instanceof Form === false) {
+				if ($field instanceof ProvidesNestedForm === false) {
 					return null;
 				}
 
-				$fields = $form->fields();
+				$fields = $field->form()->fields();
 			}
 		}
 
@@ -213,6 +309,33 @@ class Fields extends Collection
 	}
 
 	/**
+	 * Whether a field lists child pages of the model,
+	 * optionally only with the given blueprint
+	 * @since 6.0.0
+	 */
+	public function hasPageBlueprint(string|null $blueprint = null): bool
+	{
+		foreach ($this->data as $field) {
+			if (
+				$field instanceof ProvidesAcceptedPageBlueprints &&
+				$field->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+
+			// nested forms also list what their fields list
+			if (
+				$field instanceof ProvidesNestedForm &&
+				$field->form()->fields()->hasPageBlueprint($blueprint) === true
+			) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Returns the language of the fields
 	 *
 	 * @since 5.0.0
@@ -228,10 +351,11 @@ class Fields extends Collection
 	 * if the field does not exist
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return ($values is null ? array<string, mixed> : static)
 	 */
 	public function passthrough(array|null $values = null): static|array
 	{
-		// use passthrough method as getter if the value is null
 		if ($values === null) {
 			return $this->passthrough;
 		}
@@ -239,13 +363,14 @@ class Fields extends Collection
 		foreach ($values as $key => $value) {
 			$key = strtolower($key);
 
-			// check if the field exists and don't passthrough
-			// values for existing fields
-			if ($this->get($key) !== null) {
+			// don't passthrough values for existing fields that
+			// store a value. Fields without a value (e.g. info fields
+			// or converted sections) must not swallow content
+			// that is stored under the same name
+			if ($this->get($key)?->hasValue() === true) {
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($this->passthrough[$key] ?? null);
 			}
@@ -263,14 +388,10 @@ class Fields extends Collection
 	 */
 	public function reset(): static
 	{
-		// reset the passthrough values
 		$this->passthrough = [];
 
-		// reset the values of each field
 		foreach ($this->data as $field) {
-			if ($field instanceof Field) {
-				$field->fillWithEmptyValue();
-			} else {
+			if ($field->hasValue() === true) {
 				$field->reset();
 			}
 		}
@@ -280,11 +401,11 @@ class Fields extends Collection
 
 	/**
 	 * Sets the value for each field with a matching key in the input array
-	 * but only if the field is not disabled
+	 * but only if the field can be submitted (e.g. is translatable)
 	 *
 	 * @since 5.0.0
-	 * @param bool $passthrough If true, values for undefined fields will be submitted
-	 * @param bool $force If true, values for fields that cannot be submitted (e.g. disabled or untranslatable fields) will be submitted
+	 * @param $passthrough If true, values for undefined fields will be submitted
+	 * @param $force If true, values for fields that cannot be submitted (e.g. untranslatable fields) will be submitted
 	 */
 	public function submit(
 		array $input,
@@ -302,28 +423,28 @@ class Fields extends Collection
 				continue;
 			}
 
-			// don't submit fields without a value
-			if ($force === true && $field->hasValue() === false) {
+			if ($field->hasValue() === false) {
 				continue;
 			}
 
-			// don't submit fields that are not submittable
 			if ($force === false && $field->isSubmittable($language) === false) {
 				continue;
 			}
 
-			// resolve closure values
 			if ($value instanceof Closure) {
 				$value = $value($field->toFormValue());
 			}
 
-			// submit the value to the field
+			// unwrap content fields, e.g. from another model
+			if ($value instanceof ContentField) {
+				$value = $value->value();
+			}
+
 			// the field class might override this method
 			// to handle submitted values differently
 			$field->submit($value);
 		}
 
-		// reset the errors cache
 		return $this;
 	}
 
@@ -331,6 +452,8 @@ class Fields extends Collection
 	 * Converts the fields collection to an
 	 * array and also does that for every
 	 * included field.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(Closure|null $map = null): array
 	{
@@ -342,6 +465,8 @@ class Fields extends Collection
 	 * (e.g. used as data for Panel Vue components)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toFormValues(): array
 	{
@@ -356,21 +481,25 @@ class Fields extends Collection
 	 * for the frontend
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, array<string, mixed>>
 	 */
-	public function toProps(): array
+	public function toProps(bool $defaults = false): array
 	{
-		$fields      = $this->data;
 		$props       = [];
 		$language    = $this->language();
-		$permissions = $this->model->permissions()->can('update');
+		$permissions = $this->model->guards()->isAvailable('update');
 
-		foreach ($fields as $name => $field) {
+		foreach ($this->data as $name => $field) {
 			$props[$name] = $field->toArray();
 
 			// the field should be disabled in the form if the user
 			// has no update permissions for the model or if the field
 			// is not translatable into the current language
-			if ($permissions === false || $field->isTranslatable($language) === false) {
+			if (
+				$permissions === false ||
+				$field->isTranslatable($language) === false
+			) {
 				$props[$name]['disabled'] = true;
 			}
 
@@ -378,6 +507,10 @@ class Fields extends Collection
 			// we pass on the values to the frontend via the model
 			// view props to make them globally available for the view.
 			unset($props[$name]['value']);
+
+			if ($defaults === true && $field->hasValue() === true) {
+				$props[$name]['default'] = $field->default();
+			}
 		}
 
 		return $props;
@@ -388,12 +521,14 @@ class Fields extends Collection
 	 * (e.g. used for saving to content storage)
 	 *
 	 * @since 5.0.0
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toStoredValues(): array
 	{
 		return $this->toValues(
 			fn ($field) => $field->toStoredValue(),
-			fn ($field) => $field->isStorable($this->language())
+			fn ($field) => $field->hasValue() === true && $field->isStorable($this->language()) === true
 		);
 	}
 
@@ -401,6 +536,8 @@ class Fields extends Collection
 	 * Returns an array with the values of each field
 	 * and adds passthrough values if they don't exist
 	 * @unstable
+	 *
+	 * @return array<string, mixed>
 	 */
 	protected function toValues(Closure $method, Closure $filter): array
 	{
@@ -416,21 +553,21 @@ class Fields extends Collection
 	}
 
 	/**
-	 * Checks for errors in all fields and throws an
-	 * exception if there are any
+	 * Checks for errors in all fields that store a value
+	 * and throws an exception if there are any. Fields without
+	 * a value (e.g. page and file lists) only report their
+	 * errors for the publish gate and don't block saving.
 	 *
 	 * @since 5.0.0
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws FormValidationException
 	 */
 	public function validate(): void
 	{
-		$errors = $this->errors();
+		$errors = $this->filter('hasValue', true)->errors();
 
-		if ($errors !==	[]) {
-			throw new InvalidArgumentException(
-				key: 'form.incomplete',
-				details: $errors,
-				fallback: 'Invalid form with errors'
+		if ($errors !== []) {
+			throw new FormValidationException(
+				details: $errors
 			);
 		}
 	}

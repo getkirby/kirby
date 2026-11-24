@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -10,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(FilePermissions::class)]
 class FilePermissionsTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.FilePermissions';
 
 	protected function setUp(): void
 	{
@@ -21,6 +20,82 @@ class FilePermissionsTest extends ModelTestCase
 				['id' => 'admin', 'role' => 'admin']
 			]
 		]);
+	}
+
+	public function testCanChangeTemplate(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'list-a' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/a'
+						],
+						'list-b' => [
+							'type'      => 'filelist',
+							'blueprint' => 'for-list/b'
+						]
+					]
+				],
+				'files/for-list/a' => [
+					'title' => 'Type A'
+				],
+				'files/for-list/b' => [
+					'title' => 'Type B'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page(['slug' => 'test', 'template' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
+
+	public function testCanChangeTemplateWithAllAvailable(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'fields' => [
+						'files' => [
+							'type' => 'filelist',
+							// No template specified - should get all available
+						]
+					]
+				],
+				'files/image' => [
+					'title' => 'Image'
+				],
+				'files/document' => [
+					'title' => 'Document'
+				],
+				'files/video' => [
+					'title' => 'Video'
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = new Page(['slug' => 'test', 'template' => 'test']);
+		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		// Should be able to change template because multiple templates are available
+		$this->assertTrue($file->permissions()->can('changeTemplate'));
+	}
+
+	public function testCannotChangeTemplate(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$page = new Page(['slug' => 'test']);
+		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
+
+		$this->assertFalse($file->permissions()->can('changeTemplate'));
 	}
 
 	public static function actionProvider(): array
@@ -61,121 +136,6 @@ class FilePermissionsTest extends ModelTestCase
 		$perms = $file->permissions();
 
 		$this->assertFalse($perms->can($action));
-	}
-
-	public function testCanFromCache(): void
-	{
-		$this->app->impersonate('admin');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename'  => 'test.jpg',
-			'parent'    => $page,
-			'template'  => 'some-template',
-			'blueprint' => [
-				'name' => 'files/some-template',
-				'options' => [
-					'access' => false,
-					'list'   => false
-				]
-			]
-		]);
-
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'access'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-		$this->assertFalse(FilePermissions::canFromCache($file, 'list'));
-	}
-
-	public function testCanFromCacheDynamic(): void
-	{
-		$this->expectException(LogicException::class);
-		$this->expectExceptionMessage('Cannot use permission cache for dynamically-determined permission');
-
-		$page = new Page(['slug' => 'test']);
-		$file = new File([
-			'filename' => 'test.jpg',
-			'parent'   => $page,
-			'template' => 'some-template',
-		]);
-
-		FilePermissions::canFromCache($file, 'changeTemplate');
-	}
-
-	public function testCannotChangeTemplate(): void
-	{
-		$this->app->impersonate('kirby');
-
-		$page = new Page(['slug' => 'test']);
-		$file  = new File(['filename' => 'test.jpg', 'parent' => $page]);
-
-		$this->assertFalse($file->permissions()->can('changeTemplate'));
-	}
-
-	public function testCanChangeTemplate(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test' => [
-					'sections' => [
-						'section-a' => [
-							'type' => 'files',
-							'template' => 'for-section/a'
-						],
-						'section-b' => [
-							'type' => 'files',
-							'template' => 'for-section/b'
-						]
-					]
-				],
-				'files/for-section/a' => [
-					'title' => 'Type A'
-				],
-				'files/for-section/b' => [
-					'title' => 'Type B'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page(['slug' => 'test', 'template' => 'test']);
-		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
-
-		$this->assertTrue($file->permissions()->can('changeTemplate'));
-	}
-
-	public function testCanChangeTemplateWithAllAvailable(): void
-	{
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/test' => [
-					'sections' => [
-						'files' => [
-							'type' => 'files',
-							// No template specified - should get all available
-						]
-					]
-				],
-				'files/image' => [
-					'title' => 'Image'
-				],
-				'files/document' => [
-					'title' => 'Document'
-				],
-				'files/video' => [
-					'title' => 'Video'
-				]
-			]
-		]);
-
-		$this->app->impersonate('kirby');
-
-		$page = new Page(['slug' => 'test', 'template' => 'test']);
-		$file = new File(['filename' => 'test.jpg', 'parent' => $page]);
-
-		// Should be able to change template because multiple templates are available
-		$this->assertTrue($file->permissions()->can('changeTemplate'));
 	}
 
 	public function testWithPathTraversalTemplate(): void

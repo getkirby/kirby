@@ -7,6 +7,9 @@
  * @example
  * const debounced = debounce(myFunction, 300)
  * debounced() // myFunction() is called 300ms after the last invocation
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default function <T extends unknown[]>(
 	callback: (...args: T) => void,

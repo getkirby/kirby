@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'getkirby/cms',
-        'pretty_version' => '5.6.4',
-        'version' => '5.6.4.0',
+        'pretty_version' => '6.0.0',
+        'version' => '6.0.0.0',
         'reference' => null,
         'type' => 'kirby-cms',
         'install_path' => __DIR__ . '/../../',
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'christian-riesen/base32' => array(
-            'pretty_version' => '1.6.1',
-            'version' => '1.6.1.0',
-            'reference' => '03082b946c111eb6ab41a98626fee33360c5232c',
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => 'be07b4a4a2d6056975934d71e111c64e7d8babf9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../christian-riesen/base32',
             'aliases' => array(),
@@ -65,8 +65,8 @@
             'dev_requirement' => false,
         ),
         'getkirby/cms' => array(
-            'pretty_version' => '5.6.4',
-            'version' => '5.6.4.0',
+            'pretty_version' => '6.0.0',
+            'version' => '6.0.0.0',
             'reference' => null,
             'type' => 'kirby-cms',
             'install_path' => __DIR__ . '/../../',
@@ -83,11 +83,20 @@
             'dev_requirement' => false,
         ),
         'laminas/laminas-escaper' => array(
-            'pretty_version' => '2.18.0',
-            'version' => '2.18.0.0',
-            'reference' => '06f211dfffff18d91844c1f55250d5d13c007e18',
+            'pretty_version' => '2.19.0',
+            'version' => '2.19.0.0',
+            'reference' => '766b8583bbf64be9d3330e7a075197f54c46f642',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laminas/laminas-escaper',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'lbuchs/webauthn' => array(
+            'pretty_version' => 'v2.2.0',
+            'version' => '2.2.0.0',
+            'reference' => '20adb4a240c3997bd8cac7dc4dde38ab0bea0ed1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lbuchs/webauthn',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -177,12 +186,6 @@
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
             'dev_requirement' => false,
-        ),
-        'symfony/polyfill-php72' => array(
-            'dev_requirement' => false,
-            'replaced' => array(
-                0 => '*',
-            ),
         ),
         'symfony/yaml' => array(
             'pretty_version' => 'v7.4.23',

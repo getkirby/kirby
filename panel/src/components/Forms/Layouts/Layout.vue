@@ -42,7 +42,8 @@
 				icon="angle-down"
 				@click="$refs.options.toggle()"
 			/>
-			<k-dropdown-content ref="options" :options="options" align-x="end" />
+
+			<k-dropdown ref="options" :options="options" align-x="end" />
 		</nav>
 	</section>
 </template>
@@ -63,6 +64,8 @@ export const props = {
 };
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @unstable
  */
 export default {
@@ -75,6 +78,7 @@ export default {
 		"change",
 		"copy",
 		"duplicate",
+		"paste",
 		"prepend",
 		"remove",
 		"select",
@@ -138,7 +142,6 @@ export default {
 				for (const fieldName in tab.fields) {
 					tabs[tabName].fields[fieldName].endpoints = {
 						field: this.endpoints.field + "/fields/" + fieldName,
-						section: this.endpoints.section,
 						model: this.endpoints.model
 					};
 				}

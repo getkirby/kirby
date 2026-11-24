@@ -8,13 +8,10 @@ use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 
 /**
- * @package   Kirby Content
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Content\Translation>
+ * @extends Collection<Translation>
  */
 class Translations extends Collection
 {

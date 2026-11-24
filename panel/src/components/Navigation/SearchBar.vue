@@ -11,7 +11,7 @@
 					class="k-search-bar-types"
 					@click="$refs.types.toggle()"
 				/>
-				<k-dropdown-content ref="types" :options="typesDropdown" />
+				<k-dropdown ref="types" :options="typesDropdown" />
 			</template>
 
 			<!-- Input -->
@@ -21,9 +21,9 @@
 				:autofocus="true"
 				:value="query"
 				@input="query = $event"
-				@keydown.native.down.prevent="onDown"
-				@keydown.native.up.prevent="onUp"
-				@keydown.native.enter="onEnter"
+				@keydown.down.prevent="onDown"
+				@keydown.up.prevent="onUp"
+				@keydown.enter="onEnter"
 			/>
 			<k-button
 				:icon="isLoading ? 'loader' : 'cancel'"
@@ -39,7 +39,7 @@
 				v-if="results.length"
 				ref="results"
 				:items="results"
-				@mouseout.native="select(-1)"
+				@mouseout="select(-1)"
 			/>
 
 			<footer class="k-search-bar-footer">
@@ -66,7 +66,9 @@
 import Search from "@/mixins/search.js";
 
 /**
- * @since 4.4.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Search],

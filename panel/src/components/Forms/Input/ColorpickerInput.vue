@@ -1,13 +1,15 @@
 <template>
 	<fieldset
 		:class="['k-colorpicker-input', $attrs.class]"
-		:style="{
-			'--h': hsl.h,
-			'--s': hsl.s,
-			'--l': hsl.l,
-			'--a': hsl.a,
-			...$attrs.style
-		}"
+		:style="[
+			{
+				'--h': hsl.h,
+				'--s': hsl.s,
+				'--l': hsl.l,
+				'--a': hsl.a
+			},
+			$attrs.style
+		]"
 	>
 		<legend class="sr-only">{{ $t("color") }}</legend>
 		<k-coords-input
@@ -46,6 +48,7 @@
 			:name="name"
 			:required="required"
 			:value="formatted"
+			aria-hidden="true"
 			class="input-hidden"
 			tabindex="-1"
 			type="text"
@@ -82,10 +85,13 @@ export const props = {
 };
 
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	data() {
 		return {
 			color: {

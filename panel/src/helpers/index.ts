@@ -1,4 +1,4 @@
-import type Vue from "vue";
+import type { App } from "vue";
 import array from "./array";
 import clipboard from "./clipboard";
 import color from "./color";
@@ -9,6 +9,7 @@ import file from "./file.js";
 import focus from "./focus";
 import isComponent from "./isComponent";
 import isUploadEvent from "./isUploadEvent";
+import items from "./items";
 import keyboard from "./keyboard";
 import link from "./link";
 import number from "./number";
@@ -36,6 +37,7 @@ export const helper = {
 	debounce,
 	field,
 	file,
+	items,
 	keyboard,
 	link,
 	number,
@@ -54,8 +56,8 @@ export const helper = {
 };
 
 export default {
-	install(app: typeof Vue) {
-		app.prototype.$helper = helper;
-		app.prototype.$esc = helper.string.escapeHTML;
+	install(app: App) {
+		app.config.globalProperties.$helper = helper;
+		app.config.globalProperties.$esc = helper.string.escapeHTML;
 	}
 };

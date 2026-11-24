@@ -1,12 +1,13 @@
 <script>
 import HtmlFieldPreview from "./HtmlFieldPreview.vue";
+import html from "@/panel/html";
 
 export default {
 	extends: HtmlFieldPreview,
 	class: "k-writer-field-preview",
 	computed: {
 		html() {
-			return this.$helper.string.sanitizeHTML(this.value);
+			return html(this.$helper.string.sanitizeHTML(this.value));
 		}
 	}
 };

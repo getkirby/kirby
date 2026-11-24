@@ -8,7 +8,7 @@
 		@submit="$emit('submit', value)"
 		@tab="$emit('tab', $event)"
 	>
-		<template #options>
+		<template v-if="$slots.options" #options>
 			<slot name="options" />
 		</template>
 
@@ -24,7 +24,10 @@ import { props as TextProps } from "./Elements/Text.vue";
  * The text drawer is perfect if you want to display
  * additional information in a longer form that would not
  * fit into a text dialog.
- * @since 4.0.0
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	mixins: [Drawer, TextProps],

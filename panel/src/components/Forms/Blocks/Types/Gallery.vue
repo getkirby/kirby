@@ -17,11 +17,9 @@
 			<template v-else>
 				<li v-for="image in content.images" :key="image.id">
 					<k-image-frame
-						:ratio="ratio"
 						:cover="crop"
-						:src="image.url"
-						:srcset="image.image.srcset"
-						:alt="image.alt"
+						:file="image"
+						:ratio="ratio"
 						class="k-block-type-gallery-frame"
 					/>
 				</li>
@@ -44,9 +42,13 @@ import Block from "./Default.vue";
 
 /**
  * @displayName BlockTypeGallery
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	extends: Block,
+	emits: ["update"],
 	data() {
 		return {
 			back: this.onBack() ?? "var(--block-color-back)"
@@ -63,7 +65,7 @@ export default {
 			return !this.content.images?.length;
 		},
 		ratio() {
-			return this.content.ratio;
+			return !this.content.ratio ? "1/1" : this.content.ratio;
 		}
 	},
 	methods: {
@@ -96,7 +98,7 @@ export default {
 .k-block-type-gallery-figure ul {
 	display: grid;
 	grid-gap: 0.75rem;
-	grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
 	line-height: 0;
 	align-items: center;
 	justify-content: center;

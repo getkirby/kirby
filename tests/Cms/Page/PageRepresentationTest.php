@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Page::class)]
 class PageRepresentationTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.PageRepresentation';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.PageRepresentation';
 
 	public function testRepresentationWithExistingTemplate(): void
 	{
@@ -51,6 +51,18 @@ class PageRepresentationTest extends ModelTestCase
 		$this->assertSame('json', $representation->type());
 	}
 
+	public function testRepresentationWithMissingRepresentation(): void
+	{
+		$page = new Page([
+			'slug' => 'test',
+		]);
+
+		$this->expectException(NotFoundException::class);
+		$this->expectExceptionMessage('The content representation cannot be found');
+
+		$page->representation('json');
+	}
+
 	public function testRepresentationWithMultipleTypes(): void
 	{
 		$this->app = $this->app->clone([
@@ -75,17 +87,5 @@ class PageRepresentationTest extends ModelTestCase
 		$this->assertInstanceOf(Template::class, $representation);
 		$this->assertSame('test', $representation->name());
 		$this->assertSame('json', $representation->type());
-	}
-
-	public function testRepresentationWithMissingRepresentation(): void
-	{
-		$page = new Page([
-			'slug' => 'test',
-		]);
-
-		$this->expectException(NotFoundException::class);
-		$this->expectExceptionMessage('The content representation cannot be found');
-
-		$page->representation('json');
 	}
 }

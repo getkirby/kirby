@@ -17,16 +17,15 @@ use Throwable;
  * detect which data handler to use in order
  * to correctly encode and decode passed data.
  *
- * @package   Kirby
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Data
 {
 	/**
-	 * Handler Type Aliases
+	 * Handler type aliases
+	 *
+	 * @var array<string, string>
 	 */
 	public static array $aliases = [
 		'md'    => 'txt',
@@ -37,6 +36,8 @@ class Data
 
 	/**
 	 * All registered handlers
+	 *
+	 * @var array<string, class-string>
 	 */
 	public static array $handlers = [
 		'json' => Json::class,
@@ -45,38 +46,6 @@ class Data
 		'xml'  => Xml::class,
 		'yaml' => Yaml::class
 	];
-
-	/**
-	 * Handler getter
-	 */
-	public static function handler(string $type): Handler
-	{
-		// normalize the type
-		$type = strtolower($type);
-
-		// find a handler or alias
-		$handler = static::$handlers[$type] ?? null;
-
-		if ($alias = static::$aliases[$type] ?? null) {
-			$handler ??= static::$handlers[$alias] ?? null;
-		}
-
-		if ($handler === null || class_exists($handler) === false) {
-			throw new Exception(
-				message: 'Missing handler for type: "' . $type . '"'
-			);
-		}
-
-		$handler = new $handler();
-
-		if ($handler instanceof Handler === false) {
-			throw new Exception(
-				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
-			);
-		}
-
-		return $handler;
-	}
 
 	/**
 	 * Decodes data with the specified handler
@@ -106,6 +75,35 @@ class Data
 	}
 
 	/**
+	 * Handler getter
+	 */
+	public static function handler(string $type): Handler
+	{
+		$type    = strtolower($type);
+		$handler = static::$handlers[$type] ?? null;
+
+		if ($alias = static::$aliases[$type] ?? null) {
+			$handler ??= static::$handlers[$alias] ?? null;
+		}
+
+		if ($handler === null || class_exists($handler) === false) {
+			throw new Exception(
+				message: 'Missing handler for type: "' . $type . '"'
+			);
+		}
+
+		$handler = new $handler();
+
+		if ($handler instanceof Handler === false) {
+			throw new Exception(
+				message: 'Handler for type: "' . $type . '" needs to extend ' . Handler::class
+			);
+		}
+
+		return $handler;
+	}
+
+	/**
 	 * Reads data from a file;
 	 * the data handler is automatically chosen by
 	 * the extension if not specified
@@ -116,9 +114,8 @@ class Data
 		bool $fail = true
 	): array {
 		try {
-			$type  ??= F::extension($file);
-			$handler = static::handler($type);
-			return $handler->read($file);
+			$type ??= F::extension($file);
+			return static::handler($type)->read($file);
 		} catch (Throwable $e) {
 			if ($fail === false) {
 				return [];
@@ -138,8 +135,7 @@ class Data
 		$data = [],
 		string|null $type = null
 	): bool {
-		$type  ??= F::extension($file);
-		$handler = static::handler($type);
-		return $handler->write($file, $data);
+		$type ??= F::extension($file);
+		return static::handler($type)->write($file, $data);
 	}
 }

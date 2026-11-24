@@ -3,9 +3,11 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\System\UpdateStatus;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
+use Kirby\Plugin\Plugin;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
@@ -18,9 +20,6 @@ use Throwable;
  * This is mostly used by the panel installer
  * to check if the panel can be installed at all.
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -34,6 +33,15 @@ class System
 	{
 		// try to create all folders that could be missing
 		$this->init();
+	}
+
+	/**
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
+	 */
+	public function __debugInfo(): array
+	{
+		return $this->toArray();
 	}
 
 	/**
@@ -53,19 +61,11 @@ class System
 	}
 
 	/**
-	 * Check for an existing curl extension
-	 */
-	public function curl(): bool
-	{
-		return extension_loaded('curl') === true;
-	}
-
-	/**
 	 * Returns the URL to the file within a system folder
 	 * if the file is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function exposedFileUrl(string $folder): string|null
 	{
@@ -84,15 +84,15 @@ class System
 				$root  = $this->app->root('site');
 				$files = glob($root . '/blueprints/*.yml');
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/templates/*.*');
 				}
 
-				if (empty($files) === true) {
+				if ($files === []) {
 					$files = glob($root . '/snippets/*.*');
 				}
 
-				if (empty($files) === true || empty($files[0]) === true) {
+				if ($files === [] || $files[0] === '') {
 					return $url;
 				}
 
@@ -106,11 +106,34 @@ class System
 	}
 
 	/**
+	 * Returns the status of all required PHP extensions
+	 * @since 6.0.0
+	 *
+	 * @return array<string, bool>
+	 */
+	public function extensions(): array
+	{
+		return [
+			'ctype'     => extension_loaded('ctype'),
+			'curl'      => extension_loaded('curl'),
+			'dom'       => extension_loaded('dom'),
+			'filter'    => extension_loaded('filter'),
+			'hash'      => extension_loaded('hash'),
+			'iconv'     => extension_loaded('iconv'),
+			'json'      => extension_loaded('json'),
+			'libxml'    => extension_loaded('libxml'),
+			'mbstring'  => extension_loaded('mbstring'),
+			'openssl'   => extension_loaded('openssl'),
+			'SimpleXML' => extension_loaded('SimpleXML')
+		];
+	}
+
+	/**
 	 * Returns the URL to a system folder
 	 * if the folder is located in the document
 	 * root. Otherwise it will return null.
 	 *
-	 * @param string $folder 'git', 'content', 'site', 'kirby'
+	 * @param $folder 'git', 'content', 'site', 'kirby'
 	 */
 	public function folderUrl(string $folder): string|null
 	{
@@ -181,7 +204,7 @@ class System
 	 * Create the most important folders
 	 * if they don't exist yet
 	 *
-	 * @throws \Kirby\Exception\PermissionException
+	 * @throws PermissionException
 	 */
 	public function init(): void
 	{
@@ -224,14 +247,19 @@ class System
 
 	/**
 	 * Check if the Panel has 2FA activated
+	 *
+	 * @deprecated 6.0.0 Use `$kirby->auth()->methods()->hasAnyRequiring2FA()` instead
 	 */
 	public function is2FA(): bool
 	{
-		return ($this->loginMethods()['password']['2fa'] ?? null) === true;
+		return $this->app->auth()->methods()->hasAnyRequiring2FA();
 	}
 
 	/**
 	 * Check if the Panel has 2FA with TOTP activated
+	 *
+	 * @deprecated 6.0.0 Use `$kirby->auth()->methods()->hasAnyRequiring2FA()` and
+	 *                   `$kirby->auth()->enabledChallenges()` instead
 	 */
 	public function is2FAWithTOTP(): bool
 	{
@@ -248,9 +276,7 @@ class System
 	 */
 	public function isInstallable(): bool
 	{
-		return
-			$this->isLocal() === true ||
-			$this->app->option('panel.install', false) === true;
+		return in_array(false, array_values($this->extensions()), true) === false && ($this->isLocal() === true || $this->app->option('panel.install', false) === true);
 	}
 
 	/**
@@ -301,68 +327,14 @@ class System
 	 * Returns the configured UI modes for the login form
 	 * with their respective options
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the configuration is invalid
-	 *                                                   (only in debug mode)
+	 * @throws InvalidArgumentException If the configuration is invalid
+	 *                                  (only in debug mode)
+	 *
+	 * @deprecated 6.0.0 Use `$kirby->auth()->methods()->enabled()` instead
 	 */
 	public function loginMethods(): array
 	{
-		$default = ['password' => []];
-		$methods = A::wrap($this->app->option('auth.methods', $default));
-
-		// normalize the syntax variants
-		$normalized = [];
-		$uses2fa = false;
-		foreach ($methods as $key => $value) {
-			if (is_int($key) === true) {
-				// ['password']
-				$normalized[$value] = [];
-			} elseif ($value === true) {
-				// ['password' => true]
-				$normalized[$key] = [];
-			} else {
-				// ['password' => [...]]
-				$normalized[$key] = $value;
-
-				if (isset($value['2fa']) === true && $value['2fa'] === true) {
-					$uses2fa = true;
-				}
-			}
-		}
-
-		// 2FA must not be circumvented by code-based modes
-		foreach (['code', 'password-reset'] as $method) {
-			if ($uses2fa === true && isset($normalized[$method]) === true) {
-				unset($normalized[$method]);
-
-				if ($this->app->option('debug') === true) {
-					$message = 'The "' . $method . '" login method cannot be enabled when 2FA is required';
-					throw new InvalidArgumentException($message);
-				}
-			}
-		}
-
-		// only one code-based mode can be active at once
-		if (
-			isset($normalized['code']) === true &&
-			isset($normalized['password-reset']) === true
-		) {
-			unset($normalized['code']);
-
-			if ($this->app->option('debug') === true) {
-				$message = 'The "code" and "password-reset" login methods cannot be enabled together';
-				throw new InvalidArgumentException($message);
-			}
-		}
-
-		return $normalized;
-	}
-
-	/**
-	 * Check for an existing mbstring extension
-	 */
-	public function mbString(): bool
-	{
-		return extension_loaded('mbstring') === true;
+		return $this->app->auth()->methods()->enabled();
 	}
 
 	/**
@@ -374,18 +346,10 @@ class System
 	}
 
 	/**
-	 * Check for a valid PHP version
-	 */
-	public function php(): bool
-	{
-		return
-			version_compare(PHP_VERSION, '8.2.0', '>=') === true &&
-			version_compare(PHP_VERSION, '8.6.0', '<')  === true;
-	}
-
-	/**
 	 * Returns a sorted collection of all
 	 * installed plugins
+	 *
+	 * @return Collection<Plugin>
 	 */
 	public function plugins(): Collection
 	{
@@ -398,8 +362,8 @@ class System
 	 * and adds it to the .license file in the config
 	 * folder if possible.
 	 *
-	 * @throws \Kirby\Exception\Exception
-	 * @throws \Kirby\Exception\InvalidArgumentException
+	 * @throws Exception
+	 * @throws InvalidArgumentException
 	 */
 	public function register(
 		string|null $license = null,
@@ -429,8 +393,7 @@ class System
 	 */
 	public function serverSoftwareShort(): string
 	{
-		$software = $this->serverSoftware();
-		return strtok($software, ' ');
+		return explode(' ', $this->serverSoftware(), 2)[0];
 	}
 
 	/**
@@ -442,18 +405,17 @@ class System
 	}
 
 	/**
-	 * Get an status array of all checks
+	 * Returns a status array of all checks
+	 *
+	 * @return array{accounts: bool, content: bool, media: bool, sessions: bool}
 	 */
 	public function status(): array
 	{
 		return [
 			'accounts' => $this->accounts(),
 			'content'  => $this->content(),
-			'curl'     => $this->curl(),
-			'sessions' => $this->sessions(),
-			'mbstring' => $this->mbstring(),
 			'media'    => $this->media(),
-			'php'      => $this->php()
+			'sessions' => $this->sessions(),
 		];
 	}
 
@@ -473,6 +435,11 @@ class System
 		return $site->blueprint()->title();
 	}
 
+	/**
+	 * @see `self::status()`
+	 *
+	 * @return array{accounts: bool, content: bool, media: bool, sessions: bool}
+	 */
 	public function toArray(): array
 	{
 		return $this->status();
@@ -483,7 +450,7 @@ class System
 	 * the update check for Kirby has been disabled
 	 * @since 3.8.0
 	 *
-	 * @param array|null $data Custom override for the getkirby.com update data
+	 * @param $data Custom override for the getkirby.com update data
 	 */
 	public function updateStatus(array|null $data = null): UpdateStatus|null
 	{
@@ -523,14 +490,5 @@ class System
 				static::upgradeContent($newRoot);
 			}
 		}
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return $this->toArray();
 	}
 }

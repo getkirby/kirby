@@ -6,7 +6,9 @@
 
 <script>
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	props: {
@@ -48,10 +50,15 @@ export default {
 	mounted() {
 		this.$el.addEventListener("keydown", this.keydown);
 	},
-	destroyed() {
+	unmounted() {
 		this.$el.removeEventListener("keydown", this.keydown);
 	},
 	methods: {
+		/**
+		 * Focuses an element by its index or position
+		 * @param {number|"first"|"last"|"next"|"prev"} [index=0]
+		 * @param {Event} [event]
+		 */
 		focus(index = 0, event) {
 			this.move(index, event);
 		},
@@ -62,6 +69,12 @@ export default {
 
 			this.keys[event.key]?.apply(this, [event]);
 		},
+		/**
+		 * Moves the focus by index or position, beyond
+		 * the first or last element it emits `prev` or `next`
+		 * @param {number|"first"|"last"|"next"|"prev"} [next=0]
+		 * @param {Event} [event]
+		 */
 		move(next = 0, event) {
 			// get all focusable elements
 			const elements = [...this.$el.querySelectorAll(this.select)];

@@ -12,6 +12,7 @@ $root = rtrim($_SERVER['DOCUMENT_ROOT'], '/\\') . DIRECTORY_SEPARATOR;
 $path = $_SERVER['DOCUMENT_ROOT'] . '/' . ltrim($uri, '/');
 if (
 	$uri !== '/' &&
+	str_contains($path, "\0") === false &&
 	file_exists($path) === true &&
 	str_starts_with(realpath($path), $root) === true
 ) {

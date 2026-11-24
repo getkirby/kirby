@@ -34,10 +34,15 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
+ * @example
+ * <k-input :value="toggle" @input="toggle = $event" name="toggle" type="toggle" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],
+	emits: ["input"],
 	computed: {
 		labelText() {
 			// Add fallback for text
@@ -77,12 +82,6 @@ export default {
 .k-input[data-type="toggle"] {
 	--input-color-border: transparent;
 	--input-shadow: var(--shadow);
-}
-.k-input[data-type="toggle"] .k-input-before {
-	padding-inline-end: calc(var(--input-padding) / 2);
-}
-.k-input[data-type="toggle"] .k-toggle-input {
-	padding-inline-start: var(--input-padding);
 }
 .k-input[data-type="toggle"][data-disabled="true"] {
 	box-shadow: none;

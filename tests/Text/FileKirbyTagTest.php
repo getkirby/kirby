@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class FileKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.FileKirbyTag';
 
 	protected function setUp(): void
 	{
@@ -39,36 +39,6 @@ class FileKirbyTagTest extends TestCase
 						'files' => [
 							[
 								'filename' => 'a.jpg',
-							]
-						]
-					]
-				]
-			]
-		]);
-
-		$page = $kirby->page('a');
-		$file = $page->file('a.jpg');
-
-		$expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
-
-		$this->assertSame($expected, $page->text()->kt()->value());
-	}
-
-	public function testFileWithUUID(): void
-	{
-		$kirby = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'a',
-						'content' => [
-							'text' => '(file: file://file-a)',
-							'uuid' => 'page-uuid' // this is just to make sure that the test doesn't try to create a content file for this page with a generated UUID
-						],
-						'files' => [
-							[
-								'filename' => 'a.jpg',
-								'content'  => ['uuid' => 'file-a']
 							]
 						]
 					]
@@ -161,5 +131,35 @@ class FileKirbyTagTest extends TestCase
 		$expected = '<p><a download href="' . $b->url() . '">b.jpg</a></p>';
 
 		$this->assertSame($expected, $a->caption()->kt()->value());
+	}
+
+	public function testFileWithUUID(): void
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'a',
+						'content' => [
+							'text' => '(file: file://file-a)',
+							'uuid' => 'page-uuid' // this is just to make sure that the test doesn't try to create a content file for this page with a generated UUID
+						],
+						'files' => [
+							[
+								'filename' => 'a.jpg',
+								'content'  => ['uuid' => 'file-a']
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$page = $kirby->page('a');
+		$file = $page->file('a.jpg');
+
+		$expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
+
+		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 }

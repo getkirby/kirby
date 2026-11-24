@@ -110,7 +110,7 @@
 				<k-box v-for="n in 4" :key="n" :text="'' + n" theme="white" />
 			</k-draggable>
 
-			<input id="checkbox" type="checkbox" v-model="disabled" />
+			<input id="checkbox" v-model="disabled" type="checkbox" />
 			<label for="checkbox">Disabled: {{ disabled }}</label>
 		</k-lab-example>
 

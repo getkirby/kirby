@@ -15,6 +15,7 @@ use Kirby\Query\AST\LiteralNode;
 use Kirby\Query\AST\LogicalNode;
 use Kirby\Query\AST\MemberAccessNode;
 use Kirby\Query\AST\Node;
+use Kirby\Query\AST\NotNode;
 use Kirby\Query\AST\TernaryNode;
 use Kirby\Query\AST\VariableNode;
 
@@ -23,12 +24,9 @@ use Kirby\Query\AST\VariableNode;
  * and then matching and consuming tokens to create
  * an abstract syntax tree (AST) of matching nodes
  *
- * @package   Kirby Query
- * @author    Roman Steiner <roman@toastlab.ch>,
- *            Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @license   https://opensource.org/licenses/MIT
  * @since     5.1.0
+ *
  * @unstable
  */
 class Parser
@@ -67,9 +65,60 @@ class Parser
 	}
 
 	/**
+	 * Parses logical AND expressions,
+	 * which bind tighter than logical OR
+	 * @since 5.7.0
+	 */
+	protected function and(): Node
+	{
+		$left = $this->comparison();
+
+		while ($token = $this->consume(TokenType::T_AND)) {
+			$left = new LogicalNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->comparison()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
+	 * Parses a list of arguments
+	 */
+	protected function argumentList(): ArgumentListNode
+	{
+		return new ArgumentListNode(
+			arguments: $this->consumeList(TokenType::T_CLOSE_PAREN)
+		);
+	}
+
+	/**
+	 * Parses arithmetic expressions with proper precedence
+	 */
+	protected function arithmetic(): Node
+	{
+		$left = $this->term();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_PLUS,
+			TokenType::T_MINUS
+		])) {
+			$left = new ArithmeticNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->term()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
 	 * Parses an array
 	 */
-	private function array(): ArrayListNode|null
+	protected function array(): ArrayListNode|null
 	{
 		if ($this->consume(TokenType::T_OPEN_BRACKET)) {
 			return new ArrayListNode(
@@ -81,19 +130,9 @@ class Parser
 	}
 
 	/**
-	 * Parses a list of arguments
-	 */
-	private function argumentList(): ArgumentListNode
-	{
-		return new ArgumentListNode(
-			arguments: $this->consumeList(TokenType::T_CLOSE_PAREN)
-		);
-	}
-
-	/**
 	 * Checks for and parses several atomic expressions
 	 */
-	private function atomic(): Node
+	protected function atomic(): Node
 	{
 		$token   = $this->scalar();
 		$token ??= $this->array();
@@ -110,14 +149,14 @@ class Parser
 	/**
 	 * Checks for and parses a coalesce expression
 	 */
-	private function coalesce(): Node
+	protected function coalesce(): Node
 	{
-		$node = $this->logical();
+		$node = $this->or();
 
 		while ($this->consume(TokenType::T_COALESCE)) {
 			$node = new CoalesceNode(
 				left: $node,
-				right: $this->logical()
+				right: $this->or()
 			);
 		}
 
@@ -125,16 +164,43 @@ class Parser
 	}
 
 	/**
+	 * Parses comparison expressions with proper precedence
+	 */
+	protected function comparison(): Node
+	{
+		$left = $this->arithmetic();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_EQUAL,
+			TokenType::T_IDENTICAL,
+			TokenType::T_NOT_EQUAL,
+			TokenType::T_NOT_IDENTICAL,
+			TokenType::T_LESS_THAN,
+			TokenType::T_LESS_EQUAL,
+			TokenType::T_GREATER_THAN,
+			TokenType::T_GREATER_EQUAL
+		])) {
+			$left = new ComparisonNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->arithmetic()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
 	 * Collect the next token of a type
 	 *
-	 * @throws \Exception when next token is not of specified type
+	 * @throws Exception when next token is not of specified type
 	 */
 	protected function consume(
 		TokenType $type,
 		string|false $error = false
 	): Token|false {
 		if ($this->is($type) === true) {
-			return $this->advance();
+			return $this->advance() ?? false;
 		}
 
 		if (is_string($error) === true) {
@@ -146,12 +212,14 @@ class Parser
 
 	/**
 	 * Move to next token if of any specific type
+	 *
+	 * @param list<TokenType> $types
 	 */
 	protected function consumeAny(array $types): Token|false
 	{
 		foreach ($types as $type) {
 			if ($this->is($type) === true) {
-				return $this->advance();
+				return $this->advance() ?? false;
 			}
 		}
 
@@ -159,9 +227,11 @@ class Parser
 	}
 
 	/**
-	 * Collect all list element until closing token
+	 * Collect all list elements until closing token
+	 *
+	 * @return list<Node>
 	 */
-	private function consumeList(TokenType $until): array
+	protected function consumeList(TokenType $until): array
 	{
 		$elements = [];
 
@@ -193,43 +263,16 @@ class Parser
 	/**
 	 * Convert a full query expression into a node
 	 */
-	private function expression(): Node
+	protected function expression(): Node
 	{
 		// Top-level expression should be ternary
 		return $this->ternary();
 	}
 
 	/**
-	 * Parses comparison expressions with proper precedence
-	 */
-	private function comparison(): Node
-	{
-		$left = $this->arithmetic();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_EQUAL,
-			TokenType::T_IDENTICAL,
-			TokenType::T_NOT_EQUAL,
-			TokenType::T_NOT_IDENTICAL,
-			TokenType::T_LESS_THAN,
-			TokenType::T_LESS_EQUAL,
-			TokenType::T_GREATER_THAN,
-			TokenType::T_GREATER_EQUAL
-		])) {
-			$left = new ComparisonNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->arithmetic()
-			);
-		}
-
-		return $left;
-	}
-
-	/**
 	 * Parses a grouping (e.g. closure)
 	 */
-	private function grouping(): ClosureNode|Node|null
+	protected function grouping(): ClosureNode|Node|null
 	{
 		if ($this->consume(TokenType::T_OPEN_PAREN)) {
 			$list = $this->consumeList(TokenType::T_CLOSE_PAREN);
@@ -237,22 +280,24 @@ class Parser
 			if ($this->consume(TokenType::T_ARROW)) {
 				$expression = $this->expression();
 
-				/**
-				 * Assert that all elements are VariableNodes
-				 * @var VariableNode[] $list
-				 */
 				foreach ($list as $element) {
 					if ($element instanceof VariableNode === false) {
 						throw new Exception('Expecting only variables in closure argument list');
 					}
 				}
 
-				$arguments = array_map(fn ($element) => $element->name, $list);
+				/** @var list<VariableNode> $list */
+				$arguments = array_map(fn (VariableNode $element) => $element->name, $list);
 
 				return new ClosureNode(
 					arguments: $arguments,
 					body: $expression
 				);
+			}
+
+			// an empty grouping holds no expression
+			if ($list === []) {
+				throw new Exception('Expect expression');
 			}
 
 			if (count($list) > 1) {
@@ -269,7 +314,7 @@ class Parser
 	/**
 	 * Parses an identifier (global functions or variables)
 	 */
-	private function identifier(): GlobalFunctionNode|VariableNode|null
+	protected function identifier(): GlobalFunctionNode|VariableNode|null
 	{
 		if ($token = $this->consume(TokenType::T_IDENTIFIER)) {
 			if ($this->consume(TokenType::T_OPEN_PAREN)) {
@@ -308,7 +353,7 @@ class Parser
 	/**
 	 * Checks for and parses a member access expression
 	 */
-	private function memberAccess(): Node
+	protected function memberAccess(): Node
 	{
 		$object = $this->atomic();
 
@@ -349,63 +394,19 @@ class Parser
 	}
 
 	/**
-	 * Parses arithmetic expressions with proper precedence
+	 * Parses logical OR expressions,
+	 * which bind looser than logical AND
+	 * @since 5.7.0
 	 */
-	private function arithmetic(): Node
+	protected function or(): Node
 	{
-		$left = $this->term();
+		$left = $this->and();
 
-		while ($token = $this->consumeAny([
-			TokenType::T_PLUS,
-			TokenType::T_MINUS
-		])) {
-			$left = new ArithmeticNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->term()
-			);
-		}
-
-		return $left;
-	}
-
-	/**
-	 * Parses multiplication, division, and modulo expressions
-	 */
-	private function term(): Node
-	{
-		$left = $this->memberAccess();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_MULTIPLY,
-			TokenType::T_DIVIDE,
-			TokenType::T_MODULO
-		])) {
-			$left = new ArithmeticNode(
-				left: $left,
-				operator: $token->lexeme,
-				right: $this->memberAccess()
-			);
-		}
-
-		return $left;
-	}
-
-	/**
-	 * Parses logical expressions with proper precedence
-	 */
-	private function logical(): Node
-	{
-		$left = $this->comparison();
-
-		while ($token = $this->consumeAny([
-			TokenType::T_AND,
-			TokenType::T_OR
-		])) {
+		while ($token = $this->consume(TokenType::T_OR)) {
 			$left = new LogicalNode(
 				left: $left,
 				operator: $token->lexeme,
-				right: $this->comparison()
+				right: $this->and()
 			);
 		}
 
@@ -428,7 +429,7 @@ class Parser
 		return $expression;
 	}
 
-	private function scalar(): LiteralNode|null
+	protected function scalar(): LiteralNode|null
 	{
 		if ($token = $this->consumeAny([
 			TokenType::T_TRUE,
@@ -445,10 +446,32 @@ class Parser
 	}
 
 	/**
+	 * Parses multiplication, division, and modulo expressions
+	 */
+	protected function term(): Node
+	{
+		$left = $this->unary();
+
+		while ($token = $this->consumeAny([
+			TokenType::T_MULTIPLY,
+			TokenType::T_DIVIDE,
+			TokenType::T_MODULO
+		])) {
+			$left = new ArithmeticNode(
+				left: $left,
+				operator: $token->lexeme,
+				right: $this->unary()
+			);
+		}
+
+		return $left;
+	}
+
+	/**
 	 * Checks for and parses a ternary expression
 	 * (full `a ? b : c` or elvis shorthand `a ?: c`)
 	 */
-	private function ternary(): Node
+	protected function ternary(): Node
 	{
 		$condition = $this->coalesce();
 
@@ -472,5 +495,36 @@ class Parser
 		}
 
 		return $condition;
+	}
+
+	/**
+	 * Parses a unary expression (logical negation or minus)
+	 * @since 6.0.0
+	 */
+	protected function unary(): Node
+	{
+		if ($this->consume(TokenType::T_NOT) !== false) {
+			return new NotNode(value: $this->unary());
+		}
+
+		if ($this->consume(TokenType::T_MINUS) !== false) {
+			$value = $this->unary();
+
+			// fold negative number literals, e.g. `-1`
+			if (
+				$value instanceof LiteralNode &&
+				(is_int($value->value) === true || is_float($value->value) === true)
+			) {
+				return new LiteralNode(-$value->value);
+			}
+
+			return new ArithmeticNode(
+				left: new LiteralNode(0),
+				operator: '-',
+				right: $value
+			);
+		}
+
+		return $this->memberAccess();
 	}
 }

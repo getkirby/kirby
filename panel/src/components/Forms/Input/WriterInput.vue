@@ -21,6 +21,7 @@
 			:name="name"
 			:required="required"
 			:value="value"
+			aria-hidden="true"
 			class="input-hidden"
 			tabindex="-1"
 		/>
@@ -92,6 +93,10 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [Input, props],
 	emits: ["input"],
@@ -109,10 +114,10 @@ export default {
 			return this.$helper.string.unescapeHTML(plain).length;
 		},
 		isCursorAtEnd() {
-			return this.editor.selectionIsAtEnd;
+			return this.editor.active.isCursorAtEnd;
 		},
 		isCursorAtStart() {
-			return this.editor.selectionIsAtStart;
+			return this.editor.active.isCursorAtStart;
 		},
 		toolbarOptions() {
 			return {
@@ -132,6 +137,7 @@ export default {
 				this.html = newValue;
 				this.editor.setContent(this.html);
 				this.isEmpty = this.editor.isEmpty();
+				this.validate();
 			}
 		}
 	},
@@ -251,7 +257,7 @@ export default {
 			this.focus();
 		}
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		this.editor.destroy();
 		this.$panel.events.off("click", this.onBlur);
 		this.$panel.events.off("focus", this.onBlur);
@@ -262,12 +268,6 @@ export default {
 		},
 		createMarks() {
 			return Object.values(this.$helper.writer.createMarks(this.marks));
-		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableMarksFromPlugins() instead.
-		 */
-		createMarksFromPanelPlugins() {
-			return this.$helper.writer.availableMarksFromPlugins();
 		},
 		createNodes() {
 			let nodes = this.nodes;
@@ -281,7 +281,6 @@ export default {
 			if (typeof nodes === "object" && nodes !== null) {
 				nodes.hardBreak = {
 					...(typeof nodes.hardBreak === "object" ? nodes.hardBreak : {}),
-					text: true,
 					enter: this.inline
 				};
 
@@ -304,27 +303,8 @@ export default {
 
 			return result;
 		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.availableNodesFromPlugins() instead.
-		 */
-		createNodesFromPanelPlugins() {
-			return this.$helper.writer.availableNodesFromPlugins();
-		},
 		getHTML() {
 			return this.editor.getHTML();
-		},
-		/**
-		 * @deprecated 5.4.0 Use this.$helper.writer.filterExtensions() instead.
-		 */
-		filterExtensions(available, allowed, postFilter) {
-			allowed = this.$helper.writer.allowedExtensions(available, allowed);
-			let installed = this.$helper.writer.filterExtensions(available, allowed);
-
-			if (typeof postFilter === "function") {
-				installed = postFilter(allowed, installed);
-			}
-
-			return installed;
 		},
 		focus() {
 			this.editor.focus();

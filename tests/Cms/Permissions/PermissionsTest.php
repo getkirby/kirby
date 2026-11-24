@@ -10,20 +10,27 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[CoversClass(Permissions::class)]
 class PermissionsTest extends TestCase
 {
-	protected array $deprecations = [];
-
-	protected function setUp(): void
-	{
-		parent::setUp();
-		$this->deprecations = Helpers::$deprecations;
-	}
-
 	protected function tearDown(): void
 	{
 		parent::tearDown();
 		Permissions::$extendedActions = [];
 		Permissions::$extendedAreas = [];
-		Helpers::$deprecations = $this->deprecations;
+	}
+
+	public function testActionIsolation(): void
+	{
+		// disabling a single action leaves the rest of the category intact
+		$p = new Permissions(['pages' => ['delete' => false]]);
+		$this->assertFalse($p->for('pages', 'delete'));
+		$this->assertTrue($p->for('pages', 'read'));
+		$this->assertTrue($p->for('pages', 'update'));
+		$this->assertTrue($p->for('pages', 'create'));
+
+		// disabling an entire category does not affect other categories
+		$p = new Permissions(['pages' => false]);
+		$this->assertFalse($p->for('pages', 'read'));
+		$this->assertTrue($p->for('files', 'read'));
+		$this->assertTrue($p->for('site', 'update'));
 	}
 
 	public static function actionsProvider(): array
@@ -84,22 +91,6 @@ class PermissionsTest extends TestCase
 			['user', 'list'],
 			['user', 'update'],
 		];
-	}
-
-	public function testActionIsolation(): void
-	{
-		// disabling a single action leaves the rest of the category intact
-		$p = new Permissions(['pages' => ['delete' => false]]);
-		$this->assertFalse($p->for('pages', 'delete'));
-		$this->assertTrue($p->for('pages', 'read'));
-		$this->assertTrue($p->for('pages', 'update'));
-		$this->assertTrue($p->for('pages', 'create'));
-
-		// disabling an entire category does not affect other categories
-		$p = new Permissions(['pages' => false]);
-		$this->assertFalse($p->for('pages', 'read'));
-		$this->assertTrue($p->for('files', 'read'));
-		$this->assertTrue($p->for('site', 'update'));
 	}
 
 	#[DataProvider('actionsProvider')]
@@ -254,27 +245,18 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($p->for('access', 'foo', default:true));
 	}
 
-	public function testForNullCategory(): void
+	public function testForNullDefault(): void
 	{
-		$p       = new Permissions();
-		$message = null;
+		$p = new Permissions();
 
-		set_error_handler(function (int $errno, string $errstr) use (&$message) {
-			$message = $errstr;
-			return true;
-		}, E_USER_DEPRECATED);
+		// existing permissions still return their bool value
+		$this->assertTrue($p->for('access', 'site', default: null));
 
-		// returns false default and triggers deprecation
-		$this->assertFalse($p->for(null));
-		$this->assertSame(
-			'Passing `$category = null` to `Permissions::for()` is not supported',
-			$message
-		);
+		// a null default is returned when the category does not exist
+		$this->assertNull($p->for('foo', default: null));
 
-		// returns custom default
-		$this->assertTrue($p->for(null, default: true));
-
-		restore_error_handler();
+		// a null default is returned when the action does not exist
+		$this->assertNull($p->for('access', 'foo', default: null));
 	}
 
 	public function testForWithNonBoolValueThrowsException(): void
@@ -356,41 +338,8 @@ class PermissionsTest extends TestCase
 		$this->assertTrue($array['pages']['read']);
 	}
 
-	public function testUnknownCategoryDeprecated(): void
-	{
-		Helpers::$deprecations['permissions-undefined'] = true;
-
-		$this->assertError(
-			E_USER_DEPRECATED,
-			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
-			function () {
-				$p = new Permissions(['nonexistent' => false]);
-				$this->assertTrue($p->for('pages', 'read'));
-				$this->assertTrue($p->for('files', 'update'));
-			}
-		);
-	}
-
-	public function testUnknownCategoryNotDeprecatedByDefault(): void
-	{
-		$this->assertError(
-			E_USER_DEPRECATED,
-			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
-			function () {
-				$p = new Permissions(['nonexistent' => ['foo' => false]]);
-
-				// the undefined permission is still applied
-				$this->assertFalse($p->for('nonexistent', 'foo'));
-				$this->assertTrue($p->for('pages', 'read'));
-			},
-			expectedFailure: false
-		);
-	}
-
 	public function testUnknownActionDeprecated(): void
 	{
-		Helpers::$deprecations['permissions-undefined'] = true;
-
 		$this->assertError(
 			E_USER_DEPRECATED,
 			'Setting undefined permission "pages.nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
@@ -403,22 +352,6 @@ class PermissionsTest extends TestCase
 		);
 	}
 
-	public function testUnknownActionNotDeprecatedByDefault(): void
-	{
-		$this->assertError(
-			E_USER_DEPRECATED,
-			'Setting undefined permission "pages.nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
-			function () {
-				$p = new Permissions(['pages' => ['nonexistent' => false]]);
-
-				// the undefined permission is still applied
-				$this->assertFalse($p->for('pages', 'nonexistent'));
-				$this->assertTrue($p->for('pages', 'read'));
-			},
-			expectedFailure: false
-		);
-	}
-
 	public function testUnknownActionWithNonBoolValueStillThrows(): void
 	{
 		$this->expectException(LogicException::class);
@@ -427,5 +360,18 @@ class PermissionsTest extends TestCase
 		);
 
 		new Permissions(['access' => ['user' => ['changeRole' => false]]]);
+	}
+
+	public function testUnknownCategoryDeprecated(): void
+	{
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'Setting undefined permission category "nonexistent" is deprecated and will be ignored in a future version. Please use https://getkirby.com/docs/reference/plugins/extensions/permissions to register custom permissions.',
+			function () {
+				$p = new Permissions(['nonexistent' => false]);
+				$this->assertTrue($p->for('pages', 'read'));
+				$this->assertTrue($p->for('files', 'update'));
+			}
+		);
 	}
 }

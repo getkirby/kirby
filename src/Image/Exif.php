@@ -2,34 +2,30 @@
 
 namespace Kirby\Image;
 
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\V;
 
 /**
  * Reads exif data from a given image object
  *
- * @package   Kirby Image
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
 class Exif
 {
+	protected string|null $aperture = null;
+	protected Camera|null $camera = null;
+
 	/**
 	 * The raw exif array
 	 */
 	protected array $data = [];
-
-	protected string|null $aperture = null;
-	protected Camera|null $camera = null;
 	protected string|null $exposure = null;
 	protected string|null $focalLength = null;
 	protected bool|null $isColor = null;
 	protected array|string|null $iso = null;
 	protected Location|null $location = null;
-	protected string|null $timestamp = null;
 	protected int $orientation;
+	protected string|null $timestamp = null;
 
 	public function __construct(
 		protected Image $image
@@ -45,43 +41,16 @@ class Exif
 	}
 
 	/**
-	 * Returns the raw data array from the parser
+	 * Improved `var_dump` output
+	 * @codeCoverageIgnore
 	 */
-	public function data(): array
+	public function __debugInfo(): array
 	{
-		return $this->data;
-	}
-
-	/**
-	 * Returns the Camera object
-	 */
-	public function camera(): Camera
-	{
-		return $this->camera ??= new Camera($this->data);
-	}
-
-	/**
-	 * Returns the location object
-	 */
-	public function location(): Location
-	{
-		return $this->location ??= new Location($this->data);
-	}
-
-	/**
-	 * Returns the timestamp
-	 */
-	public function timestamp(): string|null
-	{
-		return $this->timestamp;
-	}
-
-	/**
-	 * Returns the exposure
-	 */
-	public function exposure(): string|null
-	{
-		return $this->exposure;
+		return [
+			...$this->toArray(),
+			'camera'   => $this->camera(),
+			'location' => $this->location()
+		];
 	}
 
 	/**
@@ -93,23 +62,43 @@ class Exif
 	}
 
 	/**
-	 * Returns the iso value
+	 * Returns the Camera object
 	 */
-	public function iso(): string|null
+	public function camera(): Camera
 	{
-		if (is_array($this->iso) === true) {
-			return A::first($this->iso);
-		}
-
-		return $this->iso;
+		return $this->camera ??= new Camera($this->data);
 	}
 
 	/**
-	 * Checks if this is a color picture
+	 * Get all computed data
 	 */
-	public function isColor(): bool|null
+	protected function computed(): array
 	{
-		return $this->isColor;
+		return $this->data['COMPUTED'] ?? [];
+	}
+
+	/**
+	 * Returns the raw data array from the parser
+	 */
+	public function data(): array
+	{
+		return $this->data;
+	}
+
+	/**
+	 * Returns the exposure
+	 */
+	public function exposure(): string|null
+	{
+		return $this->exposure;
+	}
+
+	/**
+	 * Returns the focal length
+	 */
+	public function focalLength(): string|null
+	{
+		return $this->focalLength;
 	}
 
 	/**
@@ -121,11 +110,65 @@ class Exif
 	}
 
 	/**
-	 * Returns the focal length
+	 * Checks if this is a color picture
 	 */
-	public function focalLength(): string|null
+	public function isColor(): bool|null
 	{
-		return $this->focalLength;
+		return $this->isColor;
+	}
+
+	/**
+	 * Returns the iso value
+	 */
+	public function iso(): string|array|null
+	{
+		return $this->iso;
+	}
+
+	/**
+	 * Returns the location object
+	 */
+	public function location(): Location
+	{
+		return $this->location ??= new Location($this->data);
+	}
+
+	/**
+	 * Returns the exif orientation
+	 */
+	public function orientation(): int
+	{
+		return $this->orientation;
+	}
+
+	/**
+	 * Return the focal length
+	 */
+	protected function parseFocalLength(): string|null
+	{
+		return
+			$this->data['FocalLength'] ??
+			$this->data['FocalLengthIn35mmFilm'] ??
+			null;
+	}
+
+	/**
+	 * Return the timestamp when the picture has been taken
+	 */
+	protected function parseTimestamp(): string|null
+	{
+		if (isset($this->data['DateTimeOriginal']) === true) {
+			if ($time = strtotime($this->data['DateTimeOriginal'])) {
+				return (string)$time;
+			}
+		}
+
+		if (isset($this->data['FileDateTime']) === true) {
+			return (string)$this->data['FileDateTime'];
+		}
+
+		$modified = $this->image->modified();
+		return $modified === false ? null : (string)$modified;
 	}
 
 	/**
@@ -144,44 +187,11 @@ class Exif
 	}
 
 	/**
-	 * Get all computed data
+	 * Returns the timestamp
 	 */
-	protected function computed(): array
+	public function timestamp(): string|null
 	{
-		return $this->data['COMPUTED'] ?? [];
-	}
-
-	/**
-	 * Returns the exif orientation
-	 */
-	public function orientation(): int
-	{
-		return $this->orientation;
-	}
-
-	/**
-	 * Return the timestamp when the picture has been taken
-	 */
-	protected function parseTimestamp(): string
-	{
-		if (isset($this->data['DateTimeOriginal']) === true) {
-			if ($time = strtotime($this->data['DateTimeOriginal'])) {
-				return (string)$time;
-			}
-		}
-
-		return $this->data['FileDateTime'] ?? $this->image->modified();
-	}
-
-	/**
-	 * Return the focal length
-	 */
-	protected function parseFocalLength(): string|null
-	{
-		return
-			$this->data['FocalLength'] ??
-			$this->data['FocalLengthIn35mmFilm'] ??
-			null;
+		return $this->timestamp;
 	}
 
 	/**
@@ -198,19 +208,6 @@ class Exif
 			'iso'         => $this->iso(),
 			'focalLength' => $this->focalLength(),
 			'isColor'     => $this->isColor()
-		];
-	}
-
-	/**
-	 * Improved `var_dump` output
-	 * @codeCoverageIgnore
-	 */
-	public function __debugInfo(): array
-	{
-		return [
-			...$this->toArray(),
-			'camera'   => $this->camera(),
-			'location' => $this->location()
 		];
 	}
 }

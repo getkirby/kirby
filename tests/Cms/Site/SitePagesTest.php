@@ -7,7 +7,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Site::class)]
 class SitePagesTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.SitePages';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.SitePages';
+
+	public function testDefaultPageWithChildren(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'home']
+			]
+		]);
+
+		$this->assertIsPage('home', $site->page());
+	}
 
 	public function testErrorPage(): void
 	{
@@ -40,28 +51,6 @@ class SitePagesTest extends ModelTestCase
 		$this->assertIsPage($page, $site->page());
 	}
 
-	public function testDefaultPageWithChildren(): void
-	{
-		$site = new Site([
-			'children' => [
-				['slug' => 'home']
-			]
-		]);
-
-		$this->assertIsPage('home', $site->page());
-	}
-
-	public function testPageWithPathAndChildren(): void
-	{
-		$site = new Site([
-			'children' => [
-				['slug' => 'test']
-			]
-		]);
-
-		$this->assertIsPage('test', $site->page('test'));
-	}
-
 	public function testPages(): void
 	{
 		$site = new Site([
@@ -74,5 +63,16 @@ class SitePagesTest extends ModelTestCase
 
 		$collection = $site->pages();
 		$this->assertCount(3, $collection);
+	}
+
+	public function testPageWithPathAndChildren(): void
+	{
+		$site = new Site([
+			'children' => [
+				['slug' => 'test']
+			]
+		]);
+
+		$this->assertIsPage('test', $site->page('test'));
 	}
 }

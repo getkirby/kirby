@@ -2,7 +2,7 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Buttons\ViewButton;
+use Kirby\Panel\Ui\Button\ViewButton;
 
 return [
 	'user.theme' => function (App $kirby, User $user) {

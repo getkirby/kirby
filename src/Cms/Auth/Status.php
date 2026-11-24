@@ -10,13 +10,11 @@ use Stringable;
 /**
  * Information container for the
  * authentication status
- * @since 3.5.1
  *
- * @package   Kirby Cms
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.1
+ * @deprecated 6.0.0 Use `Kirby\Auth\Status` instead
  */
 class Status implements Stringable
 {
@@ -86,9 +84,9 @@ class Status implements Stringable
 	/**
 	 * Returns the type of the active challenge
 	 *
-	 * @param bool $automaticFallback If set to `false`, no faked challenge is returned;
-	 *                                WARNING: never send the resulting `null` value to the
-	 *                                user to avoid leaking whether the pending user exists
+	 * @param $automaticFallback If set to `false`, no faked challenge is returned;
+	 *                          WARNING: never send the resulting `null` value to the
+	 *                          user to avoid leaking whether the pending user exists
 	 */
 	public function challenge(bool $automaticFallback = true): string|null
 	{

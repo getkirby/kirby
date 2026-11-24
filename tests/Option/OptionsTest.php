@@ -3,7 +3,8 @@
 namespace Kirby\Option;
 
 use Kirby\Cms\Page;
-use Kirby\Field\TestCase;
+use Kirby\TestCase;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Options::class)]
@@ -23,6 +24,18 @@ class OptionsTest extends TestCase
 		$this->assertSame('b', $options->last()->text['en']);
 	}
 
+	public function testConstructWithNullValue(): void
+	{
+		$options = new Options([
+			new Option(null),
+			new Option(1),
+			new Option('a')
+		]);
+
+		$this->assertSame(['', 1, 'a'], $options->keys());
+		$this->assertNull($options->first()->value);
+	}
+
 	public function testFactory(): void
 	{
 		$options = Options::factory(['a', 'b']);
@@ -32,6 +45,33 @@ class OptionsTest extends TestCase
 
 		$this->assertSame('b', $options->last()->value);
 		$this->assertSame('b', $options->last()->text['en']);
+	}
+
+	public function testFactoryResolve(): void
+	{
+		$model = new Page(['slug' => 'test']);
+
+		// resolves by default
+		$options = Options::factory([
+			['value' => 'a', 'text' => '{{ page.slug }}'],
+			['value' => 'b', 'text' => '{{ page.slug }}'],
+		]);
+
+		$result = $options->render($model);
+
+		$this->assertSame('test', (string)$result[0]['text']);
+		$this->assertSame('test', (string)$result[1]['text']);
+
+		// disabled resolving
+		$options = Options::factory([
+			['value' => 'a', 'text' => '{{ page.slug }}'],
+			['value' => 'b', 'text' => '{{ page.slug }}'],
+		], resolve: false);
+
+		$result = $options->render($model);
+
+		$this->assertSame('{{ page.slug }}', (string)$result[0]['text']);
+		$this->assertSame('{{ page.slug }}', (string)$result[1]['text']);
 	}
 
 	public function testFactoryWithAssocArray(): void
@@ -62,6 +102,18 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text['en']);
 	}
 
+	public function testFactoryWithOptionObjects(): void
+	{
+		$option  = new ProtectedOption('b');
+		$options = Options::factory([
+			'a',
+			$option
+		]);
+
+		$this->assertSame(['a', 'b'], $options->keys());
+		$this->assertSame($option, $options->last());
+	}
+
 	public function testFactoryWithTranslatedOptions(): void
 	{
 		$options = Options::factory([
@@ -77,32 +129,6 @@ class OptionsTest extends TestCase
 		$this->assertSame('Option B', $options->last()->text['en']);
 		$this->assertSame('Variante B', $options->last()->text['de']);
 	}
-	public function testFactoryResolve(): void
-	{
-		$model = new Page(['slug' => 'test']);
-
-		// resolves by default
-		$options = Options::factory([
-			['value' => 'a', 'text' => '{{ page.slug }}'],
-			['value' => 'b', 'text' => '{{ page.slug }}'],
-		]);
-
-		$result = $options->render($model);
-
-		$this->assertSame('test', $result[0]['text']);
-		$this->assertSame('test', $result[1]['text']);
-
-		// disabled resolving
-		$options = Options::factory([
-			['value' => 'a', 'text' => '{{ page.slug }}'],
-			['value' => 'b', 'text' => '{{ page.slug }}'],
-		], resolve: false);
-
-		$result = $options->render($model);
-
-		$this->assertSame('{{ page.slug }}', $result[0]['text']);
-		$this->assertSame('{{ page.slug }}', $result[1]['text']);
-	}
 
 	public function testRender(): void
 	{
@@ -113,19 +139,19 @@ class OptionsTest extends TestCase
 			new Option('b')
 		]);
 
-		$this->assertSame([
+		$this->assertEquals([ // @phpstan-ignore-line
 			[
 				'disabled' => false,
 				'icon'     => null,
 				'info'     => null,
-				'text'     => 'a',
+				'text'     => new HtmlString('a'),
 				'value'    => 'a',
 			],
 			[
 				'disabled' => false,
 				'icon'     => null,
 				'info'     => null,
-				'text'     => 'b',
+				'text'     => new HtmlString('b'),
 				'value'    => 'b',
 			]
 		], $options->render($model));

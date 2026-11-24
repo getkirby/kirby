@@ -2,7 +2,7 @@
 	<figure
 		:data-empty="isEmpty"
 		:class="['k-block-figure', $attrs.class]"
-		:style="{ '--block-figure-back': back, ...$attrs.style }"
+		:style="[{ '--block-figure-back': back }, $attrs.style]"
 	>
 		<k-button
 			v-if="isEmpty"
@@ -32,6 +32,10 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	inheritAttrs: false,
 	props: {

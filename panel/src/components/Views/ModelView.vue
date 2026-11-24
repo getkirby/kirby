@@ -1,5 +1,7 @@
 <script>
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  * @internal
  */
 export default {
@@ -12,7 +14,6 @@ export default {
 		lock: {
 			type: [Boolean, Object]
 		},
-		model: Object,
 		next: Object,
 		prev: Object,
 		permissions: {
@@ -79,7 +80,7 @@ export default {
 		this.$events.on("model.update", this.onModelUpdate);
 		this.$events.on("view.save", this.onViewSave);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("beforeunload", this.onBeforeUnload);
 		this.$events.off("content.save", this.onContentSave);
 		this.$events.off("keydown.left", this.toPrev);
@@ -156,7 +157,7 @@ export default {
 				this.$events.emit("model.update");
 
 				// the view needs to be refreshed to get an updated set of props
-				// this will also rerender sections if needed
+				// this will also rerender fields if needed
 				await this.$panel.view.refresh();
 			} catch (error) {
 				this.$panel.notification.error(error);

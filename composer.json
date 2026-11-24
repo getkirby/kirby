@@ -3,7 +3,7 @@
 	"description": "The Kirby core",
 	"license": "proprietary",
 	"type": "kirby-cms",
-	"version": "5.6.4",
+	"version": "6.0.0",
 	"keywords": [
 		"kirby",
 		"cms",
@@ -24,7 +24,7 @@
 		"source": "https://github.com/getkirby/kirby"
 	},
 	"require": {
-		"php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+		"php": "~8.3.0 || ~8.4.0 || ~8.5.0 || ~8.6.0",
 		"ext-ctype": "*",
 		"ext-curl": "*",
 		"ext-dom": "*",
@@ -36,22 +36,20 @@
 		"ext-mbstring": "*",
 		"ext-openssl": "*",
 		"ext-simplexml": "*",
-		"christian-riesen/base32": "^1.6.1",
+		"christian-riesen/base32": "^2.0.1",
 		"claviska/simpleimage": "^4.4.2",
 		"composer/semver": "^3.6.0",
 		"erusev/parsedown": "^1.8.0",
 		"erusev/parsedown-extra": "^0.9.0",
 		"filp/whoops": "^2.19.3",
 		"getkirby/composer-installer": "^1.2.1",
-		"laminas/laminas-escaper": "~2.18.0",
+		"laminas/laminas-escaper": "^2.19.0",
+		"lbuchs/webauthn": "^2.2",
 		"michelf/php-smartypants": "^1.8.1",
 		"phpmailer/phpmailer": "^7.2.0",
 		"symfony/polyfill-intl-idn": "^1.43.0",
 		"symfony/polyfill-mbstring": "^1.43.3",
 		"symfony/yaml": "^7.4.23"
-	},
-	"replace": {
-		"symfony/polyfill-php72": "*"
 	},
 	"suggest": {
 		"ext-apcu": "Support for the Apcu cache driver",
@@ -96,15 +94,15 @@
 			"@analyze:psalm"
 		],
 		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
-		"analyze:composer:unused": "./scripts/cpx icanhazstring/composer-unused:0.9.6 --no-progress",
-		"analyze:psalm": "./scripts/cpx vimeo/psalm:6.16.1",
+		"analyze:composer:unused": "cpx icanhazstring/composer-unused:0.9.6 --no-progress",
+		"analyze:psalm": "cpx vimeo/psalm:6.16.1",
 		"ci": [
 			"@fix",
 			"@analyze",
 			"@test"
 		],
-		"fix": "./scripts/cpx friendsofphp/php-cs-fixer:3.95.1 fix",
-		"test": "./scripts/cpx phpunit/phpunit:11.5.55",
+		"fix": "cpx getkirby/php-cs:0.3.0 fix",
+		"test": "cpx \"brianium/paratest:7.20.0||7.27.5\" --passthru-php=\"-dopcache.enable_cli=1 -dopcache.optimization_level=0 -dopcache.jit_buffer_size=0\"",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",
 			"@test --coverage-html=tests/coverage"

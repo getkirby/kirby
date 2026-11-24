@@ -62,6 +62,23 @@ describe("$helper.string.slug()", () => {
 		expect(result).toBe("1-plus-1");
 	});
 
+	it("should apply rules with alternative characters", () => {
+		const rules = [{ "ò|ó|ö|ø": "o", "ß|ẞ": "ss" }];
+
+		const result = slug("Wörld Gruß", rules);
+		expect(result).toBe("world-gruss");
+	});
+
+	it("should apply slash-delimited rules", () => {
+		const result = slug("foo", [{ "/o/": "0" }]);
+		expect(result).toBe("f00");
+	});
+
+	it("should apply slash-delimited rules with alternative characters", () => {
+		const result = slug("Wörld", [{ "/ò|ó|ö|ø/": "o" }]);
+		expect(result).toBe("world");
+	});
+
 	it("handles asterisks", () => {
 		const resultA = slug("***");
 		expect(resultA).toBe("");
@@ -82,11 +99,6 @@ describe("$helper.string.slug()", () => {
 
 	it("should return empty string when null param sent", () => {
 		const result = slug(null);
-		expect(result).toBe("");
-	});
-
-	it("should return empty string when undefined param sent", () => {
-		const result = slug(undefined);
 		expect(result).toBe("");
 	});
 });

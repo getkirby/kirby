@@ -1,14 +1,18 @@
 import { reactive } from "vue";
+import dayjs from "@/libraries/dayjs";
 import { StringTemplateValues, template } from "@/helpers/string";
+import html, { escape, HtmlData, HtmlString } from "./html";
 import State from "./state";
 
-type TranslationState = {
+export type TranslationState = {
 	code: string | null;
 	data: StringTemplateValues;
 	direction: string;
 	name: string | null;
 	weekday: number;
 };
+
+type Data = StringTemplateValues;
 
 export function defaults(): TranslationState {
 	return {
@@ -40,10 +44,82 @@ function lang(code: string): string {
 /**
  * Represents the interface language for the current user
  *
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default function Translation() {
 	const parent = State("translation", defaults());
+
+	/**
+	 * Fetches a translation string by key, optionally replacing placeholders
+	 * with values from the data argument. Falls back to the given fallback
+	 * string, or the key itself if no fallback is provided.
+	 *
+	 * @example
+	 * t("key")                      // key as fallback
+	 * t("key", "fallback")          // shorthand fallback
+	 * t("key", { name: "…" })       // with placeholder
+	 * t("key", { name: "…" }, "f")  // with placeholders and fallback
+	 * t(42)                         // undefined
+	 */
+	function translate(key: string, fallback: string): string;
+	function translate(key: string, data?: Data, fallback?: string): string;
+	function translate(key: unknown, data?: Data, fallback?: string): undefined;
+	function translate(
+		this: { data: Data },
+		key: unknown,
+		data?: Data | string,
+		fallback?: string
+	): Data[string] | undefined {
+		if (typeof key !== "string") {
+			return;
+		}
+
+		if (typeof data === "string") {
+			fallback = data;
+			data = undefined;
+		}
+
+		const value = this.data[key] ?? fallback ?? key;
+
+		if (typeof value !== "string") {
+			return value;
+		}
+
+		return template(value, data);
+	}
+
+	/**
+	 * Same as `translate()`, but marks the result as trusted HTML
+	 * and escapes every filled placeholder.
+	 *
+	 * @example
+	 * th("page.delete.confirm", { title: page.title })
+	 * th("<b>{title}</b>", { title: "<script>" }) // "<b>&lt;script&gt;</b>"
+	 * th("key", { link: html("<a href='#'>Link</a>") }) // passed through
+	 *
+	 * @since 6.0.0
+	 */
+	function translateHtml(key: string, fallback: string): HtmlString;
+	function translateHtml(
+		key: string,
+		data?: HtmlData,
+		fallback?: string
+	): HtmlString;
+	function translateHtml(
+		this: { data: Data },
+		key: string,
+		data?: HtmlData | string,
+		fallback?: string
+	): HtmlString {
+		if (typeof data === "string") {
+			fallback = data;
+			data = undefined;
+		}
+
+		return html(translate.call(this, key, escape(data ?? {}), fallback));
+	}
 
 	return reactive({
 		...parent,
@@ -53,6 +129,7 @@ export default function Translation() {
 		 * reading direction so the DOM reflects the active translation.
 		 * Direction is also set on <body> since some elements (e.g. drag
 		 * ghosts) are injected outside the Panel root.
+		 * The matching dayjs locale is activated as well.
 		 */
 		set(state: Partial<TranslationState>): TranslationState {
 			parent.set.call(this, state);
@@ -63,30 +140,12 @@ export default function Translation() {
 
 			document.body.dir = this.direction;
 
+			dayjs.locale(this.code ?? "en");
+
 			return this.state();
 		},
 
-		/**
-		 * Fetches a translation string by key and
-		 * optionally replaces placeholders
-		 * with values from the data argument
-		 */
-		translate(
-			key: unknown,
-			data?: StringTemplateValues,
-			fallback?: string
-		): StringTemplateValues[string] | undefined {
-			if (typeof key !== "string") {
-				return;
-			}
-
-			const value = this.data[key] ?? fallback;
-
-			if (typeof value !== "string") {
-				return value;
-			}
-
-			return template(value, data);
-		}
+		translate,
+		translateHtml
 	});
 }

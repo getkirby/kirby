@@ -9,9 +9,6 @@ use Kirby\Toolkit\BlockCollectionAccess;
 /**
  * HasMethods
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
@@ -19,6 +16,8 @@ trait HasMethods
 {
 	/**
 	 * All registered methods
+	 *
+	 * @var array<string, Closure>
 	 */
 	public static array $methods = [];
 
@@ -26,7 +25,7 @@ trait HasMethods
 	 * Calls a registered method class with the
 	 * passed arguments
 	 *
-	 * @throws \Kirby\Exception\BadMethodCallException
+	 * @throws BadMethodCallException
 	 */
 	#[BlockCollectionAccess]
 	protected function callMethod(string $method, array $args = []): mixed
@@ -40,15 +39,6 @@ trait HasMethods
 		}
 
 		return $closure->call($this, ...$args);
-	}
-
-	/**
-	 * Checks if the object has a registered custom method
-	 */
-	#[BlockCollectionAccess]
-	public function hasMethod(string $method): bool
-	{
-		return $this->getMethod($method) !== null;
 	}
 
 	/**
@@ -70,5 +60,14 @@ trait HasMethods
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks if the object has a registered custom method
+	 */
+	#[BlockCollectionAccess]
+	public function hasMethod(string $method): bool
+	{
+		return $this->getMethod($method) !== null;
 	}
 }

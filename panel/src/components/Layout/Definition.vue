@@ -11,7 +11,9 @@
 
 <script>
 /**
- * @since 5.3.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     5.3.0
  */
 export default {
 	props: {
@@ -38,6 +40,7 @@ export default {
 	padding-inline: var(--table-cell-padding);
 	min-height: var(--definition-height);
 	display: flex;
+	gap: var(--spacing-1);
 	align-items: var(--definition-align);
 }
 .k-definition:not(:last-child) dt,

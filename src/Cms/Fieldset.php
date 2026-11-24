@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Blueprint\Blueprint;
+use Kirby\Blueprint\FieldsRegistry;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
@@ -9,28 +11,25 @@ use Kirby\Toolkit\Str;
 
 /**
  * Represents a single Fieldset
- * @since 3.5.0
  *
- * @package   Kirby Cms
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.5.0
  *
- * @extends \Kirby\Cms\Item<\Kirby\Cms\Fieldsets>
+ * @extends Item<Fieldsets>
  */
 class Fieldset extends Item
 {
-	public const ITEMS_CLASS = Fieldsets::class;
+	public const string ITEMS_CLASS = Fieldsets::class;
 
 	protected bool $disabled;
 	protected bool $editable;
-	protected array $fields = [];
 	protected string|null $icon;
 	protected string|null $label;
-	protected string|null $name;
+	protected string $name;
 	protected string|bool|null $preview;
-	protected array $tabs;
+	protected FieldsRegistry|null $registry = null;
+	protected array|null $tabs = null;
 	protected bool $translate;
 	protected string $type;
 	protected bool $unset;
@@ -55,10 +54,9 @@ class Fieldset extends Item
 		$this->editable    = $params['editable'] ?? true;
 		$this->icon        = $params['icon'] ?? null;
 		$params['title'] ??= $params['name'] ?? Str::label($this->type);
-		$this->name        = $this->createName($params['title']);
+		$this->name        = $this->createName($params['title']) ?? Str::label($this->type);
 		$this->label       = $this->createLabel($params['label'] ?? null);
 		$this->preview     = $params['preview'] ?? null;
-		$this->tabs        = $this->createTabs($params);
 		$this->translate   = $params['translate'] ?? true;
 		$this->unset       = $params['unset'] ?? false;
 		$this->wysiwyg     = $params['wysiwyg'] ?? false;
@@ -76,22 +74,20 @@ class Fieldset extends Item
 
 	protected function createFields(array $fields = []): array
 	{
-		$fields = Blueprint::fieldsProps($fields);
-
-		// collect all fields
-		$this->fields = [...$this->fields, ...$fields];
-
-		return $fields;
-	}
-
-	protected function createName(array|string $name): string|null
-	{
-		return I18n::translate($name, $name);
+		$this->registry ??= new FieldsRegistry();
+		return $this->registry->add(Blueprint::fieldsProps($fields));
 	}
 
 	protected function createLabel(array|string|null $label = null): string|null
 	{
-		return I18n::translate($label, $label);
+		$result = I18n::translate($label, $label);
+		return is_string($result) ? $result : null;
+	}
+
+	protected function createName(array|string $name): string|null
+	{
+		$result = I18n::translate($name, $name);
+		return is_string($result) ? $result : null;
 	}
 
 	protected function createTabs(array $params = []): array
@@ -139,7 +135,7 @@ class Fieldset extends Item
 			return false;
 		}
 
-		if ($this->fields === []) {
+		if ($this->fields() === []) {
 			return false;
 		}
 
@@ -154,7 +150,11 @@ class Fieldset extends Item
 	 */
 	public function fields(): array
 	{
-		return $this->fields;
+		// the fields of all tabs are registered
+		// while creating the tabs, so ensure they are
+		$this->tabs();
+
+		return $this->registry?->toArray() ?? [];
 	}
 
 	/**
@@ -202,17 +202,7 @@ class Fieldset extends Item
 
 	public function tabs(): array
 	{
-		return $this->tabs;
-	}
-
-	public function translate(): bool
-	{
-		return $this->translate;
-	}
-
-	public function type(): string
-	{
-		return $this->type;
+		return $this->tabs ??= $this->createTabs($this->params);
 	}
 
 	public function toArray(): array
@@ -221,7 +211,7 @@ class Fieldset extends Item
 		$tabs = array_map(
 			fn (array $tab): array => [
 				...$tab,
-				'fields' => $this->form($tab['fields'])->fields()->toProps()
+				'fields' => $this->form($tab['fields'])->fields()->toProps(defaults: true)
 			],
 			$this->tabs()
 		);
@@ -239,6 +229,16 @@ class Fieldset extends Item
 			'unset'     => $this->unset(),
 			'wysiwyg'   => $this->wysiwyg(),
 		];
+	}
+
+	public function translate(): bool
+	{
+		return $this->translate;
+	}
+
+	public function type(): string
+	{
+		return $this->type;
 	}
 
 	public function unset(): bool

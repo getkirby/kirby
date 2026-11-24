@@ -10,20 +10,22 @@
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit')"
 	>
-		<!-- eslint-disable vue/no-v-html -->
 		<label
+			v-safe-html="$th('field.blocks.fieldsets.paste', { shortcut })"
 			for="pasteboard"
-			v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
 		/>
-		<!-- eslint-enable -->
 		<textarea id="pasteboard" @paste.prevent="paste" />
 	</k-dialog>
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	inheritAttrs: false,
-	emits: ["close", "paste", "submit"],
+	emits: ["cancel", "close", "paste", "submit"],
 	computed: {
 		shortcut() {
 			return this.$helper.keyboard.metaKey() + "+v";

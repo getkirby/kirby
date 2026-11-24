@@ -6,6 +6,8 @@ use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
@@ -17,16 +19,22 @@ use Stringable;
  * Flexible File object with a set of helpful
  * methods to inspect and work with files.
  *
- * @since 3.6.0
- *
- * @package   Kirby Filesystem
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
+ * @since     3.6.0
  */
 class File implements Stringable
 {
+	/**
+	 * Validation rules to be used for `::match()`
+	 *
+	 * @var array<string, array{0: string, 1: string}>
+	 */
+	public static array $validations = [
+		'maxsize' => ['size', 'max'],
+		'minsize' => ['size', 'min']
+	];
+
 	/**
 	 * Parent file model
 	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
@@ -44,20 +52,12 @@ class File implements Stringable
 	protected string|null $url;
 
 	/**
-	 * Validation rules to be used for `::match()`
-	 */
-	public static array $validations = [
-		'maxsize' => ['size', 'max'],
-		'minsize' => ['size', 'min']
-	];
-
-	/**
 	 * Constructor sets all file properties
 	 *
-	 * @param array|string|null $props Properties or deprecated `$root` string
-	 * @param string|null $url Deprecated argument, use `$props['url']` instead
+	 * @param $props Properties or deprecated `$root` string
+	 * @param $url Deprecated argument, use `$props['url']` instead
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
+	 * @throws InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
 		array|string|null $props = null,
@@ -78,10 +78,10 @@ class File implements Stringable
 
 		if (
 			$this->model !== null &&
-			method_exists($this->model, 'hasIsFileTrait') !== true
+			defined($this->model::class . '::IS_FILE_TRAIT') === false
 		) {
 			throw new InvalidArgumentException(
-				message: 'The model object must use the "Kirby\Filesystem\IsFile" trait'
+				message: 'The model object must use the "' . IsFile::class . '" trait'
 			);
 		}
 	}
@@ -128,7 +128,7 @@ class File implements Stringable
 	/**
 	 * Returns the file as data uri
 	 *
-	 * @param bool $base64 Whether the data should be base64 encoded or not
+	 * @param $base64 Whether the data should be base64 encoded or not
 	 */
 	public function dataUri(bool $base64 = true): string
 	{
@@ -152,12 +152,12 @@ class File implements Stringable
 		return true;
 	}
 
-	/*
+	/**
 	 * Automatically sends all needed headers
 	 * for the file to be downloaded and
 	 * echos the file's content
 	 *
-	 * @param string|null $filename Optional filename for the download
+	 * @param $filename Optional filename for the download
 	 */
 	public function download(string|null $filename = null): string
 	{
@@ -225,7 +225,7 @@ class File implements Stringable
 	/**
 	 * Checks if a file is of a certain type
 	 *
-	 * @param string $value An extension or mime type
+	 * @param $value An extension or mime type
 	 */
 	public function is(string $value): bool
 	{
@@ -270,14 +270,14 @@ class File implements Stringable
 	 */
 	public function kirby(): App|null
 	{
-		return App::instance(null, true);
+		return App::instance(lazy: true);
 	}
 
 	/**
 	 * Runs a set of validations on the file object
 	 * (mainly for images).
 	 *
-	 * @throws \Kirby\Exception\Exception
+	 * @throws Exception
 	 */
 	public function match(array $rules): bool
 	{
@@ -313,7 +313,8 @@ class File implements Stringable
 
 		if (is_array($rules['extension'] ?? null) === true) {
 			$extension = $this->extension();
-			if (in_array($extension, $rules['extension'], true) !== true) {
+
+			if (in_array($extension, $rules['extension'], true) === false) {
 				throw new Exception(
 					key: 'file.extension.invalid',
 					data: compact('extension')
@@ -323,7 +324,8 @@ class File implements Stringable
 
 		if (is_array($rules['type'] ?? null) === true) {
 			$type = $this->type();
-			if (in_array($type, $rules['type'], true) !== true) {
+
+			if (in_array($type, $rules['type'], true) === false) {
 				throw new Exception(
 					key: 'file.type.invalid',
 					data: compact('type')
@@ -371,6 +373,7 @@ class File implements Stringable
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
 	 *                                               for the globally configured one
+	 * @return ($format is null ? int|false : string|false)
 	 */
 	public function modified(
 		string|IntlDateFormatter|null $format = null,
@@ -382,7 +385,7 @@ class File implements Stringable
 	/**
 	 * Move the file to a new location
 	 *
-	 * @param bool $overwrite Force overwriting any existing files
+	 * @param $overwrite Force overwriting any existing files
 	 */
 	public function move(string $newRoot, bool $overwrite = false): static
 	{
@@ -408,9 +411,9 @@ class File implements Stringable
 	 * Returns the file size in a
 	 * human-readable format
 	 *
-	 * @param string|false|null $locale Locale for number formatting,
-	 *                                  `null` for the current locale,
-	 *                                  `false` to disable number formatting
+	 * @param $locale Locale for number formatting,
+	 *               `null` for the current locale,
+	 *               `false` to disable number formatting
 	 */
 	public function niceSize(string|false|null $locale = null): string
 	{
@@ -427,8 +430,9 @@ class File implements Stringable
 
 	/**
 	 * Returns the absolute path to the file
+	 * or `false` if the file does not exist
 	 */
-	public function realpath(): string
+	public function realpath(): string|false
 	{
 		return realpath($this->root());
 	}
@@ -437,7 +441,7 @@ class File implements Stringable
 	 * Changes the name of the file without
 	 * touching the extension
 	 *
-	 * @param bool $overwrite Force overwrite existing files
+	 * @param $overwrite Force overwrite existing files
 	 */
 	public function rename(string $newName, bool $overwrite = false): static
 	{
@@ -461,29 +465,18 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the absolute url for the file
-	 */
-	public function url(): string|null
-	{
-		// lazily determine the URL from the model object
-		// only if it's needed to avoid breaking custom file::url
-		// components that rely on `$cmsFile->asset()` methods
-		return $this->url ??= $this->model?->url();
-	}
-
-	/**
 	 * Sanitizes the file contents depending on the file type
 	 * by overwriting the file with the sanitized version
 	 * @since 3.6.0
 	 *
-	 * @param string|bool $typeLazy Explicit sane handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit sane handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\LogicException If more than one handler applies
-	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws LogicException If more than one handler applies
+	 * @throws NotFoundException If the handler was not found
+	 * @throws Exception On other errors
 	 */
 	public function sanitizeContents(string|bool $typeLazy = false): void
 	{
@@ -493,10 +486,30 @@ class File implements Stringable
 	/**
 	 * Returns the sha1 hash of the file
 	 * @since 3.6.0
+	 *
+	 * @throws Exception If the file cannot be read
 	 */
 	public function sha1(): string
 	{
-		return sha1_file($this->root());
+		if (is_file($this->root()) === false) {
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be hashed'
+			);
+		}
+
+		$hash = sha1_file($this->root());
+
+		// @codeCoverageIgnoreStart
+		// `sha1_file` failure after `is_file === true` would require
+		// a filesystem race condition between the two calls
+		if ($hash === false) {
+			throw new Exception(
+				message: 'The file "' . $this->root() . '" could not be hashed'
+			);
+		}
+		// @codeCoverageIgnoreEnd
+
+		return $hash;
 	}
 
 	/**
@@ -510,6 +523,8 @@ class File implements Stringable
 	/**
 	 * Converts the media object to a
 	 * plain PHP array
+	 *
+	 * @return array<string, mixed>
 	 */
 	public function toArray(): array
 	{
@@ -538,7 +553,7 @@ class File implements Stringable
 	 */
 	public function toJson(): string
 	{
-		return json_encode($this->toArray());
+		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
 	}
 
 	/**
@@ -550,15 +565,26 @@ class File implements Stringable
 	}
 
 	/**
+	 * Returns the absolute url for the file
+	 */
+	public function url(): string|null
+	{
+		// lazily determine the URL from the model object
+		// only if it's needed to avoid breaking custom file::url
+		// components that rely on `$cmsFile->asset()` methods
+		return $this->url ??= $this->model?->url();
+	}
+
+	/**
 	 * Validates the file contents depending on the file type
 	 *
-	 * @param string|bool $typeLazy Explicit sane handler type string,
-	 *                              `true` for lazy autodetection or
-	 *                              `false` for normal autodetection
+	 * @param $typeLazy Explicit sane handler type string,
+	 *                 `true` for lazy autodetection or
+	 *                 `false` for normal autodetection
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
-	 * @throws \Kirby\Exception\NotFoundException If the handler was not found
-	 * @throws \Kirby\Exception\Exception On other errors
+	 * @throws InvalidArgumentException If the file didn't pass validation
+	 * @throws NotFoundException If the handler was not found
+	 * @throws Exception On other errors
 	 */
 	public function validateContents(string|bool $typeLazy = false): void
 	{

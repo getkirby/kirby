@@ -1,8 +1,9 @@
 <template>
 	<k-string-input
 		v-bind="$props"
+		:class="['k-password-input', $attrs.class]"
+		:style="$attrs.style"
 		type="password"
-		class="k-password-input"
 		@input="$emit('input', $event)"
 	/>
 </template>
@@ -21,9 +22,14 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="password" @input="password = $event" name="password" type="password" />
+ * @example
+ * <k-input :value="password" @input="password = $event" name="password" type="password" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
-	mixins: [StringInput, props]
+	mixins: [StringInput, props],
+	emits: ["input"]
 };
 </script>

@@ -1,6 +1,12 @@
 <script>
 import LinkDialog from "@/components/Dialogs/LinkDialog.vue";
 
+/**
+ * @displayName ToolbarLinkDialog
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	extends: LinkDialog,
 	props: {
@@ -21,6 +27,7 @@ export default {
 			})
 		}
 	},
+	emits: ["cancel", "submit"],
 	methods: {
 		submit() {
 			const url = this.values.href ?? "";

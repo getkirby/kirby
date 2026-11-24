@@ -80,6 +80,19 @@ class StatTest extends TestCase
 
 			$this->assertSame('test', $stat->$prop());
 		}
+
+		// HTML entities must pass through unescaped;
+		// the Panel's Vue layer is responsible for escaping.
+		// Encoding here would double-escape.
+		$stat = new Stat(
+			...[
+				'model' => $this->model,
+				'label' => 'Test Label',
+				'value' => 'Test Value',
+				$prop   => 'A & B',
+			]
+		);
+		$this->assertSame('A & B', $stat->$prop());
 	}
 
 	public function testComponent(): void
@@ -112,7 +125,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'dialog',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}
@@ -122,7 +135,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'drawer',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}
@@ -169,7 +182,6 @@ class StatTest extends TestCase
 		$this->assertSame('Test Label', $stat->label());
 		$this->assertSame('Test Value', $stat->value());
 		$this->assertSame($this->model, $stat->model);
-
 
 		// from array without model
 		$stat = Stat::from(
@@ -242,7 +254,7 @@ class StatTest extends TestCase
 		$this->assertProp(
 			prop: 'link',
 			nullable: true,
-			translatable: true,
+			translatable: false,
 			queryable: true
 		);
 	}

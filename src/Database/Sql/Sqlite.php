@@ -7,9 +7,6 @@ use Kirby\Database\Sql;
 /**
  * SQLite query builder
  *
- * @package   Kirby Database
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -18,8 +15,6 @@ class Sqlite extends Sql
 	/**
 	 * Returns a query to list the columns of a specified table;
 	 * the query needs to return rows with a column `name`
-	 *
-	 * @param string $table Table name
 	 */
 	public function columns(string $table): array
 	{
@@ -51,9 +46,9 @@ class Sqlite extends Sql
 	/**
 	 * Combines an identifier (table and column)
 	 *
-	 * @param bool $values Whether the identifier is going to be
-	 *                     used for a VALUES clause; only relevant
-	 *                     for SQLite
+	 * @param $values Whether the identifier is going to be
+	 *               used for a VALUES clause; only relevant
+	 *               for SQLite
 	 */
 	public function combineIdentifier(
 		string $table,
@@ -71,9 +66,8 @@ class Sqlite extends Sql
 	/**
 	 * Creates a CREATE TABLE query
 	 *
-	 * @param string $table Table name
-	 * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
-	 * @return array Array with a `query` string and a `bindings` array
+	 * @param $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
+	 * @return array{query: string, bindings: array<string, mixed>}
 	 */
 	public function createTable(
 		string $table,
@@ -87,7 +81,7 @@ class Sqlite extends Sql
 			// quote each column name and
 			// make a list string out of the column names
 			$columns = implode(', ', array_map(
-				fn ($name) => $this->quoteIdentifier($name),
+				fn (string $name) => $this->quoteIdentifier($name),
 				$columns
 			));
 

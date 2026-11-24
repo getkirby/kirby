@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Url::class)]
 class UrlTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Url';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Url';
 
 	protected function setUp(): void
 	{
@@ -68,6 +68,39 @@ class UrlTest extends TestCase
 		$this->assertSame('https://getkirby.com/projects', Url::to('projects'));
 	}
 
+	public function testToTemplateAsset(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => static::TMP
+			],
+			'urls' => [
+				'index' => 'https://getkirby.com'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+					]
+				]
+			]
+		]);
+
+		$app->site()->visit('test');
+
+		F::write($app->root('assets') . '/css/default.css', 'test');
+
+		$expected = 'https://getkirby.com/assets/css/default.css';
+
+		$this->assertSame($expected, Url::toTemplateAsset('css', 'css'));
+
+		F::write($app->root('assets') . '/js/default.js', 'test');
+
+		$expected = 'https://getkirby.com/assets/js/default.js';
+
+		$this->assertSame($expected, Url::toTemplateAsset('js', 'js'));
+	}
+
 	public function testToWithLanguage(): void
 	{
 		$this->app->clone([
@@ -107,38 +140,5 @@ class UrlTest extends TestCase
 
 		// translated slug
 		$this->assertSame('https://getkirby.com/de/custom', Url::to('c', 'de'));
-	}
-
-	public function testToTemplateAsset(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => static::TMP
-			],
-			'urls' => [
-				'index' => 'https://getkirby.com'
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-					]
-				]
-			]
-		]);
-
-		$app->site()->visit('test');
-
-		F::write($app->root('assets') . '/css/default.css', 'test');
-
-		$expected = 'https://getkirby.com/assets/css/default.css';
-
-		$this->assertSame($expected, Url::toTemplateAsset('css', 'css'));
-
-		F::write($app->root('assets') . '/js/default.js', 'test');
-
-		$expected = 'https://getkirby.com/assets/js/default.js';
-
-		$this->assertSame($expected, Url::toTemplateAsset('js', 'js'));
 	}
 }

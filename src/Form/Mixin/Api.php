@@ -2,17 +2,18 @@
 
 namespace Kirby\Form\Mixin;
 
+/**
+ * Provides a stub for field API routes
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 trait Api
 {
-	public function api(): array
-	{
-		return $this->routes();
-	}
-
 	/**
 	 * Routes for the field API
 	 */
-	public function routes(): array
+	public function api(): array
 	{
 		return [];
 	}

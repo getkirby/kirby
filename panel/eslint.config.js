@@ -1,15 +1,62 @@
+import globals from "globals";
+import a11y from "eslint-plugin-vuejs-accessibility";
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import vitest from "@vitest/eslint-plugin";
 import tseslint from "typescript-eslint";
 import vue from "eslint-plugin-vue";
 
 export default [
+	// generated files
+	{
+		ignores: ["dist/", "tests/coverage/", "tmp/"]
+	},
+
 	js.configs.recommended,
 	...tseslint.configs.recommended.map((config) => ({
 		...config,
 		files: ["**/*.ts"]
 	})),
-	...vue.configs["flat/vue2-recommended"],
+	...vue.configs["flat/recommended"],
+	...a11y.configs["flat/recommended"],
+
+	{
+		files: ["**/*.vue"],
+		rules: {
+			//`:autofocus="autofocus"` not understood by static rule
+			"vuejs-accessibility/no-autofocus": "off",
+
+			// Panel previews uploaded files: there is no caption
+			// track it can currently provide for them
+			"vuejs-accessibility/media-has-caption": "off",
+
+			// TODO:
+			"vuejs-accessibility/click-events-have-key-events": "off",
+			"vuejs-accessibility/label-has-for": "off",
+			"vuejs-accessibility/mouse-events-have-key-events": "off",
+			"vuejs-accessibility/no-static-element-interactions": "off"
+		}
+	},
+
+	// Vitest rules for test files
+	{
+		files: ["**/*.test.js", "**/*.test.ts", "**/*.spec.js", "**/*.spec.ts"],
+		plugins: {
+			vitest
+		},
+		rules: {
+			...vitest.configs.recommended.rules,
+			"vitest/valid-title": "off"
+		},
+		languageOptions: {
+			globals: {
+				...globals.browser,
+				...globals.node,
+				app: "readonly"
+			}
+		}
+	},
+
 	prettier,
 	{
 		ignores: ["src/libraries/dayjs*.ts"],
@@ -45,7 +92,12 @@ export default [
 	},
 	{
 		rules: {
+			"vuejs-accessibility/heading-has-content": [
+				"error",
+				{ accessibleDirectives: ["safe-html"] }
+			],
 			"vue/attributes-order": "error",
+			"vue/no-v-html": "error",
 			"vue/component-definition-name-casing": "off",
 			"vue/html-closing-bracket-newline": [
 				"error",
@@ -54,12 +106,26 @@ export default [
 					multiline: "always"
 				}
 			],
+			"vue/html-indent": "off",
 			"vue/multi-word-component-names": "off",
 			"vue/require-default-prop": "off",
+			"vue/require-explicit-emits": "warn",
 			"vue/require-prop-types": "error"
 		},
 		languageOptions: {
-			ecmaVersion: 2022
+			sourceType: "module",
+			ecmaVersion: 2022,
+			globals: {
+				...globals.browser
+			}
+		}
+	},
+	{
+		// Prettier keeps the whitespace of inline code examples
+		// with closing brackets this rule doesn't allow
+		files: ["lab/**/*.vue"],
+		rules: {
+			"vue/html-closing-bracket-newline": "off"
 		}
 	}
 ];

@@ -1,8 +1,8 @@
 <?php
 
 use Kirby\Cms\User;
-use Kirby\Panel\Ui\Buttons\SettingsButton;
-use Kirby\Panel\Ui\Buttons\ViewButton;
+use Kirby\Panel\Ui\Button\SettingsButton;
+use Kirby\Panel\Ui\Button\ViewButton;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -14,7 +14,5 @@ return [
 			text: I18n::translate('user.create'),
 		);
 	},
-	'user.settings' => function (User $user) {
-		return new SettingsButton(model: $user);
-	}
+	'user.settings' => fn (User $user) => new SettingsButton($user)
 ];

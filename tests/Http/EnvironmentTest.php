@@ -13,23 +13,11 @@ use stdClass;
 #[CoversClass(Environment::class)]
 class EnvironmentTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
+	public const string FIXTURES = __DIR__ . '/fixtures/EnvironmentTest';
 
 	protected function tearDown(): void
 	{
 		App::destroy();
-	}
-
-	public function testAllowFromInsecureHost(): void
-	{
-		$env = new Environment([
-			'allowed' => '*'
-		], [
-			'HTTP_HOST' => 'example.com'
-		]);
-
-		$this->assertSame('http://example.com', $env->baseUrl());
-		$this->assertSame('example.com', $env->host());
 	}
 
 	public function testAllowFromInsecureForwardedHost(): void
@@ -38,6 +26,18 @@ class EnvironmentTest extends TestCase
 			'allowed' => '*'
 		], [
 			'HTTP_X_FORWARDED_HOST' => 'example.com'
+		]);
+
+		$this->assertSame('http://example.com', $env->baseUrl());
+		$this->assertSame('example.com', $env->host());
+	}
+
+	public function testAllowFromInsecureHost(): void
+	{
+		$env = new Environment([
+			'allowed' => '*'
+		], [
+			'HTTP_HOST' => 'example.com'
 		]);
 
 		$this->assertSame('http://example.com', $env->baseUrl());
@@ -102,6 +102,21 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('example.com', $env->host());
 	}
 
+	public function testAllowFromUrlsWithSlash(): void
+	{
+		$env = new Environment([
+			'allowed' => [
+				'http://getkirby.com/',
+			]
+		], [
+			'SERVER_NAME' => 'getkirby.com',
+			'SCRIPT_NAME' => '/index.php'
+		]);
+
+		$this->assertSame('http://getkirby.com', $env->baseUrl());
+		$this->assertSame('getkirby.com', $env->host());
+	}
+
 	public function testAllowFromUrlsWithSubfolders(): void
 	{
 		$env = new Environment([
@@ -118,21 +133,6 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame('http://localhost/path-a', $env->baseUrl());
 		$this->assertSame('localhost', $env->host());
-	}
-
-	public function testAllowFromUrlsWithSlash(): void
-	{
-		$env = new Environment([
-			'allowed' => [
-				'http://getkirby.com/',
-			]
-		], [
-			'SERVER_NAME' => 'getkirby.com',
-			'SCRIPT_NAME' => '/index.php'
-		]);
-
-		$this->assertSame('http://getkirby.com', $env->baseUrl());
-		$this->assertSame('getkirby.com', $env->host());
 	}
 
 	public function testBaseUri(): void
@@ -458,13 +458,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('127.0.0.1', $env->host());
 	}
 
-	public function testHostAllowedSingle(): void
-	{
-		$env = new Environment(['allowed' => 'https://getkirby.com']);
-
-		$this->assertSame('getkirby.com', $env->host());
-	}
-
 	public function testHostAllowedMultiple(): void
 	{
 		$options = [
@@ -501,6 +494,13 @@ class EnvironmentTest extends TestCase
 		]);
 
 		$this->assertSame('test.getkirby.com', $env->host());
+	}
+
+	public function testHostAllowedSingle(): void
+	{
+		$env = new Environment(['allowed' => 'https://getkirby.com']);
+
+		$this->assertSame('getkirby.com', $env->host());
 	}
 
 	public function testHostForbidden(): void
@@ -600,15 +600,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->https());
 	}
 
-	public function testHttpsAllowedSingle(): void
-	{
-		$env = new Environment(['allowed' => 'http://getkirby.com']);
-		$this->assertFalse($env->https());
-
-		$env = new Environment(['allowed' => 'https://getkirby.com']);
-		$this->assertTrue($env->https());
-	}
-
 	public function testHttpsAllowedMultiple(): void
 	{
 		$options = [
@@ -684,6 +675,15 @@ class EnvironmentTest extends TestCase
 			'HTTP_X_FORWARDED_PROTO' => 'https'
 		]);
 
+		$this->assertTrue($env->https());
+	}
+
+	public function testHttpsAllowedSingle(): void
+	{
+		$env = new Environment(['allowed' => 'http://getkirby.com']);
+		$this->assertFalse($env->https());
+
+		$env = new Environment(['allowed' => 'https://getkirby.com']);
 		$this->assertTrue($env->https());
 	}
 
@@ -790,12 +790,10 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame($_SERVER, $env->info());
 
-
 		// empty info
 		$env = new Environment(null, []);
 
 		$this->assertSame([], $env->info());
-
 
 		// custom info
 		$env = new Environment(null, $info = [
@@ -928,6 +926,42 @@ class EnvironmentTest extends TestCase
 		$this->assertFalse($env->isBehindProxy());
 	}
 
+	public function testIsLocalWithExternalForwardedForOnly(): void
+	{
+		// HTTP_FORWARDED carries a remote `for=` value as the only IP signal.
+		// isLocal() must treat the request as non-local, just like it does for
+		// HTTP_X_FORWARDED_FOR with the same value.
+		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'for=1.2.3.4',
+		]);
+
+		$this->assertFalse($env->isLocal());
+	}
+
+	public function testIsLocalWithForwardedForAndHost(): void
+	{
+		// Even when the Forwarded header also carries host/proto fields,
+		// the for= value must be extracted.
+		$env = new Environment(null, [
+			'REMOTE_ADDR'    => '127.0.0.1',
+			'HTTP_FORWARDED' => 'for=1.2.3.4;host=example.com;proto=https',
+		]);
+
+		$this->assertFalse($env->isLocal());
+	}
+
+	public function testIsLocalWithForwardedForOnly(): void
+	{
+		// HTTP_FORWARDED carries a localhost `for=` value as the only IP signal.
+		// isLocal() must treat the request as local, just like it does for
+		// HTTP_X_FORWARDED_FOR with the same value.
+		$env = new Environment(null, [
+			'HTTP_FORWARDED' => 'for=127.0.0.1',
+		]);
+
+		$this->assertTrue($env->isLocal());
+	}
+
 	public static function isLocalWithIpProvider(): array
 	{
 		return [
@@ -984,42 +1018,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame($expected, $env->isLocal());
 	}
 
-	public function testIsLocalWithForwardedForOnly(): void
-	{
-		// HTTP_FORWARDED carries a localhost `for=` value as the only IP signal.
-		// isLocal() must treat the request as local, just like it does for
-		// HTTP_X_FORWARDED_FOR with the same value.
-		$env = new Environment(null, [
-			'HTTP_FORWARDED' => 'for=127.0.0.1',
-		]);
-
-		$this->assertTrue($env->isLocal());
-	}
-
-	public function testIsLocalWithExternalForwardedForOnly(): void
-	{
-		// HTTP_FORWARDED carries a remote `for=` value as the only IP signal.
-		// isLocal() must treat the request as non-local, just like it does for
-		// HTTP_X_FORWARDED_FOR with the same value.
-		$env = new Environment(null, [
-			'HTTP_FORWARDED' => 'for=1.2.3.4',
-		]);
-
-		$this->assertFalse($env->isLocal());
-	}
-
-	public function testIsLocalWithForwardedForAndHost(): void
-	{
-		// Even when the Forwarded header also carries host/proto fields,
-		// the for= value must be extracted.
-		$env = new Environment(null, [
-			'REMOTE_ADDR'    => '127.0.0.1',
-			'HTTP_FORWARDED' => 'for=1.2.3.4;host=example.com;proto=https',
-		]);
-
-		$this->assertFalse($env->isLocal());
-	}
-
 	public static function isLocalWithServerNameProvider(): array
 	{
 		return [
@@ -1051,13 +1049,13 @@ class EnvironmentTest extends TestCase
 		$this->assertSame('test option', $env->options(static::FIXTURES)['test']);
 	}
 
-	public function testOptionsFromServerAddress(): void
+	public function testOptionsFromCLI(): void
 	{
-		$env = new Environment(null, [
-			'SERVER_ADDR' => '127.0.0.1'
+		$env = new Environment([
+			'cli' => true
 		]);
 
-		$this->assertSame('test address option', $env->options(static::FIXTURES)['test']);
+		$this->assertSame('test cli option', $env->options(static::FIXTURES)['test']);
 	}
 
 	public function testOptionsFromInvalidHost(): void
@@ -1074,13 +1072,13 @@ class EnvironmentTest extends TestCase
 		$this->assertSame([], $env->options(static::FIXTURES));
 	}
 
-	public function testOptionsFromCLI(): void
+	public function testOptionsFromServerAddress(): void
 	{
-		$env = new Environment([
-			'cli' => true
+		$env = new Environment(null, [
+			'SERVER_ADDR' => '127.0.0.1'
 		]);
 
-		$this->assertSame('test cli option', $env->options(static::FIXTURES)['test']);
+		$this->assertSame('test address option', $env->options(static::FIXTURES)['test']);
 	}
 
 	public function testPath(): void
@@ -1171,15 +1169,6 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(443, $env->port());
 	}
 
-	public function testPortAllowedSingle(): void
-	{
-		$env = new Environment(['allowed' => 'http://getkirby.com']);
-		$this->assertNull($env->port());
-
-		$env = new Environment(['allowed' => 'http://getkirby.com:9999']);
-		$this->assertSame(9999, $env->port());
-	}
-
 	public function testPortAllowedMultiple(): void
 	{
 		$options = [
@@ -1241,6 +1230,15 @@ class EnvironmentTest extends TestCase
 		$this->assertSame(9999, $env->port());
 	}
 
+	public function testPortAllowedSingle(): void
+	{
+		$env = new Environment(['allowed' => 'http://getkirby.com']);
+		$this->assertNull($env->port());
+
+		$env = new Environment(['allowed' => 'http://getkirby.com:9999']);
+		$this->assertSame(9999, $env->port());
+	}
+
 	public function testPortForbidden(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -1288,38 +1286,6 @@ class EnvironmentTest extends TestCase
 		]);
 
 		$this->assertSame(9999, $env->port());
-	}
-
-	public function testRequestUrl(): void
-	{
-		// basic
-		$env = new Environment(['cli' => false], []);
-
-		$this->assertSame('/', $env->requestUrl());
-
-		// with server name
-		$env = new Environment(['cli' => false], [
-			'SERVER_NAME' => 'getkirby.com'
-		]);
-
-		$this->assertSame('http://getkirby.com', $env->requestUrl());
-
-		// with request path
-		$env = new Environment(['cli' => false], [
-			'SERVER_NAME' => 'getkirby.com',
-			'REQUEST_URI' => '/blog/article-a',
-		]);
-
-		$this->assertSame('http://getkirby.com/blog/article-a', $env->requestUrl());
-
-		// with subfolder path
-		$env = new Environment(['cli' => false], [
-			'SERVER_NAME' => 'getkirby.com',
-			'REQUEST_URI' => '/subfolder/blog/article-a',
-			'SCRIPT_NAME' => '/subfolder/index.php',
-		]);
-
-		$this->assertSame('http://getkirby.com/subfolder/blog/article-a', $env->requestUrl());
 	}
 
 	public static function requestUriProvider(): array
@@ -1386,6 +1352,38 @@ class EnvironmentTest extends TestCase
 
 		$this->assertSame($expected['path'], $env->requestUri($value)->path()->toString());
 		$this->assertSame($expected['query'], $env->requestUri($value)->query()->toString());
+	}
+
+	public function testRequestUrl(): void
+	{
+		// basic
+		$env = new Environment(['cli' => false], []);
+
+		$this->assertSame('/', $env->requestUrl());
+
+		// with server name
+		$env = new Environment(['cli' => false], [
+			'SERVER_NAME' => 'getkirby.com'
+		]);
+
+		$this->assertSame('http://getkirby.com', $env->requestUrl());
+
+		// with request path
+		$env = new Environment(['cli' => false], [
+			'SERVER_NAME' => 'getkirby.com',
+			'REQUEST_URI' => '/blog/article-a',
+		]);
+
+		$this->assertSame('http://getkirby.com/blog/article-a', $env->requestUrl());
+
+		// with subfolder path
+		$env = new Environment(['cli' => false], [
+			'SERVER_NAME' => 'getkirby.com',
+			'REQUEST_URI' => '/subfolder/blog/article-a',
+			'SCRIPT_NAME' => '/subfolder/index.php',
+		]);
+
+		$this->assertSame('http://getkirby.com/subfolder/blog/article-a', $env->requestUrl());
 	}
 
 	public static function sanitizeProvider(): array

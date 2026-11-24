@@ -4,7 +4,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Helpers;
 use Kirby\Cms\Html;
-use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\Pages;
 use Kirby\Cms\Response;
@@ -18,6 +17,7 @@ use Kirby\Plugin\Assets as PluginAssets;
 use Kirby\Plugin\Plugin;
 use Kirby\Template\Slot;
 use Kirby\Template\Snippet;
+use Kirby\Template\Stack;
 use Kirby\Toolkit\Date;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -37,9 +37,9 @@ if (Helpers::hasOverride('attr') === false) { // @codeCoverageIgnore
 	/**
 	 * Generates a list of HTML attributes
 	 *
-	 * @param array|null $attr A list of attributes as key/value array
-	 * @param string|null $before An optional string that will be prepended if the result is not empty
-	 * @param string|null $after An optional string that will be appended if the result is not empty
+	 * @param $attr A list of attributes as key/value array
+	 * @param $before An optional string that will be prepended if the result is not empty
+	 * @param $after An optional string that will be appended if the result is not empty
 	 */
 	function attr(
 		array|null $attr = null,
@@ -55,7 +55,7 @@ if (Helpers::hasOverride('collection') === false) { // @codeCoverageIgnore
 	 * Returns the result of a collection by name
 	 *
 	 * @return \Kirby\Toolkit\Collection|null
-	 * @todo 6.0 Add return type declaration
+	 * @todo 8.0 Add return type declaration
 	 */
 	function collection(string $name, array $options = [])
 	{
@@ -67,7 +67,7 @@ if (Helpers::hasOverride('csrf') === false) { // @codeCoverageIgnore
 	/**
 	 * Checks / returns a CSRF token
 	 *
-	 * @param string|null $check Pass a token here to compare it to the one in the session
+	 * @param $check Pass a token here to compare it to the one in the session
 	 * @return string|bool Either the token or a boolean check result
 	 */
 	function csrf(string|null $check = null): string|bool
@@ -88,7 +88,7 @@ if (Helpers::hasOverride('css') === false) { // @codeCoverageIgnore
 	 * Creates one or multiple CSS link tags
 	 *
 	 * @param string|array $url Relative or absolute URLs, an array of URLs or `@auto` for automatic template css loading
-	 * @param string|array|null $options Pass an array of attributes for the link tag or a media attribute string
+	 * @param $options Pass an array of attributes for the link tag or a media attribute string
 	 */
 	function css(
 		string|array|Plugin|PluginAssets $url,
@@ -126,12 +126,22 @@ if (Helpers::hasOverride('e') === false) { // @codeCoverageIgnore
 	/**
 	 * Smart version of echo with an if condition as first argument
 	 *
-	 * @param mixed $value The string to be echoed if the condition is true
-	 * @param mixed $alternative An alternative string which should be echoed when the condition is false
+	 * @param $value The string to be echoed if the condition is true
+	 * @param $alternative An alternative string which should be echoed when the condition is false
 	 */
 	function e(mixed $condition, mixed $value, mixed $alternative = null): void
 	{
 		echo $condition ? $value : $alternative;
+	}
+}
+
+if (Helpers::hasOverride('endpush') === false) { // @codeCoverageIgnore
+	/**
+	 * Ends the last started stack push
+	 */
+	function endpush(): void
+	{
+		Stack::end();
 	}
 }
 
@@ -159,8 +169,8 @@ if (Helpers::hasOverride('esc') === false) { // @codeCoverageIgnore
 	/**
 	 * Escape context specific output
 	 *
-	 * @param string $string Untrusted data
-	 * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
+	 * @param $string Untrusted data
+	 * @param $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
 	 * @return string Escaped data
 	 */
 	function esc(string $string, string $context = 'html'): string
@@ -173,8 +183,8 @@ if (Helpers::hasOverride('get') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for $kirby->request()->get()
 	 *
-	 * @param mixed $key The key to look for. Pass false or null to return the entire request array.
-	 * @param mixed $default Optional default value, which should be returned if no element has been found
+	 * @param $key The key to look for. Pass false or null to return the entire request array.
+	 * @param $default Optional default value, which should be returned if no element has been found
 	 */
 	function get(mixed $key = null, mixed $default = null): mixed
 	{
@@ -199,10 +209,15 @@ if (Helpers::hasOverride('go') === false) { // @codeCoverageIgnore
 	/**
 	 * Redirects to the given Urls
 	 * Urls can be relative or absolute.
+	 *
+	 * @param $inherit Keep the query and params of the current request (since 5.7.0)
 	 */
-	function go(string $url = '/', int $code = 302): never
-	{
-		Response::go($url, $code); // @codeCoverageIgnore
+	function go(
+		string $url = '/',
+		int $code = 302,
+		bool $inherit = false
+	): never {
+		Response::go($url, $code, $inherit); // @codeCoverageIgnore
 	}
 }
 
@@ -210,7 +225,7 @@ if (Helpers::hasOverride('h') === false) { // @codeCoverageIgnore
 	/**
 	 * Shortcut for html()
 	 *
-	 * @param string|null $string unencoded text
+	 * @param $string unencoded text
 	 */
 	function h(string|null $string, bool $keepTags = false): string
 	{
@@ -222,7 +237,7 @@ if (Helpers::hasOverride('html') === false) { // @codeCoverageIgnore
 	/**
 	 * Creates safe html by encoding special characters
 	 *
-	 * @param string|null $string unencoded text
+	 * @param $string unencoded text
 	 */
 	function html(string|null $string, bool $keepTags = false): string
 	{
@@ -263,7 +278,7 @@ if (Helpers::hasOverride('js') === false) { // @codeCoverageIgnore
 	 */
 	function js(
 		string|array|Plugin|PluginAssets $url,
-		string|array|bool|null $options = null
+		array|bool|null $options = null
 	): string|null {
 		return Html::js($url, $options);
 	}
@@ -388,10 +403,11 @@ if (Helpers::hasOverride('page') === false) { // @codeCoverageIgnore
 	 */
 	function page(string|null $id = null): Page|null
 	{
-		if (empty($id) === true) {
+		if ($id === null || $id === '') {
 			return App::instance()->site()->page();
 		}
 
+		/** @var \Kirby\Cms\Page|null */
 		return App::instance()->site()->find($id);
 	}
 }
@@ -410,6 +426,7 @@ if (Helpers::hasOverride('pages') === false) { // @codeCoverageIgnore
 
 		// always passes $id an array; ensures we get a
 		// collection even if only one ID is passed
+		/** @var \Kirby\Cms\Pages|null */
 		return App::instance()->site()->find($id);
 	}
 }
@@ -436,13 +453,31 @@ if (Helpers::hasOverride('params') === false) { // @codeCoverageIgnore
 	}
 }
 
+if (Helpers::hasOverride('push') === false) { // @codeCoverageIgnore
+	/**
+	 * Pushes content to a stack or starts capturing output
+	 */
+	function push(
+		string $name,
+		string|Stringable|null $content = null,
+		bool $unique = false
+	): void {
+		if ($content === null) {
+			Stack::begin($name, $unique);
+			return;
+		}
+
+		Stack::push($name, $content, $unique);
+	}
+}
+
 if (Helpers::hasOverride('qr') === false) { // @codeCoverageIgnore
 	/**
 	 * Creates a QR code object
 	 */
-	function qr(string|ModelWithContent $data): QrCode
+	function qr(string|Page|Site|File $data): QrCode
 	{
-		if ($data instanceof ModelWithContent) {
+		if (is_string($data) === false) {
 			$data = $data->url();
 		}
 
@@ -454,8 +489,8 @@ if (Helpers::hasOverride('r') === false) { // @codeCoverageIgnore
 	/**
 	 * Smart version of return with an if condition as first argument
 	 *
-	 * @param mixed $value The string to be returned if the condition is true
-	 * @param mixed $alternative An alternative string which should be returned when the condition is false
+	 * @param $value The string to be returned if the condition is true
+	 * @param $alternative An alternative string which should be returned when the condition is false
 	 */
 	function r(mixed $condition, mixed $value, mixed $alternative = null): mixed
 	{
@@ -534,6 +569,30 @@ if (Helpers::hasOverride('snippet') === false) { // @codeCoverageIgnore
 	}
 }
 
+if (Helpers::hasOverride('stack') === false) { // @codeCoverageIgnore
+	/**
+	 * Renders a stack and optionally clears it
+	 */
+	function stack(
+		string $name,
+		string $glue = PHP_EOL,
+		bool $return = false,
+		bool $clear = true
+	): string|null {
+		$content = match (Stack::isRendering()) {
+			true  => Stack::placeholder($name, $glue, $clear),
+			false => Stack::render($name, $glue, $clear)
+		};
+
+		if ($return === true) {
+			return $content;
+		}
+
+		echo $content;
+		return null;
+	}
+}
+
 if (Helpers::hasOverride('svg') === false) { // @codeCoverageIgnore
 	/**
 	 * Includes an SVG file by absolute or
@@ -562,7 +621,7 @@ if (Helpers::hasOverride('tc') === false) { // @codeCoverageIgnore
 	/**
 	 * Translates a count
 	 *
-	 * @param bool $formatNumber If set to `false`, the count is not formatted
+	 * @param $formatNumber If set to `false`, the count is not formatted
 	 */
 	function tc(
 		string $key,
@@ -579,7 +638,7 @@ if (Helpers::hasOverride('timestamp') === false) { // @codeCoverageIgnore
 	 * Rounds the minutes of the given date
 	 * by the defined step
 	 *
-	 * @param int|array|null $step array of `unit` and `size` to round to nearest
+	 * @param $step array of `unit` and `size` to round to nearest
 	 */
 	function timestamp(
 		string|null $date = null,

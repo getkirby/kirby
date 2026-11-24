@@ -8,7 +8,7 @@ use Kirby\TestCase;
 
 class VideoKirbyTagTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Text.VideoKirbyTag';
+	public const string TMP = KIRBY_TMP_DIR . '/Text.VideoKirbyTag';
 
 	protected function setUp(): void
 	{
@@ -26,15 +26,18 @@ class VideoKirbyTagTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
-	public function testLocal(): void
+	public function testAutoplayAttrsOverride(): void
 	{
-		$kirby = $this->app->clone([
+		$kirby = new App([
+			'roots' => [
+				'index' => '/dev/null',
+			],
 			'site' => [
 				'children' => [
 					[
 						'slug' => 'test',
 						'content' => [
-							'text' => '(video: sample.mp4)'
+							'text' => '(video: sample.mp4 autoplay: true muted: false playsinline: false)'
 						],
 						'files' => [
 							['filename' => 'sample.mp4']
@@ -47,95 +50,8 @@ class VideoKirbyTagTest extends TestCase
 		$page  = $kirby->page('test');
 		$image = $page->file('sample.mp4');
 
-		$expected = '<figure class="video"><video controls><source src="' . $image->url() . '" type="video/mp4"></video></figure>';
+		$expected = '<figure class="video"><video autoplay controls><source src="' . $image->url() . '" type="video/mp4"></video></figure>';
 
-		$this->assertSame($expected, $page->text()->kt()->value());
-	}
-
-	public function testInlineAttrs(): void
-	{
-		$kirby = $this->app->clone([
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'content' => [
-							'text' => '(video: sample.mp4
-                                autoplay: true
-                                caption: Lorem ipsum
-                                controls: false
-                                class: video-class
-                                disablepictureinpicture: true
-                                height: 350
-                                loop: true
-                                muted: true
-                                playsinline: true
-                                poster: sample.jpg
-                                preload: auto
-                                style: border: none
-                                width: 500)'
-						],
-						'files' => [
-							['filename' => 'sample.mp4'],
-							['filename' => 'sample.jpg']
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $kirby->page('test');
-
-		$image = $page->file('sample.jpg');
-		$video = $page->file('sample.mp4');
-
-		$expected = '<figure class="video-class" style="border: none"><video autoplay disablepictureinpicture height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
-		$this->assertSame($expected, $page->text()->kt()->value());
-	}
-
-	public function testPredefinedAttrs(): void
-	{
-		$kirby = $this->app->clone([
-			'options' => [
-				'kirbytext' => [
-					'video' => [
-						'autoplay'    => true,
-						'caption'     => 'Lorem ipsum',
-						'controls'    => false,
-						'class'       => 'video-class',
-						'height'      => 350,
-						'loop'        => true,
-						'muted'       => true,
-						'playsinline' => true,
-						'poster'      => 'sample.jpg',
-						'preload'     => 'auto',
-						'style'       => 'border: none',
-						'width'       => 500
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'test',
-						'content' => [
-							'text' => '(video: sample.mp4)'
-						],
-						'files' => [
-							['filename' => 'sample.mp4'],
-							['filename' => 'sample.jpg']
-						]
-					]
-				]
-			]
-		]);
-
-		$page  = $kirby->page('test');
-
-		$image = $page->file('sample.jpg');
-		$video = $page->file('sample.mp4');
-
-		$expected = '<figure class="video-class" style="border: none"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
@@ -168,18 +84,55 @@ class VideoKirbyTagTest extends TestCase
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 
-	public function testAutoplayAttrsOverride(): void
+	public function testInlineAttrs(): void
 	{
-		$kirby = new App([
-			'roots' => [
-				'index' => '/dev/null',
-			],
+		$kirby = $this->app->clone([
 			'site' => [
 				'children' => [
 					[
 						'slug' => 'test',
 						'content' => [
-							'text' => '(video: sample.mp4 autoplay: true muted: false playsinline: false)'
+							'text' => '(video: sample.mp4
+                                autoplay: true
+                                caption: Lorem ipsum
+                                controls: false
+                                class: video-class
+                                disablepictureinpicture: true
+                                height: 350
+                                loop: true
+                                muted: true
+                                playsinline: true
+                                poster: sample.jpg
+                                preload: auto
+                                width: 500)'
+						],
+						'files' => [
+							['filename' => 'sample.mp4'],
+							['filename' => 'sample.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('test');
+
+		$image = $page->file('sample.jpg');
+		$video = $page->file('sample.mp4');
+
+		$expected = '<figure class="video-class"><video autoplay disablepictureinpicture height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testLocal(): void
+	{
+		$kirby = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'text' => '(video: sample.mp4)'
 						],
 						'files' => [
 							['filename' => 'sample.mp4']
@@ -192,7 +145,7 @@ class VideoKirbyTagTest extends TestCase
 		$page  = $kirby->page('test');
 		$image = $page->file('sample.mp4');
 
-		$expected = '<figure class="video"><video autoplay controls><source src="' . $image->url() . '" type="video/mp4"></video></figure>';
+		$expected = '<figure class="video"><video controls><source src="' . $image->url() . '" type="video/mp4"></video></figure>';
 
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
@@ -226,6 +179,51 @@ class VideoKirbyTagTest extends TestCase
 		$page  = $kirby->page('test');
 
 		$expected = '<figure class="video"><iframe allow="fullscreen" allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg?controls=0"></iframe></figure>';
+		$this->assertSame($expected, $page->text()->kt()->value());
+	}
+
+	public function testPredefinedAttrs(): void
+	{
+		$kirby = $this->app->clone([
+			'options' => [
+				'kirbytext' => [
+					'video' => [
+						'autoplay'    => true,
+						'caption'     => 'Lorem ipsum',
+						'controls'    => false,
+						'class'       => 'video-class',
+						'height'      => 350,
+						'loop'        => true,
+						'muted'       => true,
+						'playsinline' => true,
+						'poster'      => 'sample.jpg',
+						'preload'     => 'auto',
+						'width'       => 500
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'text' => '(video: sample.mp4)'
+						],
+						'files' => [
+							['filename' => 'sample.mp4'],
+							['filename' => 'sample.jpg']
+						]
+					]
+				]
+			]
+		]);
+
+		$page  = $kirby->page('test');
+
+		$image = $page->file('sample.jpg');
+		$video = $page->file('sample.mp4');
+
+		$expected = '<figure class="video-class"><video autoplay height="350" loop muted playsinline poster="' . $image->url() . '" preload="auto" width="500"><source src="' . $video->url() . '" type="video/mp4"></video><figcaption>Lorem ipsum</figcaption></figure>';
 		$this->assertSame($expected, $page->text()->kt()->value());
 	}
 

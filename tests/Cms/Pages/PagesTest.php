@@ -6,12 +6,13 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Uuid\Uuids;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Pages::class)]
 class PagesTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.Pages';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.Pages';
 
 	public function pages()
 	{
@@ -20,42 +21,6 @@ class PagesTest extends TestCase
 			new Page(['slug' => 'b', 'num' => 2]),
 			new Page(['slug' => 'c'])
 		]);
-	}
-
-	public function testAddPage(): void
-	{
-		$pages = Pages::factory([
-			['slug' => 'a']
-		]);
-
-		$page = new Page([
-			'slug' => 'b'
-		]);
-
-		$result = $pages->add($page);
-
-		$this->assertCount(2, $result);
-		$this->assertSame('a', $result->nth(0)->slug());
-		$this->assertSame('b', $result->nth(1)->slug());
-	}
-
-	public function testAddCollection(): void
-	{
-		$a = Pages::factory([
-			['slug' => 'a']
-		]);
-
-		$b = Pages::factory([
-			['slug' => 'b'],
-			['slug' => 'c']
-		]);
-
-		$c = $a->add($b);
-
-		$this->assertCount(3, $c);
-		$this->assertSame('a', $c->nth(0)->slug());
-		$this->assertSame('b', $c->nth(1)->slug());
-		$this->assertSame('c', $c->nth(2)->slug());
 	}
 
 	public function testAddById(): void
@@ -87,14 +52,23 @@ class PagesTest extends TestCase
 		$this->assertSame('a/aa', $pages->nth(2)->id());
 	}
 
-	public function testAddNull(): void
+	public function testAddCollection(): void
 	{
-		$pages = new Pages();
-		$this->assertCount(0, $pages);
+		$a = Pages::factory([
+			['slug' => 'a']
+		]);
 
-		$pages->add(null);
+		$b = Pages::factory([
+			['slug' => 'b'],
+			['slug' => 'c']
+		]);
 
-		$this->assertCount(0, $pages);
+		$c = $a->add($b);
+
+		$this->assertCount(3, $c);
+		$this->assertSame('a', $c->nth(0)->slug());
+		$this->assertSame('b', $c->nth(1)->slug());
+		$this->assertSame('c', $c->nth(2)->slug());
 	}
 
 	public function testAddFalse(): void
@@ -117,6 +91,33 @@ class PagesTest extends TestCase
 		$pages->add($site);
 	}
 
+	public function testAddNull(): void
+	{
+		$pages = new Pages();
+		$this->assertCount(0, $pages);
+
+		$pages->add(null);
+
+		$this->assertCount(0, $pages);
+	}
+
+	public function testAddPage(): void
+	{
+		$pages = Pages::factory([
+			['slug' => 'a']
+		]);
+
+		$page = new Page([
+			'slug' => 'b'
+		]);
+
+		$result = $pages->add($page);
+
+		$this->assertCount(2, $result);
+		$this->assertSame('a', $result->nth(0)->slug());
+		$this->assertSame('b', $result->nth(1)->slug());
+	}
+
 	public function testAudio(): void
 	{
 		$pages = Pages::factory([
@@ -136,6 +137,35 @@ class PagesTest extends TestCase
 		]);
 
 		$this->assertSame(['a.mp3', 'b.mp3'], $pages->audio()->pluck('filename'));
+	}
+
+	public function testChildren(): void
+	{
+		$pages = Pages::factory([
+			[
+				'slug' => 'a',
+				'children' => [
+					['slug' => 'aa'],
+					['slug' => 'ab']
+				]
+			],
+			[
+				'slug' => 'b',
+				'children' => [
+					['slug' => 'ba'],
+					['slug' => 'bb']
+				]
+			]
+		]);
+
+		$expected = [
+			'a/aa',
+			'a/ab',
+			'b/ba',
+			'b/bb',
+		];
+
+		$this->assertSame($expected, $pages->children()->keys());
 	}
 
 	public function testCode(): void
@@ -166,33 +196,32 @@ class PagesTest extends TestCase
 		$this->assertCount(2, $pages);
 	}
 
-	public function testChildren(): void
+	public function testCustomMethods(): void
 	{
+		Pages::$methods = [
+			'test' => function () {
+				$slugs = '';
+				foreach ($this as $page) {
+					$slugs .= $page->slug();
+				}
+				return $slugs;
+			}
+		];
+
 		$pages = Pages::factory([
 			[
-				'slug' => 'a',
+				'slug' => 'page',
 				'children' => [
-					['slug' => 'aa'],
-					['slug' => 'ab']
-				]
-			],
-			[
-				'slug' => 'b',
-				'children' => [
-					['slug' => 'ba'],
-					['slug' => 'bb']
+					['slug' => 'a'],
+					['slug' => 'b']
 				]
 			]
 		]);
 
-		$expected = [
-			'a/aa',
-			'a/ab',
-			'b/ba',
-			'b/bb',
-		];
+		$pages = $pages->find('page')->children();
+		$this->assertSame('ab', $pages->test());
 
-		$this->assertSame($expected, $pages->children()->keys());
+		Pages::$methods = [];
 	}
 
 	public function testDelete(): void
@@ -328,6 +357,38 @@ class PagesTest extends TestCase
 		$this->assertDirectoryExists($b->root());
 	}
 
+	public function testDeleteWithForeignUuid(): void
+	{
+		$this->app->impersonate('kirby');
+
+		Page::create([
+			'slug'    => 'a',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-a']
+		]);
+
+		$b = Page::create([
+			'slug'    => 'b',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-b']
+		]);
+
+		// a collection that only contains page a
+		$pages = $this->app->site()->children()->filterBy('slug', 'a');
+
+		// deleting a page that is not part of the collection must fail,
+		// even if the UUID resolves to a valid page elsewhere
+		try {
+			$pages->delete(['page://test-b']);
+		} catch (Exception $e) {
+			$this->assertSame('Not all pages could be deleted. Try each remaining page individually to see the specific error that prevents deletion.', $e->getMessage());
+		}
+
+		$this->assertDirectoryExists($b->root());
+
+		Uuids::cache()->flush();
+	}
+
 	public function testDeleteWithInvalidIds(): void
 	{
 		$app = new App([
@@ -372,6 +433,47 @@ class PagesTest extends TestCase
 
 		$this->assertDirectoryDoesNotExist($a);
 		$this->assertDirectoryExists($b);
+	}
+
+	public function testDeleteWithUuids(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$a = Page::create([
+			'slug'    => 'a',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-a']
+		]);
+
+		$b = Page::create([
+			'slug'    => 'b',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-b']
+		]);
+
+		$c = Page::create([
+			'slug'    => 'c',
+			'draft'   => false,
+			'content' => ['uuid' => 'test-c']
+		]);
+
+		$pages = $this->app->site()->children();
+
+		$this->assertCount(3, $pages);
+
+		// the Panel sends the selection as UUIDs
+		$pages->delete([
+			'page://test-a',
+			'page://test-b',
+		]);
+
+		$this->assertCount(1, $pages);
+
+		$this->assertDirectoryDoesNotExist($a->root());
+		$this->assertDirectoryDoesNotExist($b->root());
+		$this->assertDirectoryExists($c->root());
+
+		Uuids::cache()->flush();
 	}
 
 	public function testDocuments(): void
@@ -424,6 +526,44 @@ class PagesTest extends TestCase
 		$this->assertSame($expected, $pages->drafts()->keys());
 	}
 
+	public function testFactoryDraftParameter(): void
+	{
+		$pages = Pages::factory([
+			[
+				'slug'    => 'a',
+				'isDraft' => true,
+			],
+			[
+				'slug'    => 'b',
+				'isDraft' => false,
+			],
+			[
+				'slug'    => 'c',
+			],
+		], null, true);
+
+		$this->assertSame([true, true, true], $pages->pluck('isDraft'));
+	}
+
+	public function testFactoryIsDraftProp(): void
+	{
+		$pages = Pages::factory([
+			[
+				'slug'    => 'a',
+				'isDraft' => true,
+			],
+			[
+				'slug'    => 'b',
+				'isDraft' => false,
+			],
+			[
+				'slug'    => 'c',
+			]
+		]);
+
+		$this->assertSame([true, false, false], $pages->pluck('isDraft'));
+	}
+
 	public function testFiles(): void
 	{
 		$pages = Pages::factory([
@@ -451,10 +591,20 @@ class PagesTest extends TestCase
 		$this->assertIsPage('c', $this->pages()->find('c'));
 	}
 
-	public function testFindWithExtension(): void
+	public function testFindByDeadUuidNoIndex(): void
 	{
-		$this->assertIsPage('a', $this->pages()->find('a.xml'));
-		$this->assertIsPage('b', $this->pages()->find('b.json'));
+		$app = $this->app->clone([
+			'options' => [
+				'content' => [
+					'uuid' => [
+						'index' => false
+					]
+				]
+			]
+		]);
+
+		$this->assertNull($app->site()->find('page://does-not-exist'));
+		$this->assertNull($app->page('page://does-not-exist'));
 	}
 
 	public function testFindByUuid(): void
@@ -484,22 +634,6 @@ class PagesTest extends TestCase
 		$this->assertIsPage('b', $app->page('page://test-b'));
 		$this->assertIsPage('c', $app->page('page://test-c'));
 		$this->assertIsPage('c/d', $app->page('page://test-d'));
-	}
-
-	public function testFindByDeadUuidNoIndex(): void
-	{
-		$app = $this->app->clone([
-			'options' => [
-				'content' => [
-					'uuid' => [
-						'index' => false
-					]
-				]
-			]
-		]);
-
-		$this->assertNull($app->site()->find('page://does-not-exist'));
-		$this->assertNull($app->page('page://does-not-exist'));
 	}
 
 	public function testFindChildren(): void
@@ -849,6 +983,12 @@ class PagesTest extends TestCase
 		$this->assertTrue($collection->has($page));
 	}
 
+	public function testFindWithExtension(): void
+	{
+		$this->assertIsPage('a', $this->pages()->find('a.xml'));
+		$this->assertIsPage('b', $this->pages()->find('b.json'));
+	}
+
 	public function testImages(): void
 	{
 		$pages = Pages::factory([
@@ -907,53 +1047,6 @@ class PagesTest extends TestCase
 		];
 
 		$this->assertSame($expected, $pages->index()->keys());
-	}
-
-	public function testIndexWithDrafts(): void
-	{
-		$pages = Pages::factory([
-			[
-				'slug' => 'a',
-				'children' => [
-					[
-						'slug' => 'aa',
-						'children' => [
-							['slug' => 'aaa'],
-							['slug' => 'aab'],
-						]
-					],
-					[
-						'slug' => 'ab'
-					]
-				],
-				'drafts' => [
-					[
-						'slug' => 'ac'
-					]
-				]
-			],
-			[
-				'slug' => 'b',
-				'children' => [
-					['slug' => 'ba'],
-					['slug' => 'bb']
-				]
-			]
-		]);
-
-		$expected = [
-			'a',
-			'a/aa',
-			'a/aa/aaa',
-			'a/aa/aab',
-			'a/ab',
-			'a/ac',
-			'b',
-			'b/ba',
-			'b/bb',
-		];
-
-		$this->assertSame($expected, $pages->index(true)->keys());
 	}
 
 	public function testIndexCacheMode(): void
@@ -1025,6 +1118,417 @@ class PagesTest extends TestCase
 		$this->assertSame($expectedIndexWithDrafts, $pages->index(true)->keys());
 	}
 
+	public function testIndexWithDrafts(): void
+	{
+		$pages = Pages::factory([
+			[
+				'slug' => 'a',
+				'children' => [
+					[
+						'slug' => 'aa',
+						'children' => [
+							['slug' => 'aaa'],
+							['slug' => 'aab'],
+						]
+					],
+					[
+						'slug' => 'ab'
+					]
+				],
+				'drafts' => [
+					[
+						'slug' => 'ac'
+					]
+				]
+			],
+			[
+				'slug' => 'b',
+				'children' => [
+					['slug' => 'ba'],
+					['slug' => 'bb']
+				]
+			]
+		]);
+
+		$expected = [
+			'a',
+			'a/aa',
+			'a/aa/aaa',
+			'a/aa/aab',
+			'a/ab',
+			'a/ac',
+			'b',
+			'b/ba',
+			'b/bb',
+		];
+
+		$this->assertSame($expected, $pages->index(true)->keys());
+	}
+
+	public function testIsAccessible(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/accessible-foo' => [
+					'options' => [
+						'access' => true,
+						'list' => false
+					]
+				],
+				'pages/accessible-bar' => [
+					'options' => [
+						'access' => false,
+						'list' => true
+					]
+				],
+				'pages/accessible-baz' => [
+					'options' => [
+						'access' => true,
+						'list' => true,
+						'read' => false
+					]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'default'
+					],
+					[
+						'slug' => 'foo',
+						'template' => 'accessible-foo'
+					],
+					[
+						'slug' => 'bar',
+						'template' => 'accessible-bar'
+					],
+					[
+						'slug' => 'baz',
+						'template' => 'accessible-baz'
+					]
+				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$page = $app->page('default');
+		$this->assertTrue($page->isAccessible());
+
+		$page = $app->page('foo');
+		$this->assertTrue($page->isAccessible());
+
+		$page = $app->page('bar');
+		$this->assertFalse($page->isAccessible());
+
+		$page = $app->page('baz');
+		$this->assertFalse($page->isAccessible());
+	}
+
+	public function testIsListable(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/visible-foo' => [
+					'options' => ['list' => true]
+				],
+				'pages/visible-bar' => [
+					'options' => ['list' => false]
+				],
+				'pages/visible-baz' => [
+					'options' => ['read' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'default'
+					],
+					[
+						'slug' => 'foo',
+						'template' => 'visible-foo'
+					],
+					[
+						'slug' => 'bar',
+						'template' => 'visible-bar'
+					],
+					[
+						'slug' => 'baz',
+						'template' => 'visible-baz'
+					]
+				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$page = $app->page('default');
+		$this->assertTrue($page->isListable());
+
+		$page = $app->page('foo');
+		$this->assertTrue($page->isListable());
+
+		$page = $app->page('bar');
+		$this->assertFalse($page->isListable());
+
+		$page = $app->page('baz');
+		$this->assertFalse($page->isListable());
+	}
+
+	public function testIsReadable(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'blueprints' => [
+				'pages/readable-bar' => [
+					'options' => ['read' => true]
+				],
+				'pages/readable-baz' => [
+					'options' => ['read' => false]
+				]
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'foo'
+					],
+					[
+						'slug' => 'bar',
+						'template' => 'readable-bar'
+					],
+					[
+						'slug' => 'baz',
+						'template' => 'readable-baz'
+					]
+				]
+			],
+			'users' => [
+				['id' => 'bastian', 'role' => 'admin']
+			]
+		]);
+
+		$app->impersonate('bastian');
+
+		$page = $app->page('foo');
+		$this->assertTrue($page->isReadable());
+
+		$page = $app->page('bar');
+		$this->assertTrue($page->isReadable());
+
+		$page = $app->page('baz');
+		$this->assertFalse($page->isReadable());
+	}
+
+	public function testListed(): void
+	{
+		$this->assertCount(2, $this->pages()->listed());
+	}
+
+	public function testMergeArray(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+		$c = new Page(['slug' => 'c']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge([$b, $c]);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
+	public function testMergeById(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b'],
+					['slug' => 'c']
+				]
+			]
+		]);
+
+		$pages  = new Pages([$app->page('a')]);
+		$merged = $pages->merge('b');
+
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
+	public function testMergeByMultipleIds(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					['slug' => 'a'],
+					['slug' => 'b'],
+					['slug' => 'c']
+				]
+			]
+		]);
+
+		$pages  = new Pages([$app->page('a')]);
+		$merged = $pages->merge('b', 'c');
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
+	public function testMergeDrafts(): void
+	{
+		$app = new App([
+			'roots' => [
+				'index' => '/dev/null'
+			],
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'parent',
+						'children' => [
+							['slug' => 'a'],
+							['slug' => 'b']
+						],
+						'drafts' => [
+							['slug' => 'c'],
+							['slug' => 'd']
+						]
+					]
+				]
+			]
+		]);
+
+		$children = $app->page('parent')->children();
+		$merged   = $children->merge('drafts');
+
+		$this->assertSame(['parent/a', 'parent/b'], $children->keys());
+		$this->assertSame(
+			['parent/a', 'parent/b', 'parent/c', 'parent/d'],
+			$merged->keys()
+		);
+	}
+
+	public function testMergeDraftsWithoutParent(): void
+	{
+		$pages = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$merged = $pages->merge('drafts');
+
+		// without a parent the same collection is returned unchanged
+		$this->assertSame($pages, $merged);
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
+	public function testMergeEmptyArray(): void
+	{
+		$pages  = new Pages([new Page(['slug' => 'a'])]);
+		$merged = $pages->merge([]);
+
+		$this->assertSame(['a'], $merged->keys());
+		$this->assertNotSame($pages, $merged);
+	}
+
+	public function testMergeMultipleArguments(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+		$c = new Page(['slug' => 'c']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge($b, $c);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($pages, $merged);
+		$this->assertSame(['a'], $pages->keys());
+	}
+
+	public function testMergePage(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$pages  = new Pages([$a]);
+		$merged = $pages->merge($b);
+
+		$this->assertSame(['a', 'b'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($pages, $merged);
+		$this->assertSame(['a'], $pages->keys());
+	}
+
+	public function testMergePageDoesNotDuplicate(): void
+	{
+		$a = new Page(['slug' => 'a']);
+		$b = new Page(['slug' => 'b']);
+
+		$pages  = new Pages([$a, $b]);
+		$merged = $pages->merge($a);
+
+		$this->assertCount(2, $merged);
+		$this->assertSame(['a', 'b'], $merged->keys());
+	}
+
+	public function testMergePages(): void
+	{
+		$a = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$b = new Pages([
+			new Page(['slug' => 'c']),
+			new Page(['slug' => 'd'])
+		]);
+
+		$merged = $a->merge($b);
+
+		$this->assertSame(['a', 'b', 'c', 'd'], $merged->keys());
+
+		// merging is immutable and returns a clone
+		$this->assertNotSame($a, $merged);
+		$this->assertSame(['a', 'b'], $a->keys());
+	}
+
+	public function testMergePagesDoesNotDuplicate(): void
+	{
+		$a = new Pages([
+			new Page(['slug' => 'a']),
+			new Page(['slug' => 'b'])
+		]);
+
+		$b = new Pages([
+			new Page(['slug' => 'b']),
+			new Page(['slug' => 'c'])
+		]);
+
+		$merged = $a->merge($b);
+
+		$this->assertSame(['a', 'b', 'c'], $merged->keys());
+	}
+
 	public function testNotTemplate(): void
 	{
 		$pages = Pages::factory([
@@ -1067,16 +1571,6 @@ class PagesTest extends TestCase
 		]);
 
 		$this->assertSame([1, 2], $pages->nums());
-	}
-
-	public function testListed(): void
-	{
-		$this->assertCount(2, $this->pages()->listed());
-	}
-
-	public function testUnlisted(): void
-	{
-		$this->assertCount(1, $this->pages()->unlisted());
 	}
 
 	public function testPublished(): void
@@ -1159,34 +1653,6 @@ class PagesTest extends TestCase
 		$this->assertCount(4, $result);
 	}
 
-	public function testCustomMethods(): void
-	{
-		Pages::$methods = [
-			'test' => function () {
-				$slugs = '';
-				foreach ($this as $page) {
-					$slugs .= $page->slug();
-				}
-				return $slugs;
-			}
-		];
-
-		$pages = Pages::factory([
-			[
-				'slug' => 'page',
-				'children' => [
-					['slug' => 'a'],
-					['slug' => 'b']
-				]
-			]
-		]);
-
-		$pages = $pages->find('page')->children();
-		$this->assertSame('ab', $pages->test());
-
-		Pages::$methods = [];
-	}
-
 	public function testTemplate(): void
 	{
 		$pages = Pages::factory([
@@ -1209,6 +1675,11 @@ class PagesTest extends TestCase
 		$this->assertSame(['a', 'b', 'c'], $pages->template(['a', 'b'])->pluck('slug'));
 	}
 
+	public function testUnlisted(): void
+	{
+		$this->assertCount(1, $this->pages()->unlisted());
+	}
+
 	public function testVideos(): void
 	{
 		$pages = Pages::factory([
@@ -1228,211 +1699,5 @@ class PagesTest extends TestCase
 		]);
 
 		$this->assertSame(['a.mov', 'b.mp4'], $pages->videos()->pluck('filename'));
-	}
-
-	public function testFactoryIsDraftProp(): void
-	{
-		$pages = Pages::factory([
-			[
-				'slug'    => 'a',
-				'isDraft' => true,
-			],
-			[
-				'slug'    => 'b',
-				'isDraft' => false,
-			],
-			[
-				'slug'    => 'c',
-			]
-		]);
-
-		$this->assertSame([true, false, false], $pages->pluck('isDraft'));
-	}
-
-	public function testFactoryDraftParameter(): void
-	{
-		$pages = Pages::factory([
-			[
-				'slug'    => 'a',
-				'isDraft' => true,
-			],
-			[
-				'slug'    => 'b',
-				'isDraft' => false,
-			],
-			[
-				'slug'    => 'c',
-			],
-		], null, true);
-
-		$this->assertSame([true, true, true], $pages->pluck('isDraft'));
-	}
-
-	public function testIsReadable(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'blueprints' => [
-				'pages/readable-bar' => [
-					'options' => ['read' => true]
-				],
-				'pages/readable-baz' => [
-					'options' => ['read' => false]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'foo'
-					],
-					[
-						'slug' => 'bar',
-						'template' => 'readable-bar'
-					],
-					[
-						'slug' => 'baz',
-						'template' => 'readable-baz'
-					]
-				]
-			],
-			'users' => [
-				['id' => 'bastian', 'role' => 'admin']
-			]
-		]);
-
-		$app->impersonate('bastian');
-
-		$page = $app->page('foo');
-		$this->assertTrue($page->isReadable());
-
-		$page = $app->page('bar');
-		$this->assertTrue($page->isReadable());
-
-		$page = $app->page('baz');
-		$this->assertFalse($page->isReadable());
-	}
-
-	public function testIsListable(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'blueprints' => [
-				'pages/visible-foo' => [
-					'options' => ['list' => true]
-				],
-				'pages/visible-bar' => [
-					'options' => ['list' => false]
-				],
-				'pages/visible-baz' => [
-					'options' => ['read' => false]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'default'
-					],
-					[
-						'slug' => 'foo',
-						'template' => 'visible-foo'
-					],
-					[
-						'slug' => 'bar',
-						'template' => 'visible-bar'
-					],
-					[
-						'slug' => 'baz',
-						'template' => 'visible-baz'
-					]
-				]
-			],
-			'users' => [
-				['id' => 'bastian', 'role' => 'admin']
-			]
-		]);
-
-		$app->impersonate('bastian');
-
-		$page = $app->page('default');
-		$this->assertTrue($page->isListable());
-
-		$page = $app->page('foo');
-		$this->assertTrue($page->isListable());
-
-		$page = $app->page('bar');
-		$this->assertFalse($page->isListable());
-
-		$page = $app->page('baz');
-		$this->assertFalse($page->isListable());
-	}
-
-	public function testIsAccessible(): void
-	{
-		$app = new App([
-			'roots' => [
-				'index' => '/dev/null'
-			],
-			'blueprints' => [
-				'pages/accessible-foo' => [
-					'options' => [
-						'access' => true,
-						'list' => false
-					]
-				],
-				'pages/accessible-bar' => [
-					'options' => [
-						'access' => false,
-						'list' => true
-					]
-				],
-				'pages/accessible-baz' => [
-					'options' => [
-						'access' => true,
-						'list' => true,
-						'read' => false
-					]
-				]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug' => 'default'
-					],
-					[
-						'slug' => 'foo',
-						'template' => 'accessible-foo'
-					],
-					[
-						'slug' => 'bar',
-						'template' => 'accessible-bar'
-					],
-					[
-						'slug' => 'baz',
-						'template' => 'accessible-baz'
-					]
-				]
-			],
-			'users' => [
-				['id' => 'bastian', 'role' => 'admin']
-			]
-		]);
-
-		$app->impersonate('bastian');
-
-		$page = $app->page('default');
-		$this->assertTrue($page->isAccessible());
-
-		$page = $app->page('foo');
-		$this->assertTrue($page->isAccessible());
-
-		$page = $app->page('bar');
-		$this->assertFalse($page->isAccessible());
-
-		$page = $app->page('baz');
-		$this->assertFalse($page->isAccessible());
 	}
 }

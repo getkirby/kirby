@@ -1,0 +1,61 @@
+<?php
+
+namespace Kirby\Blueprint;
+
+use Kirby\Cms\ModelWithContent;
+use Kirby\Cms\Site;
+
+/**
+ * Extension of the basic blueprint class
+ * to handle the blueprint for the site.
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+class SiteBlueprint extends Blueprint
+{
+	/** @var Site */
+	protected ModelWithContent $model;
+
+	/**
+	 * Creates a new site blueprint object
+	 * with the given props
+	 */
+	public function __construct(array $props)
+	{
+		parent::__construct($props);
+
+		// normalize all available site options
+		$this->props['options'] = $this->normalizeOptions(
+			$this->props['options'] ?? true,
+			// defaults
+			[
+				'access'      => null,
+				'changeTitle' => null,
+				'preview'     => null,
+				'update'      => null,
+			],
+			// aliases
+			[
+				'title' => 'changeTitle',
+			]
+		);
+	}
+
+	/**
+	 * Returns the preview settings
+	 * The preview setting controls the "Open"
+	 * button in the panel and redirects it to a
+	 * different URL if necessary.
+	 */
+	public function preview(): string|bool
+	{
+		$preview = $this->props['options']['preview'] ?? true;
+
+		if (is_string($preview) === true) {
+			return $this->model->toString($preview);
+		}
+
+		return $this->model->guards()->isAvailable('preview', default: true);
+	}
+}

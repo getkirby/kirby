@@ -1,4 +1,9 @@
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+/**
  * Builds a YouTube embed URL
  *
  * @param url - The YouTube video URL

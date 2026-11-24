@@ -48,6 +48,7 @@
 			<k-block-figure caption="This is a nice caption">
 				<k-frame :cover="true" ratio="16/9">
 					<iframe
+						title="YouTube video"
 						src="https://www.youtube-nocookie.com/embed/MurryIhhIFg"
 						frameborder="0"
 						allow="autoplay; encrypted-media"

@@ -13,8 +13,8 @@ use ReflectionClass;
 #[CoversClass(Imagick::class)]
 class ImagickTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/../fixtures';
-	public const TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.Imagick';
+	public const string FIXTURES = __DIR__ . '/../fixtures';
+	public const string TMP      = KIRBY_TMP_DIR . '/Image.Darkroom.Imagick';
 
 	protected function setUp(): void
 	{
@@ -83,30 +83,32 @@ class ImagickTest extends TestCase
 	public static function autoOrientMethodProvider(): array
 	{
 		return [
-			'No change'         => [Image::ORIENTATION_TOPLEFT, []],
-			'Flop'              => [Image::ORIENTATION_TOPRIGHT, ['flopImage']],
-			'Rotate 180'        => [Image::ORIENTATION_BOTTOMRIGHT, ['rotateImage']],
-			'Flop + Rotate 180' => [Image::ORIENTATION_BOTTOMLEFT, ['flopImage', 'rotateImage']],
-			'Flop + Rotate -90' => [Image::ORIENTATION_LEFTTOP, ['flopImage', 'rotateImage']],
-			'Rotate 90'         => [Image::ORIENTATION_RIGHTTOP, ['rotateImage']],
-			'Flop + Rotate 90'  => [Image::ORIENTATION_RIGHTBOTTOM, ['flopImage', 'rotateImage']],
-			'Rotate -90'        => [Image::ORIENTATION_LEFTBOTTOM, ['rotateImage']],
+			'No change'         => [Image::ORIENTATION_TOPLEFT, false, null],
+			'Flop'              => [Image::ORIENTATION_TOPRIGHT, true, null],
+			'Rotate 180'        => [Image::ORIENTATION_BOTTOMRIGHT, false, 180],
+			'Flop + Rotate 180' => [Image::ORIENTATION_BOTTOMLEFT, true, 180],
+			'Flop + Rotate -90' => [Image::ORIENTATION_LEFTTOP, true, -90],
+			'Rotate 90'         => [Image::ORIENTATION_RIGHTTOP, false, 90],
+			'Flop + Rotate 90'  => [Image::ORIENTATION_RIGHTBOTTOM, true, 90],
+			'Rotate -90'        => [Image::ORIENTATION_LEFTBOTTOM, false, -90],
 		];
 	}
 
 	#[DataProvider('autoOrientMethodProvider')]
 	public function testAutoOrientMethod(
 		int $orientation,
-		array $expectedTransformations
+		bool $flop,
+		int|null $angle
 	): void {
 		$image = $this->createMock(Image::class);
 		$image->method('getImageOrientation')->willReturn($orientation);
-
-		foreach ($expectedTransformations as $method) {
-			$image->expects($this->once())->method($method);
-		}
-
-		$image->expects($this->once())->method('setImageOrientation')
+		$image->expects($this->exactly($flop === true ? 1 : 0))
+			->method('flopImage');
+		$image->expects($this->exactly($angle === null ? 0 : 1))
+			->method('rotateImage')
+			->with('#000', $angle);
+		$image->expects($this->once())
+			->method('setImageOrientation')
 			->with(Image::ORIENTATION_TOPLEFT);
 
 		$imagick = new Imagick();
@@ -116,10 +118,9 @@ class ImagickTest extends TestCase
 	public function testBlur(): void
 	{
 		$image = $this->createMock(Image::class);
-
 		$image->expects($this->once())
 			->method('blurImage')
-			->with($this->equalTo(0), $this->equalTo(50));
+			->with(0, 50);
 
 		$imagick = new Imagick();
 		$this->call($imagick, 'blur', $image, ['blur' => 50]);
@@ -175,7 +176,6 @@ class ImagickTest extends TestCase
 	public function testGrayscale(): void
 	{
 		$image = $this->createMock(Image::class);
-
 		$image->expects($this->once())
 			->method('transformImageColorspace')
 			->with(Image::COLORSPACE_GRAY);
@@ -187,7 +187,6 @@ class ImagickTest extends TestCase
 	public function testInterlace(): void
 	{
 		$image = $this->createMock(Image::class);
-
 		$image->expects($this->once())
 			->method('setInterlaceScheme')
 			->with(Image::INTERLACE_LINE);
@@ -457,7 +456,6 @@ class ImagickTest extends TestCase
 	public function testQuality(): void
 	{
 		$image = $this->createMock(Image::class);
-
 		$image->expects($this->once())
 			->method('setImageCompressionQuality')
 			->with(90);
@@ -466,50 +464,10 @@ class ImagickTest extends TestCase
 		$this->call($imagick, 'quality', $image, ['quality' => 90]);
 	}
 
-
 	public function testResize(): void
 	{
 		$imagick = new Imagick([
 			'crop'   => true,
-			'width'  => 200,
-			'height' => 150
-		]);
-
-		copy(
-			static::FIXTURES . '/image/cat.jpg',
-			$file = static::TMP . '/resize.jpg'
-		);
-
-		$imagick->process($file);
-		$image = new Image($file);
-
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(150, $image->getImageHeight());
-	}
-
-	public function testResizeWithoutCrop(): void
-	{
-		$imagick = new Imagick([
-			'crop'   => false,
-			'width'  => 200
-		]);
-
-		copy(
-			static::FIXTURES . '/image/cat.jpg',
-			$file = static::TMP . '/resize.jpg'
-		);
-
-		$imagick->process($file);
-		$image = new Image($file);
-
-		$this->assertEquals(200, $image->getImageWidth());
-		$this->assertEquals(200, $image->getImageHeight());
-	}
-
-	public function testResizeWithFocusPoint(): void
-	{
-		$imagick = new Imagick([
-			'crop'   => '25% 0%',
 			'width'  => 200,
 			'height' => 150
 		]);
@@ -546,18 +504,43 @@ class ImagickTest extends TestCase
 		$this->assertEquals(289, $image->getImageHeight());
 	}
 
-	public function testSaveWithFormat(): void
+	public function testResizeWithFocusPoint(): void
 	{
-		$imagick = new Imagick(['format' => 'webp']);
+		$imagick = new Imagick([
+			'crop'   => '25% 0%',
+			'width'  => 200,
+			'height' => 150
+		]);
 
 		copy(
 			static::FIXTURES . '/image/cat.jpg',
-			$file = static::TMP . '/cat.jpg'
+			$file = static::TMP . '/resize.jpg'
 		);
 
 		$imagick->process($file);
-		$this->assertTrue(F::exists($file));
-		$this->assertSame('image/webp', F::mime($file));
+		$image = new Image($file);
+
+		$this->assertEquals(200, $image->getImageWidth());
+		$this->assertEquals(150, $image->getImageHeight());
+	}
+
+	public function testResizeWithoutCrop(): void
+	{
+		$imagick = new Imagick([
+			'crop'   => false,
+			'width'  => 200
+		]);
+
+		copy(
+			static::FIXTURES . '/image/cat.jpg',
+			$file = static::TMP . '/resize.jpg'
+		);
+
+		$imagick->process($file);
+		$image = new Image($file);
+
+		$this->assertEquals(200, $image->getImageWidth());
+		$this->assertEquals(200, $image->getImageHeight());
 	}
 
 	public function testSaveSetsOutputFormat(): void
@@ -577,10 +560,23 @@ class ImagickTest extends TestCase
 		$this->assertTrue($result);
 	}
 
+	public function testSaveWithFormat(): void
+	{
+		$imagick = new Imagick(['format' => 'webp']);
+
+		copy(
+			static::FIXTURES . '/image/cat.jpg',
+			$file = static::TMP . '/cat.jpg'
+		);
+
+		$imagick->process($file);
+		$this->assertTrue(F::exists($file));
+		$this->assertSame('image/webp', F::mime($file));
+	}
+
 	public function testSharpen(): void
 	{
 		$image = $this->createMock(Image::class);
-
 		$image->expects($this->once())
 			->method('sharpenImage')
 			->with(0, 0.5);
@@ -636,6 +632,29 @@ class ImagickTest extends TestCase
 		}
 	}
 
+	public function testStripPreservesProfileFromOption(): void
+	{
+		$fixture = static::FIXTURES . '/image/onigiri-adobe-rgb-gps.jpg';
+
+		// confirm the fixture has IPTC data before processing
+		$command = 'identify -verbose ' . escapeshellarg($fixture) . ' 2>/dev/null';
+		$this->assertStringContainsString('Profile-iptc', shell_exec($command));
+
+		// IPTC is preserved when listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-preserved.jpg');
+		$imagick = new Imagick(['profiles' => ['icc', 'iptc'], 'width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringContainsString('Profile-iptc', $meta);
+
+		// IPTC is stripped when not listed in profiles option
+		copy($fixture, $file = static::TMP . '/onigiri-iptc-stripped.jpg');
+		$imagick = new Imagick(['width' => 250]);
+		$imagick->process($file);
+		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
+		$this->assertStringNotContainsString('Profile-iptc', $meta);
+	}
+
 	#[DataProvider('stripProvider')]
 	public function testStripWhenProcessing(
 		string $name,
@@ -668,29 +687,6 @@ class ImagickTest extends TestCase
 		$meta = shell_exec('identify -verbose ' . escapeshellarg($file));
 		$this->assertStringNotContainsString('photoshop:CaptionWriter', $meta);
 		$this->assertStringNotContainsString('GPS', $meta);
-		$this->assertStringNotContainsString('Profile-iptc', $meta);
-	}
-
-	public function testStripPreservesProfileFromOption(): void
-	{
-		$fixture = static::FIXTURES . '/image/onigiri-adobe-rgb-gps.jpg';
-
-		// confirm the fixture has IPTC data before processing
-		$command = 'identify -verbose ' . escapeshellarg($fixture) . ' 2>/dev/null';
-		$this->assertStringContainsString('Profile-iptc', shell_exec($command));
-
-		// IPTC is preserved when listed in profiles option
-		copy($fixture, $file = static::TMP . '/onigiri-iptc-preserved.jpg');
-		$imagick = new Imagick(['profiles' => ['icc', 'iptc'], 'width' => 250]);
-		$imagick->process($file);
-		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
-		$this->assertStringContainsString('Profile-iptc', $meta);
-
-		// IPTC is stripped when not listed in profiles option
-		copy($fixture, $file = static::TMP . '/onigiri-iptc-stripped.jpg');
-		$imagick = new Imagick(['width' => 250]);
-		$imagick->process($file);
-		$meta = shell_exec('identify -verbose ' . escapeshellarg($file) . ' 2>/dev/null');
 		$this->assertStringNotContainsString('Profile-iptc', $meta);
 	}
 }

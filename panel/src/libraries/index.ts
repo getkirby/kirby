@@ -1,4 +1,4 @@
-import type Vue from "vue";
+import type { App } from "vue";
 import autosize from "autosize";
 import colors from "./colors";
 import dayjs from "./dayjs";
@@ -10,7 +10,7 @@ export const library = {
 };
 
 export default {
-	install(app: typeof Vue) {
-		app.prototype.$library = library;
+	install(app: App) {
+		app.config.globalProperties.$library = library;
 	}
 };

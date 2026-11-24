@@ -1,3 +1,8 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
 export function read(
 	e: Event | string | undefined,
 	plain = false
@@ -71,6 +76,7 @@ export function write(value: unknown, e?: Event) {
 	container().append(input);
 
 	// iOS
+	/* v8 ignore if */
 	if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
 		input.contentEditable = "true";
 		input.readOnly = true;

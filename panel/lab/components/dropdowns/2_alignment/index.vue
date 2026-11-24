@@ -9,7 +9,7 @@
 						variant="filled"
 						@click="$refs.dropdown.toggle()"
 					/>
-					<k-dropdown-content
+					<k-dropdown
 						ref="dropdown"
 						:options="options"
 						:align-x="x"

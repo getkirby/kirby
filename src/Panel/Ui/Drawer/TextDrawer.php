@@ -1,0 +1,49 @@
+<?php
+
+namespace Kirby\Panel\Ui\Drawer;
+
+use Kirby\Panel\Ui\Drawer;
+use Kirby\Toolkit\HtmlString;
+
+/**
+ * Drawer that displays some text
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @unstable
+ */
+class TextDrawer extends Drawer
+{
+	public function __construct(
+		string $component = 'k-text-drawer',
+		string|null $class = null,
+		public string|null $empty = null,
+		string|null $icon = null,
+		array|null $options = null,
+		string|null $style = null,
+		string|null $title = null,
+		public string|HtmlString|null $text = null,
+		...$attrs
+	) {
+		parent::__construct(...[
+			...$attrs,
+			'component' => $component,
+			'class'     => $class,
+			'icon'      => $icon,
+			'options'   => $options,
+			'style'     => $style,
+			'title'     => $title,
+		]);
+	}
+
+	public function props(): array
+	{
+		return [
+			...parent::props(),
+			'empty' => $this->empty,
+			'text'  => $this->text
+		];
+	}
+}

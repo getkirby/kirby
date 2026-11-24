@@ -1,6 +1,11 @@
 import { format } from "./number";
 
 /**
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
+ */
+
+/**
  * Extracts the extension
  *
  * @example

@@ -1,0 +1,61 @@
+<?php
+
+namespace Kirby\Panel\Controller\Dialog;
+
+use Kirby\Panel\Ui\Dialog;
+use Kirby\Panel\Ui\Dialog\RemoveDialog;
+
+/**
+ * Controls the Panel dialog for deleting a user
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @unstable
+ */
+class UserDeleteDialogController extends UserDialogController
+{
+	public function load(): Dialog
+	{
+		$i18nPrefix = $this->user->isLoggedIn() ? 'account' : 'user';
+
+		return new RemoveDialog(
+			text: $this->i18nHtml($i18nPrefix . '.delete.confirm', [
+				'email' => $this->user->email()
+			])
+		);
+	}
+
+	public function submit(): array
+	{
+		$referrer = $this->kirby->panel()->referrer();
+		$url      = $this->user->panel()->url(true);
+
+		// collect the identifiers before deletion,
+		// so that fields can remove the user from their value
+		$user = [
+			'id'   => $this->user->id(),
+			'uuid' => $this->user->uuid()?->toString()
+		];
+
+		$this->user->delete();
+
+		// redirect to the users view
+		// if the dialog has been opened in the user view
+		if ($referrer === $url) {
+			$redirect = '/users';
+		}
+
+		// logout the user if they deleted themselves
+		if ($this->user->isLoggedIn()) {
+			$redirect = '/logout';
+		}
+
+		return [
+			'event'    => 'user.delete',
+			'user'     => $user,
+			'redirect' => $redirect ?? null
+		];
+	}
+}

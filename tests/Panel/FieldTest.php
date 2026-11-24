@@ -2,46 +2,21 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\App;
-use Kirby\Filesystem\Dir;
-use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(Field::class)]
 class FieldTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Field';
-
-	protected function setUp(): void
-	{
-		$this->app = new App([
-			'roots' => [
-				'index' => static::TMP,
-			]
-		]);
-
-		Dir::make(static::TMP);
-	}
-
-	protected function tearDown(): void
-	{
-		// clear session file first
-		$this->app->session()->destroy();
-
-		Dir::remove(static::TMP);
-	}
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Field';
 
 	public function testEmail(): void
 	{
 		// default
 		$field = Field::email();
-		$expected = [
-			'label'   => 'Email',
-			'type'    => 'email',
-			'counter' => false
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Email', $field['label']);
+		$this->assertSame('email', $field['type']);
+		$this->assertSame(false, $field['counter']);
 
 		// with custom props
 		$field = Field::email([
@@ -73,7 +48,6 @@ class FieldTest extends TestCase
 
 		$this->assertSame('Change position', $field['label']);
 		$this->assertSame('select', $field['type']);
-		$this->assertFalse($field['empty']);
 
 		// check options
 		$this->assertCount(5, $field['options']);
@@ -106,57 +80,7 @@ class FieldTest extends TestCase
 	public function testHidden(): void
 	{
 		$field = Field::hidden();
-		$this->assertSame(['hidden' => true], $field);
-	}
-
-	public function testFilePositionWithProtectedSibling(): void
-	{
-		// the permission cache is keyed by template and role,
-		// so both need to be unique for this test
-		$uuid = uuid();
-
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'files/secret-' . $uuid => [
-					'options' => ['list' => false]
-				]
-			],
-			'roles' => [
-				['name' => 'editor-' . $uuid]
-			],
-			'site' => [
-				'files' => [
-					['filename' => 'a.jpg'],
-					['filename' => 'b.jpg'],
-					['filename' => 'c.jpg', 'template' => 'secret-' . $uuid]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor-' . $uuid
-				]
-			],
-			'user' => 'editor@getkirby.com'
-		]);
-
-		$file  = $this->app->site()->file('b.jpg');
-		$field = Field::filePosition($file);
-
-		// the protected sibling keeps its slot, so that
-		// the selectable positions are not shifted
-		$this->assertCount(5, $field['options']);
-
-		$this->assertSame(1, $field['options'][0]['value']);
-		$this->assertSame('a.jpg', $field['options'][1]['text']);
-		$this->assertSame(2, $field['options'][2]['value']);
-
-		// ... but it must not disclose the file
-		$this->assertSame('-2', $field['options'][3]['value']);
-		$this->assertSame('[unknown]', $field['options'][3]['text']);
-		$this->assertTrue($field['options'][3]['disabled']);
-
-		$this->assertSame(3, $field['options'][4]['value']);
+		$this->assertSame(true, $field['hidden']);
 	}
 
 	public function testPagePosition(): void
@@ -211,56 +135,6 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
-	public function testPagePositionWithProtectedSibling(): void
-	{
-		// the permission cache is keyed by template and role,
-		// so both need to be unique for this test
-		$uuid = uuid();
-
-		$this->app = $this->app->clone([
-			'blueprints' => [
-				'pages/secret-' . $uuid => [
-					'options' => ['list' => false]
-				]
-			],
-			'roles' => [
-				['name' => 'editor-' . $uuid]
-			],
-			'site' => [
-				'children' => [
-					['slug' => 'a', 'num' => 1],
-					['slug' => 'b', 'num' => 2],
-					['slug' => 'c', 'num' => 3, 'template' => 'secret-' . $uuid]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor-' . $uuid
-				]
-			],
-			'user' => 'editor@getkirby.com'
-		]);
-
-		$page  = $this->app->site()->find('b');
-		$field = Field::pagePosition($page);
-
-		// the protected sibling keeps its slot, so that
-		// the selectable positions are not shifted
-		$this->assertCount(5, $field['options']);
-
-		$this->assertSame(1, $field['options'][0]['value']);
-		$this->assertSame('a', $field['options'][1]['text']);
-		$this->assertSame(2, $field['options'][2]['value']);
-
-		// ... but it must not disclose the page
-		$this->assertSame('-2', $field['options'][3]['value']);
-		$this->assertSame('[unknown]', $field['options'][3]['text']);
-		$this->assertTrue($field['options'][3]['disabled']);
-
-		$this->assertSame(3, $field['options'][4]['value']);
-	}
-
 	public function testPagePositionWithNotEnoughOptions(): void
 	{
 		$this->app = $this->app->clone([
@@ -282,12 +156,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::password();
-		$expected = [
-			'label'   => 'Password',
-			'type'    => 'password',
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Password', $field['label']);
+		$this->assertSame('key', $field['icon']);
+		$this->assertSame('password', $field['type']);
 
 		// with custom props
 		$field = Field::password([
@@ -300,13 +172,9 @@ class FieldTest extends TestCase
 	public function testRole(): void
 	{
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'hidden',
-			'options' => []
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('role', $field['name']);
+		$this->assertSame('hidden', $field['type']);
 
 		// without authenticated user
 		$this->app = $this->app->clone([
@@ -330,77 +198,49 @@ class FieldTest extends TestCase
 
 		// without authenticated user
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'hidden',
-			'options' => []
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('role', $field['name']);
+		$this->assertSame('hidden', $field['type']);
 
 		// with authenticated admin
 		$this->app->impersonate('kirby');
 
 		$field = Field::role();
-		$expected = [
-			'label'   => 'Role',
-			'type'    => 'radio',
-			'options' => [
-				[
-					'text' => 'Admin',
-					'info' => 'Admin description',
-					'value' => 'admin'
-				],
-				[
-					'text' => 'Client',
-					'info' => 'No description',
-					'value' => 'client'
-				],
-				[
-					'text' => 'Editor',
-					'info' => 'Editor description',
-					'value' => 'editor'
-				],
+
+		$options = [
+			[
+				'text'  => 'Admin',
+				'info'  => 'Admin description',
+				'value' => 'admin'
+			],
+			[
+				'text'  => 'Client',
+				'info'  => 'No description',
+				'value' => 'client'
+			],
+			[
+				'text'  => 'Editor',
+				'info'  => 'Editor description',
+				'value' => 'editor'
 			]
 		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Role', $field['label']);
+		$this->assertSame('role', $field['name']);
+		$this->assertSame('radio', $field['type']);
+		$this->assertSame($options, $field['options']);
 	}
 
 	public function testSlug(): void
 	{
 		// default
 		$field = Field::slug();
-		$expected = [
-			'label' => 'URL appendix',
-			'type'  => 'slug',
-			'allow' => 'a-z0-9'
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('URL appendix', $field['label']);
+		$this->assertSame('slug', $field['type']);
 
 		// with custom props
 		$field = Field::slug([
-			'required' => true
-		]);
-
-		$this->assertTrue($field['required']);
-	}
-
-	public function testTitle(): void
-	{
-		// default
-		$field = Field::title();
-		$expected = [
-			'label' => 'Title',
-			'type'  => 'text',
-			'icon'  => 'title'
-		];
-
-		$this->assertSame($expected, $field);
-
-		// with custom props
-		$field = Field::title([
 			'required' => true
 		]);
 
@@ -420,7 +260,11 @@ class FieldTest extends TestCase
 			'disabled' => true
 		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('Template', $field['label']);
+		$this->assertSame('select', $field['type']);
+		$this->assertSame([], $field['options']);
+		$this->assertSame('template', $field['icon']);
+		$this->assertSame(true, $field['disabled']);
 
 		// select option format
 		$options = [
@@ -470,6 +314,23 @@ class FieldTest extends TestCase
 		$this->assertTrue($field['required']);
 	}
 
+	public function testTitle(): void
+	{
+		// default
+		$field = Field::title();
+
+		$this->assertSame('Title', $field['label']);
+		$this->assertSame('text', $field['type']);
+		$this->assertSame('title', $field['icon']);
+
+		// with custom props
+		$field = Field::title([
+			'required' => true
+		]);
+
+		$this->assertTrue($field['required']);
+	}
+
 	public function testTranslation(): void
 	{
 		// default
@@ -478,7 +339,6 @@ class FieldTest extends TestCase
 		$this->assertSame('Language', $field['label']);
 		$this->assertSame('select', $field['type']);
 		$this->assertSame('translate', $field['icon']);
-		$this->assertFalse($field['empty']);
 		$this->assertCount($this->app->translations()->count(), $field['options']);
 
 		// with custom props
@@ -493,13 +353,10 @@ class FieldTest extends TestCase
 	{
 		// default
 		$field = Field::username();
-		$expected = [
-			'icon'  => 'user',
-			'label' => 'Name',
-			'type'  => 'text',
-		];
 
-		$this->assertSame($expected, $field);
+		$this->assertSame('user', $field['icon']);
+		$this->assertSame('Name', $field['label']);
+		$this->assertSame('text', $field['type']);
 
 		// with custom props
 		$field = Field::username([

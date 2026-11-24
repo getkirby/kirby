@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Controller::class)]
 class ControllerTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/fixtures';
 
 	public function testArguments(): void
 	{
@@ -17,6 +17,13 @@ class ControllerTest extends TestCase
 			'a' => 'A',
 			'b' => 'B'
 		]));
+	}
+
+	public function testArgumentsNoDefaultNull(): void
+	{
+		$controller = new Controller(fn ($a, $b = 'foo') => ($a === null ? 'null' : $a) . ($b === null ? 'null' : $b));
+
+		$this->assertSame('nullfoo', $controller->call());
 	}
 
 	public function testArgumentsOrder(): void
@@ -38,13 +45,6 @@ class ControllerTest extends TestCase
 			'b' => 'B',
 			'c' => 'C'
 		]));
-	}
-
-	public function testArgumentsNoDefaultNull(): void
-	{
-		$controller = new Controller(fn ($a, $b = 'foo') => ($a === null ? 'null' : $a) . ($b === null ? 'null' : $b));
-
-		$this->assertSame('nullfoo', $controller->call());
 	}
 
 	public function testCall(): void
@@ -74,16 +74,16 @@ class ControllerTest extends TestCase
 		$this->assertSame('loaded', $controller->call());
 	}
 
-	public function testLoadNonExisting(): void
+	public function testLoadInvalidController(): void
 	{
-		$root       = static::FIXTURES . '/controller/does-not-exist.php';
+		$root       = static::FIXTURES . '/controller/invalid.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}
 
-	public function testLoadInvalidController(): void
+	public function testLoadNonExisting(): void
 	{
-		$root       = static::FIXTURES . '/controller/invalid.php';
+		$root       = static::FIXTURES . '/controller/does-not-exist.php';
 		$controller = Controller::load($root);
 		$this->assertNull($controller);
 	}

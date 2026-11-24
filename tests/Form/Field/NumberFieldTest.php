@@ -2,54 +2,21 @@
 
 namespace Kirby\Form\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+#[CoversClass(NumberField::class)]
 class NumberFieldTest extends TestCase
 {
-	public function testDefaultProps(): void
-	{
-		$field = $this->field('number');
-
-		$this->assertSame('number', $field->type());
-		$this->assertSame('number', $field->name());
-		$this->assertSame('', $field->value());
-		$this->assertSame('', $field->default());
-		$this->assertNull($field->min());
-		$this->assertNull($field->max());
-		$this->assertSame('', $field->step());
-		$this->assertTrue($field->save());
-	}
-
-	public static function valueProvider(): array
-	{
-		return [
-			[null, ''],
-			['', ''],
-			[false, (float)0],
-			[0, (float)0],
-			['0', (float)0],
-			[1, (float)1],
-			['1', (float)1],
-			['one', (float)0],
-			['1.1', (float)1.1],
-			['1.11111', (float)1.11111],
-			[1.11111, (float)1.11111],
-			['1,1', (float)1.1],
-		];
-	}
-
-	#[DataProvider('valueProvider')]
-	public function testValue($input, $expected): void
+	public function testMax(): void
 	{
 		$field = $this->field('number', [
-			'value'   => $input,
-			'default' => $input,
-			'step'    => $input
+			'value' => 1,
+			'max'   => 0
 		]);
 
-		$this->assertSame($expected, $field->value());
-		$this->assertSame($expected, $field->default());
-		$this->assertSame($expected, $field->step());
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('max', $field->errors());
 	}
 
 	public function testMin(): void
@@ -63,23 +30,88 @@ class NumberFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
-	public function testMax(): void
+	public function testProps(): void
 	{
-		$field = $this->field('number', [
-			'value' => 1,
-			'max'   => 0
-		]);
+		$field = $this->field('number');
+		$props = $field->props();
 
-		$this->assertFalse($field->isValid());
-		$this->assertArrayHasKey('max', $field->errors());
+		ksort($props);
+
+		$expected = [
+			'after'       => null,
+			'autofocus'   => false,
+			'before'      => null,
+			'disabled'    => false,
+			'help'        => null,
+			'hidden'      => false,
+			'icon'        => null,
+			'label'       => 'Number',
+			'max'         => null,
+			'min'         => null,
+			'name'        => 'number',
+			'placeholder' => null,
+			'required'    => false,
+			'saveable'    => true,
+			'step'        => null,
+			'translate'   => true,
+			'type'        => 'number',
+			'when'        => null,
+			'width'       => '1/1',
+		];
+
+		$this->assertSame($expected, $props);
 	}
 
-	public function testLargeValue(): void
+	public static function valueProvider(): array
+	{
+		return [
+			[null, null],
+			['', null],
+			[false, (float)0],
+			[0, (float)0],
+			['0', (float)0],
+			[1, (float)1],
+			['1', (float)1],
+			['one', null],
+			['1abc', null],
+			['1e-8', 0.00000001],
+			['1.1', (float)1.1],
+			['1.11111', (float)1.11111],
+			[1.11111, (float)1.11111],
+			['1,1', (float)1.1],
+		];
+	}
+
+	#[DataProvider('valueProvider')]
+	public function testToFormValue($input, $expected): void
+	{
+		$field = $this->field('number', [
+			'value'   => $input,
+			'default' => $input,
+			'step'    => $input
+		]);
+
+		$this->assertSame($expected, $field->toFormValue());
+		$this->assertSame($expected, $field->default());
+		$this->assertSame($expected, $field->step());
+	}
+
+	public function testToFormValueLargeValue(): void
 	{
 		$field = $this->field('number', [
 			'value' => 1000
 		]);
 
-		$this->assertSame(1000.0, $field->value());
+		$this->assertSame(1000.0, $field->toFormValue());
+	}
+
+	#[DataProvider('valueProvider')]
+	public function testToStoredValue($input, $expected): void
+	{
+		$field = $this->field('number', [
+			'value' => $input
+		]);
+
+		$this->assertSame($expected ?? '', $field->toStoredValue());
 	}
 }

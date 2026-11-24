@@ -6,18 +6,6 @@ use TypeError;
 
 class StructureObjectTest extends TestCase
 {
-	public function testId(): void
-	{
-		$object = new StructureObject(['id' => 'test']);
-		$this->assertSame('test', $object->id());
-	}
-
-	public function testInvalidId(): void
-	{
-		$this->expectException(TypeError::class);
-		new StructureObject(['id' => []]);
-	}
-
 	public function testContent(): void
 	{
 		$content = ['test' => 'Test'];
@@ -27,18 +15,6 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertSame($content, $object->content()->toArray());
-	}
-
-	public function testToDate(): void
-	{
-		$object = new StructureObject([
-			'id'      => 'test',
-			'content' => [
-				'date' => '2012-12-12'
-			]
-		]);
-
-		$this->assertSame('12.12.2012', $object->date()->toDate('d.m.Y'));
 	}
 
 	public function testDefaultContent(): void
@@ -83,6 +59,28 @@ class StructureObjectTest extends TestCase
 		$this->assertSame($parent, $object->text()->parent());
 	}
 
+	public function testId(): void
+	{
+		$object = new StructureObject(['id' => 'test']);
+		$this->assertSame('test', $object->id());
+	}
+
+	public function testInvalidId(): void
+	{
+		$this->expectException(TypeError::class);
+		new StructureObject(['id' => []]);
+	}
+
+	public function testInvalidParent(): void
+	{
+		$this->expectException(TypeError::class);
+
+		$object = new StructureObject([
+			'id'     => 'test',
+			'parent' => false
+		]);
+	}
+
 	public function testParent(): void
 	{
 		$parent = new Page(['slug' => 'test']);
@@ -101,16 +99,6 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertIsSite($object->parent());
-	}
-
-	public function testInvalidParent(): void
-	{
-		$this->expectException(TypeError::class);
-
-		$object = new StructureObject([
-			'id'     => 'test',
-			'parent' => false
-		]);
 	}
 
 	public function testToArray(): void
@@ -132,5 +120,17 @@ class StructureObjectTest extends TestCase
 		]);
 
 		$this->assertSame($expected, $object->toArray());
+	}
+
+	public function testToDate(): void
+	{
+		$object = new StructureObject([
+			'id'      => 'test',
+			'content' => [
+				'date' => '2012-12-12'
+			]
+		]);
+
+		$this->assertSame('12.12.2012', $object->date()->toDate('d.m.Y'));
 	}
 }

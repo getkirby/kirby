@@ -1,0 +1,17 @@
+<?php
+
+namespace Kirby\Panel\Response;
+
+/**
+ * The Drawer response class handles Panel
+ * requests to render the JSON object for
+ * Panel drawers
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ */
+class DrawerResponse extends DialogResponse
+{
+	protected static string $key = 'drawer';
+}

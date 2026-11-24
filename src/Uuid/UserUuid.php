@@ -9,33 +9,31 @@ use Kirby\Cms\User;
 /**
  * UUID for $user
  *
- * @package   Kirby Uuid
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  * @since     3.8.0
  *
- * @extends \Kirby\Uuid\Uuid<\Kirby\Cms\User>
+ * @extends Uuid<User>
  */
 class UserUuid extends Uuid
 {
-	protected const TYPE = 'user';
+	protected const string TYPE = 'user';
 
-	/*
+	/**
 	 * Returns the user ID
 	 * (we can rely in this case that the Uri was filled
 	 * with the model ID on initiation)
 	 */
 	public function id(): string
 	{
+		/** @var string - is always set from User::id() at construction */
 		return $this->uri->host();
 	}
 
 	/**
 	 * Generator for all users
 	 *
-	 * @return \Generator|\Kirby\Cms\User[]
+	 * @return Generator<string, User>
 	 */
 	public static function index(): Generator
 	{

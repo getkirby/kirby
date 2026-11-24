@@ -7,9 +7,16 @@
 </template>
 
 <script>
+/* v8 ignore file */
 import Dialog from "@/mixins/dialog.js";
 import { props as ModelsDialogProps } from "./ModelsDialog.vue";
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `k-user-picker-dialog` instead
+ */
 export default {
 	mixins: [Dialog, ModelsDialogProps],
 	props: {
@@ -28,6 +35,7 @@ export default {
 				info: item.info !== item.text ? item.info : null
 			})
 		}
-	}
+	},
+	emits: ["cancel", "submit"]
 };
 </script>

@@ -10,7 +10,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 #[CoversClass(Handler::class)]
 class HandlerTest extends TestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Data.Handler';
+	public const string TMP = KIRBY_TMP_DIR . '/Data.Handler';
+
+	public function testReadFileMissing(): void
+	{
+		$file = static::TMP . '/does-not-exist.json';
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionMessage('The file "' . $file . '" does not exist or cannot be read');
+
+		CustomHandler::read($file);
+	}
 
 	public function testReadWrite(): void
 	{
@@ -27,15 +37,5 @@ class HandlerTest extends TestCase
 
 		$result = CustomHandler::read($file);
 		$this->assertSame($data, $result);
-	}
-
-	public function testReadFileMissing(): void
-	{
-		$file = static::TMP . '/does-not-exist.json';
-
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('The file "' . $file . '" does not exist or cannot be read');
-
-		CustomHandler::read($file);
 	}
 }

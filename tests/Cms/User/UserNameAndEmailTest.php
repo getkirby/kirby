@@ -9,7 +9,7 @@ use TypeError;
 #[CoversClass(User::class)]
 class UserNameAndEmailTest extends ModelTestCase
 {
-	public const TMP = KIRBY_TMP_DIR . '/Cms.UserNameAndEmail';
+	public const string TMP = KIRBY_TMP_DIR . '/Cms.UserNameAndEmail';
 
 	public function testEmail(): void
 	{
@@ -36,16 +36,6 @@ class UserNameAndEmailTest extends ModelTestCase
 		$this->assertSame($name, $user->name()->value());
 	}
 
-	public function testNameSanitized(): void
-	{
-		$user = new User([
-			'name' => '<strong>Homer</strong> Simpson',
-		]);
-
-		$this->assertInstanceOf(Field::class, $user->name());
-		$this->assertSame('Homer Simpson', $user->name()->value());
-	}
-
 	public function testNameOrEmail(): void
 	{
 		$user = new User([
@@ -65,5 +55,15 @@ class UserNameAndEmailTest extends ModelTestCase
 		$this->assertInstanceOf(Field::class, $user->nameOrEmail());
 		$this->assertSame($email, $user->nameOrEmail()->value());
 		$this->assertSame('email', $user->nameOrEmail()->key());
+	}
+
+	public function testNameSanitized(): void
+	{
+		$user = new User([
+			'name' => '<strong>Homer</strong> Simpson',
+		]);
+
+		$this->assertInstanceOf(Field::class, $user->name());
+		$this->assertSame('Homer Simpson', $user->name()->value());
 	}
 }

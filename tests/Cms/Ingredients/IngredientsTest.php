@@ -16,16 +16,16 @@ class IngredientsTest extends TestCase
 		]);
 	}
 
-	public function testGet(): void
-	{
-		$this->assertSame('A', $this->ingredients->a);
-		$this->assertSame('B', $this->ingredients->b);
-	}
-
 	public function testCall(): void
 	{
 		$this->assertSame('A', $this->ingredients->a());
 		$this->assertSame('B', $this->ingredients->b());
+	}
+
+	public function testGet(): void
+	{
+		$this->assertSame('A', $this->ingredients->a);
+		$this->assertSame('B', $this->ingredients->b);
 	}
 
 	public function testToArray(): void

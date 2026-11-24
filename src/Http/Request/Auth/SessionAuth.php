@@ -9,9 +9,6 @@ use Kirby\Session\Session;
 /**
  * Authentication data using Kirby's session
  *
- * @package   Kirby Http
- * @author    Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
  */
@@ -22,7 +19,10 @@ class SessionAuth extends Auth
 	 */
 	public function session(): Session
 	{
-		return App::instance()->sessionHandler()->getManually($this->data);
+		return App::instance()->sessions()->find(
+			token: $this->token(),
+			mode:  'manual'
+		);
 	}
 
 	/**

@@ -5,6 +5,7 @@ namespace Kirby\Plugin;
 use Closure;
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
+use Kirby\Exception\LogicException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
@@ -15,14 +16,10 @@ use Kirby\Toolkit\Str;
  * to the media folder, to make them publicly
  * available. This class handles the magic around that.
  *
- * @package   Kirby Plugin
- * @author    Bastian Allgeier <bastian@getkirby.com>
- * @author    Nico Hoffmann <nico@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  *
- * @extends \Kirby\Cms\Collection<\Kirby\Plugin\Asset>
+ * @extends Collection<Asset>
  */
 class Assets extends Collection
 {
@@ -141,6 +138,12 @@ class Assets extends Collection
 
 	public function plugin(): Plugin
 	{
+		if ($this->parent instanceof Plugin === false) {
+			throw new LogicException(
+				message: 'This assets collection has no associated plugin'
+			);
+		}
+
 		return $this->parent;
 	}
 
@@ -159,7 +162,7 @@ class Assets extends Collection
 
 			// @codeCoverageIgnoreStart
 			// TODO: deprecated media URL without hash
-			if (empty($hash) === true) {
+			if ($hash === '') {
 				$asset = $plugin->asset($path);
 				$asset->publishAt($path);
 				return Response::file($asset->root());

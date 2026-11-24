@@ -31,10 +31,10 @@
 						prev: prevNext(index - 1)
 					}"
 					@append="add($event, index + 1)"
-					@chooseToAppend="choose(index + 1)"
-					@chooseToConvert="chooseToConvert(block)"
-					@chooseToPrepend="choose(index)"
-					@click.native="onClickBlock(block, $event)"
+					@choose-to-append="choose(index + 1)"
+					@choose-to-convert="chooseToConvert(block)"
+					@choose-to-prepend="choose(index)"
+					@click="onClickBlock(block, $event)"
 					@close="isEditing = false"
 					@copy="copy()"
 					@duplicate="duplicate(block, index)"
@@ -45,19 +45,23 @@
 					@paste="pasteboard()"
 					@prepend="add($event, index)"
 					@remove="remove(block)"
-					@removeSelected="removeSelected"
+					@remove-selected="removeSelected"
 					@show="show(block)"
-					@selectDown="selectDown"
-					@selectUp="selectUp"
-					@sortDown="sort(block, index, index + 1)"
-					@sortUp="sort(block, index, index - 1)"
+					@select-down="selectDown"
+					@select-up="selectUp"
+					@sort-down="sort(block, index, index + 1)"
+					@sort-up="sort(block, index, index - 1)"
 					@split="split(block, index, $event)"
 					@update="update(block, $event)"
 				/>
 			</k-draggable>
 
 			<!-- No blocks -->
-			<k-empty class="k-blocks-empty" icon="box" @click="choose(blocks.length)">
+			<k-empty
+				class="k-blocks-empty"
+				icon="box"
+				v-on="!disabled ? { click: () => choose(blocks.length) } : {}"
+			>
 				{{ empty ?? $t("field.blocks.empty") }}
 			</k-empty>
 		</template>
@@ -70,7 +74,6 @@
 </template>
 
 <script>
-import { set } from "vue";
 import { autofocus, disabled, id } from "@/mixins/props.js";
 import { focusIsInModal } from "@/helpers/focus";
 
@@ -94,13 +97,17 @@ export const props = {
 			type: Array,
 			default: () => []
 		}
-	},
-	emits: ["input"]
+	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	mixins: [props],
 	inheritAttrs: false,
+	emits: ["input"],
 	data() {
 		return {
 			blocks: this.value ?? [],
@@ -169,7 +176,7 @@ export default {
 		this.$events.on("keyup", this.onKey);
 		this.$events.on("paste", this.onPaste);
 	},
-	destroyed() {
+	unmounted() {
 		this.$events.off("blur", this.onBlur);
 		this.$events.off("click", this.onClickGlobal);
 		this.$events.off("focus", this.onFocusGlobal);
@@ -378,7 +385,7 @@ export default {
 		},
 		focus(block) {
 			const ref = this.ref(block);
-			this.selected = [block?.id ?? this.blocks[0]];
+			this.selected = [block?.id ?? this.blocks[0]?.id];
 			ref?.focus();
 			ref?.$el.scrollIntoView({ block: "nearest" });
 		},
@@ -390,7 +397,7 @@ export default {
 			}
 		},
 		hide(block) {
-			set(block, "isHidden", true);
+			block.isHidden = true;
 			this.save();
 		},
 		isEventTarget(e) {
@@ -614,7 +621,7 @@ export default {
 
 			// don't add blocks that exceed the maximum limit
 			if (this.max) {
-				const max = this.max - this.blocks.length;
+				const max = Math.max(this.max - this.blocks.length, 0);
 				blocks = blocks.slice(0, max);
 			}
 
@@ -648,7 +655,7 @@ export default {
 
 			if (index !== -1) {
 				this.deselect(block);
-				this.$delete(this.blocks, index);
+				this.blocks.splice(index, 1);
 				this.save();
 			}
 		},
@@ -680,7 +687,7 @@ export default {
 						for (const id of this.selected) {
 							const index = this.findIndex(id);
 							if (index !== -1) {
-								this.$delete(this.blocks, index);
+								this.blocks.splice(index, 1);
 							}
 						}
 
@@ -720,7 +727,7 @@ export default {
 			this.selected = Object.values(this.blocks).map((block) => block.id);
 		},
 		show(block) {
-			set(block, "isHidden", false);
+			block.isHidden = false;
 			this.save();
 		},
 		async sort(block, from, to) {
@@ -761,7 +768,7 @@ export default {
 			const index = this.findIndex(block.id);
 			if (index !== -1) {
 				for (const key in content) {
-					set(this.blocks[index].content, key, content[key]);
+					this.blocks[index].content[key] = content[key];
 				}
 			}
 			this.save();

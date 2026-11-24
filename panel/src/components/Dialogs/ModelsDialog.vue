@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { set, del } from "vue";
+/* v8 ignore file */
 import Dialog from "@/mixins/dialog.js";
 import Search from "@/mixins/search.js";
 
@@ -73,6 +73,12 @@ export const props = {
 	}
 };
 
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ *
+ * @deprecated 6.0.0 Use `k-model-picker-dialog` instead
+ */
 export default {
 	mixins: [Dialog, props],
 	emits: ["cancel", "fetched", "submit"],
@@ -156,14 +162,14 @@ export default {
 			}
 
 			if (this.isSelected(item)) {
-				return del(this.selected, item.id);
+				return delete this.selected[item.id];
 			}
 
 			if (this.isMaxReached) {
 				return;
 			}
 
-			set(this.selected, item.id, item);
+			this.selected[item.id] = item;
 		}
 	}
 };

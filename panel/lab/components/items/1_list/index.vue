@@ -7,7 +7,23 @@
 			<k-items :items="items" :sortable="true" />
 		</k-lab-example>
 		<k-lab-example label="Selectable">
-			<k-items :items="selectableItems" :selecting="true" @select="onSelect" />
+			<k-items
+				:items="selectableItems"
+				:selecting="true"
+				:selected="selected"
+				@select="selected = $event"
+			/>
+			<br />
+			<k-code>Selected: {{ selected.join(", ") }}</k-code>
+		</k-lab-example>
+		<k-lab-example label="Selectable: single">
+			<k-items
+				:items="selectableItems"
+				:selecting="true"
+				selectmode="single"
+				:selected="selected"
+				@select="selected = $event"
+			/>
 			<br />
 			<k-code>Selected: {{ selected.join(", ") }}</k-code>
 		</k-lab-example>
@@ -32,15 +48,6 @@ export default {
 					selectable: true
 				};
 			});
-		}
-	},
-	methods: {
-		onSelect(item, index) {
-			if (this.selected.includes(index)) {
-				this.selected = this.selected.filter((i) => i !== index);
-			} else {
-				this.selected.push(index);
-			}
 		}
 	}
 };

@@ -1,12 +1,15 @@
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
+
 import { random } from "./string";
 
 type UploadParams = {
 	/** Signal to abort the upload request */
 	abort?: AbortSignal;
 	/** Additional attributes added to the FormData */
-	attributes?: Record<string, string>;
-	/** Callback when upload completed */
-	complete?: () => void;
+	attributes?: Record<string, string | number>;
 	/** Callback when upload failed */
 	error?: (xhr: XMLHttpRequest, file: File, response: unknown) => void;
 	/** FormData field name for the file */
@@ -43,7 +46,6 @@ export async function upload(
 			filename: file.name,
 			headers: {},
 			attributes: {},
-			complete: () => {},
 			error: () => {},
 			success: () => {},
 			progress: () => {},
@@ -62,7 +64,7 @@ export async function upload(
 			const value = options.attributes[attribute];
 
 			if (value !== null && value !== undefined) {
-				data.append(attribute, value);
+				data.append(attribute, String(value));
 			}
 		}
 
@@ -79,18 +81,19 @@ export async function upload(
 		xhr.upload.addEventListener("loadstart", progress);
 		xhr.upload.addEventListener("progress", progress);
 
-		xhr.addEventListener("load", (event: Event) => {
-			const target = event.target as XMLHttpRequest;
-			let response = null;
-
+		const parse = (event: Event): { status: string; message?: string } => {
 			try {
-				response = JSON.parse(target.response);
+				return JSON.parse((event.target as XMLHttpRequest).response);
 			} catch {
-				response = {
+				return {
 					status: "error",
 					message: "The file could not be uploaded"
 				};
 			}
+		};
+
+		xhr.addEventListener("load", (event: Event) => {
+			const response = parse(event);
 
 			if (response.status === "error") {
 				options.error(xhr, file, response);
@@ -103,12 +106,20 @@ export async function upload(
 		});
 
 		xhr.addEventListener("error", (event: Event) => {
-			const target = event.target as XMLHttpRequest;
-			const response = JSON.parse(target.response);
+			const response = parse(event);
 
 			options.progress(xhr, file, 100);
 			options.error(xhr, file, response);
 			reject(response);
+		});
+
+		// reject like `fetch()` with the reason of the abort signal,
+		// without calling the error callback
+		xhr.addEventListener("abort", () => {
+			reject(
+				options.abort?.reason ??
+					new DOMException("The upload was aborted", "AbortError")
+			);
 		});
 
 		xhr.open(options.method, options.url, true);
@@ -144,10 +155,8 @@ export async function uploadAsChunks(
 	let response: unknown;
 
 	for (let i = 0; i < parts; i++) {
-		// break if upload got aborted in the meantime
-		if (params.abort?.aborted) {
-			break;
-		}
+		// reject like `fetch()` if the upload got aborted in the meantime
+		params.abort?.throwIfAborted();
 
 		// slice chunk at the right positions
 		const start = i * size;

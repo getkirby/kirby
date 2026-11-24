@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\PageBlueprint;
+use Kirby\Blueprint\PageBlueprint;
 
 /**
  * PageBlueprint
@@ -12,7 +12,7 @@ return [
 		'options' => fn (PageBlueprint $blueprint) => $blueprint->options(),
 		'preview' => fn (PageBlueprint $blueprint) => $blueprint->preview(),
 		'status'  => fn (PageBlueprint $blueprint) => $blueprint->status(),
-		'tabs'    => fn (PageBlueprint $blueprint) => $blueprint->tabs(),
+		'tabs'    => fn (PageBlueprint $blueprint) => array_values($blueprint->tabs()->toArray()),
 		'title'   => fn (PageBlueprint $blueprint) => $blueprint->title(),
 	],
 	'type'  => PageBlueprint::class,

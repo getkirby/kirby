@@ -12,15 +12,15 @@
 				:buttons="buttons"
 				:disabled="disabled"
 				:uploads="uploads"
-				@mousedown.native.prevent
+				@mousedown.prevent
 				@command="onCommand"
 			/>
 			<textarea
+				:id="id"
 				ref="input"
 				v-bind="{
 					autofocus,
 					disabled,
-					id,
 					minlength,
 					name,
 					placeholder,
@@ -83,7 +83,11 @@ export const props = {
 };
 
 /**
- * @example <k-input :value="text" @input="text = $event" name="text" type="textarea" />
+ * @example
+ * <k-input :value="text" @input="text = $event" name="text" type="textarea" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Input, props],
@@ -145,18 +149,13 @@ export default {
 			});
 		},
 		file() {
-			this.$panel.dialog.open({
-				component: "k-files-dialog",
-				props: {
-					endpoint: this.endpoints.field + "/files",
-					multiple: false
-				},
+			this.$panel.dialog.open(this.endpoints.field + "/files", {
 				on: {
 					cancel: async () => await this.restoreSelection(),
-					submit: async (file) => {
+					submit: async ({ items }) => {
 						this.$panel.dialog.close();
 						await this.restoreSelection();
-						await this.insertFile(file);
+						await this.insertFile(items);
 					}
 				}
 			});
@@ -312,20 +311,6 @@ export default {
 			}
 
 			await this.$nextTick();
-		},
-		/**
-		 * @deprecated 5.0.0 Use `restoreSelection` instead
-		 */
-		restoreSelectionCallback() {
-			// restore selection as `insert` method
-			// depends on it
-			return async (callback) => {
-				await this.restoreSelection();
-
-				if (callback) {
-					callback();
-				}
-			};
 		},
 		select() {
 			this.$refs.input.select();

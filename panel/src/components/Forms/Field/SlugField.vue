@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template v-if="wizard && wizard.text" #options>
+		<template v-if="wizard?.text && disabled === false" #options>
 			<k-button
 				:text="wizard.text"
 				icon="sparkling"
@@ -32,7 +32,11 @@ import { props as Input } from "../Input.vue";
 import { props as SlugInput } from "../Input/SlugInput.vue";
 
 /**
- * @example <k-slug-field :value="slug" @input="slug = $event" name="slug" label="Slug" />
+ * @example
+ * <k-slug-field :value="slug" @input="slug = $event" name="slug" label="Slug" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
  */
 export default {
 	mixins: [Field, Input, SlugInput],
@@ -50,6 +54,7 @@ export default {
 			default: false
 		}
 	},
+	emits: ["input"],
 	data() {
 		return {
 			slug: this.value
@@ -62,7 +67,7 @@ export default {
 			}
 
 			if (this.path !== undefined) {
-				return this.path + this.value;
+				return this.path + (this.value ?? "");
 			}
 
 			return null;
@@ -78,6 +83,10 @@ export default {
 			this.$refs.input.focus();
 		},
 		onWizard() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			let field = this.wizard?.field;
 
 			if (field) {

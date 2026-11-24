@@ -4,11 +4,16 @@
 
 <script>
 /**
- * @since 4.0.0
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	props: {
-		diff: Object,
+		diff: {
+			type: Object,
+			default: () => ({})
+		},
 		tab: String,
 		tabs: {
 			type: Array,
@@ -20,26 +25,18 @@ export default {
 			const changes = Object.keys(this.diff);
 
 			return this.tabs.map((tab) => {
-				// collect all fields per tab
-				const fields = [];
-
-				for (const column in tab.columns) {
-					for (const section in tab.columns[column].sections) {
-						if (tab.columns[column].sections[section].type === "fields") {
-							for (const field in tab.columns[column].sections[section]
-								.fields) {
-								fields.push(field);
-							}
-						}
-					}
-				}
+				// all field names of the tab
+				const fields = tab.fields ?? [];
 
 				// get count of changed fields in this tab
-				tab.badge = fields.filter((field) =>
+				const changesInTab = fields.filter((field) =>
 					changes.includes(field.toLowerCase())
 				).length;
 
-				return tab;
+				return {
+					...tab,
+					badge: changesInTab > 0 ? { text: changesInTab } : undefined
+				};
 			});
 		}
 	}

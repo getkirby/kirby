@@ -4,6 +4,8 @@ namespace Kirby\Toolkit;
 
 use Closure;
 use DOMAttr;
+use DOMCdataSection;
+use DOMComment;
 use DOMDocument;
 use DOMDocumentType;
 use DOMElement;
@@ -19,14 +21,10 @@ use SplObjectStorage;
 
 /**
  * Helper class for DOM handling using the DOMDocument class
- * @since 3.5.8
  *
- * @package   Kirby Toolkit
- * @author    Bastian Allgeier <bastian@getkirby.com>,
- *            Lukas Bestle <lukas@getkirby.com>
- * @link      https://getkirby.com
  * @copyright Bastian Allgeier
  * @license   https://opensource.org/licenses/MIT
+ * @since     3.5.8
  */
 class Dom
 {
@@ -95,10 +93,8 @@ class Dom
 	protected SplObjectStorage $elementChildren;
 
 	/**
-	 * Class constructor
-	 *
-	 * @param string $code XML or HTML original input code
-	 * @param string $type Document type (`'HTML'` or `'XML'`)
+	 * @param $code XML or HTML original input code
+	 * @param $type Document type (`'HTML'` or `'XML'`)
 	 */
 	public function __construct(
 		protected string $code,
@@ -126,7 +122,6 @@ class Dom
 			$xml  = 'encoding="UTF-8" id="' . Str::random(10) . '"';
 			$load = $this->doc->loadHTML('<?xml ' . $xml . '>' . $code);
 
-
 			// Newer libxml2 versions may not attach the injected XML node
 			// inside <html>. Instead, they may convert it into a top-level
 			// comment node that sits before <html>:
@@ -145,10 +140,9 @@ class Dom
 
 				if (
 					// Case 1: libxml preserved it as a processing instruction
-					($node->nodeType === XML_PI_NODE && $node->data === $xml) ||
+					($node instanceof DOMProcessingInstruction && $node->data === $xml) ||
 					// Case 2: libxml converted it into a comment node
-					// (<!--?xml encoding="UTF-8" id="..."-->)
-					($node->nodeType === XML_COMMENT_NODE && strpos($node->data, $xml) !== false)
+					($node instanceof DOMComment && strpos($node->data, $xml) !== false)
 				) {
 					static::remove($node);
 					break;
@@ -191,712 +185,11 @@ class Dom
 	}
 
 	/**
-	 * Returns the document object
-	 */
-	public function document(): DOMDocument
-	{
-		return $this->doc;
-	}
-
-	/**
-	 * Extracts all URLs wrapped in a url() wrapper or referenced by a CSS
-	 * `@import` rule (both the `url()` and the plain string form). E.g. for
-	 * style attributes and `<style>` elements.
-	 */
-	public static function extractUrls(string $value): array
-	{
-		// remove invisible ASCII characters from the value
-		$value = trim(preg_replace('/[^ -~]/u', '', $value));
-
-		// decode CSS escapes (`\2f`, `\/`) like the browser's tokenizer,
-		// otherwise `url(\2f\2f evil.com)` would hide a protocol-relative URL
-		$value = preg_replace_callback(
-			'/\\\\(?:([0-9a-f]{1,6}) ?|(.))/i',
-			function (array $match): string {
-				if (isset($match[2]) === true) {
-					return $match[2];
-				}
-
-				$code = hexdec($match[1]);
-
-				// NULL, surrogates and out-of-range code points become U+FFFD
-				if (
-					$code === 0 ||
-					$code > 0x10FFFF ||
-					($code >= 0xD800 && $code <= 0xDFFF)
-				) {
-					$code = 0xFFFD;
-				}
-
-				return mb_chr($code);
-			},
-			$value
-		);
-
-		$urls = [];
-
-		// URLs inside a `url()` wrapper, including `@import url(...)`
-		$count = preg_match_all(
-			'!url\(\s*[\'"]?(.*?)[\'"]?\s*\)!i',
-			$value,
-			$matches,
-			PREG_PATTERN_ORDER
-		);
-
-		if (is_int($count) === true && $count > 0) {
-			$urls = [...$urls, ...$matches[1]];
-		}
-
-		// URLs referenced by the string form of `@import`,
-		// e.g. `@import "https://example.com/style.css"`;
-		// the rule name can be separated from the string by whitespace
-		// and/or CSS comments, but comments must only be skipped in that
-		// position as `/* */` inside the string is part of the URL
-		$count = preg_match_all(
-			'!@import(?:\s|/\*.*?\*/)*[\'"]\s*(.*?)\s*[\'"]!i',
-			$value,
-			$matches,
-			PREG_PATTERN_ORDER
-		);
-
-		if (is_int($count) === true && $count > 0) {
-			$urls = [...$urls, ...$matches[1]];
-		}
-
-		return $urls;
-	}
-
-	/**
-	 * Checks for allowed attributes according to the allowlist
-	 *
-	 * @return true|string If not allowed, an error message is returned
-	 */
-	public static function isAllowedAttr(
-		DOMAttr $attr,
-		array $options
-	): true|string {
-		$options     = static::normalizeSanitizeOptions($options);
-		$allowedTags = $options['allowedTags'];
-
-		// check if the attribute is in the list of global allowed attributes
-		$isAllowedGlobalAttr = static::isAllowedGlobalAttr($attr, $options);
-
-		// no specific tag attribute list
-		if (is_array($allowedTags) === false) {
-			return $isAllowedGlobalAttr;
-		}
-
-		// configuration per tag name
-		$tag       = $attr->ownerElement->nodeName;
-		$listedTag = static::listContainsName(
-			array_keys($allowedTags),
-			$attr->ownerElement,
-			$options
-		);
-		$allowedAttrs = match ($listedTag) {
-			false   => true,
-			default => $allowedTags[$listedTag] ?? true
-		};
-
-		// the element allows all global attributes
-		if ($allowedAttrs === true) {
-			return $isAllowedGlobalAttr;
-		}
-
-		// specific attributes are allowed in addition to the global ones
-		if (is_array($allowedAttrs) === true) {
-			// if allowed globally, we don't need further checks
-			if ($isAllowedGlobalAttr === true) {
-				return true;
-			}
-
-			// otherwise the tag configuration decides
-			if (static::listContainsName($allowedAttrs, $attr, $options) !== false) {
-				return true;
-			}
-
-			return 'Not allowed by the "' . $tag . '" element';
-		}
-
-		return 'The "' . $tag . '" element does not allow attributes';
-	}
-
-	/**
-	 * Checks for allowed attributes according to the global allowlist
-	 * @internal
-	 *
-	 * @return true|string If not allowed, an error message is returned
-	 */
-	public static function isAllowedGlobalAttr(
-		DOMAttr $attr,
-		array $options
-	): true|string {
-		$options      = static::normalizeSanitizeOptions($options);
-		$allowedAttrs = $options['allowedAttrs'];
-
-		// all attributes are allowed
-		if ($allowedAttrs === true) {
-			return true;
-		}
-
-		if (
-			static::listContainsName(
-				$options['allowedAttrPrefixes'],
-				$attr,
-				$options,
-				fn ($expected, $real): bool => Str::startsWith($real, $expected)
-			) !== false
-		) {
-			return true;
-		}
-
-		if (
-			is_array($allowedAttrs) === true &&
-			static::listContainsName($allowedAttrs, $attr, $options) !== false
-		) {
-			return true;
-		}
-
-		return 'Not included in the global allowlist';
-	}
-
-	/**
-	 * Checks if the URL is acceptable for URL attributes
-	 *
-	 * @return true|string If not allowed, an error message is returned
-	 */
-	public static function isAllowedUrl(
-		string $url,
-		array $options
-	): true|string {
-		$options = static::normalizeSanitizeOptions($options);
-		$url     = Str::lower(Url::normalize($url));
-
-		// allow empty URL values
-		if (empty($url) === true) {
-			return true;
-		}
-
-		// allow URLs that point to fragments inside the file
-		if (mb_substr($url, 0, 1) === '#') {
-			return true;
-		}
-
-		// disallow protocol-relative URLs
-		if (mb_substr($url, 0, 2) === '//') {
-			return 'Protocol-relative URLs are not allowed';
-		}
-
-		// allow site-internal URLs that didn't match the
-		// protocol-relative check above
-		if (
-			mb_substr($url, 0, 1) === '/' &&
-			$options['allowHostRelativeUrls'] !== true
-		) {
-			// if a CMS instance is active, only allow the URL
-			// if it doesn't point outside of the index URL
-			if ($kirby = App::instance(null, true)) {
-				$indexUrl = $kirby->url('index', true)->path()->toString(true);
-
-				// only the path is relevant for the comparison, as the
-				// query and fragment end the path instead of extending it
-				$path = preg_split('![?#]!', $url, 2)[0];
-
-				// the index URL must match up to a path segment boundary,
-				// so that `/sitemap` does not pass the check for `/site`
-				if (
-					$path !== $indexUrl &&
-					Str::startsWith($path, rtrim($indexUrl, '/') . '/') !== true
-				) {
-					return 'The URL points outside of the site index URL';
-				}
-
-				// disallow directory traversal outside of the index URL
-				// TODO: the ../ sequences could be cleaned from the URL
-				//       before the check by normalizing the URL; then the
-				//       check above can also validate URLs with ../ sequences
-				if (static::hasTraversal($url) === true) {
-					return 'The ../ sequence is not allowed in relative URLs';
-				}
-			}
-
-			// no active CMS instance, always allow site-internal URLs
-			return true;
-		}
-
-		// allow relative URLs (= URLs without a scheme);
-		// this is either a URL without colon or one where the
-		// part before the colon is definitely no valid scheme;
-		// see https://url.spec.whatwg.org/#url-writing
-		if (
-			Str::contains($url, ':') === false ||
-			Str::contains(Str::before($url, ':'), '/') === true
-		) {
-			// disallow directory traversal as we cannot know
-			// in which URL context the URL will be printed
-			if (static::hasTraversal($url) === true) {
-				return 'The ../ sequence is not allowed in relative URLs';
-			}
-
-			return true;
-		}
-
-		// allow specific HTTP(S) URLs
-		if (
-			Str::startsWith($url, 'http://') === true ||
-			Str::startsWith($url, 'https://') === true
-		) {
-			if ($options['allowedDomains'] === true) {
-				return true;
-			}
-
-			// the browser ends the authority at a backslash just like at
-			// a slash, so `https://evil.com\@good.com` must resolve to `evil.com`
-			$hostname = parse_url(str_replace('\\', '/', $url), PHP_URL_HOST);
-
-			if (in_array($hostname, $options['allowedDomains'], true) === true) {
-				return true;
-			}
-
-			return 'The hostname "' . $hostname . '" is not allowed';
-		}
-
-		// allow listed data URIs
-		if (Str::startsWith($url, 'data:') === true) {
-			if ($options['allowedDataUris'] === true) {
-				return true;
-			}
-
-			foreach ($options['allowedDataUris'] as $dataAttr) {
-				if (Str::startsWith($url, $dataAttr) === true) {
-					return true;
-				}
-			}
-
-			return 'Invalid data URI';
-		}
-
-		// allow valid email addresses
-		if (Str::startsWith($url, 'mailto:') === true) {
-			$address = Str::after($url, 'mailto:');
-
-			if (empty($address) === true || V::email($address) === true) {
-				return true;
-			}
-
-			return 'Invalid email address';
-		}
-
-		// allow valid telephone numbers
-		if (Str::startsWith($url, 'tel:') === true) {
-			$address = Str::after($url, 'tel:');
-
-			if (
-				empty($address) === true ||
-				preg_match('!^[+]?[0-9]+$!', $address) === 1
-			) {
-				return true;
-			}
-
-			return 'Invalid telephone number';
-		}
-
-		return 'Unknown URL type';
-	}
-
-	/**
-	 * Check if the XML extension is installed on the server.
-	 * Otherwise DOMDocument won't be available and the Dom cannot
-	 * work at all.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public static function isSupported(): bool
-	{
-		return class_exists('DOMDocument') === true;
-	}
-
-	/**
-	 * Returns the XML or HTML markup contained in the node
-	 */
-	public function innerMarkup(DOMNode $node): string
-	{
-		$markup = '';
-		$method = 'save' . $this->type;
-
-		foreach ($node->childNodes as $child) {
-			$markup .= $node->ownerDocument->$method($child);
-		}
-
-		return $markup;
-	}
-
-	/**
-	 * Checks if a list contains the name of a node
-	 * considering the allowed namespaces
-	 * @internal
-	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param \Closure|null Comparison callback that returns whether the expected and real name match
-	 * @return string|false Matched name in the list or `false`
-	 */
-	public static function listContainsName(
-		array $list,
-		DOMNode $node,
-		array $options,
-		Closure|null $compare = null
-	): string|false {
-		$options = static::normalizeSanitizeOptions($options);
-
-		$allowedNamespaces = $options['allowedNamespaces'];
-		$localName         = $node->localName;
-		$compare         ??= fn ($expected, $real): bool => $expected === $real;
-
-		// if the configuration does not define namespace URIs or if the
-		// currently checked node is from the special `xml:` namespace
-		// that has a fixed namespace according to the XML spec...
-		if (
-			$allowedNamespaces === true ||
-			$node->namespaceURI === 'http://www.w3.org/XML/1998/namespace'
-		) {
-			// ...take the list as it is and only consider
-			// exact matches of the local name (which will
-			// contain a namespace if that namespace name
-			// is not defined in the document)
-
-			// the list contains the `xml:` prefix,
-			// so add it to the name as well
-			if ($node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
-				$localName = 'xml:' . $localName;
-			}
-
-			foreach ($list as $item) {
-				if ($compare($item, $localName) === true) {
-					return $item;
-				}
-			}
-
-			return false;
-		}
-
-		// we need to consider the namespaces
-		foreach ($list as $item) {
-			// try to find the expected origin namespace URI
-			$itemLocal = $item;
-
-			// list items without namespace are from the default namespace
-			$namespaceUri = $allowedNamespaces[''] ?? null;
-
-			if (Str::contains($item, ':') === true) {
-				[$namespaceName, $itemLocal] = explode(':', $item);
-				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
-			}
-
-			// try if we can find an exact namespaced match
-			if (
-				$namespaceUri === $node->namespaceURI &&
-				$compare($itemLocal, $localName) === true
-			) {
-				return $item;
-			}
-
-			// also try to match the fully-qualified name
-			// if the document doesn't define the namespace
-			if (
-				$node->namespaceURI === null &&
-				$compare($item, $node->nodeName) === true
-			) {
-				return $item;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Removes a node from the document
-	 */
-	public static function remove(DOMNode $node): void
-	{
-		$node->parentNode->removeChild($node);
-	}
-
-	/**
-	 * Executes an XPath query in the document
-	 *
-	 * @param \DOMNode|null $node Optional context node for relative queries
-	 */
-	public function query(
-		string $query,
-		DOMNode|null $node = null
-	): DOMNodeList|false {
-		return (new DOMXPath($this->doc))->query($query, $node);
-	}
-
-	/**
-	 * Sanitizes the DOM according to the provided configuration
-	 *
-	 * @param array $options Array with the following options:
-	 *                       - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
-	 *                       like `data-` and `aria-`
-	 *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
-	 *                       any attribute
-	 *                       - `allowedDataUris`: List of all MIME types that may be used in
-	 *                       data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
-	 *                       or `true` for any
-	 *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
-	 *                       and inside `url()` wrappers or `true` for any
-	 *                       - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
-	 *                       allowed even if the site index URL is in a subfolder (useful when using
-	 *                       the HTML `<base>` element where the sanitized code will be rendered)
-	 *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
-	 *                       the array keys are reference names that can be referred to from the
-	 *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
-	 *                       and `urlAttrs` lists; the namespace names as used in the document are *not*
-	 *                       validated; setting the whole option to `true` will allow any namespace
-	 *                       - `allowedPIs`: Names of allowed XML processing instructions or
-	 *                       `true` for any
-	 *                       - `allowedTags`: Associative array of all allowed tag names with the
-	 *                       value of either an array with the list of all allowed attributes for
-	 *                       this tag, `true` to allow any attribute from the `allowedAttrs` list
-	 *                       or `false` to allow the tag without any attributes;
-	 *                       not listed tags will be unwrapped (removed, but children are kept);
-	 *                       setting the whole option to `true` will allow any tag
-	 *                       - `attrCallback`: Closure that will receive each `DOMAttr` and may
-	 *                       modify it; the callback must return an array with exception
-	 *                       objects for each modification
-	 *                       - `disallowedTags`: Array of explicitly disallowed tags, which will
-	 *                       be removed completely including their children (matched case-insensitively)
-	 *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
-	 *                       and may throw exceptions on validation errors
-	 *                       - `elementCallback`: Closure that will receive each `DOMElement` and
-	 *                       may modify it; the callback must return an array with exception
-	 *                       objects for each modification
-	 *                       - `urlAttrs`: List of attributes that may contain URLs
-	 * @return array List of validation errors during sanitization
-	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
-	 */
-	public function sanitize(array $options): array
-	{
-		$options = static::normalizeSanitizeOptions($options);
-
-		$errors = [];
-
-		// validate the doctype;
-		// convert the `DOMNodeList` to an array first, otherwise removing
-		// nodes would shift the list and make subsequent operations fail
-		foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
-			if ($child instanceof DOMDocumentType) {
-				$this->sanitizeDoctype($child, $options, $errors);
-			}
-		}
-
-		// validate all processing instructions like <?xml-stylesheet
-		$pis = $this->query('//processing-instruction()');
-
-		foreach (iterator_to_array($pis, false) as $pi) {
-			$this->sanitizePI($pi, $options, $errors);
-		}
-
-		// validate all elements in the document tree
-		$elements = $this->doc->getElementsByTagName('*');
-
-		foreach (iterator_to_array($elements, false) as $element) {
-			$this->sanitizeElement($element, $options, $errors);
-		}
-
-		// validate all character data (comments and CDATA sections);
-		// the elements may have changed, so start with a fresh cache
-		$this->elementChildren = new SplObjectStorage();
-
-		foreach ($this->characterData() as $node) {
-			$this->sanitizeCharacterData($node, $errors);
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Returns the document markup as string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with an XML declaration/
-	 *                        full HTML markup even if the input
-	 *                        didn't have them
-	 */
-	public function toString(bool $normalize = false): string
-	{
-		$string = match ($this->type) {
-			'HTML'  => $this->exportHtml($normalize),
-			default => $this->exportXml($normalize)
-		};
-
-		// add trailing newline if the input contained one
-		if (rtrim($this->code, "\r\n") !== $this->code) {
-			$string .= "\n";
-		}
-
-		return $string;
-	}
-
-	/**
-	 * Removes a node from the document but keeps its children
-	 * by moving them one level up
-	 */
-	public static function unwrap(DOMNode $node): void
-	{
-		// snapshot because `insertBefore` moves children out of `$node`,
-		// shifting the live `DOMNodeList`
-		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
-			// discard text nodes as they can be unexpected
-			// directly in the parent element
-			if ($childNode instanceof DOMText) {
-				continue;
-			}
-
-			// the child may use a default namespace (`xmlns="…"`)
-			// that was declared on `$node`; once `$node` is gone,
-			// libxml would rename it to `<default:child>`, so we
-			// copy the declaration to the child to suppress it
-			if (
-				$childNode instanceof DOMElement &&
-				($childNode->prefix === '' || $childNode->prefix === null) &&
-				is_string($childNode->namespaceURI) === true
-			) {
-				$childNode->setAttributeNS(
-					'http://www.w3.org/2000/xmlns/',
-					'xmlns',
-					$childNode->namespaceURI
-				);
-			}
-
-			// move (don't clone) so descendants pending in the
-			// `Dom::sanitize()` snapshot are still sanitized
-			$node->parentNode->insertBefore($childNode, $node);
-		}
-
-		static::remove($node);
-	}
-
-	/**
-	 * Returns the document markup as HTML string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with full HTML markup
-	 *                        even if the input didn't have it
-	 */
-	protected function exportHtml(bool $normalize = false): string
-	{
-		// enforce export as UTF-8 by injecting a <meta> tag
-		// at the beginning of the document
-		$metaTag = $this->doc->createElement('meta');
-		$metaTag->setAttribute('http-equiv', 'Content-Type');
-		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
-		$metaTag->setAttribute('id', Str::random(10));
-		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
-
-		if (
-			preg_match('/<html[> ]/i', $this->code) === 1 ||
-			$this->doc->doctype !== null ||
-			$normalize === true
-		) {
-			// full document
-			$html = $this->doc->saveHTML();
-		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
-			// there was a <body>, but no <html>; export just the <body>
-			$html = $this->doc->saveHTML($this->body());
-		} else {
-			// just an HTML snippet
-			$html = $this->innerMarkup($this->body());
-		}
-
-		// remove the <meta> tag from the document and from the output
-		static::remove($metaTag);
-		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
-
-		// if the original input contained an HTML doctype, some libxml
-		// implementations expand it to the long HTML4 transitional doctype
-		// when saving. Normalize it back to the short `<!DOCTYPE html>`
-		// to keep behavior consistent across environments.
-		if (
-			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
-			preg_match('/<!doctype\s+html/i', $this->code) === 1
-		) {
-			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
-		}
-
-		return trim($html);
-	}
-
-	/**
-	 * Returns the document markup as XML string
-	 *
-	 * @param bool $normalize If set to `true`, the document
-	 *                        is exported with an XML declaration
-	 *                        even if the input didn't have it
-	 */
-	protected function exportXml(bool $normalize = false): string
-	{
-		if (
-			Str::contains($this->code, '<?xml ', true) === false &&
-			$normalize === false
-		) {
-			// the input didn't contain an XML declaration;
-			// only return child nodes, which omits it
-			$result = [];
-
-			foreach ($this->doc->childNodes as $node) {
-				$result[] = $this->doc->saveXML($node);
-			}
-
-			return implode("\n", $result);
-		}
-
-		// ensure that the document is encoded as UTF-8
-		// unless a different encoding was specified in
-		// the input or before exporting
-		$this->doc->encoding ??= 'UTF-8';
-
-		return trim($this->doc->saveXML());
-	}
-
-	/**
-	 * Ensures that all options are set in the user-provided
-	 * options array (otherwise setting the default option)
-	 */
-	protected static function normalizeSanitizeOptions(array $options): array
-	{
-		// increase performance for already normalized option arrays
-		if (($options['_normalized'] ?? false) === true) {
-			return $options;
-		}
-
-		return [
-			'allowedAttrPrefixes'   => [],
-			'allowedAttrs'          => true,
-			'allowedDataUris'       => true,
-			'allowedDomains'        => true,
-			'allowHostRelativeUrls' => true,
-			'allowedNamespaces'     => true,
-			'allowedPIs'            => true,
-			'allowedTags'           => true,
-			'attrCallback'          => null,
-			'disallowedTags'        => [],
-			'doctypeCallback'       => null,
-			'elementCallback'       => null,
-			'urlAttrs'              => ['href', 'src', 'xlink:href'],
-			...$options,
-			'_normalized'           => true
-		];
-	}
-
-	/**
 	 * Collects all comments and CDATA sections in document order
 	 *
 	 * @since 5.6.4
 	 *
-	 * @return array<\DOMComment|\DOMCdataSection>
+	 * @return array<DOMComment|DOMCdataSection>
 	 */
 	protected function characterData(): array
 	{
@@ -1029,6 +322,166 @@ class Dom
 	}
 
 	/**
+	 * Returns the document object
+	 */
+	public function document(): DOMDocument
+	{
+		return $this->doc;
+	}
+
+	/**
+	 * Returns the document markup as HTML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with full HTML markup
+	 *                  even if the input didn't have it
+	 */
+	protected function exportHtml(bool $normalize = false): string
+	{
+		// enforce export as UTF-8 by injecting a <meta> tag
+		// at the beginning of the document
+		$metaTag = $this->doc->createElement('meta');
+		$metaTag->setAttribute('http-equiv', 'Content-Type');
+		$metaTag->setAttribute('content', 'text/html; charset=utf-8');
+		$metaTag->setAttribute('id', Str::random(10));
+		$this->doc->insertBefore($metaTag, $this->doc->documentElement);
+
+		if (
+			preg_match('/<html[> ]/i', $this->code) === 1 ||
+			$this->doc->doctype !== null ||
+			$normalize === true
+		) {
+			// full document
+			$html = $this->doc->saveHTML();
+		} elseif (preg_match('/<body[> ]/i', $this->code) === 1) {
+			// there was a <body>, but no <html>; export just the <body>
+			$html = $this->doc->saveHTML($this->body());
+		} else {
+			// just an HTML snippet
+			$html = $this->innerMarkup($this->body());
+		}
+
+		// remove the <meta> tag from the document and from the output
+		static::remove($metaTag);
+		$html = str_replace($this->doc->saveHTML($metaTag), '', $html);
+
+		// if the original input contained an HTML doctype, some libxml
+		// implementations expand it to the long HTML4 transitional doctype
+		// when saving. Normalize it back to the short `<!DOCTYPE html>`
+		// to keep behavior consistent across environments.
+		if (
+			Str::contains($this->code, '<!DOCTYPE ', true) === true &&
+			preg_match('/<!doctype\s+html/i', $this->code) === 1
+		) {
+			$html = preg_replace('/^<!DOCTYPE[^>]*>\s*/i', '<!DOCTYPE html>' . "\n", $html, 1);
+		}
+
+		return trim($html);
+	}
+
+	/**
+	 * Returns the document markup as XML string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration
+	 *                  even if the input didn't have it
+	 */
+	protected function exportXml(bool $normalize = false): string
+	{
+		if (
+			Str::contains($this->code, '<?xml ', true) === false &&
+			$normalize === false
+		) {
+			// the input didn't contain an XML declaration;
+			// only return child nodes, which omits it
+			$result = [];
+
+			foreach ($this->doc->childNodes as $node) {
+				$result[] = $this->doc->saveXML($node);
+			}
+
+			return implode("\n", $result);
+		}
+
+		// ensure that the document is encoded as UTF-8
+		// unless a different encoding was specified in
+		// the input or before exporting
+		$this->doc->encoding ??= 'UTF-8';
+
+		return trim($this->doc->saveXML());
+	}
+
+	/**
+	 * Extracts all URLs wrapped in a url() wrapper or referenced by a CSS
+	 * `@import` rule (both the `url()` and the plain string form). E.g. for
+	 * style attributes and `<style>` elements.
+	 */
+	public static function extractUrls(string $value): array
+	{
+		// remove invisible ASCII characters from the value
+		$value = trim(preg_replace('/[^ -~]/u', '', $value));
+
+		// decode CSS escapes (`\2f`, `\/`) like the browser's tokenizer,
+		// otherwise `url(\2f\2f evil.com)` would hide a protocol-relative URL
+		$value = preg_replace_callback(
+			'/\\\\(?:([0-9a-f]{1,6}) ?|(.))/i',
+			function (array $match): string {
+				if (isset($match[2]) === true) {
+					return $match[2];
+				}
+
+				$code = hexdec($match[1]);
+
+				// NULL, surrogates and out-of-range code points become U+FFFD
+				if (
+					$code === 0 ||
+					$code > 0x10FFFF ||
+					($code >= 0xD800 && $code <= 0xDFFF)
+				) {
+					$code = 0xFFFD;
+				}
+
+				$char = mb_chr($code, 'UTF-8');
+
+				return $char === false ? "\u{FFFD}" : $char;
+			},
+			$value
+		);
+
+		$urls = [];
+
+		// URLs inside a `url()` wrapper, including `@import url(...)`
+		$count = preg_match_all(
+			'!url\(\s*[\'"]?(.*?)[\'"]?\s*\)!i',
+			$value,
+			$matches,
+			PREG_PATTERN_ORDER
+		);
+
+		if (is_int($count) === true && $count > 0) {
+			$urls = [...$urls, ...$matches[1]];
+		}
+
+		// URLs referenced by the string form of `@import`,
+		// e.g. `@import "https://example.com/style.css"`;
+		// the rule name can be separated from the string by whitespace
+		// and/or CSS comments, but comments must only be skipped in that
+		// position as `/* */` inside the string is part of the URL
+		$count = preg_match_all(
+			'!@import(?:\s|/\*.*?\*/)*[\'"]\s*(.*?)\s*[\'"]!i',
+			$value,
+			$matches,
+			PREG_PATTERN_ORDER
+		);
+
+		if (is_int($count) === true && $count > 0) {
+			$urls = [...$urls, ...$matches[1]];
+		}
+
+		return $urls;
+	}
+
+	/**
 	 * Checks if the element has at least one child element
 	 *
 	 * @since 5.6.4
@@ -1059,6 +512,259 @@ class Dom
 		return
 			Str::contains($url, '../') !== false ||
 			Str::contains($url, '..\\') !== false;
+	}
+
+	/**
+	 * Returns the XML or HTML markup contained in the node
+	 */
+	public function innerMarkup(DOMNode $node): string
+	{
+		$markup = '';
+		$method = 'save' . $this->type;
+
+		foreach ($node->childNodes as $child) {
+			$markup .= $node->ownerDocument->$method($child);
+		}
+
+		return $markup;
+	}
+
+	/**
+	 * Checks for allowed attributes according to the allowlist.
+	 * If not allowed, an error message is returned.
+	 */
+	public static function isAllowedAttr(
+		DOMAttr $attr,
+		array $options
+	): true|string {
+		$options     = static::normalizeSanitizeOptions($options);
+		$allowedTags = $options['allowedTags'];
+
+		// check if the attribute is in the list of global allowed attributes
+		$isAllowedGlobalAttr = static::isAllowedGlobalAttr($attr, $options);
+
+		// no specific tag attribute list
+		if (is_array($allowedTags) === false) {
+			return $isAllowedGlobalAttr;
+		}
+
+		// configuration per tag name
+		$tag       = $attr->ownerElement->nodeName;
+		$listedTag = static::listContainsName(
+			array_keys($allowedTags),
+			$attr->ownerElement,
+			$options
+		);
+		$allowedAttrs = match ($listedTag) {
+			false   => true,
+			default => $allowedTags[$listedTag] ?? true
+		};
+
+		// the element allows all global attributes
+		if ($allowedAttrs === true) {
+			return $isAllowedGlobalAttr;
+		}
+
+		// specific attributes are allowed in addition to the global ones
+		if (is_array($allowedAttrs) === true) {
+			// if allowed globally, we don't need further checks
+			if ($isAllowedGlobalAttr === true) {
+				return true;
+			}
+
+			// otherwise the tag configuration decides
+			if (static::listContainsName($allowedAttrs, $attr, $options) !== false) {
+				return true;
+			}
+
+			return 'Not allowed by the "' . $tag . '" element';
+		}
+
+		return 'The "' . $tag . '" element does not allow attributes';
+	}
+
+	/**
+	 * Checks for allowed attributes according to the global allowlist.
+	 * If not allowed, an error message is returned.
+	 * @internal
+	 */
+	public static function isAllowedGlobalAttr(
+		DOMAttr $attr,
+		array $options
+	): true|string {
+		$options      = static::normalizeSanitizeOptions($options);
+		$allowedAttrs = $options['allowedAttrs'];
+
+		// all attributes are allowed
+		if ($allowedAttrs === true) {
+			return true;
+		}
+
+		if (
+			static::listContainsName(
+				$options['allowedAttrPrefixes'],
+				$attr,
+				$options,
+				fn ($expected, $real): bool => Str::startsWith($real, $expected)
+			) !== false
+		) {
+			return true;
+		}
+
+		if (
+			is_array($allowedAttrs) === true &&
+			static::listContainsName($allowedAttrs, $attr, $options) !== false
+		) {
+			return true;
+		}
+
+		return 'Not included in the global allowlist';
+	}
+
+	/**
+	 * Checks if the URL is acceptable for URL attributes.
+	 * If not allowed, an error message is returned.
+	 */
+	public static function isAllowedUrl(
+		string $url,
+		array $options
+	): true|string {
+		$options = static::normalizeSanitizeOptions($options);
+		$url     = Str::lower(Url::normalize($url));
+
+		// allow empty URL values
+		if ($url === '') {
+			return true;
+		}
+
+		// allow URLs that point to fragments inside the file
+		if (mb_substr($url, 0, 1) === '#') {
+			return true;
+		}
+
+		// disallow protocol-relative URLs
+		if (mb_substr($url, 0, 2) === '//') {
+			return 'Protocol-relative URLs are not allowed';
+		}
+
+		// allow site-internal URLs that didn't match the
+		// protocol-relative check above
+		if (
+			mb_substr($url, 0, 1) === '/' &&
+			$options['allowHostRelativeUrls'] !== true
+		) {
+			// if a CMS instance is active, only allow the URL
+			// if it doesn't point outside of the index URL
+			if ($kirby = App::instance(lazy: true)) {
+				$indexUrl = $kirby->url('index', true)->path()->toString(true);
+
+				// only the path is relevant for the comparison, as the
+				// query and fragment end the path instead of extending it
+				$path = preg_split('![?#]!', $url, 2)[0];
+
+				// the index URL must match up to a path segment boundary,
+				// so that `/sitemap` does not pass the check for `/site`
+				if (
+					$path !== $indexUrl &&
+					Str::startsWith($path, rtrim($indexUrl, '/') . '/') !== true
+				) {
+					return 'The URL points outside of the site index URL';
+				}
+
+				// disallow directory traversal outside of the index URL
+				// TODO: the ../ sequences could be cleaned from the URL
+				//       before the check by normalizing the URL; then the
+				//       check above can also validate URLs with ../ sequences
+				if (static::hasTraversal($url) === true) {
+					return 'The ../ sequence is not allowed in relative URLs';
+				}
+			}
+
+			// no active CMS instance, always allow site-internal URLs
+			return true;
+		}
+
+		// allow relative URLs (= URLs without a scheme);
+		// this is either a URL without colon or one where the
+		// part before the colon is definitely no valid scheme;
+		// see https://url.spec.whatwg.org/#url-writing
+		if (
+			Str::contains($url, ':') === false ||
+			Str::contains(Str::before($url, ':'), '/') === true
+		) {
+			// disallow directory traversal as we cannot know
+			// in which URL context the URL will be printed
+			if (static::hasTraversal($url) === true) {
+				return 'The ../ sequence is not allowed in relative URLs';
+			}
+
+			return true;
+		}
+
+		// allow specific HTTP(S) URLs
+		if (
+			Str::startsWith($url, 'http://') === true ||
+			Str::startsWith($url, 'https://') === true
+		) {
+			if ($options['allowedDomains'] === true) {
+				return true;
+			}
+
+			// the browser ends the authority at a backslash just like at
+			// a slash, so `https://evil.com\@good.com` must resolve to `evil.com`
+			$hostname = parse_url(str_replace('\\', '/', $url), PHP_URL_HOST);
+
+			if (in_array($hostname, $options['allowedDomains'], true) === true) {
+				return true;
+			}
+
+			return 'The hostname "' . $hostname . '" is not allowed';
+		}
+
+		// allow listed data URIs
+		if (Str::startsWith($url, 'data:') === true) {
+			if ($options['allowedDataUris'] === true) {
+				return true;
+			}
+
+			foreach ($options['allowedDataUris'] as $dataAttr) {
+				if (Str::startsWith($url, $dataAttr) === true) {
+					return true;
+				}
+			}
+
+			return 'Invalid data URI';
+		}
+
+		// allow valid email addresses
+		if (Str::startsWith($url, 'mailto:') === true) {
+			$address = Str::after($url, 'mailto:');
+
+			if (
+				$address === '' ||
+				V::email($address) === true
+			) {
+				return true;
+			}
+
+			return 'Invalid email address';
+		}
+
+		// allow valid telephone numbers
+		if (Str::startsWith($url, 'tel:') === true) {
+			$address = Str::after($url, 'tel:');
+
+			if (
+				$address === '' ||
+				preg_match('!^[+]?[0-9]+$!', $address) === 1
+			) {
+				return true;
+			}
+
+			return 'Invalid telephone number';
+		}
+
+		return 'Unknown URL type';
 	}
 
 	/**
@@ -1113,10 +819,247 @@ class Dom
 	}
 
 	/**
+	 * Check if the XML extension is installed on the server.
+	 * Otherwise DOMDocument won't be available and the Dom cannot
+	 * work at all.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public static function isSupported(): bool
+	{
+		return class_exists('DOMDocument') === true;
+	}
+
+	/**
+	 * Checks if a list contains the name of a node
+	 * considering the allowed namespaces
+	 * @internal
+	 *
+	 * @param $options See `Dom::sanitize()`
+	 * @param $compare Callback that returns whether the expected and real name match
+	 * @return string|false Matched name in the list or `false`
+	 */
+	public static function listContainsName(
+		array $list,
+		DOMNode $node,
+		array $options,
+		Closure|null $compare = null
+	): string|false {
+		$options = static::normalizeSanitizeOptions($options);
+
+		$allowedNamespaces = $options['allowedNamespaces'];
+		$localName         = $node->localName;
+		$compare         ??= fn ($expected, $real): bool => $expected === $real;
+
+		// if the configuration does not define namespace URIs or if the
+		// currently checked node is from the special `xml:` namespace
+		// that has a fixed namespace according to the XML spec...
+		if (
+			$allowedNamespaces === true ||
+			$node->namespaceURI === 'http://www.w3.org/XML/1998/namespace'
+		) {
+			// ...take the list as it is and only consider
+			// exact matches of the local name (which will
+			// contain a namespace if that namespace name
+			// is not defined in the document)
+
+			// the list contains the `xml:` prefix,
+			// so add it to the name as well
+			if ($node->namespaceURI === 'http://www.w3.org/XML/1998/namespace') {
+				$localName = 'xml:' . $localName;
+			}
+
+			foreach ($list as $item) {
+				if ($compare($item, $localName) === true) {
+					return $item;
+				}
+			}
+
+			return false;
+		}
+
+		// we need to consider the namespaces
+		foreach ($list as $item) {
+			// try to find the expected origin namespace URI
+			$itemLocal = $item;
+
+			// list items without namespace are from the default namespace
+			$namespaceUri = $allowedNamespaces[''] ?? null;
+
+			if (Str::contains($item, ':') === true) {
+				[$namespaceName, $itemLocal] = explode(':', $item);
+				$namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
+			}
+
+			// try if we can find an exact namespaced match
+			if (
+				$namespaceUri === $node->namespaceURI &&
+				$compare($itemLocal, $localName) === true
+			) {
+				return $item;
+			}
+
+			// also try to match the fully-qualified name
+			// if the document doesn't define the namespace
+			if (
+				$node->namespaceURI === null &&
+				$compare($item, $node->nodeName) === true
+			) {
+				return $item;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Ensures that all options are set in the user-provided
+	 * options array (otherwise setting the default option)
+	 */
+	protected static function normalizeSanitizeOptions(array $options): array
+	{
+		// increase performance for already normalized option arrays
+		if (($options['_normalized'] ?? false) === true) {
+			return $options;
+		}
+
+		return [
+			'allowedAttrPrefixes'   => [],
+			'allowedAttrs'          => true,
+			'allowedDataUris'       => true,
+			'allowedDomains'        => true,
+			'allowHostRelativeUrls' => true,
+			'allowedNamespaces'     => true,
+			'allowedPIs'            => true,
+			'allowedTags'           => true,
+			'attrCallback'          => null,
+			'disallowedTags'        => [],
+			'doctypeCallback'       => null,
+			'elementCallback'       => null,
+			'urlAttrs'              => ['href', 'src', 'xlink:href'],
+			...$options,
+			'_normalized'           => true
+		];
+	}
+
+	/**
+	 * Executes an XPath query in the document
+	 *
+	 * @param $node Optional context node for relative queries
+	 * @throws InvalidArgumentException for invalid XPath queries
+	 */
+	public function query(
+		string $query,
+		DOMNode|null $node = null
+	): DOMNodeList {
+		$path   = new DOMXPath($this->doc);
+		$result = @$path->query($query, $node);
+
+		if ($result === false) {
+			throw new InvalidArgumentException(
+				message: 'Invalid XPath query: ' . $query
+			);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Removes a node from the document
+	 */
+	public static function remove(DOMNode $node): void
+	{
+		$node->parentNode->removeChild($node);
+	}
+
+	/**
+	 * Sanitizes the DOM according to the provided configuration
+	 *
+	 * @param $options Array with the following options:
+	 *                - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
+	 *                like `data-` and `aria-`
+	 *                - `allowedAttrs`: Global list of allowed attrs or `true` to allow
+	 *                any attribute
+	 *                - `allowedDataUris`: List of all MIME types that may be used in
+	 *                data URIs (only checked in `urlAttrs` and inside `url()` wrappers)
+	 *                or `true` for any
+	 *                - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+	 *                and inside `url()` wrappers or `true` for any
+	 *                - `allowHostRelativeUrls`: Whether URLs that begin with `/` should be
+	 *                allowed even if the site index URL is in a subfolder (useful when using
+	 *                the HTML `<base>` element where the sanitized code will be rendered)
+	 *                - `allowedNamespaces`: Associative array of all allowed namespace URIs;
+	 *                the array keys are reference names that can be referred to from the
+	 *                `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags`, `disallowedTags`
+	 *                and `urlAttrs` lists; the namespace names as used in the document are *not*
+	 *                validated; setting the whole option to `true` will allow any namespace
+	 *                - `allowedPIs`: Names of allowed XML processing instructions or
+	 *                `true` for any
+	 *                - `allowedTags`: Associative array of all allowed tag names with the
+	 *                value of either an array with the list of all allowed attributes for
+	 *                this tag, `true` to allow any attribute from the `allowedAttrs` list
+	 *                or `false` to allow the tag without any attributes;
+	 *                not listed tags will be unwrapped (removed, but children are kept);
+	 *                setting the whole option to `true` will allow any tag
+	 *                - `attrCallback`: Closure that will receive each `DOMAttr` and may
+	 *                modify it; the callback must return an array with exception
+	 *                objects for each modification
+	 *                - `disallowedTags`: Array of explicitly disallowed tags, which will
+	 *                be removed completely including their children (matched case-insensitively)
+	 *                - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
+	 *                and may throw exceptions on validation errors
+	 *                - `elementCallback`: Closure that will receive each `DOMElement` and
+	 *                may modify it; the callback must return an array with exception
+	 *                objects for each modification
+	 *                - `urlAttrs`: List of attributes that may contain URLs
+	 *
+	 * @throws InvalidArgumentException If the doctype is not valid
+	 */
+	public function sanitize(array $options): array
+	{
+		$options = static::normalizeSanitizeOptions($options);
+
+		$errors = [];
+
+		// validate the doctype;
+		// convert the `DOMNodeList` to an array first, otherwise removing
+		// nodes would shift the list and make subsequent operations fail
+		foreach (iterator_to_array($this->doc->childNodes, false) as $child) {
+			if ($child instanceof DOMDocumentType) {
+				$this->sanitizeDoctype($child, $options, $errors);
+			}
+		}
+
+		// validate all processing instructions like <?xml-stylesheet
+		$pis = $this->query('//processing-instruction()');
+
+		foreach (iterator_to_array($pis, false) as $pi) {
+			$this->sanitizePI($pi, $options, $errors);
+		}
+
+		// validate all elements in the document tree
+		$elements = $this->doc->getElementsByTagName('*');
+
+		foreach (iterator_to_array($elements, false) as $element) {
+			$this->sanitizeElement($element, $options, $errors);
+		}
+
+		// validate all character data (comments and CDATA sections);
+		// the elements may have changed, so start with a fresh cache
+		$this->elementChildren = new SplObjectStorage();
+
+		foreach ($this->characterData() as $node) {
+			$this->sanitizeCharacterData($node, $errors);
+		}
+
+		return $errors;
+	}
+
+	/**
 	 * Sanitizes an attribute
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeAttr(
 		DOMAttr $attr,
@@ -1165,22 +1108,23 @@ class Dom
 	 * Sanitizes a comment or CDATA section node
 	 * @since 5.6.0
 	 *
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeCharacterData(
 		DOMNode $node,
 		array &$errors
 	): void {
-		$isComment = $node->nodeType === XML_COMMENT_NODE;
-		$isCdata   = $node->nodeType === XML_CDATA_SECTION_NODE;
-
 		// only comments and CDATA sections are serialized verbatim;
 		// regular text nodes are entity-escaped on export and stay safe
-		if ($isComment === false && $isCdata === false) {
+		if (
+			$node instanceof DOMComment === false &&
+			$node instanceof DOMCdataSection === false
+		) {
 			return;
 		}
 
-		$data = $node->data;
+		$isComment = $node instanceof DOMComment;
+		$data      = $node->data;
 
 		// an HTML parser judges the node by the element it sits in: inside
 		// foreign content `<![CDATA[` stays a CDATA section, while raw text
@@ -1269,8 +1213,8 @@ class Dom
 	/**
 	 * Sanitizes the doctype
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeDoctype(
 		DOMDocumentType $doctype,
@@ -1292,8 +1236,8 @@ class Dom
 	/**
 	 * Sanitizes a single DOM element and its attribute
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizeElement(
 		DOMElement $element,
@@ -1361,28 +1305,24 @@ class Dom
 
 				// custom check (if the attribute is still in the document)
 				if ($attr->ownerElement !== null && $options['attrCallback']) {
-					$errors = [
-						...$errors,
-						...$options['attrCallback']($attr, $options) ?? []
-					];
+					$attrErrors = (array)($options['attrCallback']($attr, $options) ?? []);
+					array_push($errors, ...array_values($attrErrors));
 				}
 			}
 		}
 
 		// custom check
 		if ($options['elementCallback']) {
-			$errors = [
-				...$errors,
-				...$options['elementCallback']($element, $options) ?? []
-			];
+			$elementErrors = (array)($options['elementCallback']($element, $options) ?? []);
+			array_push($errors, ...array_values($elementErrors));
 		}
 	}
 
 	/**
 	 * Sanitizes a single XML processing instruction
 	 *
-	 * @param array $options See `Dom::sanitize()`
-	 * @param array $errors Array to store additional errors in by reference
+	 * @param $options See `Dom::sanitize()`
+	 * @param $errors Array to store additional errors in by reference
 	 */
 	protected function sanitizePI(
 		DOMProcessingInstruction $pi,
@@ -1416,11 +1356,73 @@ class Dom
 	}
 
 	/**
+	 * Returns the document markup as string
+	 *
+	 * @param $normalize If set to `true`, the document
+	 *                  is exported with an XML declaration/
+	 *                  full HTML markup even if the input
+	 *                  didn't have them
+	 */
+	public function toString(bool $normalize = false): string
+	{
+		$string = match ($this->type) {
+			'HTML'  => $this->exportHtml($normalize),
+			default => $this->exportXml($normalize)
+		};
+
+		// add trailing newline if the input contained one
+		if (rtrim($this->code, "\r\n") !== $this->code) {
+			$string .= "\n";
+		}
+
+		return $string;
+	}
+
+	/**
+	 * Removes a node from the document but keeps its children
+	 * by moving them one level up
+	 */
+	public static function unwrap(DOMNode $node): void
+	{
+		// snapshot because `insertBefore` moves children out of `$node`,
+		// shifting the live `DOMNodeList`
+		foreach (iterator_to_array($node->childNodes, false) as $childNode) {
+			// discard text nodes as they can be unexpected
+			// directly in the parent element
+			if ($childNode instanceof DOMText) {
+				continue;
+			}
+
+			// the child may use a default namespace (`xmlns="…"`)
+			// that was declared on `$node`; once `$node` is gone,
+			// libxml would rename it to `<default:child>`, so we
+			// copy the declaration to the child to suppress it
+			if (
+				$childNode instanceof DOMElement &&
+				($childNode->prefix === '' || $childNode->prefix === null) &&
+				is_string($childNode->namespaceURI) === true
+			) {
+				$childNode->setAttributeNS(
+					'http://www.w3.org/2000/xmlns/',
+					'xmlns',
+					$childNode->namespaceURI
+				);
+			}
+
+			// move (don't clone) so descendants pending in the
+			// `Dom::sanitize()` snapshot are still sanitized
+			$node->parentNode->insertBefore($childNode, $node);
+		}
+
+		static::remove($node);
+	}
+
+	/**
 	 * Validates the document type
 	 *
-	 * @param array $options See `Dom::sanitize()`
+	 * @param $options See `Dom::sanitize()`
 	 *
-	 * @throws \Kirby\Exception\InvalidArgumentException If the doctype is not valid
+	 * @throws InvalidArgumentException If the doctype is not valid
 	 */
 	protected function validateDoctype(
 		DOMDocumentType $doctype,

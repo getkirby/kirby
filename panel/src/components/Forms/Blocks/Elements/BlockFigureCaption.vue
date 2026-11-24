@@ -12,12 +12,17 @@
 </template>
 
 <script>
+/**
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ */
 export default {
 	props: {
 		disabled: Boolean,
 		marks: [Array, Boolean],
 		value: String
-	}
+	},
+	emits: ["input"]
 };
 </script>
 

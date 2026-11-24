@@ -1,5 +1,12 @@
 <template>
-	<component :is="component" :data-theme="theme" :to="target" class="k-stat">
+	<component
+		:is="component"
+		:data-theme="theme"
+		:to="link"
+		:type="type"
+		class="k-stat"
+		@click="onClick"
+	>
 		<dt v-if="label" class="k-stat-label">
 			<k-icon v-if="icon" :type="icon" />
 
@@ -13,9 +20,13 @@
 <script>
 /**
  * Single stat report used in `k-stats`
- * @since 4.0.0
  *
- * @example <k-stat label="Pages" value="123" info="Last week" theme="info" />
+ * @example
+ * <k-stat label="Pages" value="123" info="Last week" theme="info" />
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     4.0.0
  */
 export default {
 	props: {
@@ -66,18 +77,7 @@ export default {
 		value: String
 	},
 	computed: {
-		component() {
-			if (this.target !== null) {
-				return "k-link";
-			}
-
-			return "div";
-		},
-		target() {
-			if (this.link) {
-				return this.link;
-			}
-
+		action() {
 			if (this.click) {
 				return this.click;
 			}
@@ -91,6 +91,27 @@ export default {
 			}
 
 			return null;
+		},
+		component() {
+			if (this.link) {
+				return "k-link";
+			}
+
+			if (this.action !== null) {
+				return "button";
+			}
+
+			return "div";
+		},
+		type() {
+			return this.component === "button" ? "button" : null;
+		}
+	},
+	methods: {
+		onClick() {
+			if (this.component === "button") {
+				this.action();
+			}
 		}
 	}
 };
@@ -110,13 +131,15 @@ export default {
 .k-stat {
 	display: flex;
 	flex-direction: column;
+	width: 100%;
 	padding: var(--spacing-3) var(--spacing-6);
 	background: var(--stat-color-back);
 	border-radius: var(--rounded);
 	box-shadow: var(--shadow);
 	line-height: var(--leading-normal);
+	text-align: start;
 }
-.k-stat.k-link:hover {
+.k-stat:is(.k-link, button):hover {
 	cursor: pointer;
 	background: var(--stat-color-hover-back);
 }

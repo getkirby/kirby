@@ -38,15 +38,6 @@ class HelpersTest extends TestCase
 		);
 	}
 
-	public function testDeprecatedKeyUndefined(): void
-	{
-		$this->assertError(
-			E_USER_DEPRECATED,
-			'The xyz method is deprecated.',
-			fn () => Helpers::deprecated('The xyz method is deprecated.', 'my-key')
-		);
-	}
-
 	public function testDeprecatedActivated(): void
 	{
 		$this->assertError(
@@ -73,6 +64,15 @@ class HelpersTest extends TestCase
 		$this->assertFalse($result);
 	}
 
+	public function testDeprecatedKeyUndefined(): void
+	{
+		$this->assertError(
+			E_USER_DEPRECATED,
+			'The xyz method is deprecated.',
+			fn () => Helpers::deprecated('The xyz method is deprecated.', 'my-key')
+		);
+	}
+
 	public function testDumpOnCli(): void
 	{
 		$this->app = $this->app->clone([
@@ -97,14 +97,6 @@ class HelpersTest extends TestCase
 		$this->expectOutputString('<pre>test1</pre><pre>test2</pre>');
 		Helpers::dump('test1');
 		Helpers::dump('test2', true);
-	}
-
-	public function testHandleErrorsNoWarning(): void
-	{
-		$this->assertSame('return', Helpers::handleErrors(
-			fn () => 'return',
-			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
-		));
 	}
 
 	public function testHandleErrorsException(): void
@@ -138,6 +130,14 @@ class HelpersTest extends TestCase
 			$this->assertSame('Exception inside the action', $e->getMessage());
 			$this->assertSame('de_DE.UTF-8', setlocale(LC_MESSAGES, 0));
 		}
+	}
+
+	public function testHandleErrorsNoWarning(): void
+	{
+		$this->assertSame('return', Helpers::handleErrors(
+			fn () => 'return',
+			fn () => $this->fail('Condition handler should not be called because no warning was triggered')
+		));
 	}
 
 	public function testHandleErrorsWarningCaught1(): void

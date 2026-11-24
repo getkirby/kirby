@@ -1,5 +1,8 @@
 /**
  * Checks if provided event is an upload-related event
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://opensource.org/licenses/MIT
  */
 export default (event: DragEvent): boolean => {
 	if (!event.dataTransfer) {

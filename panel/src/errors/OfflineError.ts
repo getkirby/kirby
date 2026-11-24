@@ -1,7 +1,10 @@
 /**
  * Signals a network failure.
  * Handled by panel.error() which sets the panel's offline state.
- * @since 5.0.3
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since    5.0.3
  */
 export default class OfflineError extends Error {
 	request: Request;

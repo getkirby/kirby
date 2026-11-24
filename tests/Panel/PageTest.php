@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
-use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
 use Kirby\Content\Lock;
 use Kirby\Filesystem\Dir;
@@ -24,12 +23,12 @@ class PageForceLocked extends ModelPage
 	}
 }
 
-#[CoversClass(\Kirby\Panel\Page::class)]
+#[CoversClass(Page::class)]
 #[CoversClass(Model::class)]
 class PageTest extends TestCase
 {
-	public const FIXTURES = __DIR__ . '/fixtures';
-	public const TMP = KIRBY_TMP_DIR . '/Panel.Page';
+	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string TMP = KIRBY_TMP_DIR . '/Panel.Page';
 
 	protected function setUp(): void
 	{
@@ -51,113 +50,6 @@ class PageTest extends TestCase
 	{
 		$page = new ModelPage(['slug' => 'test', ...$props]);
 		return new Page($page);
-	}
-
-	public function testBreadcrumb(): void
-	{
-		$this->app->impersonate('kirby');
-
-		$site = new ModelSite([
-			'children' => [
-				[
-					'slug' => 'a',
-					'children' => [
-						[
-							'slug' => 'b',
-							'children' => [
-								['slug' => 'c'],
-							]
-						],
-					]
-				],
-			]
-		]);
-
-		$page = new Page($site->page('a'));
-		$this->assertSame([
-			[
-				'label' => 'a',
-				'link'  => '/pages/a'
-			]
-		], $page->breadcrumb());
-
-		$page = new Page($site->page('a/b/c'));
-		$this->assertSame([
-			[
-				'label' => 'a',
-				'link'  => '/pages/a'
-			],
-			[
-				'label' => 'b',
-				'link'  => '/pages/a+b'
-			],
-			[
-				'label' => 'c',
-				'link'  => '/pages/a+b+c'
-			]
-		], $page->breadcrumb());
-	}
-
-	public function testBreadcrumbWithProtectedParent(): void
-	{
-		// the permission cache is keyed by template and role,
-		// so both need to be unique for this test
-		$uuid = uuid();
-
-		$app = $this->app->clone([
-			'blueprints' => [
-				'pages/secret-' . $uuid => [
-					'options' => ['list' => false]
-				]
-			],
-			'roles' => [
-				['name' => 'editor-' . $uuid]
-			],
-			'site' => [
-				'children' => [
-					[
-						'slug'     => 'a',
-						'template' => 'secret-' . $uuid,
-						'children' => [
-							['slug' => 'b']
-						]
-					]
-				]
-			],
-			'users' => [
-				[
-					'email' => 'editor@getkirby.com',
-					'role'  => 'editor-' . $uuid
-				]
-			],
-			'user' => 'editor@getkirby.com'
-		]);
-
-		// the title of the parent must not leak into the breadcrumb
-		// of a page the user is allowed to see
-		$page = new Page($app->page('a/b'));
-
-		$this->assertSame([
-			[
-				'label' => '–',
-				'title' => 'Protected'
-			],
-			[
-				'label' => 'b',
-				'link'  => '/pages/a+b'
-			]
-		], $page->breadcrumb());
-	}
-
-	public function testButtons(): void
-	{
-		$this->assertSame([
-			'k-open-view-button',
-			'k-preview-view-button',
-			'k-settings-view-button',
-			'k-languages-view-button',
-			'k-status-view-button',
-		], array_column($this->panel()->buttons(), 'component'));
 	}
 
 	public function testCrumb(): void
@@ -228,36 +120,32 @@ class PageTest extends TestCase
 		$this->assertSame('(link: page://test-page text: Test Title)', $panel->dragText());
 	}
 
-	public function testDragTextMarkdown(): void
+	public function testDragTextCustomKirbytext(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => false
+					'kirbytext' => [
+						'pageDragText' => function (ModelPage $page) {
+							return sprintf('Links sind toll: %s', $page->url());
+						},
+					]
 				]
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'a',
-						'content' => ['uuid' => 'my-a']
-					],
-					[
-						'slug' => 'b',
+						'slug' => 'test',
 						'content' => [
-							'title' => 'Test Title',
-							'uuid'  => 'my-b'
+							'title' => 'Test Title'
 						]
 					]
 				]
 			]
 		]);
 
-		$panel = new Page($app->page('a'));
-		$this->assertSame('[a](//@/page/my-a)', $panel->dragText());
-
-		$panel = new Page($app->page('b'));
-		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
+		$panel = new Page($app->page('test'));
+		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
 	public function testDragTextCustomMarkdown(): void
@@ -289,49 +177,36 @@ class PageTest extends TestCase
 		$this->assertSame('Links sind toll: /test', $panel->dragText());
 	}
 
-	public function testDragTextCustomKirbytext(): void
+	public function testDragTextMarkdown(): void
 	{
 		$app = $this->app->clone([
 			'options' => [
 				'panel' => [
-					'kirbytext' => [
-						'pageDragText' => function (ModelPage $page) {
-							return sprintf('Links sind toll: %s', $page->url());
-						},
-					]
+					'kirbytext' => false
 				]
 			],
 			'site' => [
 				'children' => [
 					[
-						'slug' => 'test',
+						'slug' => 'a',
+						'content' => ['uuid' => 'my-a']
+					],
+					[
+						'slug' => 'b',
 						'content' => [
-							'title' => 'Test Title'
+							'title' => 'Test Title',
+							'uuid'  => 'my-b'
 						]
 					]
 				]
 			]
 		]);
 
-		$panel = new Page($app->page('test'));
-		$this->assertSame('Links sind toll: /test', $panel->dragText());
-	}
+		$panel = new Page($app->page('a'));
+		$this->assertSame('[a](//@/page/my-a)', $panel->dragText());
 
-	public function testDropdownOption(): void
-	{
-		$page = new ModelPage([
-			'slug'    => 'test',
-			'content' => [
-				'title' => 'Test page'
-			]
-		]);
-
-		$panel  = new Page($page);
-		$option = $panel->dropdownOption();
-
-		$this->assertSame('page', $option['icon']);
-		$this->assertSame('Test page', $option['text']);
-		$this->assertSame('/pages/test', $option['link']);
+		$panel = new Page($app->page('b'));
+		$this->assertSame('[Test Title](//@/page/my-b)', $panel->dragText());
 	}
 
 	public function testIconFromBlueprint(): void
@@ -419,24 +294,24 @@ class PageTest extends TestCase
 
 		// cover disabled as default
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => false,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => false,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-96x.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
 		$this->assertSame([
-			'back' => 'pattern',
-			'color' => 'gray-500',
-			'cover' => true,
-			'icon' => 'page',
-			'url' => $mediaUrl . '/test.jpg',
-			'src' => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
+			'back'   => 'pattern',
+			'color'  => 'gray-500',
+			'cover'  => true,
+			'icon'   => 'page',
+			'url'    => $mediaUrl . '/test.jpg',
+			'src'    => Model::imagePlaceholder(),
+			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 
@@ -545,7 +420,7 @@ class PageTest extends TestCase
 		$this->assertSame('(link: page://test-page text: Test Title)', $data['dragText']);
 		$this->assertSame('test', $data['id']);
 		$this->assertSame('/pages/test', $data['link']);
-		$this->assertSame('Test Title', $data['text']);
+		$this->assertSame('Test Title', (string)$data['text']);
 	}
 
 	public function testPickerDataHasChildren(): void
@@ -614,145 +489,6 @@ class PageTest extends TestCase
 		$this->assertSame(4, $panel->position());
 	}
 
-	public function testProps(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test'
-		]);
-
-		$panel = new Page($page);
-		$props = $panel->props();
-
-		$this->assertArrayHasKey('model', $props);
-		$this->assertArrayHasKey('id', $props['model']);
-		$this->assertArrayHasKey('parent', $props['model']);
-		$this->assertArrayHasKey('previewUrl', $props['model']);
-		$this->assertArrayHasKey('status', $props['model']);
-		$this->assertArrayHasKey('title', $props['model']);
-
-		// inherited props
-		$this->assertArrayHasKey('blueprint', $props);
-		$this->assertArrayHasKey('lock', $props);
-		$this->assertArrayHasKey('permissions', $props);
-		$this->assertArrayNotHasKey('tab', $props);
-		$this->assertArrayHasKey('tabs', $props);
-		$this->assertArrayHasKey('versions', $props);
-
-		$this->assertNull($props['next']());
-		$this->assertNull($props['prev']());
-	}
-
-	public function testPropsPrevNext(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'foo'],
-					['slug' => 'bar'],
-					['slug' => 'baz']
-				]
-			],
-		]);
-		$app->impersonate('kirby');
-
-		$props = (new Page($app->page('foo')))->props();
-		$this->assertNull($props['prev']());
-		$this->assertSame('/pages/bar', $props['next']()['link']);
-
-		$props = (new Page($app->page('bar')))->props();
-		$this->assertSame('/pages/foo', $props['prev']()['link']);
-		$this->assertSame('/pages/baz', $props['next']()['link']);
-
-		$props = (new Page($app->page('baz')))->props();
-		$this->assertSame('/pages/bar', $props['prev']()['link']);
-		$this->assertNull($props['next']());
-	}
-
-	public function testPropsPrevNextWithSameTemplate(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'foo', 'template' => 'note'],
-					['slug' => 'bar', 'template' => 'album'],
-					['slug' => 'baz', 'template' => 'note']
-				]
-			],
-		]);
-		$app->impersonate('kirby');
-
-		$props = (new Page($app->page('foo')))->props();
-		$this->assertSame('/pages/baz', $props['next']()['link']);
-
-		$props = (new Page($app->page('bar')))->props();
-		$this->assertNull($props['prev']());
-		$this->assertNull($props['next']());
-
-		$props = (new Page($app->page('baz')))->props();
-		$this->assertSame('/pages/foo', $props['prev']()['link']);
-	}
-
-	public function testPropsPrevNextWithSameStatus(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'foo', 'num' => 0],
-					['slug' => 'bar', 'num' => null],
-					['slug' => 'baz', 'num' => 0]
-				]
-			],
-		]);
-		$app->impersonate('kirby');
-
-		$props = (new Page($app->page('foo')))->props();
-		$this->assertSame('/pages/baz', $props['next']()['link']);
-
-		$props = (new Page($app->page('bar')))->props();
-		$this->assertNull($props['prev']());
-		$this->assertNull($props['next']());
-
-		$props = (new Page($app->page('baz')))->props();
-		$this->assertSame('/pages/foo', $props['prev']()['link']);
-	}
-
-	public function testPropsPrevNextWithTab(): void
-	{
-		$app = $this->app->clone([
-			'site' => [
-				'children' => [
-					['slug' => 'foo'],
-					['slug' => 'bar'],
-					['slug' => 'baz']
-				]
-			],
-		]);
-		$app->impersonate('kirby');
-
-		$_GET['tab'] = 'test';
-
-		$prevNext = (new Page($app->page('bar')))->prevNext();
-		$this->assertSame('/pages/foo?tab=test', $prevNext['prev']()['link']);
-		$this->assertSame('/pages/baz?tab=test', $prevNext['next']()['link']);
-
-		$_GET = [];
-	}
-
-	public function testView(): void
-	{
-		$page = new ModelPage([
-			'slug'  => 'test',
-		]);
-
-		$panel = new Page($page);
-		$view  = $panel->view();
-
-		$this->assertArrayHasKey('props', $view);
-		$this->assertSame('k-page-view', $view['component']);
-		$this->assertSame('test', $view['title']);
-		$this->assertSame('test', $view['breadcrumb'][0]['label']);
-	}
-
 	public function testUrl(): void
 	{
 		$app = $this->app->clone([
@@ -778,289 +514,5 @@ class PageTest extends TestCase
 
 		$this->assertSame('https://getkirby.com/panel/pages/mother+child', $panel->url());
 		$this->assertSame('/pages/mother+child', $panel->url(true));
-	}
-
-	public function testPrevNextOne(): void
-	{
-		$app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/a' => [
-					'title' => 'A',
-					'navigation' => [
-						'status' => 'all',
-						'template' => 'all'
-					]
-				],
-				'pages/b' => [
-					'title' => 'B',
-					'navigation' => [
-						'status' => 'all',
-						'template' => 'all'
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$parent = ModelPage::create([
-			'slug' => 'test'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'a',
-			'template' => 'a'
-		]);
-
-		$expectedPrev = $parent->createChild([
-			'slug'     => 'b',
-			'template' => 'b'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'c',
-			'template' => 'a'
-		]);
-
-		$expectedNext = $parent->createChild([
-			'slug'     => 'd',
-			'template' => 'b'
-		]);
-
-		$page  = $app->page('test/c');
-		$panel = new Page($page);
-
-		$navigation = $page->blueprint()->navigation();
-		$prevNext   = $panel->prevNext();
-
-		$this->assertSame(['status' => 'all', 'template' => 'all'], $navigation);
-		$this->assertArrayHasKey('next', $prevNext);
-		$this->assertArrayHasKey('prev', $prevNext);
-		$this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
-		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
-	}
-
-	public function testPrevNextTwo(): void
-	{
-		$app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/c' => [
-					'title' => 'C',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['c']
-					]
-				],
-				'pages/d' => [
-					'title' => 'D',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['c']
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$parent = ModelPage::create([
-			'slug' => 'test'
-		]);
-
-		$expectedPrev = $parent->createChild([
-			'slug'     => 'a',
-			'template' => 'c'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'b',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'c',
-			'template' => 'c'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'd',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$expectedNext = $parent->createChild([
-			'slug'     => 'e',
-			'template' => 'c'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'f',
-			'template' => 'd'
-		])->changeStatus('listed');
-
-		$page  = $app->page('test/d');
-		$panel = new Page($page);
-
-		$navigation = $page->blueprint()->navigation();
-		$prevNext   = $panel->prevNext();
-
-		$this->assertSame([
-			'status' => ['listed'],
-			'template' => ['c']
-		], $navigation);
-		$this->assertArrayHasKey('next', $prevNext);
-		$this->assertArrayHasKey('prev', $prevNext);
-		$this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
-		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
-	}
-
-	public function testPrevNextThree(): void
-	{
-		$app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/e' => [
-					'title' => 'E',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['e', 'f']
-					]
-				],
-				'pages/f' => [
-					'title' => 'F',
-					'navigation' => [
-						'status' => ['listed'],
-						'template' => ['e', 'f']
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$parent = ModelPage::create([
-			'slug' => 'test'
-		]);
-
-		$expectedPrev = $parent->createChild([
-			'slug'     => 'a',
-			'template' => 'e'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'b',
-			'template' => 'f'
-		])->changeStatus('unlisted');
-
-		$parent->createChild([
-			'slug'     => 'c',
-			'template' => 'e'
-		])->changeStatus('unlisted');
-
-		$parent->createChild([
-			'slug'     => 'd',
-			'template' => 'f'
-		])->changeStatus('listed');
-
-		$parent->createChild([
-			'slug'     => 'e',
-			'template' => 'e'
-		])->changeStatus('unlisted');
-
-		$expectedNext = $parent->createChild([
-			'slug'     => 'f',
-			'template' => 'f'
-		])->changeStatus('listed');
-
-		$page  = $app->page('test/d');
-		$panel = new Page($page);
-
-		$navigation = $page->blueprint()->navigation();
-		$prevNext   = $panel->prevNext();
-
-		$this->assertSame([
-			'status' => ['listed'],
-			'template' => ['e', 'f']
-		], $navigation);
-		$this->assertArrayHasKey('next', $prevNext);
-		$this->assertArrayHasKey('prev', $prevNext);
-		$this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
-		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
-	}
-
-	public function testPrevNextFour(): void
-	{
-		$app = $this->app->clone([
-			'roots' => [
-				'index' => static::TMP,
-			],
-			'blueprints' => [
-				'pages/g' => [
-					'title' => 'A',
-					'navigation' => [
-						'status' => 'all',
-						'template' => 'all',
-						'sortBy' => 'slug desc'
-					]
-				],
-				'pages/h' => [
-					'title' => 'B',
-					'navigation' => [
-						'status' => 'all',
-						'template' => 'all',
-						'sortBy' => 'slug desc'
-					]
-				]
-			]
-		]);
-
-		$app->impersonate('kirby');
-
-		$parent = ModelPage::create([
-			'slug' => 'test'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'a',
-			'template' => 'g'
-		]);
-
-		$expectedNext = $parent->createChild([
-			'slug'     => 'b',
-			'template' => 'h'
-		]);
-
-		$parent->createChild([
-			'slug'     => 'c',
-			'template' => 'g'
-		]);
-
-		$expectedPrev = $parent->createChild([
-			'slug'     => 'd',
-			'template' => 'h'
-		]);
-
-		$page  = $app->page('test/c');
-		$panel = new Page($page);
-
-		$navigation = $page->blueprint()->navigation();
-		$prevNext   = $panel->prevNext();
-
-		$this->assertSame([
-			'status' => 'all',
-			'template' => 'all',
-			'sortBy' => 'slug desc'
-		], $navigation);
-		$this->assertArrayHasKey('next', $prevNext);
-		$this->assertArrayHasKey('prev', $prevNext);
-		$this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
-		$this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
 	}
 }

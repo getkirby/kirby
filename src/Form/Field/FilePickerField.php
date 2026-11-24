@@ -1,0 +1,134 @@
+<?php
+
+namespace Kirby\Form\Field;
+
+use Kirby\Api\Api;
+use Kirby\Cms\File;
+use Kirby\Cms\ModelWithContent;
+use Kirby\Form\Interface\ProvidesAcceptedFileBlueprints;
+use Kirby\Form\Mixin;
+use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
+use Kirby\Panel\Ui\Item\FileItem;
+use Kirby\Reflection\Attributes\Prop;
+
+/**
+ * Filepicker field
+ *
+ * @copyright Bastian Allgeier
+ * @license   https://getkirby.com/license
+ * @since     6.0.0
+ *
+ * @extends ModelPickerField<File>
+ */
+class FilePickerField extends ModelPickerField implements ProvidesAcceptedFileBlueprints
+{
+	use Mixin\Upload;
+
+	/**
+	 * Query for the model whose files can be picked.
+	 * By default, the files of the field's own model are used.
+	 */
+	#[Prop(computed: true)]
+	protected string|null $parent = null;
+
+	public function api(): array
+	{
+		$field = $this;
+
+		return [
+			...parent::api(),
+			[
+				'pattern' => 'upload',
+				'method'  => 'POST',
+				'action'  => function () use ($field) {
+					// @codeCoverageIgnoreStart
+					/** @var Api $api */
+					$api = $this;
+
+					// move_uploaded_file() not working with unit test
+					return $field->upload(
+						$api,
+						$field->uploads(),
+						fn ($file, $parent) => $field->toItem($file)
+					);
+					// @codeCoverageIgnoreEnd
+				}
+			]
+		];
+	}
+
+	public function dialogs(): array
+	{
+		return [
+			'picker' => fn () => new FilePickerDialogController(...[
+				'model'     => $this->model(),
+				'hasSearch' => $this->search(),
+				'image'     => $this->image(),
+				'info'      => $this->info(),
+				'max'       => $this->max(),
+				'multiple'  => $this->multiple(),
+				'query'     => $this->query(),
+				'text'      => $this->text(),
+				...$this->picker()
+			])
+		];
+	}
+
+	public function parent(): string
+	{
+		return $this->parentModel()->apiUrl(true);
+	}
+
+	public function parentModel(): ModelWithContent
+	{
+		if (is_string($this->parent) === false) {
+			return $this->model();
+		}
+
+		return $this->model()->query($this->parent, ModelWithContent::class) ?? $this->model();
+	}
+
+	public function query(): string|null
+	{
+		return $this->query;
+	}
+
+	/**
+	 * @param File|null $model
+	 */
+	public function store(ModelWithContent|null $model = null): string
+	{
+		$store = parent::store($model);
+
+		// store only the filename instead of the full ID
+		// if the file belongs to the current model
+		if (
+			$store === 'id' &&
+			$model?->parent()->is($this->model()) === true
+		) {
+			return 'filename';
+		}
+
+		return $store;
+	}
+
+	/**
+	 * @param File $model
+	 */
+	public function toItem(ModelWithContent $model): array
+	{
+		return (new FileItem(
+			file:               $model,
+			dragTextIsAbsolute: $model->parent()->is($this->model()) === false,
+			image:              $this->image(),
+			info:               $this->info(),
+			layout:             $this->layout(),
+			text:               $this->text()
+		))->props();
+	}
+
+	public function toModel(string $id): File|null
+	{
+		return $this->kirby()->file($id, $this->model());
+	}
+}
