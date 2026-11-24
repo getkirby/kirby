@@ -2,7 +2,7 @@
 	<div
 		:id="id"
 		:style="{ '--width': width }"
-		tabindex="0"
+		tabindex="-1"
 		class="k-column k-layout-column"
 		@dblclick="$refs.blocks.choose(blocks.length)"
 	>

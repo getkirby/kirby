@@ -205,6 +205,8 @@ export default {
 @container (max-width: 40rem) {
 	.k-object-field {
 		overflow: hidden;
+		padding: 2px;
+		margin: -2px;
 	}
 	.k-object-field-table.k-table tbody :where(th):is([data-mobile="true"]) {
 		width: 1px !important;

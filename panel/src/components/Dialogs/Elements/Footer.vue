@@ -21,4 +21,7 @@ export default {};
 	line-height: 1;
 	flex-shrink: 0;
 }
+.k-dialog-body + .k-dialog-footer {
+	padding-top: calc(var(--dialog-padding) - var(--spacing-1));
+}
 </style>
