@@ -81,7 +81,13 @@ export default {
 	},
 	computed: {
 		resolvedSizes() {
-			return this.sizes ?? (this.lazy === true ? "auto" : undefined);
+			// `auto` needs the width from the frame ratio,
+			// an intrinsic image would shrink to 300×150
+			if (this.lazy === false || this.ratio === "intrinsic") {
+				return this.sizes;
+			}
+
+			return this.sizes ?? "auto";
 		}
 	},
 	watch: {
