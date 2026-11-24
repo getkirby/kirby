@@ -43,22 +43,7 @@ class PasswordMethod extends Method
 
 		$user = $this->auth->validatePassword($email, $password);
 
-		// two-factor flow: create a challenge after password validation
-		if ($this->has2FA($user) === true) {
-			return $this->auth->createChallenge(
-				mode:  '2fa',
-				email: $email,
-				long:  $long,
-			);
-		}
-
-		// log the user in with a cookie-based session
-		$user->loginPasswordless([
-			'createMode' => 'cookie',
-			'long'       => $long === true
-		]);
-
-		return $user;
+		return $this->login($user, $long);
 	}
 
 	public function form(): Component
