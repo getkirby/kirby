@@ -193,6 +193,94 @@ class AuthChallengeTest extends TestCase
 		$this->auth->login2fa($email, 'springfield123');
 	}
 
+	public function testSwitchChallenge(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		$challenge = $this->auth->switchChallenge('email');
+
+		$this->assertInstanceOf(Challenge::class, $challenge);
+		$this->assertSame('email', $challenge->type());
+		$this->assertSame('email', $session->get('kirby.challenge.type'));
+	}
+
+	public function testSwitchChallengeRateLimited(): void
+	{
+		$this->app  = $this->app->clone([
+			'options' => [
+				'auth' => [
+					'debug'      => false,
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		// the email-based limit only ever applies to existing users,
+		// so it must not be observable from the switch response
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		$this->assertNull($this->auth->switchChallenge('email'));
+	}
+
+	public function testSwitchChallengeRateLimitedDebug(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		F::write(static::TMP . '/site/accounts/.logins', json_encode([
+			'by-ip' => [],
+			'by-email' => [
+				'marge@simpsons.com' => [
+					'time'   => time(),
+					'trials' => 3
+				]
+			]
+		]));
+
+		$this->expectException(RateLimitException::class);
+		$this->auth->switchChallenge('email');
+	}
+
+	public function testSwitchChallengeUnavailable(): void
+	{
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', 'marge@simpsons.com');
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.type', 'email');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+		$session->set('kirby.challenge.data', ['secret' => self::$password]);
+
+		// same result as for a missing user: no error,
+		// but a generically pending session
+		$this->assertNull($this->auth->switchChallenge('totp'));
+		$this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+		$this->assertNull($session->get('kirby.challenge.type'));
+		$this->assertNull($session->get('kirby.challenge.data'));
+	}
+
 	public function testVerifyChallenge(): void
 	{
 		$session = $this->app->session();
@@ -322,6 +410,67 @@ class AuthChallengeTest extends TestCase
 		// the flag is bound to the user the challenge was issued for
 		$data = $session->data()->get();
 		$this->assertSame('marge', $data['kirby.resetPassword'] ?? false);
+	}
+
+	public static function pendingWithoutChallengeProvider(): array
+	{
+		return [
+			// missing user (`Auth::createChallenge()`)
+			['lisa@simpsons.com', 0],
+			// existing user without an available challenge
+			// (e.g. `Challenges::switch()` to an unavailable type)
+			['marge@simpsons.com', 1],
+		];
+	}
+
+	#[DataProvider('pendingWithoutChallengeProvider')]
+	public function testVerifyChallengePendingWithoutChallenge(
+		string $email,
+		int $emailTrials
+	): void {
+		// a generically pending session (see `Challenges::keepPending()`)
+		// must be handled like a wrong code for a real challenge:
+		// same generic error, rate-limit tracking and timing jitter,
+		// otherwise it would reveal whether the user exists
+		F::remove(static::TMP . '/site/accounts/.logins');
+		$this->app->visitor()->ip('10.3.123.234');
+
+		$count = 0;
+
+		$this->app  = $this->app->clone([
+			'hooks' => [
+				'user.login:failed' => function () use (&$count) {
+					$count++;
+				}
+			],
+			'options' => [
+				'auth' => [
+					'debug'      => false,
+					'challenges' => ['email'],
+					'trials'     => 3
+				]
+			]
+		]);
+		$this->auth = $this->app->auth();
+
+		$session = $this->app->session();
+		$session->set('kirby.challenge.email', $email);
+		$session->set('kirby.challenge.mode', 'login');
+		$session->set('kirby.challenge.timeout', time() + 1000);
+
+		try {
+			$this->auth->verifyChallenge('000000');
+			$this->fail('The challenge verification should have failed');
+		} catch (PermissionException $e) {
+			$this->assertSame('error.access.code', $e->getKey());
+
+			$log = $this->auth->limits()->log();
+			$ip  = $this->app->visitor()->ip(hash: true);
+
+			$this->assertSame(1, $count);
+			$this->assertSame(1, $log['by-ip'][$ip]['trials'] ?? null);
+			$this->assertSame($emailTrials, $log['by-email'][$email]['trials'] ?? 0);
+		}
 	}
 
 	public function testVerifyChallengeRateLimited(): void

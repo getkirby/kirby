@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Cms\Site;
 use Kirby\Exception\PermissionException;
@@ -65,6 +66,18 @@ class PagePickerDialogControllerTest extends TestCase
 		);
 
 		$this->assertInstanceOf(PagesCollector::class, $controller->collector());
+	}
+
+	public function testCollectorWithFileModel(): void
+	{
+		$controller = new PagePickerDialogController(
+			model: new File([
+				'filename' => 'test.jpg',
+				'parent'   => $this->app->site()
+			])
+		);
+
+		$this->assertCount(3, $controller->collector()->models());
 	}
 
 	public function testCollectorWithQueryForSinglePage(): void

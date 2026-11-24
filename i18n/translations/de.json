@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Keine ungespeicherten Änderungen",
 	"lock.unsaved.files": "Geänderte Dateien",
 	"lock.unsaved.pages": "Geänderte Seiten",
+	"lock.unsaved.site": "Geänderte Seite",
 	"lock.unsaved.users": "Geänderte Accounts",
 	"lock.isLocked": "Ungespeicherte Änderungen von {email}",
 	"lock.unlock": "Entsperren",

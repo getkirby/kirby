@@ -77,6 +77,11 @@ class ToggleField extends InputField
 		return $this->value ?? $this->default();
 	}
 
+	public function toStoredValue(): string
+	{
+		return $this->toFormValue() === true ? 'true' : 'false';
+	}
+
 	protected function validateRequired(): void
 	{
 		if (

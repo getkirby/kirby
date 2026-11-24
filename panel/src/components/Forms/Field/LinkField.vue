@@ -29,7 +29,7 @@
 					@click="toggle"
 				>
 					<k-link-field-preview
-						:removable="true"
+						:removable="disabled === false"
 						:type="currentType.id"
 						:value="value"
 						@remove="removeModel"
@@ -226,10 +226,18 @@ export default {
 			}
 		},
 		removeModel() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.clear();
 			this.expanded = false;
 		},
 		selectModel(model) {
+			if (this.disabled === true) {
+				return;
+			}
+
 			if (model.uuid) {
 				this.onInput(model.uuid);
 				return;
@@ -261,6 +269,10 @@ export default {
 			this.focus();
 		},
 		toggle() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			this.expanded = !this.expanded;
 		}
 	}

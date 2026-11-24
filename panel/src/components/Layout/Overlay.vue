@@ -115,6 +115,12 @@ export default {
 			// it makes it run once
 			if (this.$refs.overlay.open !== true) {
 				this.$refs.overlay.showModal();
+
+				// showModal() focuses the first focusable element itself;
+				// drop it, so that the autofocus below picks the right one
+				if (this.autofocus === true) {
+					document.activeElement?.blur();
+				}
 			}
 
 			// wait for the next rendering round

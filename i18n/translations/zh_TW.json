@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "所有變更已儲存",
 	"lock.unsaved.files": "有檔案變更尚未儲存",
 	"lock.unsaved.pages": "有頁面變更尚未儲存",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "有使用者變更尚未儲存",
 	"lock.isLocked": "{email} 尚未儲存的變更",
 	"lock.unlock": "解除鎖定",

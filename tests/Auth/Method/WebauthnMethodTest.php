@@ -173,14 +173,18 @@ class WebauthnMethodTest extends TestCase
 
 	public function testAuthenticateUpdatesCounter(): void
 	{
-		// a non-zero signature counter is written back to the credential;
-		// impersonate an admin so the secret write is permitted
+		// a non-zero signature counter is written back to the credential,
+		// although nobody is logged in yet
 		$payload = $this->register('marge', signCount: 7);
-		$this->app->impersonate('kirby');
+		touch(static::TMP . '/site/accounts/marge/.htpasswd', 1337000000);
 
-		$this->method()->authenticate(null, $payload);
+		$user = $this->method()->authenticate(null, $payload);
 
+		$this->assertSame('marge', $user->id());
 		$this->assertSame(7, $this->app->user('marge')->secret('webauthn')[0]['counter']);
+
+		// keeps the sessions of the user on other devices
+		$this->assertSame(1337000000, $this->app->user('marge')->passwordTimestamp());
 	}
 
 	public function testAuthenticateWithoutUserHandle(): void

@@ -519,8 +519,9 @@ class FormTest extends TestCase
 			'info' => 'Yay'
 		]);
 
-		$this->assertCount(0, $form->toStoredValues());
-		$this->assertArrayNotHasKey('info', $form->toStoredValues());
+		// the info field has no value, but content with
+		// the same name is kept as passthrough
+		$this->assertSame(['info' => 'Yay'], $form->toStoredValues());
 	}
 
 	public function testToStoredValuesWithCorrectFieldOrder(): void

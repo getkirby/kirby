@@ -23,7 +23,7 @@ abstract class DateTimeField extends InputField
 	public const ISO = 'Y-m-d H:i:s';
 
 	#[Prop]
-	protected string|null $display = null;
+	protected array|string|null $display = null;
 
 	/**
 	 * Defines a custom format that is used when the field is saved

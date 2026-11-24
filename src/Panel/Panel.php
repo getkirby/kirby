@@ -7,6 +7,7 @@ use Kirby\Cms\Url as CmsUrl;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
+use Kirby\Toolkit\HtmlString;
 use Kirby\Toolkit\Str;
 
 /**
@@ -145,7 +146,7 @@ class Panel
 	{
 		$request = App::instance()->request();
 
-		return Response::json($data, $code, (bool)$request->get('_pretty'), [
+		return Response::json(HtmlString::resolve($data), $code, (bool)$request->get('_pretty'), [
 			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		]);

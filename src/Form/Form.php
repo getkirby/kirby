@@ -37,6 +37,7 @@ class Form
 
 	/**
 	 * Returns an array with the default value of each field
+	 * that stores a value
 	 *
 	 * @since 5.0.0
 	 *

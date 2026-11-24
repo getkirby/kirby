@@ -10,7 +10,7 @@ import {
 } from "vitest";
 import { reactive } from "vue";
 import Editor from "./Editor";
-import { Bold, Link } from "./Marks";
+import { Bold, Code, Italic, Link, Strike, Underline } from "./Marks";
 import { Heading } from "./Nodes";
 
 function createEditor(options: Record<string, unknown> = {}): Editor {
@@ -654,6 +654,25 @@ describe("Editor", () => {
 		});
 	});
 
+	describe("setActiveNodesAndMarks", () => {
+		it("tracks the cursor position in the reactive state", () => {
+			editor.setContent("<p>hello</p>");
+			const end = editor.selectionAtEnd.head;
+
+			editor.setSelection(1, 1);
+			expect(editor.active.isCursorAtStart).toBe(true);
+			expect(editor.active.isCursorAtEnd).toBe(false);
+
+			editor.setSelection(3, 3);
+			expect(editor.active.isCursorAtStart).toBe(false);
+			expect(editor.active.isCursorAtEnd).toBe(false);
+
+			editor.setSelection(end, end);
+			expect(editor.active.isCursorAtStart).toBe(false);
+			expect(editor.active.isCursorAtEnd).toBe(true);
+		});
+	});
+
 	describe("selectionIsAtEnd", () => {
 		it("returns true when the cursor is at the end of the document", () => {
 			editor.setContent("<p>hello</p>");
@@ -743,6 +762,55 @@ describe("Editor", () => {
 			const e = createEditor();
 			e.destroy();
 			expect(e.state).toBeUndefined();
+		});
+	});
+
+	describe("keyboard shortcuts", () => {
+		function press(editor: Editor, key: string): KeyboardEvent {
+			const event = new KeyboardEvent("keydown", {
+				bubbles: true,
+				cancelable: true,
+				// `Mod` resolves to `Ctrl` on non-Mac platforms (incl. jsdom)
+				ctrlKey: true,
+				key
+			});
+
+			editor.view!.dom.dispatchEvent(event);
+
+			return event;
+		}
+
+		it.each([
+			["bold", "b", "<strong>hello</strong>", () => new Bold()],
+			["code", "`", "<code>hello</code>", () => new Code()],
+			["italic", "i", "<em>hello</em>", () => new Italic()],
+			["strike", "d", "<s>hello</s>", () => new Strike()],
+			["underline", "u", "<u>hello</u>", () => new Underline()]
+		])(
+			"toggles the %s mark via shortcut and prevents the default",
+			(name, key, html, mark) => {
+				const e = createEditor({ extensions: [mark()] });
+				e.setContent("<p>hello</p>");
+				e.setSelection(1, 6);
+
+				const event = press(e, key);
+
+				expect(event.defaultPrevented).toBe(true);
+				expect(e.getHTML()).toBe(`<p>${html}</p>`);
+				e.destroy();
+			}
+		);
+
+		it("does not prevent the default for unhandled keys", () => {
+			const e = createEditor({ extensions: [new Bold()] });
+			e.setContent("<p>hello</p>");
+			e.setSelection(1, 6);
+
+			const event = press(e, "u");
+
+			expect(event.defaultPrevented).toBe(false);
+			expect(e.getHTML()).toBe("<p>hello</p>");
+			e.destroy();
 		});
 	});
 

@@ -33,6 +33,21 @@ class MultiselectFieldTest extends TestCase
 		$this->assertArrayHasKey('min', $field->errors());
 	}
 
+	public function testNumericOptions(): void
+	{
+		$field = $this->field('multiselect', [
+			'value'   => '36, 40',
+			'options' => [36, 38, 40]
+		]);
+
+		$this->assertTrue($field->isValid());
+
+		$field->fill('36, 42');
+
+		$this->assertFalse($field->isValid());
+		$this->assertArrayHasKey('accepted', $field->errors());
+	}
+
 	public function testOptionsQueryWithProtectedPages(): void
 	{
 		$app   = $this->appWithProtectedPages();

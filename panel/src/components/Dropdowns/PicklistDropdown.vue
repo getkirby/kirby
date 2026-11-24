@@ -74,7 +74,7 @@ export default {
 	padding: var(--dropdown-padding);
 }
 
-.k-picklist-dropdown .k-picklist-input-header {
+.k-picklist-dropdown .k-picklist-input-header:not(:last-child) {
 	border-bottom: 1px solid var(--dropdown-color-hr);
 }
 .k-picklist-dropdown .k-picklist-input-search {

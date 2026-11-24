@@ -11,6 +11,7 @@ use Kirby\Cms\Site;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Reflection\Attributes\Prop;
 
 /**
@@ -96,7 +97,22 @@ trait Upload
 
 				return $map($file, $parent);
 			},
-			template: $params['blueprint'] ?? null
+			template: $params['blueprint'] ?? null,
+			// authorize every request before any (chunk) data
+			// is persisted to the temporary uploads directory
+			preflight: function (string $filename, string|null $template) use ($parent) {
+				$file = new File([
+					'parent'   => $parent,
+					'filename' => $filename,
+					'template' => $template
+				]);
+
+				if ($file->guards()->isAvailable('create') !== true) {
+					throw new PermissionException(
+						message: 'The file cannot be created'
+					);
+				}
+			}
 		);
 	}
 

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -83,6 +84,50 @@ class UserPasswordAndSecretTest extends ModelTestCase
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('JSON string is invalid');
 		$user->secret('totp');
+	}
+
+	public function testUpdateSecret(): void
+	{
+		$calls = 0;
+		$hook  = function () use (&$calls) {
+			$calls++;
+		};
+
+		$this->app = $this->app->clone([
+			'hooks' => [
+				'user.changeSecret:before' => $hook,
+				'user.changeSecret:after'  => $hook
+			]
+		]);
+
+		// nobody is logged in yet during a passkey login
+		$this->app->impersonate();
+
+		F::write(static::TMP . '/site/accounts/test/index.php', '<?php return [];');
+		$file = static::TMP . '/site/accounts/test/.htpasswd';
+		F::write($file, 'a very secure hash' . "\n" . '{"webauthn":[{"id":"a","counter":0}]}');
+		touch($file, 1337000000);
+
+		$user = $this->app->user('test');
+		$this->assertTrue($user->updateSecret('webauthn', [['id' => 'a', 'counter' => 7]]));
+
+		$this->assertSame('a very secure hash', $user->secret('password'));
+		$this->assertSame([['id' => 'a', 'counter' => 7]], $user->secret('webauthn'));
+
+		// keeps the sessions on other devices and fires no hooks
+		$this->assertSame(1337000000, $user->passwordTimestamp());
+		$this->assertSame(0, $calls);
+	}
+
+	public function testUpdateSecretWithPassword(): void
+	{
+		F::write(static::TMP . '/site/accounts/test/index.php', '<?php return [];');
+		$user = $this->app->user('test');
+
+		$this->expectException(LogicException::class);
+		$this->expectExceptionMessage('The password cannot be updated without ending the sessions');
+
+		$user->updateSecret('password', 'a new hash');
 	}
 
 	public static function passwordProvider(): array

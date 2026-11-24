@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Það eru öngvar óvistaðar breytingar",
 	"lock.unsaved.files": "Óvistaðar skrár",
 	"lock.unsaved.pages": "Óvistaðar síður",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Óvistaðir notendareikningar",
 	"lock.isLocked": "Óvistaðar breytingar framkvæmdar af {email}",
 	"lock.unlock": "Aflæsa",

@@ -553,6 +553,27 @@ class Auth
 	}
 
 	/**
+	 * Switches the active challenge within the current pending session
+	 * and hides all errors (e.g. rate limits) to avoid leaking whether
+	 * the user exists
+	 *
+	 * @since 6.0.0
+	 *
+	 * @throws Throwable Any error from switching the challenge (only in debug mode)
+	 */
+	public function switchChallenge(string $type): Challenge|null
+	{
+		// catch every exception to hide them from attackers
+		try {
+			return $this->challenges->switch($this->kirby->session(), $type);
+		} catch (Throwable $e) {
+			// only re-throw the exception in auth debug mode
+			$this->fail($e);
+			return null;
+		}
+	}
+
+	/**
 	 * Tracks a login
 	 *
 	 * @param $triggerHook If `false`, no user.login:failed hook is triggered
@@ -674,11 +695,13 @@ class Auth
 		// This method can be reached with a missing/expired challenge
 		// in the session. In that case, unlike `::login()`, there is
 		// nothing to really attempt at all here. Reject it, so that
-		// this will not consume the rate-limit budget
-		if (
-			is_string($email) !== true ||
-			is_string($session->get('kirby.challenge.type')) !== true
-		) {
+		// this will not consume the rate-limit budget.
+		// A generically pending session (email but no challenge type,
+		// see `Challenges::keepPending()`) must not be rejected here:
+		// it has to go through `::guard()` like a wrong code for a real
+		// challenge, otherwise the missing rate-limit tracking and timing
+		// jitter would reveal that the user does not exist
+		if (is_string($email) !== true) {
 			$this->fail(
 				new InvalidArgumentException(
 					message: 'No authentication challenge is active'

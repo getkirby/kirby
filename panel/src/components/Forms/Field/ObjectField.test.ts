@@ -4,7 +4,7 @@ import ObjectField from "./ObjectField.vue";
 
 const TableCell = {
 	name: "k-table-cell",
-	props: ["field", "value"],
+	props: ["disabled", "field", "value"],
 	template: "<td />"
 };
 
@@ -33,6 +33,14 @@ describe("k-object-field", () => {
 		it.inheritsNoAttrs(mount);
 	});
 
+	// props
+	describe("disabled prop", () => {
+		it("disables the cells", () => {
+			const wrapper = mount({ disabled: true });
+			expect(wrapper.findComponent(TableCell).props("disabled")).toBe(true);
+		});
+	});
+
 	// computed
 	describe("subfields computed", () => {
 		it("passes the fields with their own endpoints to the cells", () => {
@@ -47,6 +55,21 @@ describe("k-object-field", () => {
 				type: "text",
 				endpoints: { field: "pages/x/fields/meta+title", model: "pages/x" }
 			});
+		});
+	});
+
+	// methods
+	describe("cell()", () => {
+		it("emits the object with the new cell value", () => {
+			const wrapper = mount();
+			wrapper.vm.cell("title", "B");
+			expect(wrapper.emitted("input")).toStrictEqual([[{ title: "B" }]]);
+		});
+
+		it("does nothing when disabled", () => {
+			const wrapper = mount({ disabled: true });
+			wrapper.vm.cell("title", "B");
+			expect(wrapper.emitted("input")).toBeUndefined();
 		});
 	});
 });

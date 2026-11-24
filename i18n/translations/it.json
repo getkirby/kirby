@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Non ci sono altre modifiche non salvate",
 	"lock.unsaved.files": "File non salvati",
 	"lock.unsaved.pages": "Pagine non salvate",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Account non salvati",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Sblocca",

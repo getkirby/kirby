@@ -41,8 +41,8 @@ export default abstract class Mark<
 		return {};
 	}
 
-	toggle(): void {
-		this.editor.toggleMark(this.name);
+	toggle(): boolean | undefined {
+		return this.editor.toggleMark(this.name);
 	}
 
 	get type(): "mark" {

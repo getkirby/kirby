@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Det er ingen flere ulagrede endringer",
 	"lock.unsaved.files": "Unsaved files",
 	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Ulagrede endringer av {email}",
 	"lock.unlock": "Lås opp",

@@ -104,4 +104,14 @@ class NumberFieldTest extends TestCase
 
 		$this->assertSame(1000.0, $field->toFormValue());
 	}
+
+	#[DataProvider('valueProvider')]
+	public function testToStoredValue($input, $expected): void
+	{
+		$field = $this->field('number', [
+			'value' => $input
+		]);
+
+		$this->assertSame($expected ?? '', $field->toStoredValue());
+	}
 }

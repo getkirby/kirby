@@ -130,11 +130,14 @@ export default {
 					this.$emit("end", event);
 				},
 				// Item is dropped into the list from another list
+				// (uses `oldIndex` and `newIndex` instead of the draggable
+				// indexes, as those skip children that are not draggable,
+				// e.g. unsortable items, but still are part of `list`)
 				onAdd: (evt) => {
 					if (this.list) {
 						const source = this.getInstance(evt.from);
-						const oldIndex = evt.oldDraggableIndex;
-						const newIndex = evt.newDraggableIndex;
+						const oldIndex = evt.oldIndex;
+						const newIndex = evt.newIndex;
 						const element = source.list[oldIndex];
 						this.list.splice(newIndex, 0, element);
 						this.$emit("change", { added: { element, newIndex } });
@@ -143,8 +146,8 @@ export default {
 				// Changed sorting within list
 				onUpdate: (evt) => {
 					if (this.list) {
-						const oldIndex = evt.oldDraggableIndex;
-						const newIndex = evt.newDraggableIndex;
+						const oldIndex = evt.oldIndex;
+						const newIndex = evt.newIndex;
 						const element = this.list[oldIndex];
 						this.list.splice(oldIndex, 1);
 						this.list.splice(newIndex, 0, element);
@@ -154,7 +157,7 @@ export default {
 				// Item is removed from the list into another list
 				onRemove: (evt) => {
 					if (this.list) {
-						const oldIndex = evt.oldDraggableIndex;
+						const oldIndex = evt.oldIndex;
 						const element = this.list[oldIndex];
 						this.list.splice(oldIndex, 1);
 						this.$emit("change", { removed: { element, oldIndex } });

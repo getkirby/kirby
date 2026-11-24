@@ -6,7 +6,7 @@
 		:input="id"
 		:style="$attrs.style"
 	>
-		<template v-if="wizard && wizard.text" #options>
+		<template v-if="wizard?.text && disabled === false" #options>
 			<k-button
 				:text="wizard.text"
 				icon="sparkling"
@@ -83,6 +83,10 @@ export default {
 			this.$refs.input.focus();
 		},
 		onWizard() {
+			if (this.disabled === true) {
+				return;
+			}
+
 			let field = this.wizard?.field;
 
 			if (field) {

@@ -60,6 +60,25 @@ class HtmlStringTest extends TestCase
 		$this->assertArrayNotHasKey('<body>', $data);
 	}
 
+	public function testResolveDropsFakeMarkedKeys(): void
+	{
+		$resolved = HtmlString::resolve([
+			'row' => [
+				'name'    => 'Row',
+				'<name>'  => '<b>x</b>',
+				'<image>' => [
+					['<filename>' => '<b class="audit">x</b>']
+				]
+			],
+			'<title>' => '<script>alert(1)</script>',
+			'<list>'  => ['<b>a</b>', '<b>b</b>'],
+			'<empty>' => []
+		]);
+
+		// marked keys with untrusted values must never be passed on
+		$this->assertSame(['row' => ['name' => 'Row']], $resolved);
+	}
+
 	public function testResolveIsIdempotent(): void
 	{
 		$data = [
@@ -144,6 +163,26 @@ class HtmlStringTest extends TestCase
 		$this->assertArrayNotHasKey('text', $resolved['options'][0]);
 		$this->assertArrayHasKey('text', $resolved['options'][1]);
 		$this->assertArrayNotHasKey('<text>', $resolved['options'][1]);
+	}
+
+	public function testResolveWalksObjects(): void
+	{
+		$resolved = HtmlString::resolve([
+			'empty'  => (object)[],
+			'values' => (object)[
+				'help'    => new HtmlString('<b>trusted</b>'),
+				'rows'    => [
+					['text' => 'Row', '<text>' => '<b>x</b>']
+				],
+				'<title>' => '<script>alert(1)</script>'
+			]
+		]);
+
+		// objects stay JSON objects, even when empty
+		$this->assertSame(
+			'{"empty":{},"values":{"<help>":"<b>trusted</b>","rows":[{"text":"Row"}]}}',
+			Json::encode($resolved)
+		);
 	}
 
 	public function testToString(): void

@@ -164,6 +164,48 @@ class PageDuplicateDialogControllerTest extends TestCase
 		$this->assertSame('Test Copy 2', $controller->title());
 	}
 
+	public function testSlugTitleSuffixCountAfterThirdCopy(): void
+	{
+		$this->app = $this->app->clone([
+			'site' => [
+				'children' => [
+					[
+						'slug' => 'test',
+						'content' => [
+							'title' => 'Test'
+						]
+					],
+					[
+						'slug' => 'test-copy',
+						'content' => [
+							'title' => 'Test Copy'
+						]
+					],
+					[
+						'slug' => 'test-copy2',
+						'content' => [
+							'title' => 'Test Copy 2'
+						]
+					],
+					[
+						'slug' => 'test-copy3',
+						'content' => [
+							'title' => 'Test Copy 3'
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$page = $this->app->page('test');
+		$controller = new PageDuplicateDialogController($page);
+		$this->assertSame(4, $controller->suffixCount());
+		$this->assertSame('test-copy4', $controller->slug());
+		$this->assertSame('Test Copy 4', $controller->title());
+	}
+
 	public function testSlugTitleSuffixCountFurther(): void
 	{
 		$this->app = $this->app->clone([

@@ -2,10 +2,40 @@
 
 namespace Kirby\Form\Field;
 
+use Closure;
+use Kirby\Api\Api;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
+
+class TextareaFieldTestApi extends Api
+{
+	public Closure|null $preflight = null;
+	public bool $processed = false;
+
+	public function upload(
+		Closure $callback,
+		bool $single = false,
+		bool $debug = false,
+		string|null $template = null,
+		Closure|null $preflight = null
+	): array {
+		$this->preflight = $preflight;
+
+		// like the real upload handler, authorize the
+		// upload before any data gets processed
+		$preflight?->__invoke('test.txt', $template);
+
+		$this->processed = true;
+
+		return [
+			'status' => 'ok',
+			'data'   => null
+		];
+	}
+}
 
 #[CoversClass(TextareaField::class)]
 class TextareaFieldTest extends TestCase
@@ -253,6 +283,57 @@ class TextareaFieldTest extends TestCase
 		]);
 
 		$this->assertSame('test', $field->toFormValue());
+	}
+
+	public function testUploadPreflight(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$field = $this->field('textarea');
+		$api   = new TextareaFieldTestApi(['kirby' => $this->app]);
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
+
+		$this->assertInstanceOf(Closure::class, $api->preflight);
+		$this->assertTrue($api->processed);
+	}
+
+	public function testUploadPreflightWithoutCreatePermission(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so the role needs to be unique for this test
+		$role = 'client-' . uuid();
+
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => $role,
+					'permissions' => [
+						'files' => ['create' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'client@getkirby.com',
+					'role'  => $role
+				]
+			]
+		]);
+		$this->app->impersonate('client@getkirby.com');
+
+		$field = $this->field('textarea');
+		$api   = new TextareaFieldTestApi(['kirby' => $this->app]);
+
+		try {
+			$field->upload($api, $field->uploads(), fn ($file) => $file);
+			$this->fail('The upload should have been rejected');
+		} catch (PermissionException $e) {
+			$this->assertSame('The file cannot be created', $e->getMessage());
+		}
+
+		// no upload data has been processed
+		$this->assertFalse($api->processed);
 	}
 
 	public function testUploads(): void

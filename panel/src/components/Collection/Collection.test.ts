@@ -175,6 +175,14 @@ describe("k-collection", () => {
 			expect(onClick).not.toHaveBeenCalled();
 		});
 
+		it("emits empty when the listener is added after the first render", async () => {
+			const onEmpty = vi.fn();
+			const wrapper = mount({ items: [] });
+			await wrapper.setProps({ onEmpty });
+			await wrapper.findComponent(Empty).trigger("click");
+			expect(onEmpty).toHaveBeenCalledOnce();
+		});
+
 		it("lets the empty state be without empty listener", async () => {
 			const onClick = vi.fn();
 			const wrapper = mount({ items: [] });

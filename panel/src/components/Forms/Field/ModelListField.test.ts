@@ -175,29 +175,81 @@ describe("k-model-list-field", () => {
 
 	// watch
 	describe("$panel.language.code watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("reloads the entries", async () => {
 			const $panel = reactive({ language: { code: "en" } });
 
 			mount({}, {}, $panel);
 			await flushPromises();
 
+			vi.useFakeTimers();
+
 			$panel.language.code = "de";
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+	});
+
+	describe("$panel.view.timestamp watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
+		it("reloads the entries", async () => {
+			const $panel = reactive({ view: { timestamp: 1 } });
+
+			mount({}, {}, $panel);
 			await flushPromises();
+
+			vi.useFakeTimers();
+
+			// e.g. after `$panel.view.reload()`
+			$panel.view.timestamp = 2;
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).toHaveBeenCalledTimes(2);
+		});
+
+		it("triggers a single reload together with a new language", async () => {
+			const $panel = reactive({
+				language: { code: "en" },
+				view: { timestamp: 1 }
+			});
+
+			mount({}, {}, $panel);
+			await flushPromises();
+
+			vi.useFakeTimers();
+
+			// a new view state for another language
+			$panel.language.code = "de";
+			$panel.view.timestamp = 2;
+			await vi.advanceTimersByTimeAsync(1);
 
 			expect(api.get).toHaveBeenCalledTimes(2);
 		});
 	});
 
 	describe("endpoints.field watcher", () => {
+		afterEach(() => {
+			vi.useRealTimers();
+		});
+
 		it("reloads the entries from the new endpoint", async () => {
 			const wrapper = mount();
 			await flushPromises();
+
+			vi.useFakeTimers();
 
 			// the slug of the parent page changed
 			await wrapper.setProps({
 				endpoints: { field: "pages/new-slug/fields/drafts" }
 			});
-			await flushPromises();
+			await vi.advanceTimersByTimeAsync(1);
 
 			expect(api.get).toHaveBeenCalledTimes(2);
 			expect(api.get).toHaveBeenLastCalledWith("pages/new-slug/fields/drafts", {
@@ -210,10 +262,12 @@ describe("k-model-list-field", () => {
 			const wrapper = mount();
 			await flushPromises();
 
+			vi.useFakeTimers();
+
 			await wrapper.setProps({
 				endpoints: { field: "pages/test/fields/drafts" }
 			});
-			await flushPromises();
+			await vi.advanceTimersByTimeAsync(1);
 
 			expect(api.get).toHaveBeenCalledOnce();
 		});
@@ -410,6 +464,21 @@ describe("k-model-list-field", () => {
 
 			// the new view hands the field its new endpoint
 			listeners["model.update"]({ redirect: "/pages/new-slug" });
+
+			await vi.advanceTimersByTimeAsync(1);
+
+			expect(api.get).not.toHaveBeenCalled();
+		});
+
+		it("does not reload when the view reloads", async () => {
+			mount();
+			await flushPromises();
+			api.get.mockClear();
+
+			vi.useFakeTimers();
+
+			// the reloaded view refreshes the field with its new timestamp
+			listeners["model.update"]({ reload: true });
 
 			await vi.advanceTimersByTimeAsync(1);
 

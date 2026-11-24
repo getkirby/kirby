@@ -105,6 +105,8 @@ class ViewDocumentResponse extends ViewResponse
 	public function headers(): array
 	{
 		return [
+			...$this->headers,
+			'Cache-Control'           => 'no-store, private',
 			'Content-Security-Policy' => $this->cors(),
 			'X-Robots-Tag'            => 'noindex, nofollow',
 		];

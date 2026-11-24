@@ -175,6 +175,7 @@ class JsonResponse extends Response
 	public function headers(): array
 	{
 		return [
+			...$this->headers,
 			'X-Panel'       => 'true',
 			'Cache-Control' => 'no-store, private'
 		];

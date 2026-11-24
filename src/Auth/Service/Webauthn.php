@@ -310,7 +310,7 @@ class Webauthn extends BaseWebauthn
 	public function verifyLogin(
 		array $credentials,
 		mixed $payload,
-		string $challenge
+		string|null $challenge
 	): array {
 		$payload   = $this->payload($payload);
 		$challenge = $this->challenge($challenge);
@@ -347,7 +347,7 @@ class Webauthn extends BaseWebauthn
 	 * @return array{id: string, publicKey: string, counter: int, createdAt: int, attestation: string|null}
 	 * @throws InvalidArgumentException
 	 */
-	public function verifyRegister(mixed $payload, string $challenge): array
+	public function verifyRegister(mixed $payload, string|null $challenge): array
 	{
 		$payload   = $this->payload($payload);
 		$challenge = $this->challenge($challenge);

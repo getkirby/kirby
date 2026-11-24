@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Nebeliko neišsaugotų pakeitimų",
 	"lock.unsaved.files": "Unsaved files",
 	"lock.unsaved.pages": "Unsaved pages",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Unsaved accounts",
 	"lock.isLocked": "Unsaved changes by {email}",
 	"lock.unlock": "Atrakinti",

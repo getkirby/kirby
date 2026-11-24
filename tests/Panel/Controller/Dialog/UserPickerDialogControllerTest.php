@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel\Controller\Dialog;
 
+use Kirby\Cms\File;
 use Kirby\Cms\User;
 use Kirby\Panel\Collector\UsersCollector;
 use Kirby\Panel\TestCase;
@@ -62,6 +63,18 @@ class UserPickerDialogControllerTest extends TestCase
 		);
 
 		$this->assertInstanceOf(UsersCollector::class, $controller->collector());
+	}
+
+	public function testCollectorWithFileModel(): void
+	{
+		$controller = new UserPickerDialogController(
+			model: new File([
+				'filename' => 'test.jpg',
+				'parent'   => $this->app->site()
+			])
+		);
+
+		$this->assertCount(2, $controller->collector()->models());
 	}
 
 	public function testFind(): void

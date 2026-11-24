@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Toolkit\HtmlString;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -192,6 +193,19 @@ class PanelTest extends TestCase
 		$this->assertSame('application/json', $response->type());
 		$this->assertSame('true', $response->header('X-Panel'));
 		$this->assertSame($data, json_decode($response->body(), true));
+	}
+
+	public function testJsonWithHtmlString(): void
+	{
+		$response = Panel::json([
+			'help'   => new HtmlString('<b>trusted</b>'),
+			'<text>' => '<b>untrusted</b>'
+		]);
+
+		$this->assertSame(
+			['<help>' => '<b>trusted</b>'],
+			json_decode($response->body(), true)
+		);
 	}
 
 	public function testMenu(): void

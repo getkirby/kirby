@@ -312,6 +312,7 @@ return array(
     'Kirby\\Form\\Mixin\\Pattern' => $baseDir . '/src/Form/Mixin/Pattern.php',
     'Kirby\\Form\\Mixin\\Placeholder' => $baseDir . '/src/Form/Mixin/Placeholder.php',
     'Kirby\\Form\\Mixin\\Prepend' => $baseDir . '/src/Form/Mixin/Prepend.php',
+    'Kirby\\Form\\Mixin\\Preselect' => $baseDir . '/src/Form/Mixin/Preselect.php',
     'Kirby\\Form\\Mixin\\Pretty' => $baseDir . '/src/Form/Mixin/Pretty.php',
     'Kirby\\Form\\Mixin\\Required' => $baseDir . '/src/Form/Mixin/Required.php',
     'Kirby\\Form\\Mixin\\Separator' => $baseDir . '/src/Form/Mixin/Separator.php',

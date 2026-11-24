@@ -344,9 +344,17 @@ class Challenges
 			$this->auth->limits()->ensure($email);
 			$this->auth->limits()->track($email, triggerHook: false);
 
-			// a missing user must not be observable;
+			// a missing user or a challenge that is not available
+			// for the user and mode must not be observable (the two
+			// cases would otherwise be distinguishable from each other);
 			// instead keep the session generically pending
-			if ($user === null) {
+			if (
+				$user === null ||
+				(
+					$session->get('kirby.challenge.type') !== $type &&
+					in_array($type, $this->available($user, $mode), true) === false
+				)
+			) {
 				$this->keepPending($session, $email, $mode);
 				return null;
 			}
@@ -354,15 +362,6 @@ class Challenges
 			// keep existing challenge if the requested type is same
 			if ($session->get('kirby.challenge.type') === $type) {
 				return $this->get($type, $user, $mode);
-			}
-
-			// check if new challenge is available for the user and mode
-			$available = $this->available($user, $mode);
-
-			if (in_array($type, $available, true) === false) {
-				throw new InvalidArgumentException(
-					fallback: 'The requested challenge is not available'
-				);
 			}
 
 			// clear existing challenge

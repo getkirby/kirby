@@ -5,6 +5,9 @@ namespace Kirby\Panel\Controller\View;
 use Kirby\Cms\Language;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Content\VersionId;
+use Kirby\Data\Json;
+use Kirby\Data\Yaml;
+use Kirby\Panel\Response\JsonResponse;
 use Kirby\Panel\TestCase;
 use Kirby\Panel\Ui\View;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -99,6 +102,45 @@ class ModelViewControllerTest extends TestCase
 		$controller = new TestModelViewController($this->model);
 		$prev       = $controller->prev();
 		$this->assertNull($prev);
+	}
+
+	public function testPropsDropsFakeMarkedKeys(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/test' => [
+					'columns' => [
+						1 => [
+							'fields' => [
+								'rows' => [
+									'type'   => 'structure',
+									'fields' => [
+										'text' => ['type' => 'text']
+									]
+								]
+							]
+						]
+					]
+				]
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$model = $this->app->page('test');
+		$model->version('latest')->save([
+			'rows' => Yaml::encode([
+				['text' => 'Row', '<text>' => '<b>x</b>']
+			])
+		]);
+
+		$controller = new TestModelViewController($model);
+		$response   = new JsonResponse($controller->props());
+		$versions   = Json::decode($response->body())['response']['versions'];
+
+		// the versions are objects, which the frontend walks as well
+		$this->assertSame([['text' => 'Row']], $versions['latest']['rows']);
+		$this->assertSame([['text' => 'Row']], $versions['changes']['rows']);
 	}
 
 	public function testTab(): void

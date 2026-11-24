@@ -186,6 +186,31 @@ describe("k-writer-input", () => {
 		});
 	});
 
+	describe("isCursorAtEnd computed", () => {
+		it("follows the cursor", async () => {
+			const wrapper = await ready({ value: "<p>Hello</p>" });
+			const end = editor(wrapper).selectionAtEnd.head;
+			editor(wrapper).setSelection(end, end);
+			expect(wrapper.vm.isCursorAtEnd).toBe(true);
+			editor(wrapper).setSelection(3, 3);
+			expect(wrapper.vm.isCursorAtEnd).toBe(false);
+			editor(wrapper).setSelection(end, end);
+			expect(wrapper.vm.isCursorAtEnd).toBe(true);
+		});
+	});
+
+	describe("isCursorAtStart computed", () => {
+		it("follows the cursor", async () => {
+			const wrapper = await ready({ value: "<p>Hello</p>" });
+			editor(wrapper).setSelection(1, 1);
+			expect(wrapper.vm.isCursorAtStart).toBe(true);
+			editor(wrapper).setSelection(3, 3);
+			expect(wrapper.vm.isCursorAtStart).toBe(false);
+			editor(wrapper).setSelection(1, 1);
+			expect(wrapper.vm.isCursorAtStart).toBe(true);
+		});
+	});
+
 	describe("toolbarOptions computed", () => {
 		it("passes the editor and the toolbar options", async () => {
 			const wrapper = await ready();

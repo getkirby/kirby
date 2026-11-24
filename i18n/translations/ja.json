@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "未保存の変更はありません",
 	"lock.unsaved.files": "未保存のファイル",
 	"lock.unsaved.pages": "未保存のページ",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "未保存のアカウント",
 	"lock.isLocked": "{email}による未保存の変更",
 	"lock.unlock": "ロック解除",

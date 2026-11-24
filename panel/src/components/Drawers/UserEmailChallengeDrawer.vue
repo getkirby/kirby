@@ -129,8 +129,8 @@ export default {
 		disableAsAdmin() {
 			// an admin managing another user re-enters their own password
 			this.confirmPassword({
-				text: this.$t("login.challenge.email.disable.confirm", {
-					user: this.$helper.string.escapeHTML(this.user.email)
+				text: this.$th("login.challenge.email.disable.confirm", {
+					user: this.user.email
 				}),
 				button: {
 					text: this.$t("disable"),

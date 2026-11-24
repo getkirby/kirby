@@ -287,6 +287,21 @@ class FieldsTest extends TestCase
 		$this->assertSame(['a' => 'a', 'b' => 'b'], $fields->defaults());
 	}
 
+	public function testDefaultsWithNonValueField(): void
+	{
+		$fields = new Fields([
+			'a' => [
+				'default' => 'a',
+				'type'    => 'text'
+			],
+			'b' => [
+				'type' => 'info'
+			],
+		], $this->model);
+
+		$this->assertSame(['a' => 'a'], $fields->defaults());
+	}
+
 	public function testErrors(): void
 	{
 		$fields = new Fields([
@@ -536,8 +551,10 @@ class FieldsTest extends TestCase
 			'b' => 'B'
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'B',
+			'a' => 'A',
 		], $fields->toFormValues());
 	}
 
@@ -1022,8 +1039,10 @@ class FieldsTest extends TestCase
 			'b' => 'B updated',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'a' => 'A updated',
+			'b' => 'B updated',
 		], $fields->toFormValues());
 	}
 
@@ -1161,7 +1180,8 @@ class FieldsTest extends TestCase
 
 		$this->assertSame([
 			'a' => 'A updated',
-		], $fields->toStoredValues(), 'The info field can never be submitted. It has no value.');
+			'b' => 'B updated',
+		], $fields->toStoredValues(), 'The info field has no value. Content with the same name is kept as passthrough.');
 	}
 
 	public function testSubmitWithPassthrough(): void
@@ -1240,8 +1260,10 @@ class FieldsTest extends TestCase
 			'b' => 'Value b',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'Value b',
+			'a' => 'Value a',
 		], $fields->toFormValues());
 	}
 
@@ -1346,6 +1368,23 @@ class FieldsTest extends TestCase
 		], $fields->toProps(defaults: true));
 	}
 
+	public function testToPropsWithDefaultsAndNonValueField(): void
+	{
+		$this->setUpSingleLanguage();
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'type' => 'info'
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertArrayNotHasKey('default', $fields->toProps(defaults: true)['a']);
+	}
+
 	public function testToPropsWithoutUpdatePermission(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1407,8 +1446,10 @@ class FieldsTest extends TestCase
 			'b' => 'Value b',
 		]);
 
+		// the value for the field without a value is kept as passthrough
 		$this->assertSame([
 			'b' => 'Value b',
+			'a' => 'Value a',
 		], $fields->toStoredValues());
 	}
 
@@ -1428,6 +1469,22 @@ class FieldsTest extends TestCase
 		$this->expectExceptionMessageIs('Please fix all form errors…');
 
 		$fields->validate();
+	}
+
+	public function testValidateWithListFieldErrors(): void
+	{
+		$fields = new Fields(
+			fields: [
+				'pages' => [
+					'type' => 'pagelist',
+					'min'  => 1
+				]
+			],
+			model: $this->model
+		);
+
+		$this->assertArrayHasKey('pages', $fields->errors());
+		$this->assertNull($fields->validate());
 	}
 
 	public function testValidateWithoutErrors(): void

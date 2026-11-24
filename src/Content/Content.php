@@ -110,6 +110,12 @@ class Content
 
 		// go through all fields of new template
 		foreach ($newFields as $newField) {
+			// fields without a value (e.g. info fields or
+			// converted sections) don't own any content
+			if ($newField->hasValue() === false) {
+				continue;
+			}
+
 			$name     = $newField->name();
 			$oldField = $oldFields->get($name);
 

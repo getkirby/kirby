@@ -108,7 +108,7 @@ class FileChangeTemplateTest extends ModelTestCase
 		// changing to another template
 		$modified = $file->changeTemplate('b');
 		$this->assertSame('b', $modified->template());
-		$this->assertNull($modified->caption()->value());
+		$this->assertSame('Caption', $modified->caption()->value(), 'The caption should be kept because the info field has no value');
 		$this->assertSame('Text', $modified->text()->value());
 		$this->assertSame(2, $calls);
 	}
@@ -481,13 +481,13 @@ class FileChangeTemplateTest extends ModelTestCase
 		$contentFR = $modified->content('fr');
 
 		$this->assertSame('This is the text', $contentEN->text()->value());
-		$this->assertNull($contentEN->caption()->value(), 'The caption should be null because it turned into an info field');
+		$this->assertSame('This is the caption', $contentEN->caption()->value(), 'The caption should be kept because the info field has no value');
 
 		$this->assertSame('Das ist der Text', $contentDE->text()->value());
-		$this->assertNull($contentDE->caption()->value(), 'The caption should be null because it turned into an info field');
+		$this->assertSame('Das ist die Caption', $contentDE->caption()->value(), 'The caption should be kept because the info field has no value');
 
 		$this->assertSame('This is the text', $contentFR->text()->value(), 'should fall back to the default language');
-		$this->assertNull($contentFR->caption()->value(), 'should fall back to the default language');
+		$this->assertSame('This is the caption', $contentFR->caption()->value(), 'should fall back to the default language');
 	}
 
 	public function testChangeTemplateWhenStorageFails(): void

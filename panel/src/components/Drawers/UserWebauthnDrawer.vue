@@ -139,8 +139,8 @@ export default {
 			// user, admin needs to re-enter their own password
 			if (this.assertion === null) {
 				this.confirmPassword({
-					text: this.$t("login.webauthn.remove.confirm", {
-						user: this.$helper.string.escapeHTML(this.user.email)
+					text: this.$th("login.webauthn.remove.confirm", {
+						user: this.user.email
 					}),
 					button: { text: this.$t("delete") },
 					onSubmit: (password) => this.request("remove", { id, password })

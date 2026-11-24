@@ -105,6 +105,19 @@ class ViewDocumentResponseTest extends TestCase
 		$this->assertArrayHasKey('Content-Security-Policy', $response->headers());
 		$this->assertSame($response->cors(), $response->headers()['Content-Security-Policy']);
 		$this->assertSame('noindex, nofollow', $response->headers()['X-Robots-Tag']);
+		$this->assertSame('no-store, private', $response->headers()['Cache-Control']);
+	}
+
+	public function testHeadersWithFallbacks(): void
+	{
+		$response = new ViewDocumentResponse();
+		$response->setHeaderFallbacks([
+			'Cache-Control' => 'public',
+			'X-Test'        => 'test'
+		]);
+
+		$this->assertSame('test', $response->headers()['X-Test']);
+		$this->assertSame('no-store, private', $response->headers()['Cache-Control']);
 	}
 
 	public function testType(): void

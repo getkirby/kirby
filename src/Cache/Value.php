@@ -2,6 +2,7 @@
 
 namespace Kirby\Cache;
 
+use JsonException;
 use Throwable;
 
 /**
@@ -106,11 +107,18 @@ class Value
 	}
 
 	/**
-	 * Converts the object to a JSON string
+	 * Converts the object to a JSON string;
+	 * returns an empty string if the value cannot
+	 * be encoded (e.g. invalid UTF-8), which results
+	 * in an empty cache entry that is treated as a miss
 	 */
 	public function toJson(): string
 	{
-		return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+		try {
+			return json_encode($this->toArray(), JSON_THROW_ON_ERROR);
+		} catch (JsonException) {
+			return '';
+		}
 	}
 
 	/**

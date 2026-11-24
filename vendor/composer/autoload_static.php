@@ -439,6 +439,7 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Form\\Mixin\\Pattern' => __DIR__ . '/../..' . '/src/Form/Mixin/Pattern.php',
         'Kirby\\Form\\Mixin\\Placeholder' => __DIR__ . '/../..' . '/src/Form/Mixin/Placeholder.php',
         'Kirby\\Form\\Mixin\\Prepend' => __DIR__ . '/../..' . '/src/Form/Mixin/Prepend.php',
+        'Kirby\\Form\\Mixin\\Preselect' => __DIR__ . '/../..' . '/src/Form/Mixin/Preselect.php',
         'Kirby\\Form\\Mixin\\Pretty' => __DIR__ . '/../..' . '/src/Form/Mixin/Pretty.php',
         'Kirby\\Form\\Mixin\\Required' => __DIR__ . '/../..' . '/src/Form/Mixin/Required.php',
         'Kirby\\Form\\Mixin\\Separator' => __DIR__ . '/../..' . '/src/Form/Mixin/Separator.php',

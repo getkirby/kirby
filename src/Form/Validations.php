@@ -150,11 +150,10 @@ class Validations
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
-			method_exists($field, 'options') === true
+			method_exists($field, 'options') === true &&
+			method_exists($field, 'hasOptionValue') === true
 		) {
-			$values = array_column($field->options(), 'value');
-
-			if (in_array($value, $values, true) !== true) {
+			if ($field->hasOptionValue($value) !== true) {
 				throw new InvalidArgumentException(
 					key: 'validation.option'
 				);
@@ -171,12 +170,11 @@ class Validations
 	{
 		if (
 			$field->isEmptyValue($value) === false &&
-			method_exists($field, 'options') === true
+			method_exists($field, 'options') === true &&
+			method_exists($field, 'hasOptionValue') === true
 		) {
-			$values = array_column($field->options(), 'value');
-
 			foreach ($value as $val) {
-				if (in_array($val, $values, true) === false) {
+				if ($field->hasOptionValue($val) === false) {
 					throw new InvalidArgumentException(
 						key: 'validation.option'
 					);

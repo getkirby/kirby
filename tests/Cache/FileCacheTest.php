@@ -385,4 +385,20 @@ class FileCacheTest extends TestCase
 		$this->assertDirectoryExists($root . '/foo');
 		$this->assertDirectoryExists($root);
 	}
+
+	public function testSetInvalidValue(): void
+	{
+		$cache = new FileCache([
+			'root' => static::TMP
+		]);
+
+		// existing entry gets overwritten with an empty entry
+		// when the new value cannot be encoded
+		$this->assertTrue($cache->set('foo', 'A basic value'));
+		$this->assertTrue($cache->exists('foo'));
+
+		$this->assertTrue($cache->set('foo', "\xC3"));
+		$this->assertNull($cache->retrieve('foo'));
+		$this->assertNull($cache->get('foo'));
+	}
 }

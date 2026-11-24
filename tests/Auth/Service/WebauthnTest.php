@@ -359,6 +359,15 @@ class WebauthnTest extends TestCase
 		);
 	}
 
+	public function testVerifyLoginNullChallenge(): void
+	{
+		// a challenge that was used up by an earlier attempt
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+
+		$this->webauthn()->verifyLogin([], ['id' => 'aaa'], null);
+	}
+
 	public function testVerifyLoginRejectsNonStringPublicKey(): void
 	{
 		$this->expectException(InvalidArgumentException::class);
@@ -441,6 +450,15 @@ class WebauthnTest extends TestCase
 			['response' => ['clientDataJSON' => 'x']],
 			''
 		);
+	}
+
+	public function testVerifyRegisterNullChallenge(): void
+	{
+		// a challenge that was used up by an earlier attempt
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The passkey challenge is missing or expired');
+
+		$this->webauthn()->verifyRegister(['client' => 'x'], null);
 	}
 
 	public function testVerifyRegisterSucceeds(): void

@@ -8,11 +8,13 @@ use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Controller\Dialog\FilePickerDialogController;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 class FilePickerFieldTestApi extends Api
 {
+	public Closure|null $preflight = null;
 	public string|null $template = null;
 
 	public function upload(
@@ -22,7 +24,12 @@ class FilePickerFieldTestApi extends Api
 		string|null $template = null,
 		Closure|null $preflight = null
 	): array {
-		$this->template = $template;
+		$this->preflight = $preflight;
+		$this->template  = $template;
+
+		// like the real upload handler, authorize the
+		// upload before any data gets processed
+		$preflight?->__invoke('test.txt', $template);
 
 		return [
 			'status' => 'ok',
@@ -558,6 +565,65 @@ class FilePickerFieldTest extends TestCase
 		$this->assertSame('custom', $api->template);
 		$this->assertSame('custom', $parent->createdFile['template']);
 		$this->assertSame('custom', $result['data']);
+	}
+
+	public function testUploadPreflight(): void
+	{
+		$this->app->impersonate('kirby');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+		$field  = $this->field('filepicker', [
+			'model' => $parent
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		$field->upload($api, $field->uploads(), fn ($file) => $file);
+
+		$this->assertInstanceOf(Closure::class, $api->preflight);
+		$this->assertSame('test.txt', $parent->createdFile['filename']);
+	}
+
+	public function testUploadPreflightWithoutCreatePermission(): void
+	{
+		// the permission cache is keyed by template and role,
+		// so the role needs to be unique for this test
+		$role = 'client-' . uuid();
+
+		$this->app = $this->app->clone([
+			'roles' => [
+				[
+					'name'        => $role,
+					'permissions' => [
+						'files' => ['create' => false]
+					]
+				]
+			],
+			'users' => [
+				[
+					'email' => 'client@getkirby.com',
+					'role'  => $role
+				]
+			]
+		]);
+		$this->app->impersonate('client@getkirby.com');
+
+		$parent = new FilePickerFieldTestPage(['slug' => 'test']);
+		$field  = $this->field('filepicker', [
+			'model' => $parent
+		]);
+
+		$api = new FilePickerFieldTestApi(['kirby' => $this->app]);
+
+		try {
+			$field->upload($api, $field->uploads(), fn ($file) => $file);
+			$this->fail('The upload should have been rejected');
+		} catch (PermissionException $e) {
+			$this->assertSame('The file cannot be created', $e->getMessage());
+		}
+
+		// the file has not been created
+		$this->assertSame([], $parent->createdFile);
 	}
 
 	public function testUploadWithInvalidParentQuery(): void

@@ -156,19 +156,22 @@ class WebauthnChallengeTest extends TestCase
 	public function testVerifySucceeds(): void
 	{
 		[$payload, $secret] = $this->assertion(signCount: 9);
-
-		$this->app->impersonate('kirby');
+		touch(static::TMP . '/site/accounts/marge/.htpasswd', 1337000000);
 
 		$challenge = new WebauthnChallenge($this->user, 'webauthn', 'login', 600);
 		$result    = $challenge->verify($payload, new Pending(secret: $secret));
 
 		$this->assertTrue($result);
 
-		// the authenticator's new counter is persisted on the credential
+		// the authenticator's new counter is persisted on the credential,
+		// although nobody is logged in yet
 		$this->assertSame(
 			9,
 			$this->app->user('marge')->secret('webauthn')[0]['counter']
 		);
+
+		// keeps the sessions of the user on other devices
+		$this->assertSame(1337000000, $this->app->user('marge')->passwordTimestamp());
 	}
 
 	protected function writeCredentials(mixed $webauthn): void

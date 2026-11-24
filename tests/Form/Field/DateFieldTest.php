@@ -5,6 +5,7 @@ namespace Kirby\Form\Field;
 use DateTime;
 use DateTimeImmutable;
 use Kirby\Toolkit\Date;
+use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -28,6 +29,22 @@ class DateFieldTest extends TestCase
 
 		$field = $this->field('date', ['display' => 'dd[mm']);
 		$this->assertSame('DD[MM', $field->display());
+	}
+
+	public function testDisplayWithTranslation(): void
+	{
+		$props = [
+			'display' => [
+				'en' => 'MM/DD/YYYY',
+				'de' => 'DD.MM.YYYY'
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('MM/DD/YYYY', $this->field('date', $props)->display());
+
+		I18n::$locale = 'de';
+		$this->assertSame('DD.MM.YYYY', $this->field('date', $props)->display());
 	}
 
 	public function testMax(): void
@@ -255,6 +272,24 @@ class DateFieldTest extends TestCase
 		]);
 
 		$this->assertFalse($field->time()['times']);
+	}
+
+	public function testTimeWithTranslatedDisplay(): void
+	{
+		$props = [
+			'time' => [
+				'display' => [
+					'en' => 'hh:mm a',
+					'de' => 'HH:mm'
+				]
+			]
+		];
+
+		I18n::$locale = 'en';
+		$this->assertSame('hh:mm a', $this->field('date', $props)->time()['display']);
+
+		I18n::$locale = 'de';
+		$this->assertSame('HH:mm', $this->field('date', $props)->time()['display']);
 	}
 
 	public function testToStoredValue(): void

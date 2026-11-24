@@ -1,5 +1,10 @@
 <template>
 	<k-dialog v-bind="$props" class="k-changes-dialog">
+		<section v-if="site">
+			<k-headline>{{ $t("lock.unsaved.site") }}</k-headline>
+			<k-items :items="[site]" layout="list" />
+		</section>
+
 		<section v-if="pages.length">
 			<k-headline>{{ $t("lock.unsaved.pages") }}</k-headline>
 			<k-items :items="pages" layout="list" />
@@ -15,7 +20,7 @@
 			<k-items :items="users" layout="list" />
 		</section>
 
-		<section v-if="!pages.length && !files.length && !users.length">
+		<section v-if="!site && !pages.length && !files.length && !users.length">
 			<k-headline>{{ $t("lock.unsaved") }}</k-headline>
 			<k-empty icon="edit-line">{{ $t("lock.unsaved.empty") }}</k-empty>
 		</section>
@@ -44,6 +49,10 @@ export default {
 		pages: {
 			type: Array,
 			default: () => []
+		},
+		site: {
+			type: Object,
+			default: null
 		},
 		// eslint-disable-next-line vue/require-prop-types
 		size: {

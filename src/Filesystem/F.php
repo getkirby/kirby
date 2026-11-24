@@ -49,9 +49,11 @@ class F
 			'm4a',
 			'midi',
 			'mp3',
+			'oga',
 			'ogg',
 			'opus',
 			'wav',
+			'weba',
 		],
 		'code' => [
 			'css',

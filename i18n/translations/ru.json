@@ -582,6 +582,7 @@
 	"lock.unsaved.empty": "Несохраненных изменений нет",
 	"lock.unsaved.files": "Несохраненные файлы",
 	"lock.unsaved.pages": "Несохраненные страницы",
+	"lock.unsaved.site": "Unsaved site",
 	"lock.unsaved.users": "Несохраненные аккаунты",
 	"lock.isLocked": "Несохраненные изменения {email}",
 	"lock.unlock": "Разблокировать",

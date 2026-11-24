@@ -161,8 +161,8 @@ describe("k-draggable", () => {
 			const wrapper = mount({ list });
 			const instance = await sortable(wrapper);
 			instance.options.onUpdate?.({
-				newDraggableIndex: 2,
-				oldDraggableIndex: 0
+				newIndex: 2,
+				oldIndex: 0
 			} as never);
 			expect(list).toStrictEqual(["b", "c", "a"]);
 			expect(wrapper.emitted("change")).toStrictEqual([
@@ -170,11 +170,29 @@ describe("k-draggable", () => {
 			]);
 		});
 
+		it("moves an item within a list with undraggable items", async () => {
+			// the draggable indexes skip undraggable items (here: "b"),
+			// which are still part of the list
+			const list = ["a", "b", "c", "d"];
+			const wrapper = mount({ list });
+			const instance = await sortable(wrapper);
+			instance.options.onUpdate?.({
+				newDraggableIndex: 1,
+				newIndex: 2,
+				oldDraggableIndex: 2,
+				oldIndex: 3
+			} as never);
+			expect(list).toStrictEqual(["a", "b", "d", "c"]);
+			expect(wrapper.emitted("change")).toStrictEqual([
+				[{ moved: { element: "d", newIndex: 2, oldIndex: 3 } }]
+			]);
+		});
+
 		it("removes an item moved into another list", async () => {
 			const list = ["a", "b", "c"];
 			const wrapper = mount({ list });
 			const instance = await sortable(wrapper);
-			instance.options.onRemove?.({ oldDraggableIndex: 1 } as never);
+			instance.options.onRemove?.({ oldIndex: 1 } as never);
 			expect(list).toStrictEqual(["a", "c"]);
 			expect(wrapper.emitted("change")).toStrictEqual([
 				[{ removed: { element: "b", oldIndex: 1 } }]
@@ -188,8 +206,8 @@ describe("k-draggable", () => {
 			const instance = await sortable(wrapper);
 			instance.options.onAdd?.({
 				from: source.element,
-				newDraggableIndex: 1,
-				oldDraggableIndex: 1
+				newIndex: 1,
+				oldIndex: 1
 			} as never);
 			expect(list).toStrictEqual(["a", "y", "b"]);
 			expect(wrapper.emitted("change")).toStrictEqual([
@@ -201,8 +219,8 @@ describe("k-draggable", () => {
 			const wrapper = mount();
 			const instance = await sortable(wrapper);
 			instance.options.onUpdate?.({
-				newDraggableIndex: 1,
-				oldDraggableIndex: 0
+				newIndex: 1,
+				oldIndex: 0
 			} as never);
 			expect(wrapper.emitted("change")).toBeUndefined();
 		});
