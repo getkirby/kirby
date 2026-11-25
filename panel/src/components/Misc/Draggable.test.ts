@@ -309,6 +309,25 @@ describe("k-draggable keyboard", () => {
 			wrapper.unmount();
 		});
 
+		it("emits the same sort and end payload as Sortable", async () => {
+			const list = ["a", "b", "c"];
+			const wrapper = mountList(list);
+			const item = wrapper.find("[title=a]").element.parentElement;
+			await press(wrapper, "a", "ArrowDown");
+			const payload = {
+				item,
+				from: wrapper.element,
+				to: wrapper.element,
+				oldIndex: 0,
+				newIndex: 1,
+				oldDraggableIndex: 0,
+				newDraggableIndex: 1
+			};
+			expect(wrapper.emitted("sort")?.[0][0]).toStrictEqual(payload);
+			expect(wrapper.emitted("end")?.[0][0]).toStrictEqual(payload);
+			wrapper.unmount();
+		});
+
 		it("leaves the handles of an inner list to the inner list", async () => {
 			const list = ["a", "b"];
 			const wrapper = vueMount(Draggable, {

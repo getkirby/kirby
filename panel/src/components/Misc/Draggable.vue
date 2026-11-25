@@ -232,8 +232,9 @@ export default {
 			}
 
 			const { draggable, filter } = this.dragOptions;
+			const children = () => [...this.$el.children];
 			const items = () =>
-				[...this.$el.children].filter(
+				children().filter(
 					(element) =>
 						(draggable === ">*" || element.matches(draggable)) &&
 						element.matches(filter) === false
@@ -258,12 +259,22 @@ export default {
 				return;
 			}
 
+			const sortEvent = {
+				item: before[oldIndex],
+				from: this.$el,
+				to: this.$el,
+				oldIndex: children().indexOf(before[oldIndex]),
+				newIndex: children().indexOf(before[newIndex]),
+				oldDraggableIndex: oldIndex,
+				newDraggableIndex: newIndex
+			};
+
 			const element = this.list[oldIndex];
 			this.list.splice(oldIndex, 1);
 			this.list.splice(newIndex, 0, element);
 			this.$emit("change", { moved: { element, newIndex, oldIndex } });
-			this.$emit("sort", { oldIndex, newIndex });
-			this.$emit("end", { oldIndex, newIndex });
+			this.$emit("sort", sortEvent);
+			this.$emit("end", sortEvent);
 
 			await this.$nextTick();
 			items()[newIndex]?.querySelector(handle)?.focus();
