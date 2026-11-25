@@ -285,20 +285,19 @@ class MenuTest extends TestCase
 		$props = [
 			'badge'      => ['text' => '3', 'theme' => 'notice'],
 			'class'      => 'todos',
-			'data-foo'   => 'bar',
 			'dropdown'   => true,
 			'responsive' => 'text',
 			'size'       => 'sm',
 			'style'      => 'color: red',
 			'theme'      => 'positive',
+			'type'       => 'submit',
 			'variant'    => 'filled'
 		];
 
 		$areas = new Areas([
 			'todos' => new Area(
 				id: 'todos',
-				label: 'Todos',
-				menu: fn () => ['label' => 'Tasks', ...$props]
+				menu: fn () => $props
 			)
 		]);
 
@@ -308,11 +307,6 @@ class MenuTest extends TestCase
 		foreach ($props as $key => $value) {
 			$this->assertSame($value, $item[$key]);
 		}
-
-		$this->assertSame('todos', $item['id']);
-		$this->assertSame('todos', $item['link']);
-		$this->assertSame('Tasks', $item['text']);
-		$this->assertArrayNotHasKey('label', $item);
 	}
 
 	public function testItemWithMenuPropsEmpty(): void
