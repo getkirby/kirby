@@ -309,6 +309,38 @@ describe("k-draggable keyboard", () => {
 			wrapper.unmount();
 		});
 
+		it("leaves the handles of an inner list to the inner list", async () => {
+			const list = ["a", "b"];
+			const wrapper = vueMount(Draggable, {
+				props: { list, handle: true },
+				attachTo: document.body,
+				slots: {
+					default: () =>
+						list.map((item: string) =>
+							h("div", { key: item }, [
+								h("button", { class: "k-sort-handle", title: item }),
+								h(Draggable, { handle: true }, () => [
+									h("div", [
+										h("button", { class: "k-sort-handle", title: item + "1" })
+									]),
+									h("div", [
+										h("button", { class: "k-sort-handle", title: item + "2" })
+									])
+								])
+							])
+						)
+				},
+				global: {
+					mocks: { $panel: { drag: { start() {}, stop() {} } } }
+				}
+			});
+			await press(wrapper, "a1", "ArrowDown");
+			expect(list).toStrictEqual(["a", "b"]);
+			await press(wrapper, "a", "ArrowDown");
+			expect(list).toStrictEqual(["b", "a"]);
+			wrapper.unmount();
+		});
+
 		it("moves an item up with ArrowUp on its handle", async () => {
 			const list = ["a", "b", "c"];
 			const wrapper = mountList(list);

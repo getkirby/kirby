@@ -17,6 +17,8 @@
 <script>
 /* eslint-disable vue/no-mutating-props */
 
+const ownedKeydowns = new WeakSet();
+
 /**
  * The Draggable component implements the widespread
  * [Sortable.js](https://github.com/RubaXa/Sortable) library.
@@ -222,10 +224,9 @@ export default {
 				event.ctrlKey ||
 				event.metaKey ||
 				event.shiftKey ||
-				this.dragOptions.disabled ||
-				!this.list ||
 				!handle ||
-				event.target.matches(handle) === false
+				event.target.matches(handle) === false ||
+				ownedKeydowns.has(event)
 			) {
 				return;
 			}
@@ -242,6 +243,12 @@ export default {
 			const newIndex = oldIndex + step;
 
 			if (oldIndex === -1) {
+				return;
+			}
+
+			ownedKeydowns.add(event);
+
+			if (this.dragOptions.disabled || !this.list) {
 				return;
 			}
 
