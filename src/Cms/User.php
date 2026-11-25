@@ -161,7 +161,9 @@ class User extends ModelWithContent
 				'users/' . $this->role(),
 				'users/default'
 			);
-		} catch (Exception) {
+		} catch (Exception $e) {
+			UserBlueprint::throwUnlessMissing($e);
+
 			return $this->blueprint ??= new UserBlueprint([
 				'model' => $this,
 				'name'  => 'default',

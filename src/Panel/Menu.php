@@ -141,10 +141,14 @@ class Menu
 			($props['drawer'] ?? null) === null
 		) {
 			$props['link'] ??= $id;
+		} else {
+			$props['link'] = null;
 		}
 
 		return new Button(
 			id: $id,
+			badge: ($props['badge'] ?? null) ?: null,
+			class: $props['class'] ?? null,
 			current: $this->isCurrent(
 				$id,
 				$props['current'] ?? null
@@ -152,11 +156,18 @@ class Menu
 			dialog: $props['dialog'] ?? null,
 			disabled: $props['disabled'] ?? false,
 			drawer: $props['drawer'] ?? null,
+			dropdown: $props['dropdown'] ?? null,
 			icon: $props['icon'] ?? null,
 			link: $props['link'] ?? null,
+			responsive: $props['responsive'] ?? false,
+			size: $props['size'] ?? null,
+			style: $props['style'] ?? null,
 			target: $props['target'] ?? null,
 			text: $text = $props['text'] ?? $props['label'] ?? null,
+			theme: $props['theme'] ?? null,
 			title: $props['title'] ?? $text,
+			type: $props['type'] ?? 'button',
+			variant: $props['variant'] ?? null,
 		);
 	}
 
