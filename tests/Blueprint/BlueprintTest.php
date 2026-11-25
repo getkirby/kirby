@@ -7,15 +7,18 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Form\Fields;
 use Kirby\TestCase;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 #[CoversClass(Blueprint::class)]
 #[CoversClass(Normalizer::class)]
@@ -275,6 +278,40 @@ class BlueprintTest extends TestCase
 		$this->assertSame('Default', $blueprint->title());
 	}
 
+	public function testExtendWithInvalidYaml(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'fields/broken' => $file
+			]
+		]);
+
+		$props = Blueprint::extend(['extends' => 'fields/broken', 'label' => 'Test']);
+
+		$this->assertSame(['label' => 'Test'], $props);
+	}
+
+	public function testExtendWithInvalidYamlInDebugMode(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'fields/broken' => $file
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('The blueprint "fields/broken" could not be loaded: ');
+
+		Blueprint::extend(['extends' => 'fields/broken', 'label' => 'Test']);
+	}
+
 	public function testFactory(): void
 	{
 		$this->app = $this->app->clone([
@@ -437,6 +474,55 @@ class BlueprintTest extends TestCase
 
 		$this->assertSame('Base', $blueprint->title());
 		$this->assertSame('pages/child', $blueprint->name());
+	}
+
+	public function testFactoryWithInvalidYaml(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken'  => $file,
+				'pages/default' => ['title' => 'Default']
+			]
+		]);
+
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/broken', 'pages/default');
+
+		$this->assertSame('pages/default', $blueprint->name());
+	}
+
+	public function testFactoryWithInvalidYamlInDebugMode(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken'  => $file,
+				'pages/default' => ['title' => 'Default']
+			],
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('The blueprint "pages/broken" could not be loaded: ');
+
+		Blueprint::factory(new Page(['slug' => 'test']), 'pages/broken', 'pages/default');
+	}
+
+	public function testFactoryWithMissingBlueprintInDebugMode(): void
+	{
+		$this->app = $this->app->clone([
+			'options' => [
+				'debug' => true
+			]
+		]);
+
+		$blueprint = Blueprint::factory(new Page(['slug' => 'test']), 'pages/nope', 'pages/default');
+
+		$this->assertSame('pages/default', $blueprint->name());
 	}
 
 	public function testFields(): void
@@ -602,6 +688,30 @@ class BlueprintTest extends TestCase
 		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
 
 		$this->assertSame('Photo', Blueprint::find('files/gallery/photo')['title']);
+	}
+
+	public function testFindWithInvalidYaml(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken' => $file
+			]
+		]);
+
+		try {
+			Blueprint::find('pages/broken');
+			$this->fail('The broken blueprint should not be found');
+		} catch (KirbyException $e) {
+			$previous = $e->getPrevious();
+
+			$this->assertInstanceOf(ParseException::class, $previous);
+			$this->assertSame(
+				'The blueprint "pages/broken" could not be loaded: ' . $previous->getMessage(),
+				$e->getMessage()
+			);
+		}
 	}
 
 	public static function pathTraversalProvider(): array
