@@ -55,7 +55,8 @@ export default {
 			return this.isInternal ? !this.file : !this.src;
 		},
 		isInternal() {
-			return this.content.location === "kirby";
+			// blueprints without a `location` field pick from Kirby
+			return this.content.location !== "web";
 		},
 		src() {
 			if (!this.isInternal) {

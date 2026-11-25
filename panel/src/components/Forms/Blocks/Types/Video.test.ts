@@ -1,5 +1,5 @@
-import { describe, expect, it } from "@test/unit";
-import { mount as vueMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it, vi } from "@test/unit";
+import { flushPromises, mount as vueMount } from "@vue/test-utils";
 import Video from "./Video.vue";
 
 const Figure = {
@@ -21,7 +21,8 @@ const VideoFrame = {
 	template: "<div />"
 };
 
-const file = { id: "a.mp4", url: "/media/a.mp4" };
+const file = "file://a";
+const items = vi.fn();
 
 function mount(props = {}, attrs = {}) {
 	return vueMount(Video, {
@@ -31,6 +32,7 @@ function mount(props = {}, attrs = {}) {
 		},
 		attrs,
 		global: {
+			mocks: { $helper: { items } },
 			stubs: { "k-block-figure": Figure, "k-video-frame": VideoFrame }
 		}
 	});
@@ -45,6 +47,10 @@ function frame(wrapper: ReturnType<typeof mount>) {
 }
 
 describe("k-block-type-video", () => {
+	beforeEach(() => {
+		items.mockReset();
+	});
+
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "FIGURE", "k-block-type-video-figure");
@@ -74,23 +80,42 @@ describe("k-block-type-video", () => {
 			});
 		});
 
-		it("plays a file from Kirby", () => {
+		it("plays a file from Kirby", async () => {
+			items.mockResolvedValueOnce({ url: "/media/p.jpg" });
+
 			const wrapper = mount({
 				content: {
 					controls: true,
 					location: "kirby",
-					poster: [{ url: "/media/a.jpg" }],
+					poster: ["file://p"],
 					url: "https://youtu.be/a",
 					video: [file]
 				}
 			});
+			await flushPromises();
+
+			expect(items).toHaveBeenCalledWith("items/files", "file://p");
 			expect(frame(wrapper).props()).toStrictEqual({
 				controls: true,
 				element: "div",
 				file,
-				poster: "/media/a.jpg",
+				poster: "/media/p.jpg",
 				url: undefined
 			});
+		});
+
+		it("skips the poster for an external video", async () => {
+			const wrapper = mount({
+				content: {
+					location: "web",
+					poster: ["file://p"],
+					url: "https://youtu.be/a"
+				}
+			});
+			await flushPromises();
+
+			expect(items).not.toHaveBeenCalled();
+			expect(frame(wrapper).props("poster")).toBeUndefined();
 		});
 
 		it("is empty without url", () => {
@@ -122,6 +147,29 @@ describe("k-block-type-video", () => {
 	describe("disabled prop", () => {
 		it("disables the figure", () => {
 			expect(figure(mount({ disabled: true })).props("disabled")).toBe(true);
+		});
+	});
+
+	// methods
+	describe("fetchPoster()", () => {
+		it("drops a response that arrives after the poster changed", async () => {
+			const cat = Promise.withResolvers();
+			items.mockReturnValueOnce(cat.promise);
+			items.mockResolvedValueOnce({ url: "/media/dog.jpg" });
+
+			const content = { location: "kirby", video: [file] };
+			const wrapper = mount({
+				content: { ...content, poster: ["file://cat"] }
+			});
+			await wrapper.setProps({
+				content: { ...content, poster: ["file://dog"] }
+			} as never);
+			await flushPromises();
+
+			cat.resolve({ url: "/media/cat.jpg" });
+			await flushPromises();
+
+			expect(frame(wrapper).props("poster")).toBe("/media/dog.jpg");
 		});
 	});
 

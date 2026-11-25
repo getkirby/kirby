@@ -13,7 +13,7 @@
 		<k-video-frame
 			:controls="content.controls"
 			:file="file"
-			:poster="poster"
+			:poster="resolvedPoster"
 			:url="url"
 			element="div"
 		/>
@@ -31,6 +31,11 @@ import Block from "./Default.vue";
  */
 export default {
 	extends: Block,
+	data() {
+		return {
+			resolvedPoster: undefined
+		};
+	},
 	computed: {
 		captionMarks() {
 			return this.field("caption", { marks: true }).marks;
@@ -49,7 +54,11 @@ export default {
 			return this.content.location === "kirby";
 		},
 		poster() {
-			return this.content.poster?.[0]?.url;
+			if (this.isInternal) {
+				return this.content.poster?.[0];
+			}
+
+			return undefined;
 		},
 		url() {
 			if (!this.isInternal) {
@@ -57,6 +66,30 @@ export default {
 			}
 
 			return undefined;
+		}
+	},
+	watch: {
+		poster: {
+			handler: "fetchPoster",
+			immediate: true
+		}
+	},
+	methods: {
+		async fetchPoster() {
+			const poster = this.poster;
+			let url;
+
+			// load the URL for the poster's file UUID from the request endpoint
+			if (poster) {
+				url = (await this.$helper.items("items/files", poster))?.url;
+
+				// the poster might have changed while the request was in flight
+				if (this.poster !== poster) {
+					return;
+				}
+			}
+
+			this.resolvedPoster = url;
 		}
 	}
 };
