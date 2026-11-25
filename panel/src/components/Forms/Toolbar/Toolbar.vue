@@ -112,7 +112,7 @@ export default {
 				return;
 			}
 
-			if (this.$el.closest("[dir]")?.dir === "rtl") {
+			if (getComputedStyle(this.$el).direction === "rtl") {
 				step = -step;
 			}
 

@@ -150,9 +150,9 @@ const FocusableButton = {
 	template: `<button :aria-disabled="disabled ? 'true' : null" :title="title" />`
 };
 
-function mountFocusable(buttons: unknown[], dir = "ltr") {
+function mountFocusable(buttons: unknown[], direction = "ltr") {
 	const root = document.createElement("div");
-	root.dir = dir;
+	root.style.direction = direction;
 	document.body.append(root);
 	return vueMount(Toolbar, {
 		props: { buttons },
