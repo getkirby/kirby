@@ -48,6 +48,9 @@ import Block from "./Default.vue";
 export default {
 	extends: Block,
 	props: {
+		/**
+		 * @since 6.1.0
+		 */
 		isHidden: Boolean,
 		tabs: Object
 	},
