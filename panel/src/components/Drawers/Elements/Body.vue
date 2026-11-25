@@ -22,10 +22,8 @@ export default {};
 	background: var(--drawer-color-back);
 }
 /* Sticky elements inside drawer */
-.k-drawer-body
-	.k-writer-input:focus-within
-	.k-toolbar:not([data-inline="true"]),
-.k-drawer-body .k-textarea-input-wrapper:focus-within .k-toolbar,
+.k-drawer-body .k-writer-input:has(:focus) .k-toolbar:not([data-inline="true"]),
+.k-drawer-body .k-textarea-input-wrapper:has(:focus) .k-toolbar,
 .k-drawer-body .k-table th {
 	top: -1.5rem;
 }

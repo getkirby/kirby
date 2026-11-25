@@ -62,7 +62,7 @@ export default {
 .k-field-counter {
 	display: none;
 }
-.k-text-field:focus-within .k-field-counter {
+.k-text-field:has(:focus) .k-field-counter {
 	display: block;
 }
 </style>
