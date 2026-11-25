@@ -320,6 +320,57 @@ class MenuTest extends TestCase
 		$this->assertNull($item);
 	}
 
+	public function testItemWithMenuProps(): void
+	{
+		$props = [
+			'badge'      => ['text' => '3', 'theme' => 'notice'],
+			'class'      => 'todos',
+			'dropdown'   => true,
+			'responsive' => 'text',
+			'size'       => 'sm',
+			'style'      => 'color: red',
+			'theme'      => 'positive',
+			'type'       => 'submit',
+			'variant'    => 'filled'
+		];
+
+		$areas = new Areas([
+			'todos' => new Area(
+				id: 'todos',
+				menu: fn () => $props
+			)
+		]);
+
+		$menu = new Menu($areas);
+		$item = $menu->item('todos')->props();
+
+		foreach ($props as $key => $value) {
+			$this->assertSame($value, $item[$key]);
+		}
+	}
+
+	public function testItemWithMenuPropsEmpty(): void
+	{
+		$areas = new Areas([
+			'todos' => new Area(
+				id: 'todos',
+				menu: fn () => [
+					'badge'   => false,
+					'current' => false,
+					'theme'   => null,
+					'type'    => null
+				]
+			)
+		]);
+
+		$menu = new Menu($areas, current: 'todos');
+		$item = $menu->item('todos')->props();
+		$this->assertNull($item['badge']);
+		$this->assertFalse($item['current']);
+		$this->assertNull($item['theme']);
+		$this->assertSame('button', $item['type']);
+	}
+
 	public function testItemWithNoPermission(): void
 	{
 		$menu = new Menu(permissions: ['access' => ['users' => false]]);
