@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
@@ -305,7 +306,8 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->expectException(ParseException::class);
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('The blueprint "fields/broken" could not be loaded: ');
 
 		Blueprint::extend(['extends' => 'fields/broken', 'label' => 'Test']);
 	}
@@ -504,7 +506,8 @@ class BlueprintTest extends TestCase
 			]
 		]);
 
-		$this->expectException(ParseException::class);
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('The blueprint "pages/broken" could not be loaded: ');
 
 		Blueprint::factory(new Page(['slug' => 'test']), 'pages/broken', 'pages/default');
 	}
@@ -685,6 +688,30 @@ class BlueprintTest extends TestCase
 		Data::write(static::TMP . '/files/gallery/photo.yml', ['title' => 'Photo']);
 
 		$this->assertSame('Photo', Blueprint::find('files/gallery/photo')['title']);
+	}
+
+	public function testFindWithInvalidYaml(): void
+	{
+		F::write($file = static::TMP . '/broken.yml', 'title: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/broken' => $file
+			]
+		]);
+
+		try {
+			Blueprint::find('pages/broken');
+			$this->fail('The broken blueprint should not be found');
+		} catch (KirbyException $e) {
+			$previous = $e->getPrevious();
+
+			$this->assertInstanceOf(ParseException::class, $previous);
+			$this->assertSame(
+				'The blueprint "pages/broken" could not be loaded: ' . $previous->getMessage(),
+				$e->getMessage()
+			);
+		}
 	}
 
 	public static function pathTraversalProvider(): array

@@ -7,6 +7,7 @@ use Kirby\Cms\App;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\User;
 use Kirby\Data\Data;
+use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
@@ -160,8 +161,9 @@ class Blueprint
 					$mixin = static::extend($mixin);
 					$props = A::merge($mixin, $props, A::MERGE_REPLACE);
 				} catch (Exception $e) {
-					// keep the props unextended if the snippet wasn't found
 					static::throwUnlessMissing($e);
+
+					// keep the props unextended if the snippet wasn't found
 				}
 			}
 
@@ -275,6 +277,7 @@ class Blueprint
 	 * Find a blueprint by name
 	 *
 	 * @throws NotFoundException If the blueprint cannot be found
+	 * @throws KirbyException If the blueprint file cannot be read
 	 */
 	public static function find(string $name): array
 	{
@@ -311,7 +314,14 @@ class Blueprint
 
 		// now ensure that we always return the data array
 		if (is_string($file) === true && F::exists($file) === true) {
-			return static::$loaded[$name] = Data::read($file);
+			try {
+				return static::$loaded[$name] = Data::read($file);
+			} catch (Exception $e) {
+				throw new KirbyException(
+					message: 'The blueprint "' . $name . '" could not be loaded: ' . $e->getMessage(),
+					previous: $e
+				);
+			}
 		}
 
 		if (is_array($file) === true) {
@@ -471,10 +481,12 @@ class Blueprint
 	/**
 	 * Throws the exception in debug mode, unless
 	 * it only says that a blueprint is missing
+	 * @internal
+	 * @since 6.0.1
 	 *
 	 * @throws Exception If an existing blueprint cannot be loaded
 	 */
-	protected static function throwUnlessMissing(Exception $e): void
+	public static function throwUnlessMissing(Exception $e): void
 	{
 		if (
 			$e instanceof NotFoundException === false &&
