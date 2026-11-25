@@ -282,22 +282,59 @@ class MenuTest extends TestCase
 
 	public function testItemWithMenuProps(): void
 	{
+		$props = [
+			'badge'      => ['text' => '3', 'theme' => 'notice'],
+			'class'      => 'todos',
+			'data-foo'   => 'bar',
+			'dropdown'   => true,
+			'responsive' => 'text',
+			'size'       => 'sm',
+			'style'      => 'color: red',
+			'theme'      => 'positive',
+			'variant'    => 'filled'
+		];
+
 		$areas = new Areas([
 			'todos' => new Area(
 				id: 'todos',
-				menu: fn () => [
-					'badge'   => ['text' => '3', 'theme' => 'notice'],
-					'theme'   => 'positive',
-					'variant' => 'filled'
-				]
+				label: 'Todos',
+				menu: fn () => ['label' => 'Tasks', ...$props]
 			)
 		]);
 
 		$menu = new Menu($areas);
 		$item = $menu->item('todos')->props();
-		$this->assertSame(['text' => '3', 'theme' => 'notice'], $item['badge']);
-		$this->assertSame('positive', $item['theme']);
-		$this->assertSame('filled', $item['variant']);
+
+		foreach ($props as $key => $value) {
+			$this->assertSame($value, $item[$key]);
+		}
+
+		$this->assertSame('todos', $item['id']);
+		$this->assertSame('todos', $item['link']);
+		$this->assertSame('Tasks', $item['text']);
+		$this->assertArrayNotHasKey('label', $item);
+	}
+
+	public function testItemWithMenuPropsEmpty(): void
+	{
+		$areas = new Areas([
+			'todos' => new Area(
+				id: 'todos',
+				menu: fn () => [
+					'badge'   => false,
+					'current' => false,
+					'theme'   => null,
+					'type'    => null
+				]
+			)
+		]);
+
+		$menu = new Menu($areas, current: 'todos');
+		$item = $menu->item('todos')->props();
+		$this->assertNull($item['badge']);
+		$this->assertFalse($item['current']);
+		$this->assertNull($item['theme']);
+		$this->assertSame('button', $item['type']);
 	}
 
 	public function testItemWithNoPermission(): void

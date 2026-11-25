@@ -143,24 +143,24 @@ class Menu
 			$props['link'] ??= $id;
 		}
 
-		return new Button(
-			id: $id,
-			badge: $props['badge'] ?? null,
-			current: $this->isCurrent(
+		$text = $props['text'] ?? $props['label'] ?? null;
+
+		return new Button(...[
+			...array_filter(A::without($menu, 'label')),
+			'id'       => $id,
+			'current'  => $this->isCurrent(
 				$id,
 				$props['current'] ?? null
 			),
-			dialog: $props['dialog'] ?? null,
-			disabled: $props['disabled'] ?? false,
-			drawer: $props['drawer'] ?? null,
-			icon: $props['icon'] ?? null,
-			link: $props['link'] ?? null,
-			target: $props['target'] ?? null,
-			text: $text = $props['text'] ?? $props['label'] ?? null,
-			theme: $props['theme'] ?? null,
-			title: $props['title'] ?? $text,
-			variant: $props['variant'] ?? null,
-		);
+			'dialog'   => $props['dialog'] ?? null,
+			'disabled' => $props['disabled'] ?? false,
+			'drawer'   => $props['drawer'] ?? null,
+			'icon'     => $props['icon'] ?? null,
+			'link'     => $props['link'] ?? null,
+			'target'   => $props['target'] ?? null,
+			'text'     => $text,
+			'title'    => $props['title'] ?? $text
+		]);
 	}
 
 	/**
