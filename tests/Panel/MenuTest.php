@@ -249,6 +249,46 @@ class MenuTest extends TestCase
 		$this->assertNull($item['link']);
 	}
 
+	public function testItemWithDialogOrDrawerAndLink(): void
+	{
+		$areas = new Areas([
+			'docs' => new Area(
+				id: 'docs',
+				link: 'docs',
+				menu: true
+			),
+			'todos' => new Area(
+				id: 'todos',
+				dialog: 'todos/create',
+				link: 'todos',
+				menu: true
+			),
+			'notes' => new Area(
+				id: 'notes',
+				link: 'notes',
+				menu: fn () => ['drawer' => 'notes/create']
+			)
+		]);
+
+		$menu = new Menu($areas);
+
+		$item = $menu->item('todos')->props();
+		$this->assertSame('todos/create', $item['dialog']);
+		$this->assertNull($item['link']);
+
+		$item = $menu->item('notes')->props();
+		$this->assertSame('notes/create', $item['drawer']);
+		$this->assertNull($item['link']);
+
+		$item = $menu->item('docs', ['dialog' => 'docs/search'])->props();
+		$this->assertSame('docs/search', $item['dialog']);
+		$this->assertNull($item['link']);
+
+		$item = $menu->item('todos', ['dialog' => null])->props();
+		$this->assertNull($item['dialog']);
+		$this->assertSame('todos', $item['link']);
+	}
+
 	public function testItemWithExtraProps(): void
 	{
 		$menu = new Menu();

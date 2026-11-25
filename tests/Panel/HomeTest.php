@@ -46,6 +46,32 @@ class HomeTest extends TestCase
 		$this->assertSame('/panel/site', $home->alternative());
 	}
 
+	public function testAlternativeWithDialog(): void
+	{
+		$this->app = $this->app->clone([
+			'areas' => [
+				'todos' => fn () => [
+					'dialog' => 'todos/create',
+					'label'  => 'Todos',
+					'link'   => 'todos',
+					'menu'   => true
+				]
+			],
+			'options' => [
+				'panel' => [
+					'menu' => ['todos', 'site']
+				]
+			],
+			'users' => [
+				['email' => 'test@getkirby.com', 'role' => 'admin']
+			]
+		]);
+
+		$this->app->impersonate('test@getkirby.com');
+		$home = $this->app->panel()->home();
+		$this->assertSame('/panel/site', $home->alternative());
+	}
+
 	public function testAlternativeWithLimitedAccess(): void
 	{
 		$this->app = $this->app->clone([

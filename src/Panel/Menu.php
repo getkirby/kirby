@@ -141,6 +141,8 @@ class Menu
 			($props['drawer'] ?? null) === null
 		) {
 			$props['link'] ??= $id;
+		} else {
+			$props['link'] = null;
 		}
 
 		return new Button(
