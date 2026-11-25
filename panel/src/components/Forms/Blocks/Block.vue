@@ -25,16 +25,6 @@
 		@focus.stop="onFocus"
 		@focusin.stop="onFocusIn"
 	>
-		<div :class="className" :data-disabled="isDisabled" class="k-block">
-			<component
-				:is="customComponent"
-				ref="editor"
-				v-bind="$props"
-				:tabs="tabs"
-				v-on="listeners"
-			/>
-		</div>
-
 		<k-block-options
 			v-if="isLastSelected && !isDisabled"
 			ref="options"
@@ -48,6 +38,16 @@
 			}"
 			v-on="listenersForOptions"
 		/>
+
+		<div :class="className" :data-disabled="isDisabled" class="k-block">
+			<component
+				:is="customComponent"
+				ref="editor"
+				v-bind="$props"
+				:tabs="tabs"
+				v-on="listeners"
+			/>
+		</div>
 	</div>
 </template>
 
