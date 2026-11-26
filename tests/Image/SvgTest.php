@@ -41,7 +41,9 @@ class SvgTest extends TestCase
 		return [
 			'size'                  => ['width="40" height="10"', true],
 			'width'                 => ['width="40" viewBox="0 0 20 10"', true],
-			'height in em'          => ['height="2em"', false],
+			'height in em'          => ['height="2em"', true],
+			'width in rem'          => ['width="3rem"', true],
+			'zero in em'            => ['width="0em"', false],
 			'percentages'           => ['width="100%" height="100%" viewBox="0 0 20 10"', false],
 			'viewBox'               => ['viewBox="0 0 20 10"', false],
 			'overflowing size'      => ['width="1e400" viewBox="0 0 20 10"', false],

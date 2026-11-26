@@ -48,13 +48,33 @@ class Svg
 	}
 
 	/**
-	 * Whether the SVG sets its own absolute width or height
+	 * Whether the SVG sets its own width or height
+	 * in absolute or font-relative units
 	 */
 	public function hasNaturalSize(): bool
 	{
 		return
 			$this->length('width') !== null ||
-			$this->length('height') !== null;
+			$this->length('height') !== null ||
+			$this->hasFontRelativeLength('width') === true ||
+			$this->hasFontRelativeLength('height') === true;
+	}
+
+	/**
+	 * Whether an attribute is a font-relative length, which has
+	 * no fixed pixel value, but still gives the SVG a size
+	 */
+	protected function hasFontRelativeLength(string $attr): bool
+	{
+		$value = trim($this->attr($attr));
+
+		if (preg_match('/^(\S*?)(em|rem|ex|ch)$/i', $value, $matches) !== 1) {
+			return false;
+		}
+
+		return
+			is_numeric($matches[1]) === true &&
+			$this->normalizeFloat((float)$matches[1]) !== null;
 	}
 
 	/**
