@@ -173,6 +173,18 @@ class User extends ModelWithContent
 	}
 
 	/**
+	 * Creates a new instance with the same initial properties,
+	 * but lets it read the credentials again from disk
+	 */
+	#[BlockCollectionAccess]
+	public function clone(array $props = []): static
+	{
+		$props['credentials'] ??= null;
+
+		return parent::clone($props);
+	}
+
+	/**
 	 * Prepares the content for the write method
 	 * @internal
 	 *

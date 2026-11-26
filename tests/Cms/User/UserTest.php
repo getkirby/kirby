@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Exception\Exception as KirbyException;
 use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -34,6 +35,24 @@ class UserTest extends ModelTestCase
 		$this->expectExceptionMessage('The blueprint "tabs/broken" could not be loaded: ');
 
 		$this->userWithBrokenBlueprint(debug: true)->blueprint();
+	}
+
+	public function testCloneReadsCredentialsAgain(): void
+	{
+		Data::write($file = static::TMP . '/site/accounts/test/index.php', [
+			'email'    => 'test@getkirby.com',
+			'language' => 'en',
+			'name'     => 'Old name',
+			'role'     => 'admin'
+		]);
+
+		$user = $this->app->user('test');
+		$user = $user->changeName('New name');
+		$user->changeLanguage('de');
+
+		$credentials = F::load($file);
+		$this->assertSame('New name', $credentials['name']);
+		$this->assertSame('de', $credentials['language']);
 	}
 
 	public function testCredentials(): void
