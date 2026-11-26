@@ -6,7 +6,7 @@
 		<header class="k-block-type-fields-header">
 			<div class="k-block-type-fields-title">
 				<k-button
-					:aria-expanded="String(!collapsed && !isHidden)"
+					:aria-expanded="!collapsed && !isHidden"
 					:icon="collapsed ? 'angle-down' : 'angle-up'"
 					:aria-label="fieldset.name"
 					class="k-block-type-fields-toggle"
