@@ -42,6 +42,8 @@ class SvgTest extends TestCase
 			'size'                  => ['width="40" height="10"', true],
 			'width'                 => ['width="40" viewBox="0 0 20 10"', true],
 			'height in em'          => ['height="2em"', true],
+			'width in rem'          => ['width="3rem"', true],
+			'zero in em'            => ['width="0em"', false],
 			'percentages'           => ['width="100%" height="100%" viewBox="0 0 20 10"', false],
 			'viewBox'               => ['viewBox="0 0 20 10"', false],
 			'overflowing size'      => ['width="1e400" viewBox="0 0 20 10"', false],
@@ -60,8 +62,16 @@ class SvgTest extends TestCase
 	{
 		return [
 			'size'                           => ['width="40" height="10" viewBox="0 0 10 10"', 40.0, 10.0],
+			'in'                             => ['width="1in" height="96px"', 96.0, 96.0],
+			'cm'                             => ['width="2.54cm" height="96px"', 96.0, 96.0],
+			'mm'                             => ['width="25.4mm" height="96px"', 96.0, 96.0],
+			'Q'                              => ['width="101.6Q" height="96px"', 96.0, 96.0],
+			'pt'                             => ['width="72pt" height="96px"', 96.0, 96.0],
+			'pc'                             => ['width="6pc" height="96px"', 96.0, 96.0],
+			'relative units'                 => ['width="2em" height="3rem" viewBox="0 0 20 10"', 20.0, 10.0],
+			'converted overflow'             => ['width="1e18in" height="10"', null, 10.0],
 			'decimals'                       => ['width="35.6" height="20.4"', 35.6, 20.4],
-			'units'                          => ['width="24px" height="2em"', 24.0, 2.0],
+			'units'                          => ['width="24px" height="2em"', 24.0, null],
 			'width + viewBox'                => ['width="40" viewBox="0 0 20 10"', 40.0, 20.0],
 			'height + viewBox'               => ['width="100%" height="25" viewBox="10 10 50 50"', 25.0, 25.0],
 			'width only'                     => ['width="40"', 40.0, null],
@@ -74,6 +84,7 @@ class SvgTest extends TestCase
 			'derived side beyond int range'  => ['height="1e10" viewBox="0 0 1e10 1"', null, 1.0e10],
 			'derived side with huge viewBox' => ['height="1e18" viewBox="0 0 1e300 1e300"', 1.0e18, 1.0e18],
 			'underflowing derived side'      => ['width="10" viewBox="0 0 1e300 1e-300"', 10.0, null],
+			'trailing dot'                   => ['width="5." height="5.px" viewBox="0 0 20 10"', 20.0, 10.0],
 			'auto'                           => ['width="auto" height="auto"', null, null],
 			'no size info'                   => ['', null, null],
 		];
@@ -89,6 +100,7 @@ class SvgTest extends TestCase
 	{
 		return [
 			'size'                   => ['width="40" height="10"', 4.0],
+			'mixed absolute units'   => ['width="1in" height="96px" viewBox="0 0 96 96"', 1.0],
 			'size + viewBox'         => ['width="40" height="10" viewBox="0 0 10 10"', 4.0],
 			'width + viewBox'        => ['width="40" viewBox="0 0 20 10"', 2.0],
 			'percentages'            => ['width="100%" height="100%" viewBox="0 0 400 100"', 4.0],

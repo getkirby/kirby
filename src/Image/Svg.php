@@ -5,7 +5,6 @@ namespace Kirby\Image;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Str;
 
 /**
  * Provides information about an SVG
@@ -49,13 +48,33 @@ class Svg
 	}
 
 	/**
-	 * Whether the SVG sets its own absolute width or height
+	 * Whether the SVG sets its own width or height
+	 * in absolute or font-relative units
 	 */
 	public function hasNaturalSize(): bool
 	{
 		return
 			$this->length('width') !== null ||
-			$this->length('height') !== null;
+			$this->length('height') !== null ||
+			$this->hasFontRelativeLength('width') === true ||
+			$this->hasFontRelativeLength('height') === true;
+	}
+
+	/**
+	 * Whether an attribute is a font-relative length, which has
+	 * no fixed pixel value, but still gives the SVG a size
+	 */
+	protected function hasFontRelativeLength(string $attr): bool
+	{
+		$value = trim($this->attr($attr));
+
+		if (preg_match('/^(\S*?)(em|rem|ex|ch)$/i', $value, $matches) !== 1) {
+			return false;
+		}
+
+		return
+			is_numeric($matches[1]) === true &&
+			$this->normalizeFloat((float)$matches[1]) !== null;
 	}
 
 	/**
@@ -71,13 +90,28 @@ class Svg
 	 */
 	protected function length(string $attr): float|null
 	{
-		$value = $this->attr($attr);
+		$value = trim($this->attr($attr));
 
-		if (Str::endsWith($value, '%') === true) {
+		if (preg_match('/^(\S*?)(px|in|cm|mm|pt|pc|q)?$/i', $value, $matches) !== 1) {
 			return null;
 		}
 
-		return $this->normalizeFloat((float)$value);
+		// `is_numeric()` accepts a trailing dot (`5.`), which is not valid in SVG
+		if (is_numeric($matches[1]) === false || str_ends_with($matches[1], '.') === true) {
+			return null;
+		}
+
+		$factor = match (strtolower($matches[2] ?? '')) {
+			'in'    => 96,
+			'cm'    => 96 / 2.54,
+			'mm'    => 96 / 25.4,
+			'q'     => 96 / 101.6,
+			'pt'    => 96 / 72,
+			'pc'    => 16,
+			default => 1
+		};
+
+		return $this->normalizeFloat((float)$matches[1] * $factor);
 	}
 
 	/**
