@@ -589,8 +589,8 @@ class App
 
 	/**
 	 * Returns the image library, configured by the `thumbs`
-	 * options; without their defaults (e.g. `quality`
-	 * or `format`) for originals resized on upload
+	 * options; without their defaults (e.g. `quality`,
+	 * `format` or `strip`) for originals changed on upload
 	 * @since 7.0.0
 	 */
 	public function darkroom(bool $defaults = true): Darkroom

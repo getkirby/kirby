@@ -358,7 +358,7 @@ return [
 	 *
 	 * @param string $src Root of the original file
 	 * @param string $dst Root of the thumb, in its format's extension
-	 * @param array $options Thumb options, e.g. `width`, `height`, `crop`, `blur`, `grayscale`, `quality`, `format`
+	 * @param array $options Thumb options, e.g. `width`, `height`, `crop`, `blur`, `grayscale`, `quality`, `format`, `strip`
 	 */
 	'thumb' => function (
 		App $kirby,

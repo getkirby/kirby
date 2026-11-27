@@ -453,6 +453,27 @@ class FileModificationsTest extends ModelTestCase
 		$this->assertSame(50, $version->width());
 	}
 
+	public function testVersionStrip(): void
+	{
+		F::copy(__DIR__ . '/../../Image/fixtures/image/onigiri-adobe-rgb-gps.jpg', static::TMP . '/content/gps.jpg');
+
+		$app = $this->app->clone([
+			'site' => [
+				'files' => [
+					['filename' => 'gps.jpg']
+				]
+			]
+		]);
+
+		$file = $app->file('gps.jpg');
+
+		// by default without EXIF tags
+		$this->assertNull($file->resize(100)->exif()->location()->lat());
+
+		$version = $file->thumb(['width' => 100, 'strip' => ['camera']]);
+		$this->assertEqualsWithDelta(40.26, $version->exif()->location()->lat(), 0.01);
+	}
+
 	public function testVersionWithFormatOption(): void
 	{
 		$file = $this->cat(['thumbs' => ['format' => 'webp']]);
@@ -467,5 +488,15 @@ class FileModificationsTest extends ModelTestCase
 		$file = $this->app->file('test.jpg');
 
 		$this->assertSame($file, $file->resize(100));
+	}
+
+	public function testVersionWithStripOption(): void
+	{
+		$file = $this->cat(['thumbs' => ['strip' => ['camera', 'location']]]);
+
+		// named by the EXIF categories they keep, unless none
+		$this->assertStringEndsWith('/cat-100x100-q85-exif-desc-rights-time.jpg', $file->resize(100)->url());
+		$this->assertStringEndsWith('/cat-100x100-q85.jpg', $file->thumb(['width' => 100, 'strip' => true])->url());
+		$this->assertStringEndsWith('/cat-100x100-q85-exif.jpg', $file->thumb(['width' => 100, 'strip' => false])->url());
 	}
 }
