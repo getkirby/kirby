@@ -204,12 +204,16 @@ describe("k-draggable", () => {
 			const list = ["a", "b"];
 			const wrapper = mount({ list });
 			const instance = await sortable(wrapper);
+			const item = source.element.children[1];
+			wrapper.element.insertBefore(item, wrapper.element.children[1]);
 			instance.options.onAdd?.({
 				from: source.element,
+				item,
 				newIndex: 1,
 				oldIndex: 1
 			} as never);
 			expect(list).toStrictEqual(["a", "y", "b"]);
+			expect(item.isConnected).toBe(false);
 			expect(wrapper.emitted("change")).toStrictEqual([
 				[{ added: { element: "y", newIndex: 1 } }]
 			]);

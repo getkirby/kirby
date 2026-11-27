@@ -152,6 +152,24 @@ describe("k-button", () => {
 			expect(wrapper.attributes("data-foo")).toBeUndefined();
 		});
 
+		it("keeps aria attributes set to false", () => {
+			const wrapper = mount(Button, {
+				props: { role: "switch" },
+				attrs: { "aria-checked": false, "aria-expanded": false }
+			});
+			expect(wrapper.attributes("aria-checked")).toBe("false");
+			expect(wrapper.attributes("aria-expanded")).toBe("false");
+		});
+
+		it("drops aria attributes set to null or undefined", () => {
+			const wrapper = mount(Button, {
+				props: { text: "Save" },
+				attrs: { "aria-checked": null, "aria-label": undefined }
+			});
+			expect(wrapper.attributes("aria-checked")).toBeUndefined();
+			expect(wrapper.attributes("aria-label")).toBe("Save");
+		});
+
 		it("prefers a passed aria-label over the text", () => {
 			const wrapper = mount(Button, {
 				props: { text: "Save" },
