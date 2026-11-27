@@ -23,6 +23,7 @@
 		</k-section>
 
 		<security :security="security" :urls="urls" />
+		<upgrade v-if="upgrade" :upgrade="upgrade" />
 		<plugins :plugins="plugins" />
 	</k-panel-inside>
 </template>
@@ -30,6 +31,7 @@
 <script>
 import Plugins from "./SystemPlugins.vue";
 import Security from "./SystemSecurity.vue";
+import Upgrade from "./SystemUpgrade.vue";
 
 /**
  * @internal
@@ -37,7 +39,8 @@ import Security from "./SystemSecurity.vue";
 export default {
 	components: {
 		Plugins,
-		Security
+		Security,
+		Upgrade
 	},
 	props: {
 		buttons: Array,
@@ -46,6 +49,7 @@ export default {
 		info: Object,
 		plugins: Array,
 		security: Array,
+		upgrade: Object,
 		urls: [Object, Array]
 	},
 	mounted() {

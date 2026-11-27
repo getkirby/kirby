@@ -46,6 +46,67 @@ return [
 
 			$exceptions = $updateStatus?->exceptionMessages() ?? [];
 
+			$latestVersion = $updateStatus?->latestVersion();
+			$nextMajor     = (int)$latestVersion > (int)$kirby->version() ? (int)$latestVersion : null;
+
+			if ($nextMajor !== null) {
+				$issues = [];
+				$php    = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION;
+
+				if ($updateStatus->supportsPhp($latestVersion, $php) === false) {
+					$issues[] = [
+						'id'   => 'php',
+						'link' => 'https://getkirby.com/docs/guide/quickstart#requirements',
+						'text' => I18n::template('system.upgrade.php', null, [
+							'kirby' => $nextMajor,
+							'php'   => $php
+						])
+					];
+				}
+
+				foreach ($system->plugins() as $plugin) {
+					$compatibility = $plugin->updateStatus()?->compatibility($latestVersion);
+					$status        = $compatibility['status'] ?? 'unknown';
+
+					if ($status === 'compatible') {
+						continue;
+					}
+
+					$issues[] = [
+						'id'    => 'plugin-' . $plugin->id(),
+						'icon'  => match ($status) {
+							'update'  => 'info',
+							'unknown' => 'question',
+							default   => 'alert'
+						},
+						'link'  => $plugin->link(),
+						'text'  => I18n::template('system.upgrade.plugin.' . $status, null, [
+							'kirby'   => $nextMajor,
+							'plugin'  => $plugin->name(),
+							'version' => $compatibility['version'] ?? null
+						]),
+						'theme' => match ($status) {
+							'update'  => 'info',
+							'unknown' => 'passive',
+							default   => 'negative'
+						}
+					];
+				}
+
+				$upgrade = [
+					'headline' => I18n::template('system.upgrade', null, ['kirby' => $nextMajor]),
+					'issues'   => $issues ?: [
+						[
+							'id'    => 'ready',
+							'icon'  => 'check',
+							'text'  => I18n::translate('system.upgrade.ready'),
+							'theme' => 'positive'
+						]
+					],
+					'link'     => 'https://getkirby.com/releases/' . $nextMajor
+				];
+			}
+
 			$plugins = $system->plugins()->values(function ($plugin) use (&$exceptions) {
 				$authors      = $plugin->authorsNames();
 				$updateStatus = $plugin->updateStatus();
@@ -150,6 +211,7 @@ return [
 					'info'        => $system->info(),
 					'plugins'     => $plugins,
 					'security'    => $security,
+					'upgrade'     => $upgrade ?? null,
 					'urls'        => $sensitive ?? []
 				]
 			];
