@@ -94,6 +94,14 @@ class PageRenderTest extends ModelTestCase
 						]
 					],
 					[
+						'slug'     => 'stack-inner',
+						'template' => 'stack-inner'
+					],
+					[
+						'slug'     => 'stack-outer',
+						'template' => 'stack-outer'
+					],
+					[
 						'slug'     => 'version',
 						'template' => 'version'
 					],
@@ -484,6 +492,36 @@ class PageRenderTest extends ModelTestCase
 		$this->assertSame(202, $this->app->response()->code());
 		$this->assertSame(['Cache-Control' => 'private'], $this->app->response()->headers());
 		$this->assertSame('text/plain', $this->app->response()->type());
+	}
+
+	public function testRenderCacheNestedWithStack(): void
+	{
+		$cache = $this->app->cache('pages');
+		$inner = $this->app->page('stack-inner');
+		$outer = $this->app->page('stack-outer');
+
+		$html = $outer->render();
+		$this->assertStringNotContainsString('<!--kirby-stack:', $html);
+		$this->assertStringContainsString('<link rel="stylesheet" href="inner.css">', $html);
+
+		// the outer page is cached normally
+		$value = $cache->retrieve('stack-outer.latest.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html, $value->value()['html']);
+
+		// the nested render must not be cached
+		// as it still contained the stack placeholder
+		$this->assertNull($cache->retrieve('stack-inner.latest.html'));
+
+		// a direct render of the inner page resolves the stack
+		// and gets cached with the final HTML
+		$html = $inner->render();
+		$this->assertStringNotContainsString('<!--kirby-stack:', $html);
+		$this->assertStringContainsString('<head><link rel="stylesheet" href="inner.css"></head>', $html);
+
+		$value = $cache->retrieve('stack-inner.latest.html');
+		$this->assertInstanceOf(Value::class, $value);
+		$this->assertSame($html, $value->value()['html']);
 	}
 
 	public function testRenderController(): void
