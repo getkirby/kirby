@@ -334,6 +334,17 @@ describe("k-textarea-input", () => {
 		});
 	});
 
+	describe("onSelectionChange()", () => {
+		it("ignores the event after the unmount", () => {
+			const wrapper = mount();
+			const vm = wrapper.vm;
+
+			wrapper.unmount();
+
+			expect(() => vm.onSelectionChange()).not.toThrow();
+		});
+	});
+
 	describe("onShortcut()", () => {
 		it("passes the key to the toolbar", () => {
 			const wrapper = mount();

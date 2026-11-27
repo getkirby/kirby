@@ -251,9 +251,16 @@ export default {
 			}
 		},
 		onSelectionChange() {
+			const input = this.$refs.input;
+
+			// the event can still arrive after the unmount
+			if (!input) {
+				return;
+			}
+
 			this.selectionRange = {
-				start: this.$refs.input.selectionStart,
-				end: this.$refs.input.selectionEnd
+				start: input.selectionStart,
+				end: input.selectionEnd
 			};
 		},
 		onShortcut($event) {
