@@ -62,8 +62,8 @@ class FileVersion extends FilesystemFile
 	}
 
 	/**
-	 * Named by the plan's key, so requests
-	 * for the same image share the thumb
+	 * Named by the plan's key, so requests for the same
+	 * image share the thumb, and signed for the media route
 	 */
 	protected function basename(): string|null
 	{
@@ -74,8 +74,9 @@ class FileVersion extends FilesystemFile
 		}
 
 		$name = F::safeBasename($this->original->filename());
+		$name = $name . '-' . $plan->key() . '.' . $plan->format->extension();
 
-		return $name . '-' . $plan->key() . '.' . $plan->format->extension();
+		return Media::sign($this->original, $name);
 	}
 
 	/**
@@ -235,9 +236,6 @@ class FileVersion extends FilesystemFile
 			$this->root,
 			$this->options()
 		);
-
-		// like `Media::thumb()`, as the job is done
-		Media::dequeue($this->root);
 
 		return $this;
 	}

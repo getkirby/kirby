@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Content\Field;
-use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
@@ -409,32 +408,26 @@ class FileModificationsTest extends ModelTestCase
 
 		// named by the plan's key
 		$this->assertInstanceOf(FileVersion::class, $version);
-		$this->assertSame($file->mediaUrl('cat-300x200-crop0-0-500-333-q80.jpg'), $version->url());
+		$name = Media::sign($file, 'cat-300x200-crop0-0-500-333-q80.jpg');
+
+		$this->assertSame($file->mediaUrl($name), $version->url());
 		$this->assertSame(300, $version->width());
 		$this->assertSame(200, $version->height());
 
-		// a job for the media route, nothing made yet
-		$job = $file->mediaDir() . '/.jobs/cat-300x200-crop0-0-500-333-q80.jpg.json';
-
-		$this->assertSame([
-			'quality'  => 80,
-			'format'   => 'jpg',
-			'width'    => 300,
-			'height'   => 200,
-			'crop'     => 'top left',
-			'filename' => 'cat.jpg'
-		], Data::read($job));
+		// nothing made or written yet
 		$this->assertFalse($version->exists());
+		$this->assertDirectoryDoesNotExist($file->mediaDir());
 	}
 
 	public function testVersionNames(): void
 	{
 		$file = $this->cat();
+		$url  = fn (string $name) => $file->mediaUrl(Media::sign($file, $name));
 
-		$this->assertStringEndsWith('/cat-500x500-q85.jpg', $file->resize(800)->url());
-		$this->assertStringEndsWith('/cat-250x250-q85.jpg', $file->crop(250)->url());
-		$this->assertStringEndsWith('/cat-500x500-blur10-grayscale-q85.jpg', $file->thumb(['blur' => true, 'bw' => true])->url());
-		$this->assertStringEndsWith('/cat-100x100-sharpen50-q85.webp', $file->thumb(['width' => 100, 'sharpen' => true, 'format' => 'webp'])->url());
+		$this->assertSame($url('cat-500x500-q85.jpg'), $file->resize(800)->url());
+		$this->assertSame($url('cat-250x250-q85.jpg'), $file->crop(250)->url());
+		$this->assertSame($url('cat-500x500-blur10-grayscale-q85.jpg'), $file->thumb(['blur' => true, 'bw' => true])->url());
+		$this->assertSame($url('cat-100x100-sharpen50-q85.webp'), $file->thumb(['width' => 100, 'sharpen' => true, 'format' => 'webp'])->url());
 
 		// requests for the same image share it
 		$this->assertSame($file->resize(800)->url(), $file->resize(1200)->url());
@@ -456,9 +449,10 @@ class FileModificationsTest extends ModelTestCase
 	public function testVersionWithFormatOption(): void
 	{
 		$file = $this->cat(['thumbs' => ['format' => 'webp']]);
+		$url  = fn (string $name) => $file->mediaUrl(Media::sign($file, $name));
 
-		$this->assertStringEndsWith('/cat-100x100-q85.webp', $file->resize(100)->url());
-		$this->assertStringEndsWith('/cat-100x100-q85.png', $file->thumb(['width' => 100, 'format' => 'png'])->url());
+		$this->assertSame($url('cat-100x100-q85.webp'), $file->resize(100)->url());
+		$this->assertSame($url('cat-100x100-q85.png'), $file->thumb(['width' => 100, 'format' => 'png'])->url());
 	}
 
 	public function testVersionWithoutImage(): void

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\Asset;
+use Kirby\Filesystem\F;
 use Kirby\Image\Dimensions;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -78,8 +79,10 @@ class FileVersionTest extends ModelTestCase
 			options:  ['width' => 64]
 		);
 
-		$this->assertSame($original->mediaUrl('test-64x64-q85.jpg'), $version->url());
-		$this->assertSame('test-64x64-q85.jpg', $version->filename());
+		$name = Media::sign($original, 'test-64x64-q85.jpg');
+
+		$this->assertSame($original->mediaUrl($name), $version->url());
+		$this->assertSame($name, $version->filename());
 		$this->assertSame(['format' => 'jpg', 'width' => 64], $version->options());
 
 		// a requested format
@@ -88,7 +91,7 @@ class FileVersionTest extends ModelTestCase
 			options:  ['width' => 64, 'format' => 'webp']
 		);
 
-		$this->assertSame('test-64x64-q85.webp', $version->filename());
+		$this->assertSame(Media::sign($original, 'test-64x64-q85.webp'), $version->filename());
 		$this->assertSame(['format' => 'webp', 'width' => 64], $version->options());
 
 		// crops never enlarge
@@ -97,7 +100,7 @@ class FileVersionTest extends ModelTestCase
 			options:  ['width' => 800, 'height' => 400, 'crop' => true]
 		);
 
-		$this->assertSame('test-128x64-crop0-32-128-64-q85.jpg', $version->filename());
+		$this->assertSame(Media::sign($original, 'test-128x64-crop0-32-128-64-q85.jpg'), $version->filename());
 		$this->assertEquals(new Dimensions(128, 64), $version->dimensions());
 
 		// nothing is made
@@ -171,8 +174,10 @@ class FileVersionTest extends ModelTestCase
 			options:  ['width' => 50]
 		);
 
-		$this->assertSame('test-50x50-q85.jpg', $version->filename());
-		$this->assertSame('test-50x50-q85', $version->name());
+		$name = Media::sign($version->original(), 'test-50x50-q85.jpg');
+
+		$this->assertSame($name, $version->filename());
+		$this->assertSame(F::name($name), $version->name());
 		$this->assertSame('jpg', $version->extension());
 		$this->assertSame('image', $version->type());
 		$this->assertTrue($version->isViewable());
@@ -256,17 +261,14 @@ class FileVersionTest extends ModelTestCase
 
 	public function testSave(): void
 	{
-		// the root would make the version
 		$original = $this->original();
 		$version  = $original->thumb(['width' => 50]);
-		$job     = $original->mediaDir() . '/.jobs/' . basename($version->url()) . '.json';
 
-		$this->assertFileExists($job);
+		$this->assertFalse($version->exists());
 
 		$version->save();
 
 		$this->assertTrue($version->exists());
-		$this->assertFileDoesNotExist($job);
 	}
 
 	public function testSaveWithComponent(): void

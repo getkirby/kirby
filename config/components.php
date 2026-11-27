@@ -4,7 +4,6 @@ use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
-use Kirby\Cms\Media;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
 use Kirby\Cms\User;
@@ -60,7 +59,7 @@ return [
 	},
 
 	/**
-	 * Plans a thumb and leaves a job for the
+	 * Plans a thumb, named and signed for the
 	 * media route; the original if it can't be made
 	 */
 	'file::version' => function (
@@ -75,11 +74,6 @@ return [
 		);
 
 		if ($version->dimensions() === null) {
-			return $file;
-		}
-
-		// without a job, the thumb can't be made
-		if (Media::queue($version) === false) {
 			return $file;
 		}
 
