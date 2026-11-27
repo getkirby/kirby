@@ -209,14 +209,14 @@ export default {
 .k-coords-input-thumb:active {
 	cursor: grabbing;
 }
-.k-coords-input:focus-within {
+.k-coords-input:has(:focus-visible) {
 	outline: var(--outline);
 }
 .k-coords-input[aria-disabled="true"] {
 	pointer-events: none;
 	opacity: var(--opacity-disabled);
 }
-.k-coords-input .k-coords-input-thumb:focus {
+.k-coords-input .k-coords-input-thumb:focus-visible {
 	outline: var(--outline);
 }
 </style>

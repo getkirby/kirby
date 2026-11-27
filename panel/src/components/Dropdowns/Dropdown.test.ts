@@ -351,6 +351,49 @@ describe("k-dropdown", () => {
 			expect(b.vm.isOpen).toBe(true);
 		});
 
+		it("hides the focus ring when opened by a click", async () => {
+			const wrapper = mount(
+				{},
+				{},
+				{ slots: { default: "<button>Item</button>" } }
+			);
+			const item = wrapper.find("button").element;
+			const focus = vi.spyOn(item, "focus");
+			wrapper.element.showModal = () => item.focus();
+
+			Object.defineProperty(window, "event", {
+				configurable: true,
+				value: { detail: 1 }
+			});
+			await open(wrapper);
+			Reflect.deleteProperty(window, "event");
+
+			expect(focus).toHaveBeenLastCalledWith({
+				focusVisible: false,
+				preventScroll: true
+			});
+		});
+
+		it("keeps the focus ring when opened with the keyboard", async () => {
+			const wrapper = mount(
+				{},
+				{},
+				{ slots: { default: "<button>Item</button>" } }
+			);
+			const item = wrapper.find("button").element;
+			const focus = vi.spyOn(item, "focus");
+			wrapper.element.showModal = () => item.focus();
+
+			Object.defineProperty(window, "event", {
+				configurable: true,
+				value: { detail: 0 }
+			});
+			await open(wrapper);
+			Reflect.deleteProperty(window, "event");
+
+			expect(focus).toHaveBeenCalledOnce();
+		});
+
 		it("falls back to the button of the current event", async () => {
 			const opener = button();
 			const icon = document.createElement("span");

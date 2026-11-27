@@ -45,10 +45,10 @@ describe("k-layout-column", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 
-		it("is a focusable column", () => {
+		it("is a column out of the Tab order", () => {
 			const wrapper = mount();
 			expect(wrapper.classes()).toContain("k-column");
-			expect(wrapper.attributes("tabindex")).toBe("0");
+			expect(wrapper.attributes("tabindex")).toBe("-1");
 		});
 
 		it("renders the blocks of the layout group", () => {

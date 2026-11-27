@@ -25,16 +25,6 @@
 		@focus.stop="onFocus"
 		@focusin.stop="onFocusIn"
 	>
-		<div :class="className" :data-disabled="isDisabled" class="k-block">
-			<component
-				:is="customComponent"
-				ref="editor"
-				v-bind="$props"
-				:tabs="tabs"
-				v-on="listeners"
-			/>
-		</div>
-
 		<k-block-options
 			v-if="isLastSelected && !isDisabled"
 			ref="options"
@@ -48,6 +38,16 @@
 			}"
 			v-on="listenersForOptions"
 		/>
+
+		<div :class="className" :data-disabled="isDisabled" class="k-block">
+			<component
+				:is="customComponent"
+				ref="editor"
+				v-bind="$props"
+				:tabs="tabs"
+				v-on="listeners"
+			/>
+		</div>
 	</div>
 </template>
 
@@ -395,17 +395,24 @@ export default {
 	outline: var(--outline);
 	border-bottom-color: transparent;
 }
-.k-block-container[data-batched="true"]::after {
+.k-block-container:is(
+		[data-batched="true"],
+		[data-selected="true"]:focus-visible
+	)::after {
 	position: absolute;
 	inset: 0;
 	content: "";
 	background: hsl(214 33% 77% / 0.175);
-	mix-blend-mode: multiply;
+	border-radius: inherit;
+}
+.k-block-container[data-selected="true"]:focus-visible::after {
+	pointer-events: none;
 }
 
 .k-block-container .k-block-options {
 	position: absolute;
 	top: 0;
+	z-index: var(--z-toolbar);
 	inset-inline-end: var(--spacing-3);
 	margin-top: calc(-1.75rem + 2px);
 }

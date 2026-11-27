@@ -3,7 +3,7 @@
 		:data-disabled="disabled"
 		:data-selected="isSelected"
 		class="k-layout"
-		tabindex="0"
+		tabindex="-1"
 		@click="$emit('select')"
 	>
 		<k-grid class="k-layout-columns">
@@ -230,7 +230,7 @@ export default {
 	color: var(--color-gray-500);
 	border-radius: var(--rounded);
 }
-.k-layout-toolbar:hover {
+.k-layout-toolbar:is(:hover, :has(:focus-visible)) {
 	color: light-dark(var(--color-black), var(--color-white));
 }
 .k-layout-toolbar-button {

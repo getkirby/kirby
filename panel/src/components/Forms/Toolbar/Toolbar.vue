@@ -91,7 +91,7 @@ export default {
 	--toolbar-border: var(--panel-color-back);
 	--toolbar-current: var(--color-focus);
 }
-:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+:where(.k-textarea-input, .k-writer-input):not(:has(:focus)) {
 	--toolbar-text: light-dark(var(--color-gray-300), var(--color-gray-700));
 }
 
@@ -119,7 +119,7 @@ export default {
 	--button-rounded: 0;
 	outline-offset: -2px;
 }
-.k-toolbar-button:hover {
+.k-toolbar-button:is(:hover, :focus-visible) {
 	--button-color-back: var(--toolbar-hover);
 }
 .k-toolbar .k-button[aria-current="true"] {
@@ -134,7 +134,7 @@ export default {
 	border-end-end-radius: var(--rounded);
 }
 
-:where(.k-textarea-input, .k-writer-input):not(:focus-within) {
+:where(.k-textarea-input, .k-writer-input):not(:has(:focus)) {
 	--toolbar-text: var(--color-gray-400);
 	--toolbar-border: var(--panel-color-back);
 }

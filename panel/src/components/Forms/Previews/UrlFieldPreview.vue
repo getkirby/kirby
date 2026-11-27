@@ -63,7 +63,7 @@ export default {
 	text-decoration: underline;
 	text-underline-offset: var(--link-underline-offset);
 }
-.k-url-field-preview a:hover {
+.k-url-field-preview a:is(:hover, :focus-visible) {
 	color: var(--link-color-hover);
 }
 </style>

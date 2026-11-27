@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
+use Kirby\Exception\Exception as KirbyException;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(User::class)]
@@ -16,6 +19,40 @@ class UserTest extends ModelTestCase
 		]);
 
 		$this->assertNull($user->avatar());
+	}
+
+	public function testBlueprintWithInvalidYaml(): void
+	{
+		$blueprint = $this->userWithBrokenBlueprint(debug: false)->blueprint();
+
+		$this->assertSame('editor', $blueprint->name());
+		$this->assertSame(['text'], array_keys($blueprint->fields()));
+	}
+
+	public function testBlueprintWithInvalidYamlInDebugMode(): void
+	{
+		$this->expectException(KirbyException::class);
+		$this->expectExceptionMessage('The blueprint "tabs/broken" could not be loaded: ');
+
+		$this->userWithBrokenBlueprint(debug: true)->blueprint();
+	}
+
+	public function testCloneReadsCredentialsAgain(): void
+	{
+		Data::write($file = static::TMP . '/site/accounts/test/index.php', [
+			'email'    => 'test@getkirby.com',
+			'language' => 'en',
+			'name'     => 'Old name',
+			'role'     => 'admin'
+		]);
+
+		$user = $this->app->user('test');
+		$user = $user->changeName('New name');
+		$user->changeLanguage('de');
+
+		$credentials = F::load($file);
+		$this->assertSame('New name', $credentials['name']);
+		$this->assertSame('de', $credentials['language']);
 	}
 
 	public function testCredentials(): void
@@ -125,5 +162,31 @@ class UserTest extends ModelTestCase
 			'Email: test@getkirby.com',
 			$user->toString('Email: {{ user.email }}')
 		);
+	}
+
+	protected function userWithBrokenBlueprint(bool $debug): User
+	{
+		F::write($file = static::TMP . '/broken.yml', 'label: @broken');
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'tabs/broken'  => $file,
+				'users/editor' => [
+					'name' => 'editor',
+					'tabs' => [
+						'main'   => ['fields' => ['text' => ['type' => 'text']]],
+						'broken' => 'tabs/broken'
+					]
+				]
+			],
+			'options' => [
+				'debug' => $debug
+			],
+			'users' => [
+				['email' => 'editor@getkirby.com', 'role' => 'editor']
+			]
+		]);
+
+		return $this->app->user('editor@getkirby.com');
 	}
 }

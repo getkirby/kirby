@@ -269,14 +269,11 @@ export default {
 .k-tags-input-toggle.k-button:is(:hover, :focus-visible) {
 	--button-color-text: var(--input-color-text);
 }
-.k-tags-input:is(:hover, :focus-within) .k-tags-input-toggle {
+.k-tags-input:is(:hover, :has(:focus)) .k-tags-input-toggle {
 	opacity: 1;
 }
 
 .k-tags-input .k-picklist-dropdown {
 	margin-top: var(--spacing-1);
-}
-.k-tags-input .k-picklist-dropdown .k-choice-input:focus-within {
-	outline: var(--outline);
 }
 </style>

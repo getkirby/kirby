@@ -173,9 +173,10 @@ export default {
 				attrs["aria-selected"] = this.selected;
 			}
 
-			// support all aria- attributes
+			// support all aria- attributes; like Vue, only skip
+			// `null`/`undefined` so that e.g. `aria-checked="false"` is kept
 			for (const attr of Object.keys(this.$attrs)) {
-				if (attr.startsWith("aria-") && this.$attrs[attr]) {
+				if (attr.startsWith("aria-") && this.$attrs[attr] != null) {
 					attrs[attr] = this.$attrs[attr];
 				}
 			}
@@ -314,6 +315,7 @@ export default {
 }
 .k-button:where([data-variant="dimmed"]):not([aria-disabled="true"]):is(
 		:hover,
+		:focus-visible,
 		[aria-current="true"]
 	)
 	.k-button-text {
@@ -331,7 +333,10 @@ export default {
 .k-button:where([data-variant="filled"]) {
 	--button-color-back: var(--button-filled-color-back);
 }
-.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):hover {
+.k-button:where([data-variant="filled"]):not([aria-disabled="true"]):is(
+		:hover,
+		:focus-visible
+	) {
 	filter: brightness(97%);
 }
 

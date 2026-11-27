@@ -194,6 +194,13 @@ describe("k-block", () => {
 			});
 		});
 
+		it("puts the options before the block in the Tab order", async () => {
+			const wrapper = mount();
+			await wrapper.setProps({ isLastSelected: true } as never);
+			const options = wrapper.findComponent(Options).element;
+			expect(options.nextElementSibling?.classList).toContain("k-block");
+		});
+
 		it("shows no options by default", () => {
 			const wrapper = mount();
 			expect(wrapper.findComponent(Options).exists()).toBe(false);

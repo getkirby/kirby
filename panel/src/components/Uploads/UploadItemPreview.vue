@@ -118,7 +118,7 @@ export default {
 	border-start-start-radius: var(--rounded);
 	border-end-start-radius: var(--rounded);
 }
-.k-upload-item-preview:focus {
+.k-upload-item-preview:focus-visible {
 	border-radius: var(--rounded);
 	outline: 2px solid var(--color-focus);
 	z-index: 1;

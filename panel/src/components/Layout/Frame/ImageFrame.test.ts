@@ -170,8 +170,24 @@ describe("k-image-frame", () => {
 			expect(img.attributes("sizes")).toBeUndefined();
 		});
 
+		it("omits sizes for an intrinsic image", () => {
+			const wrapper = mount({ src: "/image.jpg", ratio: "intrinsic" });
+			const img = wrapper.find("img");
+			expect(img.attributes("sizes")).toBeUndefined();
+		});
+
 		it("keeps an explicit sizes prop", () => {
 			const wrapper = mount({ src: "/image.jpg", sizes: "50vw" });
+			const img = wrapper.find("img");
+			expect(img.attributes("sizes")).toBe("50vw");
+		});
+
+		it("keeps an explicit sizes prop for an intrinsic image", () => {
+			const wrapper = mount({
+				ratio: "intrinsic",
+				sizes: "50vw",
+				src: "/image.jpg"
+			});
 			const img = wrapper.find("img");
 			expect(img.attributes("sizes")).toBe("50vw");
 		});

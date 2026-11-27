@@ -1,5 +1,5 @@
 <template>
-	<k-panel class="k-panel-outside" tabindex="0">
+	<k-panel class="k-panel-outside" tabindex="-1">
 		<!-- @slot Main content for the view  -->
 		<slot />
 	</k-panel>

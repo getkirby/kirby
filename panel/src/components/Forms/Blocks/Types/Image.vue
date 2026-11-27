@@ -55,7 +55,8 @@ export default {
 			return this.isInternal ? !this.file : !this.src;
 		},
 		isInternal() {
-			return this.content.location === "kirby";
+			// blueprints without a `location` field pick from Kirby
+			return this.content.location !== "web";
 		},
 		src() {
 			if (!this.isInternal) {
@@ -112,7 +113,7 @@ export default {
 	opacity: 0;
 	transition: opacity 0.2s ease-in-out;
 }
-.k-block-type-image:hover .k-background-dropdown {
+.k-block-type-image:is(:hover, :has(:focus-visible)) .k-background-dropdown {
 	opacity: 1;
 }
 </style>

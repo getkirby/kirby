@@ -167,13 +167,27 @@ class User extends ModelWithContent
 				'users/' . $this->role(),
 				'users/default'
 			);
-		} catch (Exception) {
+		} catch (Exception $e) {
+			UserBlueprint::throwUnlessMissing($e);
+
 			return $this->blueprint ??= new UserBlueprint([
 				'model' => $this,
 				'name'  => 'default',
 				'title' => 'Default',
 			]);
 		}
+	}
+
+	/**
+	 * Creates a new instance with the same initial properties,
+	 * but lets it read the credentials again from disk
+	 */
+	#[BlockCollectionAccess]
+	public function clone(array $props = []): static
+	{
+		$props['credentials'] ??= null;
+
+		return parent::clone($props);
 	}
 
 	/**

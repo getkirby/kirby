@@ -573,7 +573,7 @@ export default {
 .k-table tbody tr td {
 	background: var(--table-color-back);
 }
-.k-table tbody tr:hover td {
+.k-table tbody tr:is(:hover, :has(:focus-visible)) td {
 	background: var(--table-color-hover);
 }
 
@@ -647,13 +647,16 @@ export default {
 
 /* Table Options */
 .k-table .k-table-options-column {
+	position: relative;
 	padding: 0;
 	width: var(--table-row-height);
 	text-align: center;
 }
 .k-table .k-table-options-column .k-options-dropdown-toggle {
-	--button-width: 100%;
-	--button-height: 100%;
+	--button-width: auto;
+	--button-height: auto;
+	position: absolute;
+	inset: 0;
 	outline-offset: -2px;
 }
 

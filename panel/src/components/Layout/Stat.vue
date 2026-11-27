@@ -139,7 +139,7 @@ export default {
 	line-height: var(--leading-normal);
 	text-align: start;
 }
-.k-stat:is(.k-link, button):hover {
+.k-stat:is(.k-link, button):is(:hover, :focus-visible) {
 	cursor: pointer;
 	background: var(--stat-color-hover-back);
 }

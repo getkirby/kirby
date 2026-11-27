@@ -211,10 +211,11 @@ export default {
 	position: relative;
 	min-height: var(--item-height);
 }
-.k-item-box:has(a:focus) {
+.k-item-box:has(a:focus-visible) {
 	outline: 2px solid var(--color-focus);
 }
-.k-item:not(:hover):not(.k-sortable-fallback) .k-item-sort-handle {
+.k-item:not(:hover, :has(:focus-visible), .k-sortable-fallback)
+	.k-item-sort-handle {
 	opacity: 0;
 }
 .k-item-box {
@@ -333,7 +334,7 @@ export default {
 	z-index: 2;
 }
 .k-item:is([data-layout="cardlets"], [data-layout="cards"])
-	.k-item-sort-handle:hover {
+	.k-item-sort-handle:is(:hover, :focus-visible) {
 	background: light-dark(hsla(0, 0%, 100%, 95%), hsla(0, 0%, 7%, 95%));
 }
 
