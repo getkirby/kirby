@@ -94,7 +94,7 @@
 		],
 		"analyze:composer": [
 			"composer validate --strict --no-check-version --no-check-all",
-			"cpx icanhazstring/composer-unused:0.9.6 --no-progress"
+			"cpx icanhazstring/composer-unused:0.9.9 --no-progress"
 		],
 		"analyze:psalm": "cpx vimeo/psalm:7.23.0",
 		"ci": [
@@ -103,7 +103,7 @@
 			"@test"
 		],
 		"fix": "cpx getkirby/php-cs:0.3.0 fix",
-		"test": "cpx \"brianium/paratest:7.20.0||7.27.5\" --passthru-php=\"-dopcache.enable_cli=1 -dopcache.optimization_level=0 -dopcache.jit_buffer_size=0\"",
+		"test": "cpx \"brianium/paratest:7.20.0||7.30.0\" --passthru-php=\"-dopcache.enable_cli=1 -dopcache.optimization_level=0 -dopcache.jit_buffer_size=0\"",
 		"test:coverage": [
 			"@putenv XDEBUG_MODE=coverage",
 			"@test --coverage-html=tests/coverage"
