@@ -283,6 +283,7 @@ class File extends ModelWithContent
 	 * Sends all needed headers for the file
 	 * to be downloaded and returns its content
 	 */
+	 #[BlockCollectionAccess]
 	public function download(string|null $filename = null): string
 	{
 		return $this->asset()->download($filename);
@@ -341,6 +342,7 @@ class File extends ModelWithContent
 	/**
 	 * Sends an appropriate header for the file
 	 */
+	#[BlockCollectionAccess]
 	public function header(bool $send = true): Response|null
 	{
 		return $this->asset()->header($send);
@@ -713,6 +715,7 @@ class File extends ModelWithContent
 	/**
 	 * Reads the file content and returns it
 	 */
+	#[BlockCollectionAccess]
 	public function read(): string|false
 	{
 		return $this->asset()->read();
