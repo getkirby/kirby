@@ -146,6 +146,18 @@ class SystemTest extends AreaTestCase
 		$this->assertSame([], $props['exceptions']);
 		$this->assertSame([], $props['plugins']);
 		$this->assertSame([
+			'headline' => 'Ready for Kirby 99999?',
+			'issues'   => [
+				[
+					'id'    => 'ready',
+					'icon'  => 'check',
+					'text'  => 'No known issues',
+					'theme' => 'positive'
+				]
+			],
+			'link'     => 'https://getkirby.com/releases/99999'
+		], $props['upgrade']);
+		$this->assertSame([
 			[
 				'text'  => 'This is a very important announcement!',
 				'kirby' => '*',
@@ -443,6 +455,77 @@ class SystemTest extends AreaTestCase
 
 		$this->assertSame($expected, $view['props']['plugins']);
 		$this->assertSame([], $view['props']['exceptions']);
+		$this->assertSame([
+			[
+				'id'    => 'plugin-getkirby/private',
+				'icon'  => 'question',
+				'link'  => null,
+				'text'  => 'Could not check if the getkirby/private plugin supports Kirby 99999',
+				'theme' => 'passive'
+			],
+			[
+				'id'    => 'plugin-getkirby/public',
+				'icon'  => 'info',
+				'link'  => 'https://plugins.getkirby.com/getkirby/public',
+				'text'  => 'Update the getkirby/public plugin to 88888.8.8 for Kirby 99999 support',
+				'theme' => 'info'
+			],
+			[
+				'id'    => 'plugin-getkirby/unknown',
+				'icon'  => 'question',
+				'link'  => null,
+				'text'  => 'Could not check if the getkirby/unknown plugin supports Kirby 99999',
+				'theme' => 'passive'
+			]
+		], $view['props']['upgrade']['issues']);
+	}
+
+	public function testViewWithCompatiblePlugin(): void
+	{
+		App::plugin('getkirby/public', [
+			'info' => [
+				'version' => '88888.0.0'
+			]
+		]);
+
+		$this->login();
+
+		$view = $this->view('system');
+
+		$this->assertSame([
+			[
+				'id'    => 'ready',
+				'icon'  => 'check',
+				'text'  => 'No known issues',
+				'theme' => 'positive'
+			]
+		], $view['props']['upgrade']['issues']);
+	}
+
+	public function testViewWithUnsupportedPhp(): void
+	{
+		$this->login();
+
+		$this->app->cache('updates')->set('security', [
+			'_version' => $this->app->version(),
+			'latest'   => '99999.9.9',
+			'versions' => [
+				'99999.*' => [
+					'php' => '<5.0'
+				]
+			]
+		]);
+
+		$view = $this->view('system');
+		$php  = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION . '.' . PHP_RELEASE_VERSION;
+
+		$this->assertSame([
+			[
+				'id'   => 'php',
+				'link' => 'https://getkirby.com/docs/guide/quickstart#requirements',
+				'text' => 'Kirby 99999 does not support your PHP version ' . $php
+			]
+		], $view['props']['upgrade']['issues']);
 	}
 
 	public function testViewWithPluginsDebug(): void
@@ -628,5 +711,6 @@ class SystemTest extends AreaTestCase
 			]
 		], $props['plugins']);
 		$this->assertSame([], $props['exceptions']);
+		$this->assertNull($props['upgrade']);
 	}
 }

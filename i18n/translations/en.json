@@ -738,6 +738,12 @@
 	"system.updateStatus.up-to-date": "Up to date",
 	"system.updateStatus.update": "Free update { version } available",
 	"system.updateStatus.upgrade": "Upgrade { version } available",
+	"system.upgrade": "Ready for Kirby { kirby }?",
+	"system.upgrade.php": "Kirby { kirby } does not support your PHP version { php }",
+	"system.upgrade.plugin.incompatible": "The { plugin } plugin does not support Kirby { kirby } yet",
+	"system.upgrade.plugin.unknown": "Could not check if the { plugin } plugin supports Kirby { kirby }",
+	"system.upgrade.plugin.update": "Update the { plugin } plugin to { version } for Kirby { kirby } support",
+	"system.upgrade.ready": "No known issues",
 
 	"tel": "Phone",
 	"tel.placeholder": "+49123456789",

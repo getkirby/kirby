@@ -36,6 +36,128 @@ class UpdateStatusTest extends TestCase
 		Dir::remove(static::TMP);
 	}
 
+	public static function compatibilityProvider(): array
+	{
+		return [
+			'installed version is compatible' => [
+				'3.0.0',
+				[
+					['plugin' => '^3.0', 'kirby' => '^4.0 || ^5.0 || ^6.0', 'latest' => '3.0.1'],
+					['plugin' => '^2.0', 'kirby' => '4.0-beta.2', 'latest' => '2.1.0']
+				],
+				['status' => 'compatible', 'version' => null]
+			],
+			'update is compatible' => [
+				'5.7.0',
+				[
+					['plugin' => '^6.0', 'kirby' => '^6.0', 'latest' => '6.0.1'],
+					['plugin' => '^5.0', 'kirby' => '^4.3.1 || ^5.0', 'latest' => '5.7.0']
+				],
+				['status' => 'update', 'version' => '6.0.1']
+			],
+			'smallest update is preferred' => [
+				'1.0.0',
+				[
+					['plugin' => '^3.0', 'kirby' => '^6.0', 'latest' => '3.0.1'],
+					['plugin' => '^2.0', 'kirby' => '^5.0 || ^6.0', 'latest' => '2.1.0']
+				],
+				['status' => 'update', 'version' => '2.1.0']
+			],
+			'downgrade is not suggested' => [
+				'5.0.0',
+				[
+					['plugin' => '^2.0', 'kirby' => '>=3.0', 'latest' => '2.1.0']
+				],
+				['status' => 'incompatible', 'version' => null]
+			],
+			'no compatible version' => [
+				'2.1.0',
+				[
+					['plugin' => '^2.0', 'kirby' => '^3.8 || ^4.0 || ^5.0', 'latest' => '2.1.0']
+				],
+				['status' => 'incompatible', 'version' => null]
+			],
+			'incomplete entry is skipped' => [
+				'3.0.0',
+				[
+					['plugin' => '^3.0', 'kirby' => '^6.0']
+				],
+				['status' => 'incompatible', 'version' => null]
+			],
+			'no compatibility data' => [
+				'2.1.0',
+				[],
+				['status' => 'unknown', 'version' => null]
+			],
+			'no installed version' => [
+				null,
+				[
+					['plugin' => '^6.0', 'kirby' => '^6.0', 'latest' => '6.0.1']
+				],
+				['status' => 'unknown', 'version' => null]
+			]
+		];
+	}
+
+	#[DataProvider('compatibilityProvider')]
+	public function testCompatibility(
+		string|null $version,
+		array $entries,
+		array $expected
+	): void {
+		$updateStatus = new UpdateStatus(
+			$this->plugin($version),
+			false,
+			['compatibility' => $entries]
+		);
+
+		$this->assertSame($expected, $updateStatus->compatibility('6.0.0'));
+	}
+
+	public function testCompatibilityInvalidConstraint(): void
+	{
+		$updateStatus = new UpdateStatus($this->plugin('5.7.0'), false, [
+			'compatibility' => [
+				['plugin' => '^6.0', 'kirby' => 'invalid', 'latest' => '6.0.1']
+			]
+		]);
+
+		$this->assertSame(
+			['status' => 'incompatible', 'version' => null],
+			$updateStatus->compatibility('6.0.0')
+		);
+		$this->assertSame([
+			'Error comparing version constraint for plugin getkirby/test while checking compatibility: Could not parse version constraint invalid: Invalid version string "invalid"'
+		], $updateStatus->exceptionMessages());
+	}
+
+	public function testSupportsPhp(): void
+	{
+		$updateStatus = new UpdateStatus($this->app('5.6.4'), false, [
+			'versions' => [
+				'6.0.0' => ['status' => 'latest'],
+				'6.*'   => ['status' => 'active-support', 'php' => '~8.3.0 || ~8.4.0'],
+				'5.*'   => ['status' => 'security-support', 'php' => '~8.2.0 || ~8.3.0']
+			]
+		]);
+
+		$this->assertTrue($updateStatus->supportsPhp('6.0.0', '8.3.10'));
+		$this->assertFalse($updateStatus->supportsPhp('6.0.0', '8.2.29'));
+		$this->assertTrue($updateStatus->supportsPhp('5.6.4', '8.2.29'));
+		$this->assertNull($updateStatus->supportsPhp('4.9.8', '8.2.29'));
+	}
+
+	public function testSupportsPhpWithoutData(): void
+	{
+		$updateStatus = new UpdateStatus($this->app('5.6.4'), false, [
+			'versions' => [
+				'6.*' => ['status' => 'active-support']
+			]
+		]);
+
+		$this->assertNull($updateStatus->supportsPhp('6.0.0', '8.3.10'));
+	}
+
 	public function testLoadData(): void
 	{
 		$app = $this->app('88888.8.5');

@@ -74,6 +74,59 @@ class UpdateStatus
 	}
 
 	/**
+	 * Returns whether the installed or a newer version
+	 * of the package supports the given Kirby version,
+	 * based on the compatibility data from getkirby.com;
+	 * the status is 'compatible', 'update', 'incompatible' or 'unknown'
+	 * @since 5.7.0
+	 *
+	 * @return array{status: string, version: string|null}
+	 */
+	public function compatibility(string $kirbyVersion): array
+	{
+		$entries = $this->data['compatibility'] ?? [];
+
+		if (
+			$entries === [] ||
+			$this->currentVersion === null ||
+			$this->currentVersion === ''
+		) {
+			return ['status' => 'unknown', 'version' => null];
+		}
+
+		$update = null;
+
+		foreach ($entries as $entry) {
+			if (isset($entry['plugin'], $entry['kirby'], $entry['latest']) !== true) {
+				continue;
+			}
+
+			if ($this->checkConstraint($kirbyVersion, $entry['kirby'], 'while checking compatibility') !== true) {
+				continue;
+			}
+
+			if ($this->checkConstraint($this->currentVersion, $entry['plugin'], 'while checking compatibility') === true) {
+				return ['status' => 'compatible', 'version' => null];
+			}
+
+			// never suggest a downgrade
+			if (version_compare($entry['latest'], $this->currentVersion, '<=') === true) {
+				continue;
+			}
+
+			if ($update === null || version_compare($entry['latest'], $update, '<') === true) {
+				$update = $entry['latest'];
+			}
+		}
+
+		if ($update === null) {
+			return ['status' => 'incompatible', 'version' => null];
+		}
+
+		return ['status' => 'update', 'version' => $update];
+	}
+
+	/**
 	 * Returns the currently installed version
 	 */
 	public function currentVersion(): string|null
@@ -234,6 +287,28 @@ class UpdateStatus
 	public function status(): string
 	{
 		return $this->targetData()['status'];
+	}
+
+	/**
+	 * Returns whether the given version of the package
+	 * supports the given PHP version; `null` if unknown
+	 * @since 5.7.0
+	 */
+	public function supportsPhp(string $version, string $phpVersion): bool|null
+	{
+		foreach ($this->data['versions'] ?? [] as $constraint => $entry) {
+			if (isset($entry['php']) !== true) {
+				continue;
+			}
+
+			if ($this->checkConstraint($version, $constraint, 'while checking PHP support') !== true) {
+				continue;
+			}
+
+			return $this->checkConstraint($phpVersion, $entry['php'], 'while checking PHP support');
+		}
+
+		return null;
 	}
 
 	/**
