@@ -283,7 +283,7 @@ class File extends ModelWithContent
 	 * Sends all needed headers for the file
 	 * to be downloaded and returns its content
 	 */
-	 #[BlockCollectionAccess]
+	#[BlockCollectionAccess]
 	public function download(string|null $filename = null): string
 	{
 		return $this->asset()->download($filename);
