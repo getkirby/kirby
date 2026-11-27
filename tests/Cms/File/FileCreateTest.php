@@ -6,7 +6,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Image\Image;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -33,7 +33,7 @@ class FileCreateTest extends ModelTestCase
 		$this->assertFileExists($source);
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf(BaseFile::class, $result->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $result->asset());
 
 		// make sure file received UUID right away
 		$this->assertIsString($result->content()->get('uuid')->value());
@@ -106,7 +106,7 @@ class FileCreateTest extends ModelTestCase
 
 		$this->app = $this->app->clone([
 			'hooks' => [
-				'file.create:before' => function (File $file, BaseFile $upload) use (&$before) {
+				'file.create:before' => function (File $file, FilesystemFile $upload) use (&$before) {
 					$before = true;
 				},
 				'file.create:after' => function (File $file) use (&$after, $phpunit) {
@@ -272,7 +272,7 @@ class FileCreateTest extends ModelTestCase
 		$this->assertFileDoesNotExist($source);
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf(BaseFile::class, $result->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $result->asset());
 
 		// make sure file received UUID right away
 		$this->assertIsString($result->content()->get('uuid')->value());

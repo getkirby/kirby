@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Image\Image;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -31,14 +31,14 @@ class FileReplaceTest extends ModelTestCase
 
 		$this->assertFileExists($original);
 		$this->assertSame(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement);
 
 		$this->assertFileExists($original);
 		$this->assertFileExists($replacement);
 		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $replacedFile->asset());
 	}
 
 	public function testReplaceHooks(): void
@@ -49,9 +49,9 @@ class FileReplaceTest extends ModelTestCase
 
 		$this->app = $this->app->clone([
 			'hooks' => [
-				'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
+				'file.replace:before' => function (File $file, FilesystemFile $upload) use ($phpunit, &$calls) {
 					$phpunit->assertIsFile($file);
-					$phpunit->assertInstanceOf(BaseFile::class, $upload);
+					$phpunit->assertInstanceOf(FilesystemFile::class, $upload);
 					$phpunit->assertSame('site.csv', $file->filename());
 					$phpunit->assertSame('replace.csv', $upload->filename());
 					$phpunit->assertFileDoesNotExist($file->root());
@@ -155,13 +155,13 @@ class FileReplaceTest extends ModelTestCase
 
 		$this->assertFileExists($original);
 		$this->assertSame(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $originalFile->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $originalFile->asset());
 
 		$replacedFile = $originalFile->replace($replacement, true);
 
 		$this->assertFileExists($original);
 		$this->assertFileDoesNotExist($replacement);
 		$this->assertSame('# Replacement', F::read($replacedFile->root()));
-		$this->assertInstanceOf(BaseFile::class, $replacedFile->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $replacedFile->asset());
 	}
 }

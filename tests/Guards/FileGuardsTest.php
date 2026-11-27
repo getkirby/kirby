@@ -9,7 +9,7 @@ use Kirby\Cms\User;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as Upload;
+use Kirby\Filesystem\File as FilesystemFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileGuards::class)]
@@ -83,7 +83,7 @@ class FileGuardsTest extends ModelTestCase
 	public function testCreate(): void
 	{
 		$file   = $this->file('test.jpg');
-		$upload = new Upload(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$this->assertNull($this->guards($file)->ensureExecutable('create', $upload));
 	}
@@ -91,7 +91,7 @@ class FileGuardsTest extends ModelTestCase
 	public function testCreateWithDuplicate(): void
 	{
 		$file   = $this->fileOnDisk('test.jpg');
-		$upload = new Upload(static::FIXTURES . '/cat.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/cat.jpg');
 
 		$this->expectException(DuplicateException::class);
 		$this->expectExceptionCode('error.file.duplicate');
@@ -104,7 +104,7 @@ class FileGuardsTest extends ModelTestCase
 		// uploading the exact same file again changes nothing
 		// and therefore needs no checks at all
 		$file   = $this->fileOnDisk('test.jpg');
-		$upload = new Upload(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$this->assertTrue($file->isIdentical($upload));
 		$this->assertNull($this->guards($file)->ensureExecutable('create', $upload));

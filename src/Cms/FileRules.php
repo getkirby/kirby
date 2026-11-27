@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 
 /**
  * Validators for all file actions
@@ -32,7 +32,7 @@ class FileRules
 		$file->guards()->ensureExecutable('changeTemplate', $template);
 	}
 
-	public static function create(File $file, BaseFile $upload): void
+	public static function create(File $file, FilesystemFile $upload): void
 	{
 		$file->guards()->ensureExecutable('create', $upload);
 	}
@@ -42,7 +42,7 @@ class FileRules
 		$file->guards()->ensureExecutable('delete');
 	}
 
-	public static function replace(File $file, BaseFile $upload): void
+	public static function replace(File $file, FilesystemFile $upload): void
 	{
 		$file->guards()->ensureExecutable('replace', $upload);
 	}

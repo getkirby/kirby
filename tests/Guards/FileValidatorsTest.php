@@ -10,7 +10,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as Upload;
+use Kirby\Filesystem\File as FilesystemFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileValidators::class)]
@@ -175,7 +175,7 @@ class FileValidatorsTest extends ModelTestCase
 	public function testEnsureReplace(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/doc.pdf');
+		$upload     = new FilesystemFile(static::FIXTURES . '/doc.pdf');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.mime.differs');
@@ -397,7 +397,7 @@ class FileValidatorsTest extends ModelTestCase
 	public function testUpload(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/test.jpg');
+		$upload     = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$this->assertNull($validators->validateUpload($upload));
 	}
@@ -405,7 +405,7 @@ class FileValidatorsTest extends ModelTestCase
 	public function testUploadWithHarmfulContents(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.svg'));
-		$upload     = new Upload(static::FIXTURES . '/test.svg');
+		$upload     = new FilesystemFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
@@ -416,7 +416,7 @@ class FileValidatorsTest extends ModelTestCase
 	public function testUploadWithSameType(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/cat.jpg');
+		$upload     = new FilesystemFile(static::FIXTURES . '/cat.jpg');
 
 		$this->assertNull($validators->validateUploadWithSameType($upload));
 	}
@@ -424,7 +424,7 @@ class FileValidatorsTest extends ModelTestCase
 	public function testUploadWithSameTypeWithDifferentType(): void
 	{
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/doc.pdf');
+		$upload     = new FilesystemFile(static::FIXTURES . '/doc.pdf');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.mime.differs');
@@ -443,7 +443,7 @@ class FileValidatorsTest extends ModelTestCase
 		]);
 
 		$validators = $this->validators($this->fileOnDisk('test.jpg'));
-		$upload     = new Upload(static::FIXTURES . '/doc.pdf');
+		$upload     = new FilesystemFile(static::FIXTURES . '/doc.pdf');
 
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode('error.file.mime.invalid');

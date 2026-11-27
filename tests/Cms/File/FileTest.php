@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Http\Response;
 use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -75,7 +75,7 @@ class FileTest extends ModelTestCase
 			'url'      => 'https://getkirby.com/projects/project-a/cover.jpg'
 		]);
 
-		$this->assertInstanceOf(BaseFile::class, $file->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $file->asset());
 		$this->assertSame(
 			'https://getkirby.com/projects/project-a/cover.jpg',
 			$file->asset()->url()

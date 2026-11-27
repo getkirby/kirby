@@ -7,7 +7,7 @@ use IntlDateFormatter;
 use Kirby\Blueprint\FileBlueprint;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Filesystem\IsFile;
 use Kirby\Guards\FileGuards;
 use Kirby\Http\Response;
@@ -403,7 +403,7 @@ class File extends ModelWithContent
 	 * one that already exists under the same name, template
 	 * included
 	 */
-	public function isIdentical(BaseFile $file): bool
+	public function isIdentical(FilesystemFile $file): bool
 	{
 		if ($this->exists() === false) {
 			return false;

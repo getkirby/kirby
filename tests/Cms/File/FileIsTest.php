@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
@@ -116,7 +116,7 @@ class FileIsTest extends ModelTestCase
 	public function testIsIdentical(): void
 	{
 		$page   = $this->pageWithFile(template: 'test');
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$file = new File([
 			'filename' => 'test.jpg',
@@ -130,7 +130,7 @@ class FileIsTest extends ModelTestCase
 	public function testIsIdenticalWithDifferentTemplate(): void
 	{
 		$page   = $this->pageWithFile(template: 'test');
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$file = new File([
 			'filename' => 'test.jpg',
@@ -143,7 +143,7 @@ class FileIsTest extends ModelTestCase
 
 	public function testIsIdenticalWithMissingFile(): void
 	{
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$file = new File([
 			'filename' => 'test.jpg',

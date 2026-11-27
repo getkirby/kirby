@@ -7,7 +7,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(FileRules::class)]
@@ -319,7 +319,7 @@ class FileRulesTest extends ModelTestCase
 		$this->expectExceptionCode('error.file.duplicate');
 		$this->expectExceptionMessageIs('A file with the name "test.jpg" already exists');
 
-		$upload = new BaseFile(static::FIXTURES . '/cat.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/cat.jpg');
 		FileRules::create($newFile, $upload);
 	}
 
@@ -327,7 +327,7 @@ class FileRulesTest extends ModelTestCase
 	{
 		$parent = new Page(['slug' => 'test']);
 		$file   = new File(['filename' => 'test.svg', 'parent' => $parent]);
-		$upload = new BaseFile(static::FIXTURES . '/test.svg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
@@ -369,7 +369,7 @@ class FileRulesTest extends ModelTestCase
 
 		$this->expectNotToPerformAssertions();
 
-		$upload = new BaseFile($testImage);
+		$upload = new FilesystemFile($testImage);
 		FileRules::create($newFile, $upload);
 	}
 
@@ -410,7 +410,7 @@ class FileRulesTest extends ModelTestCase
 		$this->expectExceptionCode('error.file.duplicate');
 		$this->expectExceptionMessageIs('A file with the name "test.jpg" already exists');
 
-		$upload = new BaseFile($testImage);
+		$upload = new FilesystemFile($testImage);
 		FileRules::create($newFile, $upload);
 	}
 
@@ -420,7 +420,7 @@ class FileRulesTest extends ModelTestCase
 
 		$parent = new Page(['slug' => 'test']);
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.file.create.permission');
@@ -444,7 +444,7 @@ class FileRulesTest extends ModelTestCase
 	public function testReplaceHarmfulContents(): void
 	{
 		$file   = $this->fileOnDisk('test.svg');
-		$upload = new BaseFile(static::FIXTURES . '/test.svg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.svg');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessageIs('The URL is not allowed in attribute "xlink:href" (line 2): Unknown URL type');
@@ -455,7 +455,7 @@ class FileRulesTest extends ModelTestCase
 	public function testReplaceInvalidMimeExtension(): void
 	{
 		$file   = $this->fileOnDisk('test.jpg');
-		$upload = new BaseFile(static::FIXTURES . '/doc.pdf');
+		$upload = new FilesystemFile(static::FIXTURES . '/doc.pdf');
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionCode('error.file.mime.differs');
@@ -470,7 +470,7 @@ class FileRulesTest extends ModelTestCase
 
 		$parent = new Page(['slug' => 'test']);
 		$file   = new File(['filename' => 'test.jpg', 'parent' => $parent]);
-		$upload = new BaseFile(static::FIXTURES . '/test.jpg');
+		$upload = new FilesystemFile(static::FIXTURES . '/test.jpg');
 
 		$this->expectException(PermissionException::class);
 		$this->expectExceptionCode('error.file.replace.permission');
