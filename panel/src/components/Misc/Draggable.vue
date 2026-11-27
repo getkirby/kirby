@@ -135,6 +135,7 @@ export default {
 				// e.g. unsortable items, but still are part of `list`)
 				onAdd: (evt) => {
 					if (this.list) {
+						evt.item.remove();
 						const source = this.getInstance(evt.from);
 						const oldIndex = evt.oldIndex;
 						const newIndex = evt.newIndex;
