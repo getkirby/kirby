@@ -77,6 +77,13 @@ class UpdateStatusTest extends TestCase
 				],
 				['status' => 'incompatible', 'version' => null]
 			],
+			'incomplete entry is skipped' => [
+				'3.0.0',
+				[
+					['plugin' => '^3.0', 'kirby' => '^6.0']
+				],
+				['status' => 'incompatible', 'version' => null]
+			],
 			'no compatibility data' => [
 				'2.1.0',
 				[],
