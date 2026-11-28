@@ -122,6 +122,8 @@ trait FileModifications
 	 * Create a srcset definition for the given sizes
 	 * Sizes can be defined as a simple array. They can
 	 * also be set up in the config with the thumbs.srcsets option.
+	 * Sizes without a condition get the thumb's planned width,
+	 * so sizes beyond the original's add no candidate.
 	 * @since 3.1.0
 	 *
 	 * @param array<array-key, int|string|array<string, mixed>>|string|null $sizes Sizes or the name of a `thumbs.srcsets` preset
@@ -141,22 +143,17 @@ trait FileModifications
 		$set = [];
 
 		foreach ($sizes as $key => $value) {
-			if (is_array($value)) {
-				$options = $value;
-				$condition = $key;
-			} elseif (is_string($value) === true) {
-				$options = [
-					'width' => $key
-				];
-				$condition = $value;
-			} else {
-				$options = [
-					'width' => $value
-				];
-				$condition = $value . 'w';
-			}
+			// without a condition, the planned width
+			[$options, $condition] = match (true) {
+				is_array($value)  => [$value, is_string($key) ? $key : null],
+				is_string($value) => [['width' => $key], $value],
+				default           => [['width' => $value], null]
+			};
 
-			$set[] = $this->thumb($options)->url() . ' ' . $condition;
+			$version     = $this->thumb($options);
+			$condition ??= $version->width() . 'w';
+
+			$set[$condition] ??= $version->url() . ' ' . $condition;
 		}
 
 		return implode(', ', $set);

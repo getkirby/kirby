@@ -200,6 +200,17 @@ class FileModificationsTest extends ModelTestCase
 		);
 	}
 
+	public function testSrcsetBeyondOriginal(): void
+	{
+		$file = $this->cat();
+
+		// both are the 500 px original's size, so one candidate
+		$this->assertSame(
+			$file->resize(300)->url() . ' 300w, ' . $file->resize(800)->url() . ' 500w',
+			$file->srcset([300, 800, 1600])
+		);
+	}
+
 	public function testSrcsetWithConditions(): void
 	{
 		$file = $this->cat();
@@ -207,6 +218,11 @@ class FileModificationsTest extends ModelTestCase
 		$this->assertSame(
 			$file->resize(100)->url() . ' 1x, ' . $file->resize(200)->url() . ' 2x',
 			$file->srcset([100 => '1x', 200 => '2x'])
+		);
+
+		$this->assertSame(
+			$file->crop(100, 50)->url() . ' 100w',
+			$file->srcset([['width' => 100, 'height' => 50, 'crop' => true]])
 		);
 	}
 
