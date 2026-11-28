@@ -2,8 +2,6 @@
 
 namespace Kirby\Filesystem;
 
-use Kirby\Cms\File as CmsFile;
-use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
 use Kirby\Image\Dimensions;
@@ -145,20 +143,6 @@ class FileImageTest extends TestCase
 	{
 		$file = $this->_image();
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
-
-		$page = new Page(['slug' => 'test']);
-		$file = new CmsFile([
-			'filename' => 'cat.jpg',
-			'parent'   => $page,
-			'content'  => ['alt' => 'Test text']
-		]);
-		$image = new File([
-			'root'  => static::FIXTURES . '/image/cat.jpg',
-			'url'   => 'https://foo.bar/cat.jpg',
-			'model' => $file
-		]);
-
-		$this->assertSame('<img alt="Test text" src="https://foo.bar/cat.jpg">', $image->html());
 	}
 
 	public function testHtmlWithoutUrl(): void

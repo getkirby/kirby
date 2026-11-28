@@ -5,10 +5,10 @@ namespace Kirby\Cms;
 use Exception;
 use IntlDateFormatter;
 use Kirby\Blueprint\FileBlueprint;
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
-use Kirby\Filesystem\IsFile;
 use Kirby\Guards\FileGuards;
 use Kirby\Http\Response;
 use Kirby\Image\Dimensions;
@@ -26,10 +26,10 @@ use Kirby\Uuid\FileUuid;
  * URL or resizing an image. It also
  * handles file meta data.
  *
- * The File class proxies the `Kirby\Filesystem\File`
- * class, which is used to handle all asset file methods.
- * In addition the File class handles
- * meta data via `Kirby\Content\Content`.
+ * The file on disk is represented by a
+ * `Kirby\Filesystem\File` object, which can be
+ * accessed via `::asset()`. In addition the
+ * File class handles meta data via `Kirby\Content\Content`.
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
@@ -43,9 +43,13 @@ class File extends ModelWithContent
 	use FileModifications;
 	use HasMethods;
 	use HasSiblings;
-	use IsFile;
 
 	public const string CLASS_ALIAS = 'file';
+
+	/**
+	 * The file on disk
+	 */
+	protected FilesystemFile|null $asset = null;
 
 	/**
 	 * Cache for the initialized blueprint object
@@ -104,6 +108,8 @@ class File extends ModelWithContent
 	/**
 	 * Magic caller for file methods
 	 * and content fields. (in this order)
+	 *
+	 * @throws BadMethodCallException For methods of the file on disk
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{
@@ -112,14 +118,17 @@ class File extends ModelWithContent
 			return $this->$method;
 		}
 
-		// asset method proxy
-		if (method_exists($this->asset(), $method) === true) {
-			return $this->asset()->$method(...$arguments);
-		}
-
 		// file methods
 		if ($this->hasMethod($method)) {
 			return $this->callMethod($method, $arguments);
+		}
+
+		// low-level methods of the file on disk must be called
+		// explicitly, e.g. to not bypass the file actions
+		if (method_exists($this->asset(), $method) === true) {
+			throw new BadMethodCallException(
+				message: 'The method "' . $method . '" is only available via `$file->asset()->' . $method . '()`'
+			);
 		}
 
 		// content fields
@@ -139,6 +148,19 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the `<img>` tag for images,
+	 * otherwise the URL of the file
+	 */
+	public function __toString(): string
+	{
+		if ($this->type() === 'image') {
+			return $this->html();
+		}
+
+		return $this->url();
+	}
+
+	/**
 	 * Returns the url to api endpoint
 	 * @internal
 	 */
@@ -146,6 +168,19 @@ class File extends ModelWithContent
 	public function apiUrl(bool $relative = false): string
 	{
 		return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
+	}
+
+	/**
+	 * Returns the object for the file on disk
+	 */
+	public function asset(): FilesystemFile
+	{
+		// the URL is resolved lazily, as custom `file::url`
+		// components might rely on `$file->asset()` themselves
+		return $this->asset ??= new FilesystemFile([
+			'root' => $this->root(),
+			'url'  => fn () => $this->url()
+		]);
 	}
 
 	/**
@@ -305,6 +340,14 @@ class File extends ModelWithContent
 	public function exif(): Exif|null
 	{
 		return $this->asset()->exif();
+	}
+
+	/**
+	 * Checks if the file exists on disk
+	 */
+	public function exists(): bool
+	{
+		return $this->asset()->exists();
 	}
 
 	/**
@@ -901,6 +944,14 @@ class File extends ModelWithContent
 			'id'       => $this->id(),
 			'template' => $this->template(),
 		];
+	}
+
+	/**
+	 * Returns the file type
+	 */
+	public function type(): string|null
+	{
+		return F::type($this->root() ?? $this->url());
 	}
 
 	/**

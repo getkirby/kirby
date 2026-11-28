@@ -2,10 +2,9 @@
 
 namespace Kirby\Filesystem;
 
+use Closure;
 use IntlDateFormatter;
 use Kirby\Cms\App;
-use Kirby\Cms\FileVersion;
-use Kirby\Content\Content;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -76,28 +75,20 @@ class File implements Stringable
 	protected Exif|null $exif = null;
 
 	/**
-	 * Parent file model
-	 * The model object must use the `\Kirby\Filesystem\IsFile` trait
-	 */
-	protected object|null $model;
-
-	/**
 	 * Absolute file path
 	 */
 	protected string|null $root;
 
 	/**
-	 * Absolute file URL
+	 * Absolute file URL or a closure to resolve it lazily
 	 */
-	protected string|null $url;
+	protected Closure|string|null $url;
 
 	/**
 	 * Constructor sets all file properties
 	 *
 	 * @param $props Properties or deprecated `$root` string
 	 * @param $url Deprecated argument, use `$props['url']` instead
-	 *
-	 * @throws InvalidArgumentException When the model does not use the `Kirby\Filesystem\IsFile` trait
 	 */
 	public function __construct(
 		array|string|null $props = null,
@@ -112,18 +103,8 @@ class File implements Stringable
 			];
 		}
 
-		$this->root  = $props['root'] ?? null;
-		$this->url   = $props['url'] ?? null;
-		$this->model = $props['model'] ?? null;
-
-		if (
-			$this->model !== null &&
-			defined($this->model::class . '::IS_FILE_TRAIT') === false
-		) {
-			throw new InvalidArgumentException(
-				message: 'The model object must use the "' . IsFile::class . '" trait'
-			);
-		}
+		$this->root = $props['root'] ?? null;
+		$this->url  = $props['url'] ?? null;
 	}
 
 	/**
@@ -337,22 +318,6 @@ class File implements Stringable
 			return Html::a($this->url() ?? '', $attr);
 		}
 
-		$model = match (true) {
-			$this->model instanceof FileVersion => $this->model->original(),
-			default                             => $this->model
-		};
-
-		// if no alt text explicitly provided,
-		// try to infer from model content file
-		if (
-			$model !== null &&
-			method_exists($model, 'content') === true &&
-			$model->content() instanceof Content &&
-			$model->content()->get('alt')->isNotEmpty() === true
-		) {
-			$attr['alt'] ??= $model->content()->get('alt')->value();
-		}
-
 		if ($url = $this->url()) {
 			return Html::img($url, $attr);
 		}
@@ -554,14 +519,6 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the parent file model, which uses this instance as proxied file asset
-	 */
-	public function model(): object|null
-	{
-		return $this->model;
-	}
-
-	/**
 	 * Returns the file's last modification time
 	 *
 	 * @param 'date'|'intl'|'strftime'|null $handler Custom date handler or `null`
@@ -672,7 +629,7 @@ class File implements Stringable
 	 */
 	public function root(): string|null
 	{
-		return $this->root ??= $this->model?->root();
+		return $this->root;
 	}
 
 	/**
@@ -788,10 +745,12 @@ class File implements Stringable
 	 */
 	public function url(): string|null
 	{
-		// lazily determine the URL from the model object
-		// only if it's needed to avoid breaking custom file::url
-		// components that rely on `$cmsFile->asset()` methods
-		return $this->url ??= $this->model?->url();
+		// resolve a lazily passed URL only when needed
+		if ($this->url instanceof Closure) {
+			$this->url = ($this->url)();
+		}
+
+		return $this->url;
 	}
 
 	/**

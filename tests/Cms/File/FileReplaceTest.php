@@ -163,4 +163,38 @@ class FileReplaceTest extends ModelTestCase
 		$this->assertSame('# Replacement', F::read($replacedFile->root()));
 		$this->assertInstanceOf(FilesystemFile::class, $replacedFile->asset());
 	}
+
+	public function testReplaceMoveAndManipulate(): void
+	{
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'files/test' => [
+					'name'   => 'test',
+					'create' => ['width' => 100]
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		$parent      = new Page(['slug' => 'test']);
+		$replacement = static::TMP . '/replacement.jpg';
+
+		F::copy(static::FIXTURES . '/cat.jpg', $replacement);
+
+		$originalFile = File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => $parent,
+			'template' => 'test'
+		]);
+
+		$this->assertSame(100, $originalFile->width());
+
+		// the moved source must not be used to check
+		// whether the replaced file can be resized
+		$replacedFile = $originalFile->replace($replacement, true);
+
+		$this->assertFileDoesNotExist($replacement);
+		$this->assertSame(100, $replacedFile->width());
+	}
 }
