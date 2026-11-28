@@ -53,6 +53,8 @@
 			</errorLevel>
 		</InvalidScope>
 
+		<MissingExtensionRequirement errorLevel="error" />
+
 		<!-- Don't warn about missing overrides attributes - we do not want to use them so far -->
 		<MissingOverrideAttribute errorLevel="suppress" />
 
