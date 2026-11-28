@@ -177,10 +177,10 @@ class File extends ModelWithContent
 	{
 		// the URL is resolved lazily, as custom `file::url`
 		// components might rely on `$file->asset()` themselves
-		return $this->asset ??= new FilesystemFile([
-			'root' => $this->root(),
-			'url'  => fn () => $this->url()
-		]);
+		return $this->asset ??= new FilesystemFile(
+			root: $this->root(),
+			url:  fn () => $this->url()
+		);
 	}
 
 	/**

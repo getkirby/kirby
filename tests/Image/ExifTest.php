@@ -17,7 +17,7 @@ class ExifTest extends TestCase
 
 	protected function _image($filename = 'image/cat.jpg')
 	{
-		return new File(static::FIXTURES . '/' . $filename);
+		return new File(root: static::FIXTURES . '/' . $filename);
 	}
 
 	public function testAperture(): void
@@ -214,7 +214,7 @@ class ExifTest extends TestCase
 	public function testParseTimestampReturnsNullWhenUnavailable(): void
 	{
 		// image pointing at a non-existent file makes modified() return false
-		$image = new File(static::FIXTURES . '/image/does-not-exist.jpg');
+		$image = new File(root: static::FIXTURES . '/image/does-not-exist.jpg');
 		$exif  = new Exif($image);
 
 		$ref  = new ReflectionClass($exif);

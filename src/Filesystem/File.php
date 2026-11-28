@@ -75,36 +75,13 @@ class File implements Stringable
 	protected Exif|null $exif = null;
 
 	/**
-	 * Absolute file path
-	 */
-	protected string|null $root;
-
-	/**
-	 * Absolute file URL or a closure to resolve it lazily
-	 */
-	protected Closure|string|null $url;
-
-	/**
-	 * Constructor sets all file properties
-	 *
-	 * @param $props Properties or deprecated `$root` string
-	 * @param $url Deprecated argument, use `$props['url']` instead
+	 * @param $root Absolute file path
+	 * @param $url Absolute file URL or a closure to resolve it lazily
 	 */
 	public function __construct(
-		array|string|null $props = null,
-		string|null $url = null
+		protected string|null $root = null,
+		protected Closure|string|null $url = null
 	) {
-		// Legacy support for old constructor of
-		// the `Kirby\Image\Image` class
-		if (is_array($props) === false) {
-			$props = [
-				'root' => $props,
-				'url'  => $url
-			];
-		}
-
-		$this->root = $props['root'] ?? null;
-		$this->url  = $props['url'] ?? null;
 	}
 
 	/**
@@ -148,7 +125,7 @@ class File implements Stringable
 			);
 		}
 
-		return new static($target);
+		return new static(root: $target);
 	}
 
 	/**
@@ -545,7 +522,7 @@ class File implements Stringable
 			);
 		}
 
-		return new static($newRoot);
+		return new static(root: $newRoot);
 	}
 
 	/**
@@ -621,7 +598,7 @@ class File implements Stringable
 			);
 		}
 
-		return new static($newRoot);
+		return new static(root: $newRoot);
 	}
 
 	/**
