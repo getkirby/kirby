@@ -59,8 +59,6 @@
 						icon="sort"
 						class="k-sort-handle k-entries-field-item-sort-handle"
 						size="sm"
-						@keydown.up="sortUp(index)"
-						@keydown.down="sortDown(index)"
 					/>
 					<component
 						:is="`k-${field.type}-field`"
@@ -334,6 +332,9 @@ export default {
 		save() {
 			this.$emit("input", this.values);
 		},
+		/**
+		 * @deprecated 6.1.0 `k-draggable` sorts with the arrow keys
+		 */
 		async sort(index, direction) {
 			if (this.isSortable === false) {
 				return;
@@ -346,6 +347,9 @@ export default {
 			await this.$nextTick();
 			this.focus(index + direction, "sort-handle");
 		},
+		/**
+		 * @deprecated 6.1.0 `k-draggable` sorts with the arrow keys
+		 */
 		sortDown(index) {
 			if (index >= this.entries.length - 1) {
 				return;
@@ -353,6 +357,9 @@ export default {
 
 			this.sort(index, 1);
 		},
+		/**
+		 * @deprecated 6.1.0 `k-draggable` sorts with the arrow keys
+		 */
 		sortUp(index) {
 			if (index <= 0) {
 				return;

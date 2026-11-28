@@ -1,5 +1,9 @@
 <template>
-	<component :is="element" :class="{ 'k-draggable': !dragOptions.disabled }">
+	<component
+		:is="element"
+		:class="{ 'k-draggable': !dragOptions.disabled }"
+		@keydown="onKeydown"
+	>
 		<!-- @slot Items to be sortable via drag and drop -->
 		<slot />
 
@@ -12,6 +16,8 @@
 
 <script>
 /* eslint-disable vue/no-mutating-props */
+
+const ownedKeydowns = new WeakSet();
 
 /**
  * The Draggable component implements the widespread
@@ -210,6 +216,72 @@ export default {
 					node.classList?.add("k-draggable-footer");
 				}
 			}
+		},
+		async onKeydown(event) {
+			const step = { ArrowUp: -1, ArrowDown: 1 }[event.key];
+			const handle = this.dragOptions.handle;
+
+			if (
+				step === undefined ||
+				event.defaultPrevented ||
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey ||
+				event.shiftKey ||
+				!handle ||
+				event.target.matches(handle) === false ||
+				ownedKeydowns.has(event)
+			) {
+				return;
+			}
+
+			const { draggable, filter } = this.dragOptions;
+			const children = () => [...this.$el.children];
+			const items = () =>
+				children().filter(
+					(element) =>
+						(draggable === ">*" || element.matches(draggable)) &&
+						element.matches(filter) === false
+				);
+			const before = items();
+			const oldIndex = before.findIndex((item) => item.contains(event.target));
+			const newIndex = oldIndex + step;
+
+			if (oldIndex === -1) {
+				return;
+			}
+
+			ownedKeydowns.add(event);
+
+			if (this.dragOptions.disabled || !this.list) {
+				return;
+			}
+
+			event.preventDefault();
+
+			if (newIndex < 0 || newIndex >= before.length) {
+				return;
+			}
+
+			const sortEvent = {
+				item: before[oldIndex],
+				from: this.$el,
+				to: this.$el,
+				oldIndex: children().indexOf(before[oldIndex]),
+				newIndex: children().indexOf(before[newIndex]),
+				oldDraggableIndex: oldIndex,
+				newDraggableIndex: newIndex
+			};
+
+			const element = this.list[oldIndex];
+			this.list.splice(oldIndex, 1);
+			this.list.splice(newIndex, 0, element);
+			this.$emit("change", { moved: { element, newIndex, oldIndex } });
+			this.$emit("sort", sortEvent);
+			this.$emit("end", sortEvent);
+
+			await this.$nextTick();
+			items()[newIndex]?.querySelector(handle)?.focus();
 		},
 		getInstance(element) {
 			// get the Vue instance from HTMLElement

@@ -383,6 +383,31 @@ describe("k-model-list-field", () => {
 		});
 	});
 
+	describe("sort handle focus", () => {
+		it("puts the focus back on the sort handle after sorting", async () => {
+			const $panel = {
+				...panel,
+				events: { emit: vi.fn() },
+				notification: { success: vi.fn() }
+			};
+			const wrapper = mount({}, {}, $panel);
+			await flushPromises();
+			document.body.append(wrapper.element);
+			wrapper.element.insertAdjacentHTML(
+				"beforeend",
+				`<div data-id="a"><button class="k-sort-handle"></button></div>`
+			);
+			const handle = wrapper.element.querySelector("button") as HTMLElement;
+			handle.focus();
+
+			await wrapper.vm.request(async () => handle.blur());
+			await wrapper.vm.reload();
+
+			expect(document.activeElement).toBe(handle);
+			wrapper.element.remove();
+		});
+	});
+
 	// events
 	describe("field.loaded event", () => {
 		it("is emitted once the entries have arrived", async () => {

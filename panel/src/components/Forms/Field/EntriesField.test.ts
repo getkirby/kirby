@@ -466,15 +466,6 @@ describe("k-entries-field", () => {
 		});
 	});
 
-	describe("keydown event", () => {
-		it("sorts with the arrow keys on a sort handle", async () => {
-			const wrapper = mount();
-			const [first] = buttons(wrapper, "sort");
-			await first.trigger("keydown.down");
-			expect(lastInput(wrapper)).toStrictEqual(["b", "a"]);
-		});
-	});
-
 	describe("sort event", () => {
 		it("emits the values after dragging", () => {
 			const wrapper = mount();

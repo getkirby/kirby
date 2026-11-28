@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import { h } from "vue";
 import Draggable from "./Draggable.vue";
 
 // the options and callbacks Sortable was created with
@@ -283,6 +284,167 @@ describe("k-draggable", () => {
 			expect(
 				instance.options.onMove?.({ dragged: footer } as never, {} as never)
 			).toBe(false);
+		});
+	});
+});
+
+function mountList(list: string[], props = {}) {
+	return vueMount(Draggable, {
+		props: { list, handle: true, ...props },
+		attachTo: document.body,
+		slots: {
+			default: () =>
+				list.map((item: string) =>
+					h("div", { key: item }, [
+						h("button", { class: "k-sort-handle", title: item })
+					])
+				)
+		},
+		global: {
+			mocks: { $panel: { drag: { start() {}, stop() {} } } }
+		}
+	});
+}
+
+async function press(
+	wrapper: ReturnType<typeof mountList>,
+	title: string,
+	key: string
+) {
+	const handle = wrapper.find(`[title=${title}]`);
+	(handle.element as HTMLElement).focus();
+	await handle.trigger("keydown", { key });
+}
+
+describe("k-draggable keyboard", () => {
+	describe("keyboard", () => {
+		it("moves an item down with ArrowDown on its handle", async () => {
+			const list = ["a", "b", "c"];
+			const wrapper = mountList(list);
+			await press(wrapper, "a", "ArrowDown");
+			expect(list).toStrictEqual(["b", "a", "c"]);
+			expect(wrapper.emitted("change")?.[0][0]).toStrictEqual({
+				moved: { element: "a", newIndex: 1, oldIndex: 0 }
+			});
+			expect(wrapper.emitted("sort")).toHaveLength(1);
+			expect(wrapper.emitted("end")).toHaveLength(1);
+			wrapper.unmount();
+		});
+
+		it("emits the same sort and end payload as Sortable", async () => {
+			const list = ["a", "b", "c"];
+			const wrapper = mountList(list);
+			const item = wrapper.find("[title=a]").element.parentElement;
+			await press(wrapper, "a", "ArrowDown");
+			const payload = {
+				item,
+				from: wrapper.element,
+				to: wrapper.element,
+				oldIndex: 0,
+				newIndex: 1,
+				oldDraggableIndex: 0,
+				newDraggableIndex: 1
+			};
+			expect(wrapper.emitted("sort")?.[0][0]).toStrictEqual(payload);
+			expect(wrapper.emitted("end")?.[0][0]).toStrictEqual(payload);
+			wrapper.unmount();
+		});
+
+		it("leaves the handles of an inner list to the inner list", async () => {
+			const list = ["a", "b"];
+			const wrapper = vueMount(Draggable, {
+				props: { list, handle: true },
+				attachTo: document.body,
+				slots: {
+					default: () =>
+						list.map((item: string) =>
+							h("div", { key: item }, [
+								h("button", { class: "k-sort-handle", title: item }),
+								h(Draggable, { handle: true }, () => [
+									h("div", [
+										h("button", { class: "k-sort-handle", title: item + "1" })
+									]),
+									h("div", [
+										h("button", { class: "k-sort-handle", title: item + "2" })
+									])
+								])
+							])
+						)
+				},
+				global: {
+					mocks: { $panel: { drag: { start() {}, stop() {} } } }
+				}
+			});
+			await press(wrapper, "a1", "ArrowDown");
+			expect(list).toStrictEqual(["a", "b"]);
+			await press(wrapper, "a", "ArrowDown");
+			expect(list).toStrictEqual(["b", "a"]);
+			wrapper.unmount();
+		});
+
+		it("moves an item up with ArrowUp on its handle", async () => {
+			const list = ["a", "b", "c"];
+			const wrapper = mountList(list);
+			await press(wrapper, "c", "ArrowUp");
+			expect(list).toStrictEqual(["a", "c", "b"]);
+			wrapper.unmount();
+		});
+
+		it("stops at the ends of the list", async () => {
+			const list = ["a", "b"];
+			const wrapper = mountList(list);
+			await press(wrapper, "a", "ArrowUp");
+			await press(wrapper, "b", "ArrowDown");
+			expect(list).toStrictEqual(["a", "b"]);
+			expect(wrapper.emitted("change")).toBeUndefined();
+			wrapper.unmount();
+		});
+
+		it("ignores keys a handle already handled", async () => {
+			const list = ["a", "b"];
+			const wrapper = mountList(list);
+			const handle = wrapper.find("[title=a]");
+			handle.element.addEventListener("keydown", (event) =>
+				event.preventDefault()
+			);
+			await handle.trigger("keydown", { key: "ArrowDown" });
+			expect(list).toStrictEqual(["a", "b"]);
+			wrapper.unmount();
+		});
+
+		it("ignores arrow keys with modifiers", async () => {
+			const list = ["a", "b"];
+			const wrapper = mountList(list);
+			const handle = wrapper.find("[title=a]");
+			(handle.element as HTMLElement).focus();
+			await handle.trigger("keydown", { key: "ArrowDown", shiftKey: true });
+			await handle.trigger("keydown", { key: "ArrowDown", ctrlKey: true });
+			expect(list).toStrictEqual(["a", "b"]);
+			wrapper.unmount();
+		});
+
+		it("keeps the key at the end of the list from reaching outer lists", async () => {
+			const list = ["a", "b"];
+			const wrapper = mountList(list);
+			const handle = wrapper.find("[title=b]");
+			(handle.element as HTMLElement).focus();
+			const event = new KeyboardEvent("keydown", {
+				key: "ArrowDown",
+				bubbles: true,
+				cancelable: true
+			});
+			handle.element.dispatchEvent(event);
+			expect(event.defaultPrevented).toBe(true);
+			expect(list).toStrictEqual(["a", "b"]);
+			wrapper.unmount();
+		});
+
+		it("does nothing when disabled", async () => {
+			const list = ["a", "b"];
+			const wrapper = mountList(list, { disabled: true });
+			await press(wrapper, "a", "ArrowDown");
+			expect(list).toStrictEqual(["a", "b"]);
+			wrapper.unmount();
 		});
 	});
 });

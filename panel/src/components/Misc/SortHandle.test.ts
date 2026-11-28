@@ -15,9 +15,9 @@ describe("k-sort-handle", () => {
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 
-		it("is aria-hidden", () => {
+		it("is not hidden from assistive technology", () => {
 			const wrapper = mount();
-			expect(wrapper.attributes("aria-hidden")).toBe("true");
+			expect(wrapper.attributes("aria-hidden")).toBeUndefined();
 		});
 
 		it("uses the sort icon", () => {

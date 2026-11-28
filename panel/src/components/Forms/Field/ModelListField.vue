@@ -119,6 +119,7 @@ export default {
 			isLoading: true,
 			isSearching: false,
 			searchterm: null,
+			sortedItem: null,
 			state: {
 				columns: this.columns,
 				models: [],
@@ -364,6 +365,15 @@ export default {
 			}
 
 			await this.$nextTick();
+			if (this.sortedItem && document.activeElement === document.body) {
+				this.$el
+					.querySelector(
+						`[data-id="${CSS.escape(this.sortedItem)}"] .k-sort-handle`
+					)
+					?.focus();
+			}
+
+			this.sortedItem = null;
 			this.$events.emit("field.loaded", this);
 		},
 		/**
@@ -371,6 +381,12 @@ export default {
 		 * which refreshes every list that shows the same models
 		 */
 		async request(callback) {
+			const handle = document.activeElement?.closest(".k-sort-handle");
+
+			if (handle && this.$el.contains(handle)) {
+				this.sortedItem = handle.closest("[data-id]")?.dataset.id;
+			}
+
 			this.isProcessing = true;
 
 			try {
