@@ -5,7 +5,7 @@ namespace Kirby\Guards;
 use Kirby\Cms\App;
 use Kirby\Cms\File;
 use Kirby\Exception\DuplicateException;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -48,7 +48,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the file that is about to be created
 	 */
-	protected function ensureToCreate(BaseFile $upload): void
+	protected function ensureToCreate(FilesystemFile $upload): void
 	{
 		$this->validateDoesNotExist();
 		$this->validateUpload($upload);
@@ -57,7 +57,7 @@ class FileValidators extends ModelValidators
 	/**
 	 * Validates the input of the `replace` action
 	 */
-	protected function ensureToReplace(BaseFile $upload): void
+	protected function ensureToReplace(FilesystemFile $upload): void
 	{
 		$this->validateUploadWithSameType($upload);
 	}
@@ -249,7 +249,7 @@ class FileValidators extends ModelValidators
 	 * Validates the uploaded file against the general file rules
 	 * as well as the `accept` settings of the file blueprint
 	 */
-	public function validateUpload(BaseFile $upload): void
+	public function validateUpload(FilesystemFile $upload): void
 	{
 		$this->validateFile($upload->mime());
 
@@ -261,7 +261,7 @@ class FileValidators extends ModelValidators
 	 * Validates an uploaded replacement file, which must match
 	 * the MIME type or extension of the file it replaces
 	 */
-	public function validateUploadWithSameType(BaseFile $upload): void
+	public function validateUploadWithSameType(FilesystemFile $upload): void
 	{
 		$this->validateMime($upload->mime());
 

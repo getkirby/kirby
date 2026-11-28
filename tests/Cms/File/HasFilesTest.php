@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -43,7 +43,7 @@ class NewHasFilesTest extends ModelTestCase
 		$this->assertFileExists($source);
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf(BaseFile::class, $result->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $result->asset());
 
 		// make sure file received UUID right away
 		$this->assertIsString($result->content()->get('uuid')->value());
@@ -66,7 +66,7 @@ class NewHasFilesTest extends ModelTestCase
 		$this->assertFileDoesNotExist($source);
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.md');
-		$this->assertInstanceOf(BaseFile::class, $result->asset());
+		$this->assertInstanceOf(FilesystemFile::class, $result->asset());
 
 		// make sure file received UUID right away
 		$this->assertIsString($result->content()->get('uuid')->value());

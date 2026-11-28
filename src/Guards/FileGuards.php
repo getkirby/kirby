@@ -8,7 +8,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Filesystem\File as BaseFile;
+use Kirby\Filesystem\File as FilesystemFile;
 
 /**
  * Bundles all guards for a `$file` object
@@ -50,7 +50,7 @@ class FileGuards extends ModelGuards
 	 * @throws InvalidArgumentException If the name, extension, MIME type or contents of the file are invalid
 	 * @throws PermissionException If the user is not allowed to create the file
 	 */
-	protected function ensureToCreate(BaseFile $upload): void
+	protected function ensureToCreate(FilesystemFile $upload): void
 	{
 		// uploading the exact same file again changes nothing
 		// and therefore needs no checks at all
