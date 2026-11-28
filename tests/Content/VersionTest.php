@@ -3,6 +3,7 @@
 namespace Kirby\Content;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Cms\File;
 use Kirby\Cms\Page;
 use Kirby\Data\Data;
@@ -187,6 +188,158 @@ class VersionTest extends TestCase
 
 		$this->assertSame($expectedContentEN, $version->content('en')->toArray());
 		$this->assertSame($expectedContentDE, $version->content('de')->toArray());
+	}
+
+	public function testContentChangesSecondaryLanguageWithoutTranslation(): void
+	{
+		$this->setUpChangesLanguageFallback();
+
+		$latest = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+		$changes = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$latest->save([
+			'title'    => 'Home',
+			'uuid'     => 'nmr3oz1rok707lxb',
+			'text'     => 'Hello',
+			'category' => 'News'
+		], 'en');
+
+		// No secondary-language file exists yet. Saving the changes
+		// version strips uuid and untranslatable fields on write.
+		$changes->save([
+			'title'    => 'Home',
+			'uuid'     => 'nmr3oz1rok707lxb',
+			'text'     => 'Bonjour',
+			'category' => 'News'
+		], 'de');
+
+		$stored = $changes->read('de');
+		$this->assertArrayNotHasKey('uuid', $stored);
+		$this->assertArrayNotHasKey('category', $stored);
+		$this->assertSame('Bonjour', $stored['text']);
+		$this->assertNull($changes->read('en'));
+
+		$content = $changes->content('de')->toArray();
+		$this->assertSame('Home', $content['title']);
+		$this->assertSame('Bonjour', $content['text']);
+		$this->assertSame('News', $content['category']);
+		$this->assertSame('nmr3oz1rok707lxb', $content['uuid']);
+		$this->assertArrayNotHasKey('lock', $content);
+	}
+
+	public function testContentChangesSecondaryLanguageWithTranslation(): void
+	{
+		$this->setUpChangesLanguageFallback();
+
+		$latest = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+		$changes = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$latest->save([
+			'title'    => 'Home',
+			'uuid'     => 'nmr3oz1rok707lxb',
+			'text'     => 'Hello',
+			'category' => 'News'
+		], 'en');
+		$latest->save([
+			'title' => 'Accueil',
+			'text'  => 'Salut'
+		], 'de');
+
+		$changes->save([
+			'title' => 'Accueil',
+			'text'  => 'Bonjour'
+		], 'de');
+
+		$content = $changes->content('de')->toArray();
+		$this->assertSame('Accueil', $content['title']);
+		$this->assertSame('Bonjour', $content['text']);
+		$this->assertSame('News', $content['category']);
+		$this->assertSame('nmr3oz1rok707lxb', $content['uuid']);
+	}
+
+	public function testContentChangesSecondaryLanguagePrefersDefaultChanges(): void
+	{
+		$this->setUpChangesLanguageFallback();
+
+		$latest = new Version(
+			model: $this->model,
+			id: VersionId::latest()
+		);
+		$changes = new Version(
+			model: $this->model,
+			id: VersionId::changes()
+		);
+
+		$latest->save([
+			'title'    => 'Home',
+			'uuid'     => 'nmr3oz1rok707lxb',
+			'text'     => 'Hello',
+			'category' => 'News'
+		], 'en');
+
+		// Unpublished default-language content must win over the published file.
+		$changes->save([
+			'title'    => 'Home',
+			'uuid'     => 'nmr3oz1rok707lxb',
+			'text'     => 'Hello',
+			'category' => 'Sports'
+		], 'en');
+		$changes->save([
+			'title' => 'Home',
+			'text'  => 'Bonjour'
+		], 'de');
+
+		$content = $changes->content('de')->toArray();
+		$this->assertSame('Bonjour', $content['text']);
+		$this->assertSame('Sports', $content['category']);
+		$this->assertSame('nmr3oz1rok707lxb', $content['uuid']);
+	}
+
+	/**
+	 * Page blueprint with one untranslatable field, used by the
+	 * secondary-language changes fallback tests.
+	 */
+	private function setUpChangesLanguageFallback(): void
+	{
+		// Blueprint::find() caches by name for the whole process.
+		// Drop it so this article blueprint does not leak into later tests.
+		Blueprint::$loaded = [];
+
+		$this->setUpMultiLanguage();
+
+		$this->app = $this->app->clone([
+			'blueprints' => [
+				'pages/article' => [
+					'fields' => [
+						'text' => [
+							'type' => 'textarea'
+						],
+						'category' => [
+							'type'      => 'text',
+							'translate' => false
+						]
+					]
+				]
+			]
+		]);
+	}
+
+	protected function tearDown(): void
+	{
+		Blueprint::$loaded = [];
+		parent::tearDown();
 	}
 
 	public function testCreateMultiLanguage(): void
