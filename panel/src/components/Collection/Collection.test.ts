@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "@test/unit";
 import { mount as vueMount } from "@vue/test-utils";
+import Table from "@/components/Layout/Table.vue";
 import Collection from "./Collection.vue";
+import RealItems from "./Items.vue";
 
 const Empty = {
 	name: "k-empty",
@@ -50,10 +52,27 @@ function mount(props = {}, attrs = {}, slots = {}) {
 	});
 }
 
+// the real items and table, for their header and cell events
+function mountTable(props = {}) {
+	return vueMount(Collection, {
+		props: {
+			columns: { text: { label: "Text" } },
+			items,
+			layout: "table",
+			...props
+		},
+		global: {
+			components: { "k-items": RealItems, "k-table": Table }
+		}
+	});
+}
+
 describe("k-collection", () => {
 	// $el
 	describe("element", () => {
 		it.rendersAs(mount, "DIV", "k-collection");
+		it.acceptsClass(mount);
+		it.acceptsStyle(mount);
 		it.inheritsNoAttrs(mount);
 
 		it("renders the items", () => {
@@ -199,9 +218,41 @@ describe("k-collection", () => {
 			component.vm.$emit("select", ["a"]);
 			component.vm.$emit("sort", "sorted");
 			expect(wrapper.emitted("change")).toStrictEqual([["changed"]]);
-			expect(wrapper.emitted("item")?.[0][0]).toStrictEqual(items[1]);
+			expect(wrapper.emitted("item")).toStrictEqual([[items[1], 1]]);
 			expect(wrapper.emitted("select")).toStrictEqual([[["a"]]]);
 			expect(wrapper.emitted("sort")).toStrictEqual([["sorted"]]);
+		});
+
+		it("passes on the header of the table", async () => {
+			const column = { label: "Text", sorted: false };
+			const wrapper = mountTable({ columns: { text: column } });
+			await wrapper.find('th[data-column-id="text"] button').trigger("click");
+			expect(wrapper.emitted("header")).toStrictEqual([
+				[{ column, columnIndex: "text" }]
+			]);
+		});
+
+		it("adds the column to the item of a table cell click", async () => {
+			const wrapper = mountTable();
+			await wrapper.findAll("k-table-cell")[1].trigger("click");
+			expect(wrapper.emitted("item")).toStrictEqual([[items[1], 1, "text"]]);
+		});
+
+		it("toggles the selection for a table cell click while selecting", async () => {
+			const wrapper = mountTable({ selecting: true });
+			await wrapper.findAll("k-table-cell")[1].trigger("click");
+			expect(wrapper.emitted("item")).toBeUndefined();
+			expect(wrapper.emitted("select")).toStrictEqual([[["b"]]]);
+		});
+
+		it("emits the item of an unselectable row while selecting", async () => {
+			const wrapper = mountTable({
+				items: [{ id: "a", text: "A", selectable: false }],
+				selecting: true
+			});
+			await wrapper.find("k-table-cell").trigger("click");
+			expect(wrapper.emitted("item")).toHaveLength(1);
+			expect(wrapper.emitted("select")).toBeUndefined();
 		});
 
 		it("emits the option of an item as action and option", () => {
