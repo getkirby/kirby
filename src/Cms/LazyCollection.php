@@ -32,6 +32,13 @@ use Kirby\Exception\LogicException;
 abstract class LazyCollection extends Collection
 {
 	/**
+	 * Elements stay `null` until they are hydrated
+	 *
+	 * @var array<string, TValue|null>
+	 */
+	public array $data = [];
+
+	/**
 	 * Flag that tells whether hydration has been
 	 * completed for all collection elements;
 	 * this is used to increase performance

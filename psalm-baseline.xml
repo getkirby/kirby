@@ -161,8 +161,6 @@
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$files->data]]></code>
-      <code><![CDATA[$this->data]]></code>
-      <code><![CDATA[[...$this->data, ...$existing]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Content/FieldMethods.php">
