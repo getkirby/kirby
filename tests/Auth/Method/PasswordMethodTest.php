@@ -53,7 +53,9 @@ class PasswordMethodTest extends TestCase
 	public function testAuthenticateWith2FA(): void
 	{
 		$status       = $this->createStub(Status::class);
-		$user         = $this->createStub(User::class);
+		$user         = $this->createConfiguredStub(User::class, [
+			'email' => 'marge@simpsons.com'
+		]);
 		$validate     = null;
 		$challenge    = null;
 		$auth         = $this->createStub(Auth::class);
@@ -137,7 +139,9 @@ class PasswordMethodTest extends TestCase
 	public function testAuthenticateWithSecondFactor(): void
 	{
 		$status       = $this->createStub(Status::class);
-		$user         = $this->createStub(User::class);
+		$user         = $this->createConfiguredStub(User::class, [
+			'email' => 'marge@simpsons.com'
+		]);
 		$validate     = null;
 		$challenge    = null;
 		$challenges   = $this->createStub(Challenges::class);

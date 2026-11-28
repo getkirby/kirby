@@ -56,6 +56,18 @@ abstract class Method
 	}
 
 	/**
+	 * Checks whether the user needs a second factor because
+	 * they have set one up or any method requires it
+	 * @since 6.1.0
+	 */
+	protected function has2FA(User $user): bool
+	{
+		return
+			$this->auth->methods()->hasAnyRequiring2FA() === true ||
+			$this->auth->challenges()->hasAvailable($user, '2fa') === true;
+	}
+
+	/**
 	 * Returns an icon name used to represent
 	 * the method, e.g. on the login view
 	 */
@@ -79,6 +91,30 @@ abstract class Method
 	public function label(): string
 	{
 		return static::i18n('login.method.' . $this->type() . '.label');
+	}
+
+	/**
+	 * Logs in the user that has been authenticated by the method
+	 * or creates a challenge if the user needs a second factor
+	 * @since 6.1.0
+	 */
+	protected function loginOrChallenge(User $user, bool $long = false): User|Status
+	{
+		if ($this->has2FA($user) === true) {
+			return $this->auth->createChallenge(
+				mode:  '2fa',
+				email: $user->email(),
+				long:  $long,
+			);
+		}
+
+		// log the user in with a cookie-based session
+		$user->loginPasswordless([
+			'createMode' => 'cookie',
+			'long'       => $long === true
+		]);
+
+		return $user;
 	}
 
 	/**
