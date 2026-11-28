@@ -44,6 +44,8 @@
 		<InternalMethod errorLevel="suppress" />
 		<InternalProperty errorLevel="suppress" />
 
+		<InvalidDocblockParamName errorLevel="error" />
+
 		<!-- Don't warn about "$this in a non-class context" in the config dir -->
 		<InvalidScope>
 			<errorLevel type="suppress">
