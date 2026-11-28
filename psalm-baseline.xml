@@ -15,16 +15,6 @@
       <code><![CDATA[$extensions['routes'] ?? []]]></code>
       <code><![CDATA[$routes]]></code>
     </InvalidOperand>
-    <InvalidReturnStatement>
-      <code><![CDATA[match ($code ?? 'current') {
-			'default' => $this->defaultLanguage(),
-			'current' => $this->currentLanguage(),
-			default   => $this->languages()->find($code)
-		}]]></code>
-    </InvalidReturnStatement>
-    <InvalidReturnType>
-      <code><![CDATA[Language|null]]></code>
-    </InvalidReturnType>
   </file>
   <file src="src/Cms/AppErrors.php">
     <InvalidArrayOffset>
@@ -49,11 +39,6 @@
       <code><![CDATA[$this->extensions['snippets']]]></code>
       <code><![CDATA[$this->extensions['templates']]]></code>
     </InvalidOperand>
-  </file>
-  <file src="src/Cms/AppTranslations.php">
-    <InvalidReturnType>
-      <code><![CDATA[Translation]]></code>
-    </InvalidReturnType>
   </file>
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
@@ -167,13 +152,6 @@
       <code><![CDATA[$this->type('application/json')]]></code>
     </InvalidReturnStatement>
   </file>
-  <file src="src/Cms/Site.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$this->errorPage ??= $this->find($this->errorPageId())]]></code>
-      <code><![CDATA[$this->find($path)]]></code>
-      <code><![CDATA[$this->homePage ??= $this->find($this->homePageId())]]></code>
-    </InvalidReturnStatement>
-  </file>
   <file src="src/Cms/Users.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[$object]]></code>
@@ -188,10 +166,6 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Content/FieldMethods.php">
-    <InvalidReturnType>
-      <code><![CDATA[Pages]]></code>
-      <code><![CDATA[Users]]></code>
-    </InvalidReturnType>
     <UndefinedMethod>
       <code><![CDATA[title]]></code>
     </UndefinedMethod>

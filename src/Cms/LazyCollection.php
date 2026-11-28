@@ -152,7 +152,8 @@ abstract class LazyCollection extends Collection
 	 * Find one or multiple elements by id
 	 *
 	 * @param string|list<string> ...$keys
-	 * @return TValue|static
+	 * @return TValue|static|null
+	 * @psalm-return (func_num_args() is 1 ? ($keys is string ? TValue|null : static) : static)
 	 */
 	public function find(...$keys)
 	{

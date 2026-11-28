@@ -99,6 +99,7 @@ trait HasChildren
 
 	/**
 	 * Finds one or multiple published children by ID
+	 * @psalm-return (func_num_args() is 1 ? ($arguments is string ? Page|null : Pages) : Pages)
 	 */
 	public function find(string|array ...$arguments): Page|Pages|null
 	{
