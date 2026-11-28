@@ -3,6 +3,7 @@
 namespace Kirby\Filesystem;
 
 use Closure;
+use Darkroom\Source;
 use IntlDateFormatter;
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
@@ -12,6 +13,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Image\Dimensions;
 use Kirby\Image\Exif;
+use Kirby\Image\Svg;
 use Kirby\Sane\Sane;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Html;
@@ -31,15 +33,6 @@ use Stringable;
  */
 class File implements Stringable
 {
-	public static array $resizableTypes = [
-		'avif',
-		'jpg',
-		'jpeg',
-		'gif',
-		'png',
-		'webp'
-	];
-
 	/**
 	 * Validation rules to be used for `::match()`
 	 *
@@ -73,6 +66,11 @@ class File implements Stringable
 	 * Cached exif data
 	 */
 	protected Exif|null $exif = null;
+
+	/**
+	 * Facts from the image's header, read when asked
+	 */
+	protected Source|null $source = null;
 
 	/**
 	 * @param $root Absolute file path
@@ -156,8 +154,9 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the dimensions of the file or
-	 * `null` if the file has no visual dimensions
+	 * Returns the dimensions of the file as displayed, i.e. with
+	 * its orientation applied, or `null` if the file has no visual
+	 * dimensions; 0×0 for an image whose size can't be read
 	 */
 	public function dimensions(): Dimensions|null
 	{
@@ -166,41 +165,24 @@ class File implements Stringable
 			return $this->dimensions ?: null;
 		}
 
-		if ($this->type() === 'image') {
-			$mime   = null;
-			$header = $this->exists() ? (string)@file_get_contents($this->root, false, null, 0, 16) : '';
+		$source = $this->source();
 
-			// read the type from the header, `mime()` reads up to 7 MB of the file
-			if (
-				str_starts_with($header, "\xFF\xD8\xFF") === true ||
-				(str_starts_with($header, "\x89PNG\r\n\x1A\n") === true && substr($header, 12, 4) === 'IHDR') ||
-				(str_starts_with($header, 'RIFF') === true && substr($header, 8, 4) === 'WEBP')
-			) {
-				$mime = $this->imagesize()['mime'] ?? null;
-			}
-
-			if (in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true) === false) {
-				$mime = $this->mime();
-			}
-
-			if (in_array($mime, [
-				'image/avif',
-				'image/gif',
-				'image/jpeg',
-				'image/jp2',
-				'image/png',
-				'image/webp'
-			], true)) {
-				return $this->dimensions = Dimensions::forImage($this);
-			}
-
-			if ($this->extension() === 'svg') {
-				return $this->dimensions = Dimensions::forSvg($this->root());
-			}
+		if ($source === null) {
+			$this->dimensions = false;
+			return null;
 		}
 
-		$this->dimensions = false;
-		return null;
+		// the library reads no SVG
+		if ($this->extension() === 'svg') {
+			$svg = Svg::from($source->file);
+
+			return $this->dimensions = new Dimensions(
+				(int)round($svg->width() ?? 0),
+				(int)round($svg->height() ?? 0)
+			);
+		}
+
+		return $this->dimensions = Dimensions::from($source->size());
 	}
 
 	/**
@@ -223,11 +205,13 @@ class File implements Stringable
 	 */
 	public function exif(): Exif|null
 	{
-		if ($this->type() !== 'image') {
+		$source = $this->source();
+
+		if ($source === null) {
 			return null;
 		}
 
-		return $this->exif ??= new Exif($this);
+		return $this->exif ??= new Exif($source->exif(), $this->modified());
 	}
 
 	/**
@@ -243,7 +227,7 @@ class File implements Stringable
 	 */
 	public function extension(): string
 	{
-		return F::extension($this->root());
+		return F::extension($this->root);
 	}
 
 	/**
@@ -251,7 +235,7 @@ class File implements Stringable
 	 */
 	public function filename(): string
 	{
-		return basename($this->root());
+		return basename($this->root);
 	}
 
 	/**
@@ -259,7 +243,7 @@ class File implements Stringable
 	 */
 	public function hash(): string
 	{
-		return md5($this->root());
+		return md5($this->root);
 	}
 
 	/**
@@ -305,14 +289,6 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the PHP imagesize array
-	 */
-	public function imagesize(): array|false
-	{
-		return @getimagesize($this->root());
-	}
-
-	/**
 	 * Checks if a file is of a certain type
 	 *
 	 * @param $value An extension or mime type
@@ -327,7 +303,7 @@ class File implements Stringable
 	 */
 	public function isLandscape(): bool
 	{
-		return $this->dimensions()?->landscape() ?? false;
+		return $this->dimensions()?->isLandscape() ?? false;
 	}
 
 	/**
@@ -335,7 +311,7 @@ class File implements Stringable
 	 */
 	public function isPortrait(): bool
 	{
-		return $this->dimensions()?->portrait() ?? false;
+		return $this->dimensions()?->isPortrait() ?? false;
 	}
 
 	/**
@@ -347,27 +323,15 @@ class File implements Stringable
 	}
 
 	/**
-	 * Checks if the file is a resizable image
+	 * Checks if a configured driver makes thumbs of the image
 	 */
 	public function isResizable(): bool
 	{
-		// check extension first to avoid expensive dimension calculation
-		if (in_array($this->extension(), static::$resizableTypes, true) === false) {
-			return false;
-		}
+		$source = $this->source();
 
-		$dimensions = $this->dimensions();
-
-		if ($dimensions === null) {
-			return false;
-		}
-
-		// invalid or corrupted images return 0x0 dimensions
-		if ($dimensions->width() === 0 || $dimensions->height() === 0) {
-			return false;
-		}
-
-		return true;
+		return
+			$source !== null &&
+			App::instance()->darkroom()->tryPlan($source) !== null;
 	}
 
 	/**
@@ -375,7 +339,7 @@ class File implements Stringable
 	 */
 	public function isSquare(): bool
 	{
-		return $this->dimensions()?->square() ?? false;
+		return $this->dimensions()?->isSquare() ?? false;
 	}
 
 	/**
@@ -469,7 +433,7 @@ class File implements Stringable
 
 				// rules on dimensions only apply to files that have them
 				if (
-					method_exists(Dimensions::class, $property) === true &&
+					in_array($property, ['width', 'height', 'orientation'], true) === true &&
 					$this->dimensions() === null
 				) {
 					continue;
@@ -531,7 +495,7 @@ class File implements Stringable
 	 */
 	public function name(): string
 	{
-		return pathinfo($this->root(), PATHINFO_FILENAME);
+		return pathinfo($this->root, PATHINFO_FILENAME);
 	}
 
 	/**
@@ -602,7 +566,9 @@ class File implements Stringable
 	}
 
 	/**
-	 * Returns the given file path
+	 * Returns the given file path; methods that only
+	 * need the path read it directly, so subclasses
+	 * can make the file here on first access
 	 */
 	public function root(): string|null
 	{
@@ -666,6 +632,20 @@ class File implements Stringable
 	}
 
 	/**
+	 * The image's facts, read from its header when asked;
+	 * `null` for files that are no image
+	 * @internal
+	 */
+	protected function source(): Source|null
+	{
+		if ($this->root() === null || $this->type() !== 'image') {
+			return null;
+		}
+
+		return $this->source ??= new Source($this->root());
+	}
+
+	/**
 	 * Converts the media object to a
 	 * plain PHP array
 	 *
@@ -708,7 +688,7 @@ class File implements Stringable
 	 */
 	public function type(): string|null
 	{
-		$path = $this->root() ?? $this->url();
+		$path = $this->root ?? $this->url();
 
 		if ($path === null) {
 			return null;

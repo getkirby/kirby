@@ -10,7 +10,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
-use Kirby\Image\Darkroom;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Uuid\Uuid;
 use Kirby\Uuid\Uuids;
@@ -381,29 +380,43 @@ trait FileActions
 	public function manipulate(array|null $options = []): static
 	{
 		// nothing to process
-		if (
-			$options === null ||
-			$options === [] ||
-			$this->isResizable() === false
-		) {
+		if ($options === null || $options === []) {
 			return $this;
 		}
 
-		// apply the options on top of the defaults
-		// instead of the global thumb settings
-		$options = [...Darkroom::defaultOptions(), ...$options];
+		// originals ignore the `thumbs` defaults
+		$darkroom = $this->kirby()->darkroom(defaults: false);
 
-		// generate image file and overwrite it in place
-		$this->kirby()->thumb($this->root(), $this->root(), $options);
+		// planned from the file on disk, which
+		// may have been replaced since it was read
+		$root = $this->root();
+		$plan = $darkroom->tryPlan($root, $options);
+
+		if ($plan === null) {
+			return $this;
+		}
+
+		// the same format keeps the file's name;
+		// the plan's options leave nothing to the defaults
+		if ($plan->format === $plan->source->format()) {
+			$this->kirby()->thumb($root, $root, [
+				...$plan->toArray(),
+				'format' => null
+			]);
+
+			return $this->clone();
+		}
+
+		// another format replaces the bytes, then the extension
+		$extension = $plan->format->extension();
+		$tmp       = dirname($root) . '/.' . basename($root) . '.' . $extension;
+
+		$this->kirby()->thumb($root, $tmp, $plan->toArray());
+		F::move($tmp, $root, true);
 
 		$file = $this->clone();
 
-		// change the file extension if format option configured
-		if ($format = $options['format'] ?? null) {
-			$file = $file->changeExtension($file, $format);
-		}
-
-		return $file;
+		return $file->changeExtension($file, $extension);
 	}
 
 	/**

@@ -416,6 +416,17 @@ class AppComponentsTest extends TestCase
 		$this->assertInstanceOf(Template::class, $this->app->template('default'));
 	}
 
+	public function testThumb(): void
+	{
+		$app = $this->app->clone([
+			'components' => [
+				'thumb' => fn (App $kirby, string $src, string $dst, array $options) => $dst . '?width=' . $options['width']
+			]
+		]);
+
+		$this->assertSame('b.jpg?width=64', $app->thumb('a.jpg', 'b.jpg', ['width' => 64]));
+	}
+
 	public function testUrlInvalidUuid(): void
 	{
 		$this->app->clone([

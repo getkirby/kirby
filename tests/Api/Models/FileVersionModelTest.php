@@ -41,30 +41,30 @@ class FileVersionModelTest extends ModelTestCase
 
 	public function testExists(): void
 	{
-		$version = new FileVersion([
-			'original' => $this->file,
-			'root'     => static::TMP . '/test-version.jpg',
-		]);
+		$version = new FileVersion(
+			original: $this->file,
+			root:     static::TMP . '/test-version.jpg'
+		);
 
 		$this->assertAttr($version, 'exists', false);
 	}
 
 	public function testType(): void
 	{
-		$version = new FileVersion([
-			'original' => $this->file,
-			'root'     => static::TMP . '/test-version.jpg',
-		]);
+		$version = new FileVersion(
+			original: $this->file,
+			root:     static::TMP . '/test-version.jpg'
+		);
 
 		$this->assertAttr($version, 'type', 'image');
 	}
 
 	public function testUrl(): void
 	{
-		$version = new FileVersion([
-			'original' => $this->file,
-			'root'     => static::TMP . '/test-version.jpg',
-		]);
+		$version = new FileVersion(
+			original: $this->file,
+			root:     static::TMP . '/test-version.jpg'
+		);
 
 		$this->assertAttr($version, 'url', null);
 	}

@@ -60,11 +60,11 @@ class ImageFilePreviewTest extends TestCase
 
 	public function testDetailsWithoutDimensions(): void
 	{
-		// a `.jpg` without image content has no dimensions
-		$page = new Page(['slug' => 'test']);
-		F::write($page->root() . '/test.jpg', 'test');
+		// darkroom reads dimensions for every image with a root,
+		// so only a file without one ends up here
+		$file = $this->createStub(File::class);
+		$file->method('dimensions')->willReturn(null);
 
-		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
 		$preview = new ImageFilePreview($file);
 
 		$this->assertSame(new DefaultFilePreview($file)->details(), $preview->details());

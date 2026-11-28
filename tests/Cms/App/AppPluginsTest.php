@@ -541,7 +541,6 @@ class AppPluginsTest extends TestCase
 				'heif' => [
 					'mime' => ['image/heic', 'image/heif'],
 					'type' => 'image',
-					'resizable' => true,
 					'viewable' => true,
 				],
 				'test' => [
@@ -560,33 +559,27 @@ class AppPluginsTest extends TestCase
 		$fileTypes = $kirby->extensions('fileTypes');
 		$this->assertSame($fileTypes['type'], F::$types);
 		$this->assertSame($fileTypes['mime'], Mime::$types);
-		$this->assertSame($fileTypes['resizable'], FilesystemFile::$resizableTypes);
 		$this->assertSame($fileTypes['viewable'], FilesystemFile::$viewableTypes);
 
 		$this->assertContains('m4p', F::$types['video']);
 		$this->assertArrayHasKey('m4p', Mime::$types);
 		$this->assertSame('video/m4p', Mime::$types['m4p']);
-		$this->assertNotContains('m4p', FilesystemFile::$resizableTypes);
 		$this->assertNotContains('m4p', FilesystemFile::$viewableTypes);
 
 		$this->assertContains('heif', F::$types['image']);
 		$this->assertArrayHasKey('heif', Mime::$types);
 		$this->assertSame(['image/heif', 'image/heic'], Mime::$types['heif']);
-		$this->assertContains('heif', FilesystemFile::$resizableTypes);
 		$this->assertContains('heif', FilesystemFile::$viewableTypes);
 
 		$this->assertContains('kql', F::$types['code']);
-		$this->assertNotContains('kql', FilesystemFile::$resizableTypes);
 		$this->assertNotContains('kql', FilesystemFile::$viewableTypes);
 
 		$this->assertArrayHasKey('midi', Mime::$types);
 		$this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
-		$this->assertNotContains('midi', FilesystemFile::$resizableTypes);
 		$this->assertNotContains('midi', FilesystemFile::$viewableTypes);
 
 		$this->assertArrayHasKey('font', F::$types);
 		$this->assertContains('ttf', F::$types['font']);
-		$this->assertNotContains('ttf', FilesystemFile::$resizableTypes);
 		$this->assertNotContains('ttf', FilesystemFile::$viewableTypes);
 	}
 

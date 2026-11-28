@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Darkroom\Plan;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
@@ -89,6 +90,38 @@ class FileManipulateTest extends ModelTestCase
 		$this->assertSame(100, $replacedFile->width());
 	}
 
+	public function testManipulateGlobalInterlaceAndStrip(): void
+	{
+		$plans = [];
+
+		$this->app = $this->app->clone([
+			'options' => [
+				'thumbs' => [
+					'drivers'   => [
+						new CallbackDriver(function (Plan $plan) use (&$plans) {
+							$plans[] = $plan;
+						})
+					],
+					'interlace' => true,
+					'strip'     => false
+				]
+			]
+		]);
+		$this->app->impersonate('kirby');
+
+		File::create([
+			'filename' => 'test.jpg',
+			'source'   => static::FIXTURES . '/test.jpg',
+			'parent'   => new Page(['slug' => 'test'])
+		])->manipulate([
+			'width' => 100
+		]);
+
+		$this->assertCount(1, $plans);
+		$this->assertFalse($plans[0]->interlace);
+		$this->assertTrue($plans[0]->strip);
+	}
+
 	public function testManipulateGlobalQuality(): void
 	{
 		$this->app = $this->app->clone([
@@ -116,7 +149,7 @@ class FileManipulateTest extends ModelTestCase
 			'parent'   => $parent
 		])->manipulate([
 			'width'   => 100,
-			'quality' => 90
+			'quality' => 85
 		]);
 
 		$lowQuality = File::create([

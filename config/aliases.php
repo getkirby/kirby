@@ -80,7 +80,6 @@ return [
 	'kirby\cms\content'        => 'Kirby\Content\Content',
 	'kirby\cms\dir'            => 'Kirby\Filesystem\Dir',
 	'kirby\cms\field'          => 'Kirby\Content\Field',
-	'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',
 	'kirby\cms\fileblueprint'  => 'Kirby\Blueprint\FileBlueprint',
 	'kirby\cms\form'           => 'Kirby\Form\Form',
 	'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',

@@ -2,6 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Closure;
+use Darkroom\Driver;
+use Darkroom\Drivers\Gd;
+use Darkroom\Format;
+use Darkroom\Plan;
+use Darkroom\Source;
 use Exception;
 use Kirby\Tests\MockTime;
 
@@ -41,4 +47,61 @@ function password_hash(
 function time(): int
 {
 	return \Kirby\Tests\time(MockTime::$time);
+}
+
+/**
+ * Runs a callback before GD makes the thumb,
+ * e.g. to let it fail or to look at the files
+ */
+class CallbackDriver extends Driver
+{
+	protected Driver $driver;
+
+	public function __construct(
+		protected Closure $callback
+	) {
+		parent::__construct();
+		$this->driver = new Gd();
+	}
+
+	protected function animates(Format $format): bool
+	{
+		return $this->driver->canAnimate($format);
+	}
+
+	protected function decodes(Format $format): bool
+	{
+		return $this->driver->canRead($format);
+	}
+
+	protected function encodes(Format $format): bool
+	{
+		return $this->driver->canWrite($format);
+	}
+
+	public function icc(Plan $plan): string|null
+	{
+		return $this->driver->icc($plan);
+	}
+
+	public function isAvailable(): bool
+	{
+		return $this->driver->isAvailable();
+	}
+
+	public function orients(Source $source): bool
+	{
+		return $this->driver->orients($source);
+	}
+
+	public function process(Plan $plan, string $file): void
+	{
+		($this->callback)($plan, $file);
+		$this->driver->process($plan, $file);
+	}
+
+	protected function reads(Source $source): bool
+	{
+		return $this->driver->canRead($source);
+	}
 }

@@ -21,6 +21,23 @@ use Throwable;
 class Media
 {
 	/**
+	 * Removes the job once its thumb is made
+	 * @since 7.0.0
+	 */
+	public static function dequeue(string $thumb): bool
+	{
+		return F::remove(static::job($thumb));
+	}
+
+	/**
+	 * The job file the media route makes the thumb from
+	 */
+	protected static function job(string $thumb): string
+	{
+		return dirname($thumb) . '/.jobs/' . basename($thumb) . '.json';
+	}
+
+	/**
 	 * Tries to find a file by model and filename
 	 * and to copy it to the media folder.
 	 */
@@ -83,6 +100,33 @@ class Media
 	}
 
 	/**
+	 * Leaves a job for the media route, unless the thumb
+	 * or a job exist; `false` if the job can't be written
+	 * @since 7.0.0
+	 */
+	public static function queue(FileVersion $version): bool
+	{
+		$original = $version->original();
+		$thumb    = $original->mediaDir() . '/' . $version->filename();
+		$job      = static::job($thumb);
+
+		if (file_exists($thumb) === true || file_exists($job) === true) {
+			return true;
+		}
+
+		try {
+			Data::write($job, [
+				...$version->options(),
+				'filename' => $original->filename()
+			]);
+
+			return true;
+		} catch (Throwable) {
+			return false;
+		}
+	}
+
+	/**
 	 * Tries to find a job file for the
 	 * given filename and then calls the thumb
 	 * component to create a thumbnail accordingly
@@ -125,7 +169,7 @@ class Media
 			}
 
 			$thumb = $root . '/' . $filename;
-			$job   = $root . '/.jobs/' . $filename . '.json';
+			$job   = static::job($thumb);
 
 			$options = Data::read($job);
 		} catch (Throwable) {
@@ -136,7 +180,11 @@ class Media
 			);
 		}
 
-		if (empty($options['filename']) === true) {
+		// the original's filename, the rest are thumb options
+		$original = $options['filename'] ?? null;
+		unset($options['filename']);
+
+		if (is_string($original) === false || $original === '') {
 			throw new InvalidArgumentException(
 				message: 'Incomplete thumbnail configuration'
 			);
@@ -148,20 +196,20 @@ class Media
 			$source = match (true) {
 				is_string($model) === true
 					=> F::realpath(
-						$index . '/' . $model . '/' . $options['filename'],
+						$index . '/' . $model . '/' . $original,
 						$index
 					),
 				$model instanceof File
 					=> $model->root(),
 				default
-				=> $model->file($options['filename'])->root()
+				=> $model->file($original)->root()
 			};
 
 			// generate the thumbnail and save it in the media folder
 			$kirby->thumb($source, $thumb, $options);
 
 			// remove the job file once the thumbnail has been created
-			F::remove($job);
+			static::dequeue($thumb);
 
 			// read the file and send it to the browser
 			return Response::file($thumb);

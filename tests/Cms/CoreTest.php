@@ -101,7 +101,6 @@ class CoreTest extends TestCase
 		$this->assertArrayHasKey('smartypants', $components);
 		$this->assertArrayHasKey('snippet', $components);
 		$this->assertArrayHasKey('template', $components);
-		$this->assertArrayHasKey('thumb', $components);
 		$this->assertArrayHasKey('url', $components);
 	}
 

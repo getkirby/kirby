@@ -35,12 +35,15 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         ),
         'L' =>
         array (
-            'League\\ColorExtractor\\' => 22,
             'Laminas\\Escaper\\' => 16,
         ),
         'K' =>
         array (
             'Kirby\\' => 6,
+        ),
+        'D' =>
+        array (
+            'Darkroom\\' => 9,
         ),
         'C' =>
         array (
@@ -81,10 +84,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'League\\ColorExtractor\\' =>
-        array (
-            0 => __DIR__ . '/..' . '/league/color-extractor/src',
-        ),
         'Laminas\\Escaper\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-escaper/src',
@@ -93,6 +92,10 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         array (
             0 => __DIR__ . '/../..' . '/src',
             1 => __DIR__ . '/..' . '/getkirby/composer-installer/src',
+        ),
+        'Darkroom\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/getkirby/darkroom/src',
         ),
         'Composer\\Semver\\' =>
         array (
@@ -105,13 +108,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
     );
 
     public static $prefixesPsr0 = array (
-        'c' =>
-        array (
-            'claviska' =>
-            array (
-                0 => __DIR__ . '/..' . '/claviska/simpleimage/src',
-            ),
-        ),
         'P' =>
         array (
             'ParsedownExtra' =>
@@ -148,6 +144,57 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Composer\\Semver\\Intervals' => __DIR__ . '/..' . '/composer/semver/src/Intervals.php',
         'Composer\\Semver\\Semver' => __DIR__ . '/..' . '/composer/semver/src/Semver.php',
         'Composer\\Semver\\VersionParser' => __DIR__ . '/..' . '/composer/semver/src/VersionParser.php',
+        'Darkroom\\Containers\\Bytes' => __DIR__ . '/..' . '/getkirby/darkroom/src/Containers/Bytes.php',
+        'Darkroom\\Containers\\FullBox' => __DIR__ . '/..' . '/getkirby/darkroom/src/Containers/FullBox.php',
+        'Darkroom\\Containers\\Layout' => __DIR__ . '/..' . '/getkirby/darkroom/src/Containers/Layout.php',
+        'Darkroom\\Containers\\Splice' => __DIR__ . '/..' . '/getkirby/darkroom/src/Containers/Splice.php',
+        'Darkroom\\Darkroom' => __DIR__ . '/..' . '/getkirby/darkroom/src/Darkroom.php',
+        'Darkroom\\Defaults' => __DIR__ . '/..' . '/getkirby/darkroom/src/Defaults.php',
+        'Darkroom\\Driver' => __DIR__ . '/..' . '/getkirby/darkroom/src/Driver.php',
+        'Darkroom\\Drivers\\Gd' => __DIR__ . '/..' . '/getkirby/darkroom/src/Drivers/Gd.php',
+        'Darkroom\\Drivers\\Imagick' => __DIR__ . '/..' . '/getkirby/darkroom/src/Drivers/Imagick.php',
+        'Darkroom\\Drivers\\Vips' => __DIR__ . '/..' . '/getkirby/darkroom/src/Drivers/Vips.php',
+        'Darkroom\\Exception\\Exception' => __DIR__ . '/..' . '/getkirby/darkroom/src/Exception/Exception.php',
+        'Darkroom\\Exception\\LimitException' => __DIR__ . '/..' . '/getkirby/darkroom/src/Exception/LimitException.php',
+        'Darkroom\\Exception\\ProcessException' => __DIR__ . '/..' . '/getkirby/darkroom/src/Exception/ProcessException.php',
+        'Darkroom\\Exception\\UnsupportedException' => __DIR__ . '/..' . '/getkirby/darkroom/src/Exception/UnsupportedException.php',
+        'Darkroom\\Focus' => __DIR__ . '/..' . '/getkirby/darkroom/src/Focus.php',
+        'Darkroom\\Format' => __DIR__ . '/..' . '/getkirby/darkroom/src/Format.php',
+        'Darkroom\\Formats\\Gif\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Gif/Reader.php',
+        'Darkroom\\Formats\\Gif\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Gif/Writer.php',
+        'Darkroom\\Formats\\Header' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Header.php',
+        'Darkroom\\Formats\\Heif\\Aperture' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Aperture.php',
+        'Darkroom\\Formats\\Heif\\Iloc' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Iloc.php',
+        'Darkroom\\Formats\\Heif\\Items' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Items.php',
+        'Darkroom\\Formats\\Heif\\Meta' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Meta.php',
+        'Darkroom\\Formats\\Heif\\Properties' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Properties.php',
+        'Darkroom\\Formats\\Heif\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Reader.php',
+        'Darkroom\\Formats\\Heif\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Heif/Writer.php',
+        'Darkroom\\Formats\\Jpeg\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Jpeg/Reader.php',
+        'Darkroom\\Formats\\Jpeg\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Jpeg/Writer.php',
+        'Darkroom\\Formats\\Jxl\\Codestream' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Jxl/Codestream.php',
+        'Darkroom\\Formats\\Jxl\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Jxl/Reader.php',
+        'Darkroom\\Formats\\Jxl\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Jxl/Writer.php',
+        'Darkroom\\Formats\\Png\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Png/Reader.php',
+        'Darkroom\\Formats\\Png\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Png/Writer.php',
+        'Darkroom\\Formats\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Reader.php',
+        'Darkroom\\Formats\\Webp\\Reader' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Webp/Reader.php',
+        'Darkroom\\Formats\\Webp\\Vp8x' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Webp/Vp8x.php',
+        'Darkroom\\Formats\\Webp\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Webp/Writer.php',
+        'Darkroom\\Formats\\Writer' => __DIR__ . '/..' . '/getkirby/darkroom/src/Formats/Writer.php',
+        'Darkroom\\Gravity' => __DIR__ . '/..' . '/getkirby/darkroom/src/Gravity.php',
+        'Darkroom\\Key' => __DIR__ . '/..' . '/getkirby/darkroom/src/Key.php',
+        'Darkroom\\Meta' => __DIR__ . '/..' . '/getkirby/darkroom/src/Meta.php',
+        'Darkroom\\Meta\\Exif' => __DIR__ . '/..' . '/getkirby/darkroom/src/Meta/Exif.php',
+        'Darkroom\\Options' => __DIR__ . '/..' . '/getkirby/darkroom/src/Options.php',
+        'Darkroom\\Orientation' => __DIR__ . '/..' . '/getkirby/darkroom/src/Orientation.php',
+        'Darkroom\\Plan' => __DIR__ . '/..' . '/getkirby/darkroom/src/Plan.php',
+        'Darkroom\\Rect' => __DIR__ . '/..' . '/getkirby/darkroom/src/Rect.php',
+        'Darkroom\\Settings' => __DIR__ . '/..' . '/getkirby/darkroom/src/Settings.php',
+        'Darkroom\\Size' => __DIR__ . '/..' . '/getkirby/darkroom/src/Size.php',
+        'Darkroom\\Source' => __DIR__ . '/..' . '/getkirby/darkroom/src/Source.php',
+        'Darkroom\\Tools\\Quality' => __DIR__ . '/..' . '/getkirby/darkroom/src/Tools/Quality.php',
+        'Darkroom\\Tools\\Sharpen' => __DIR__ . '/..' . '/getkirby/darkroom/src/Tools/Sharpen.php',
         'Kirby\\Api\\Api' => __DIR__ . '/../..' . '/src/Api/Api.php',
         'Kirby\\Api\\Collection' => __DIR__ . '/../..' . '/src/Api/Collection.php',
         'Kirby\\Api\\Controller\\Changes' => __DIR__ . '/../..' . '/src/Api/Controller/Changes.php',
@@ -349,7 +396,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Filesystem\\Dir' => __DIR__ . '/../..' . '/src/Filesystem/Dir.php',
         'Kirby\\Filesystem\\F' => __DIR__ . '/../..' . '/src/Filesystem/F.php',
         'Kirby\\Filesystem\\File' => __DIR__ . '/../..' . '/src/Filesystem/File.php',
-        'Kirby\\Filesystem\\Filename' => __DIR__ . '/../..' . '/src/Filesystem/Filename.php',
         'Kirby\\Filesystem\\Mime' => __DIR__ . '/../..' . '/src/Filesystem/Mime.php',
         'Kirby\\Form\\Field' => __DIR__ . '/../..' . '/src/Form/Field.php',
         'Kirby\\Form\\FieldOptions' => __DIR__ . '/../..' . '/src/Form/FieldOptions.php',
@@ -508,14 +554,8 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Kirby\\Http\\Visitor' => __DIR__ . '/../..' . '/src/Http/Visitor.php',
         'Kirby\\Http\\VolatileHeaders' => __DIR__ . '/../..' . '/src/Http/VolatileHeaders.php',
         'Kirby\\Image\\Camera' => __DIR__ . '/../..' . '/src/Image/Camera.php',
-        'Kirby\\Image\\Darkroom' => __DIR__ . '/../..' . '/src/Image/Darkroom.php',
-        'Kirby\\Image\\Darkroom\\GdLib' => __DIR__ . '/../..' . '/src/Image/Darkroom/GdLib.php',
-        'Kirby\\Image\\Darkroom\\ImageMagick' => __DIR__ . '/../..' . '/src/Image/Darkroom/ImageMagick.php',
-        'Kirby\\Image\\Darkroom\\Imagick' => __DIR__ . '/../..' . '/src/Image/Darkroom/Imagick.php',
         'Kirby\\Image\\Dimensions' => __DIR__ . '/../..' . '/src/Image/Dimensions.php',
         'Kirby\\Image\\Exif' => __DIR__ . '/../..' . '/src/Image/Exif.php',
-        'Kirby\\Image\\Focus' => __DIR__ . '/../..' . '/src/Image/Focus.php',
-        'Kirby\\Image\\Gravity' => __DIR__ . '/../..' . '/src/Image/Gravity.php',
         'Kirby\\Image\\Location' => __DIR__ . '/../..' . '/src/Image/Location.php',
         'Kirby\\Image\\QrCode' => __DIR__ . '/../..' . '/src/Image/QrCode.php',
         'Kirby\\Image\\Svg' => __DIR__ . '/../..' . '/src/Image/Svg.php',
@@ -824,9 +864,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Laminas\\Escaper\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/ExceptionInterface.php',
         'Laminas\\Escaper\\Exception\\InvalidArgumentException' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/InvalidArgumentException.php',
         'Laminas\\Escaper\\Exception\\RuntimeException' => __DIR__ . '/..' . '/laminas/laminas-escaper/src/Exception/RuntimeException.php',
-        'League\\ColorExtractor\\Color' => __DIR__ . '/..' . '/league/color-extractor/src/Color.php',
-        'League\\ColorExtractor\\ColorExtractor' => __DIR__ . '/..' . '/league/color-extractor/src/ColorExtractor.php',
-        'League\\ColorExtractor\\Palette' => __DIR__ . '/..' . '/league/color-extractor/src/Palette.php',
         'Michelf\\SmartyPants' => __DIR__ . '/..' . '/michelf/php-smartypants/Michelf/SmartyPants.php',
         'Michelf\\SmartyPantsTypographer' => __DIR__ . '/..' . '/michelf/php-smartypants/Michelf/SmartyPantsTypographer.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
@@ -887,7 +924,6 @@ class ComposerStaticInit0bf5c8a9cfa251a218fc581ac888fe35
         'Whoops\\Util\\Misc' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/Misc.php',
         'Whoops\\Util\\SystemFacade' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/SystemFacade.php',
         'Whoops\\Util\\TemplateHelper' => __DIR__ . '/..' . '/filp/whoops/src/Whoops/Util/TemplateHelper.php',
-        'claviska\\SimpleImage' => __DIR__ . '/..' . '/claviska/simpleimage/src/claviska/SimpleImage.php',
         'lbuchs\\WebAuthn\\Attestation\\AttestationObject' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AttestationObject.php',
         'lbuchs\\WebAuthn\\Attestation\\AuthenticatorData' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/AuthenticatorData.php',
         'lbuchs\\WebAuthn\\Attestation\\Format\\AndroidKey' => __DIR__ . '/..' . '/lbuchs/webauthn/src/Attestation/Format/AndroidKey.php',

@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Darkroom\Darkroom;
 use Exception as GlobalException;
 use Generator;
 use Kirby\Api\Api;
@@ -76,6 +77,7 @@ class App
 	protected Api|null $api = null;
 	protected Collections|null $collections = null;
 	protected Core $core;
+	protected array $darkrooms = [];
 	protected Language|null $defaultLanguage = null;
 	protected Environment|null $environment = null;
 	protected Events $events;
@@ -583,6 +585,23 @@ class App
 	public function currentLanguage(): Language|null
 	{
 		return $this->language ??= $this->defaultLanguage();
+	}
+
+	/**
+	 * Returns the image library, configured by the `thumbs`
+	 * options; without their defaults (e.g. `quality`
+	 * or `format`) for originals resized on upload
+	 * @since 7.0.0
+	 */
+	public function darkroom(bool $defaults = true): Darkroom
+	{
+		$options = $this->option('thumbs', []);
+
+		return $this->darkrooms[(int)$defaults] ??= new Darkroom(
+			drivers:  $options['drivers'] ?? Darkroom::DRIVERS,
+			defaults: $defaults === true ? $options : [],
+			settings: $options
+		);
 	}
 
 	/**
@@ -1629,8 +1648,11 @@ class App
 	/**
 	 * Thumbnail creator
 	 */
-	public function thumb(string $src, string $dst, array $options = []): string
-	{
+	public function thumb(
+		string $src,
+		string $dst,
+		array $options = []
+	): string {
 		return ($this->component('thumb'))($this, $src, $dst, $options);
 	}
 

@@ -212,24 +212,24 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertArrayNotHasKey('query', $image);
-		$this->assertStringContainsString('test-36x.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
 
-		// cards
+		// cards: widths beyond the 128 px original share its size
 		$image = $panel->image('site.image', 'cards');
-		$this->assertStringContainsString('test-400x.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-800x.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1600x.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $image['srcset']);
 
 		// cardlets
 		$image = $panel->image('site.image', 'cardlets');
-		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
-		$this->assertStringContainsString('test-192x.jpg 192w', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 192w', $image['srcset']);
 
 		// table
 		$image = $panel->image('site.image', 'table');
-		$this->assertStringContainsString('test-36x.jpg 36w', $image['srcset']);
-		$this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 36w', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-q85.jpg 96w', $image['srcset']);
 
 		// full options
 		$image = $panel->image([
@@ -243,8 +243,8 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($icon, $image['icon']);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-36x36-crop.jpg 1x', $image['srcset']);
-		$this->assertStringContainsString('test-96x96-crop.jpg 2x', $image['srcset']);
+		$this->assertStringContainsString('test-36x36-q85.jpg 1x', $image['srcset']);
+		$this->assertStringContainsString('test-96x96-q85.jpg 2x', $image['srcset']);
 
 		// string ratio
 		$image = $panel->image([
@@ -256,9 +256,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
 
 		// numeric ratio
 		$image = $panel->image([
@@ -270,9 +270,9 @@ class ModelTest extends TestCase
 		$this->assertArrayHasKey('src', $image);
 		$this->assertArrayHasKey('srcset', $image);
 		$this->assertSame($ratio, $image['ratio']);
-		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
 	}
 
 	public function testImagePlaceholder(): void
@@ -408,9 +408,9 @@ class ModelTest extends TestCase
 			'ratio' => '{{ site.ratio }}'
 		], 'cards');
 		$this->assertSame('3/2', $image['ratio']);
-		$this->assertStringContainsString('test-400x267-crop.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-800x533-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1600x1067-crop.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-128x85-crop0-22-128-85-q85.jpg 1600w', $image['srcset']);
 
 		// query without result falls back to a square
 		$image = $panel->image([
@@ -418,9 +418,9 @@ class ModelTest extends TestCase
 			'query' => 'site.image',
 			'ratio' => '{{ site.missing }}'
 		], 'cards');
-		$this->assertStringContainsString('test-400x400-crop.jpg 400w', $image['srcset']);
-		$this->assertStringContainsString('test-800x800-crop.jpg 800w', $image['srcset']);
-		$this->assertStringContainsString('test-1600x1600-crop.jpg 1600w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 400w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 800w', $image['srcset']);
+		$this->assertStringContainsString('test-128x128-q85.jpg 1600w', $image['srcset']);
 	}
 
 	public function testModel(): void

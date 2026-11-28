@@ -1,0 +1,72 @@
+{
+	"name": "getkirby/darkroom",
+	"description": "Resize, crop, orient and filter images with GD, Imagick or libvips",
+	"license": "MIT",
+	"type": "library",
+	"keywords": ["image", "thumbnail", "resize", "crop", "gd", "imagick", "vips"],
+	"homepage": "https://github.com/getkirby/darkroom",
+	"authors": [
+		{
+			"name": "Kirby Team",
+			"email": "support@getkirby.com",
+			"homepage": "https://getkirby.com"
+		}
+	],
+	"support": {
+		"email": "support@getkirby.com",
+		"issues": "https://github.com/getkirby/darkroom/issues",
+		"source": "https://github.com/getkirby/darkroom"
+	},
+	"require": {
+		"php": "^8.4",
+		"ext-filter": "*"
+	},
+	"require-dev": {
+		"jcupitt/vips": "^2.6"
+	},
+	"suggest": {
+		"ext-exif": "To read the raw EXIF tags with Source::exif()",
+		"ext-ffi": "For the vips driver",
+		"ext-gd": "For the gd driver",
+		"ext-imagick": "For the imagick driver",
+		"ext-zlib": "To read and write PNG color profiles",
+		"jcupitt/vips": "For the vips driver (needs libvips)"
+	},
+	"autoload": {
+		"psr-4": {
+			"Darkroom\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Darkroom\\Bench\\": "bench/",
+			"Darkroom\\Playground\\": "playground/",
+			"Darkroom\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"sort-packages": true
+	},
+	"scripts": {
+		"analyze": [
+			"@analyze:composer",
+			"@analyze:psalm"
+		],
+		"analyze:composer": "composer validate --strict --no-check-version --no-check-all",
+		"analyze:psalm": "cpx vimeo/psalm:7.22.1",
+		"bench": "cpx phpbench/phpbench:1.7.1 run --report=aggregate",
+		"ci": [
+			"@fix",
+			"@analyze",
+			"@test"
+		],
+		"fix": "cpx getkirby/php-cs:0.3.0 fix",
+		"playground": [
+			"Composer\\Config::disableProcessTimeout",
+			"@putenv PHP_CLI_SERVER_WORKERS=8",
+			"(sleep 1; open http://127.0.0.1:8080 || xdg-open http://127.0.0.1:8080) > /dev/null 2>&1 &",
+			"@php -d ffi.enable=1 -S 127.0.0.1:8080 -t playground playground/index.php"
+		],
+		"test": "cpx brianium/paratest:7.30.0"
+	}
+}

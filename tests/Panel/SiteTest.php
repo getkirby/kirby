@@ -84,7 +84,7 @@ class SiteTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x.jpg 36w, ' . $mediaUrl . '/test-96x.jpg 96w'
+			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 36w, ' . $mediaUrl . '/test-96x96-q85.jpg 96w'
 		], $panel->image());
 
 		// cover enabled
@@ -95,7 +95,7 @@ class SiteTest extends TestCase
 			'icon'   => 'page',
 			'url'    => $mediaUrl . '/test.jpg',
 			'src'    => Model::imagePlaceholder(),
-			'srcset' => $mediaUrl . '/test-36x36-crop.jpg 1x, ' . $mediaUrl . '/test-96x96-crop.jpg 2x'
+			'srcset' => $mediaUrl . '/test-36x36-q85.jpg 1x, ' . $mediaUrl . '/test-96x96-q85.jpg 2x'
 		], $panel->image(['cover' => true]));
 	}
 

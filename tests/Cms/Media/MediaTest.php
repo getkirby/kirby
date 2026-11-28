@@ -2,29 +2,27 @@
 
 namespace Kirby\Cms;
 
+use Darkroom\Exception\UnsupportedException;
 use Exception;
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Http\Response;
-use Kirby\Image\Darkroom;
-
-class MediaTestTrackingDarkroom extends Darkroom
-{
-	public static string|null $processedFile = null;
-
-	public function process(string $file, array $options = []): array
-	{
-		static::$processedFile = $file;
-		return $options;
-	}
-}
 
 class MediaTest extends TestCase
 {
 	public const string FIXTURES = __DIR__ . '/fixtures';
 	public const string TMP      = KIRBY_TMP_DIR . '/Cms.Media';
+
+	public function testDequeue(): void
+	{
+		F::write($job = static::TMP . '/media/a/.jobs/b.jpg.json', '{}');
+
+		$this->assertTrue(Media::dequeue(static::TMP . '/media/a/b.jpg'));
+		$this->assertFileDoesNotExist($job);
+	}
 
 	public function testLinkNonExistingFile(): void
 	{
@@ -110,6 +108,46 @@ class MediaTest extends TestCase
 		$this->assertDirectoryDoesNotExist($versionB1);
 	}
 
+	public function testQueue(): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$file    = $this->app->file('test.jpg');
+		$version = new FileVersion(original: $file, options: ['width' => 64]);
+		$thumb   = $file->mediaDir() . '/' . $version->filename();
+		$job     = $file->mediaDir() . '/.jobs/' . $version->filename() . '.json';
+
+		$this->assertTrue(Media::queue($version));
+		$this->assertSame([
+			...$version->options(),
+			'filename' => 'test.jpg'
+		], Data::read($job));
+
+		// a queued job stays as it is
+		F::write($job, '{"filename":"test.jpg"}');
+		$this->assertTrue(Media::queue($version));
+		$this->assertSame(['filename' => 'test.jpg'], Data::read($job));
+
+		// a made thumb needs no job
+		F::remove($job);
+		F::write($thumb, 'thumb');
+		$this->assertTrue(Media::queue($version));
+		$this->assertFileDoesNotExist($job);
+	}
+
+	public function testQueueWithoutJob(): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$file    = $this->app->file('test.jpg');
+		$version = new FileVersion(original: $file, options: ['width' => 64]);
+
+		// a file where the jobs folder belongs
+		F::write($file->mediaDir() . '/.jobs', '');
+
+		$this->assertFalse(Media::queue($version));
+	}
+
 	public function testThumb(): void
 	{
 		Dir::make(static::TMP . '/content');
@@ -140,49 +178,6 @@ class MediaTest extends TestCase
 		$this->assertSame(64, $thumbInfo[1]);
 	}
 
-	public function testThumbComponentUsesTempFile(): void
-	{
-		$originalDarkroomTypes = Darkroom::$types;
-		Darkroom::$types['tracking-test'] = MediaTestTrackingDarkroom::class;
-		MediaTestTrackingDarkroom::$processedFile = null;
-
-		App::destroy();
-		$this->app = new App([
-			'options' => [
-				'thumbs.driver' => 'tracking-test'
-			],
-			'roots'   => [
-				'index' => static::TMP
-			]
-		]);
-
-		Dir::make(static::TMP . '/content');
-		Dir::make(static::TMP . '/media');
-		F::copy(static::FIXTURES . '/files/test.jpg', $source = static::TMP . '/content/test.jpg');
-
-		try {
-			$this->assertSame(
-				$destination = static::TMP . '/media/test.jpg',
-				$this->app->thumb($source, $destination, [
-					'width'  => 64,
-					'height' => 64,
-					'crop'   => 'center'
-				])
-			);
-		} finally {
-			Darkroom::$types = $originalDarkroomTypes;
-			$processedFile = MediaTestTrackingDarkroom::$processedFile;
-			MediaTestTrackingDarkroom::$processedFile = null;
-		}
-
-		$this->assertNotNull($processedFile);
-		$this->assertNotSame($destination, $processedFile);
-		$this->assertStringStartsWith(static::TMP . '/media/.test.tmp-', $processedFile);
-		$this->assertStringEndsWith('.jpg', $processedFile);
-		$this->assertFileExists($destination);
-		$this->assertFileDoesNotExist($processedFile);
-	}
-
 	public function testThumbStringModel(): void
 	{
 		Dir::make(static::TMP . '/content');
@@ -210,6 +205,38 @@ class MediaTest extends TestCase
 		$this->assertSame(64, $thumbInfo[1]);
 	}
 
+	public function testThumbWhenComponentFails(): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$app = $this->app->clone([
+			'components' => [
+				'thumb' => function (App $kirby, string $src, string $dst) {
+					// a generator that writes in place
+					F::write($dst, 'broken');
+					throw new Exception('Generation failed');
+				}
+			]
+		]);
+
+		$file  = $app->file('test.jpg');
+		$thumb = $file->mediaDir() . '/' . $file->filename();
+		$job   = $file->mediaDir() . '/.jobs/' . $file->filename() . '.json';
+
+		F::write($job, '{"width":64,"filename":"test.jpg"}');
+
+		try {
+			Media::thumb($file, $file->mediaHash(), $file->filename());
+			$this->fail('The component did not throw');
+		} catch (Exception $e) {
+			$this->assertSame('Generation failed', $e->getMessage());
+		}
+
+		// no broken thumb, the job stays for the next request
+		$this->assertFileDoesNotExist($thumb);
+		$this->assertFileExists($job);
+	}
+
 	public function testThumbWhenGenerationFails(): void
 	{
 		Dir::make(static::TMP . '/content');
@@ -228,11 +255,42 @@ class MediaTest extends TestCase
 		$jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
 		F::write($file->mediaDir() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
-		$this->expectException(Exception::class);
-		// the message ends with a random temporary file name
-		$this->expectExceptionMessageIsOrContains('File not found');
+		$this->expectException(UnsupportedException::class);
+		// the message ends with the path of the image
+		$this->expectExceptionMessageIsOrContains('Unsupported or unreadable image');
 
 		Media::thumb($site, $file->mediaHash(), $file->filename());
+	}
+
+	public function testThumbWithComponent(): void
+	{
+		F::copy(static::FIXTURES . '/files/test.jpg', static::TMP . '/content/test.jpg');
+
+		$args = null;
+		$app  = $this->app->clone([
+			'components' => [
+				'thumb' => function (App $kirby, string $src, string $dst, array $options) use (&$args) {
+					$args = [$src, $dst, $options];
+					F::copy($src, $dst);
+					return $dst;
+				}
+			]
+		]);
+
+		$file = $app->file('test.jpg');
+		$job  = $file->mediaDir() . '/.jobs/' . $file->filename() . '.json';
+
+		F::write($job, '{"width":64,"filename":"test.jpg"}');
+
+		$response = Media::thumb($file, $file->mediaHash(), $file->filename());
+
+		$this->assertSame(200, $response->code());
+		$this->assertSame([
+			$file->root(),
+			$file->mediaDir() . '/' . $file->filename(),
+			['width' => 64]
+		], $args);
+		$this->assertFileDoesNotExist($job);
 	}
 
 	public function testThumbWithExistingJobFile(): void
