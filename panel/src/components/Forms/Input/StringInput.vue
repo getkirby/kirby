@@ -1,11 +1,12 @@
 <template>
 	<input
-		v-direction
 		v-bind="{
 			autocomplete,
 			autofocus,
+			dir,
 			disabled,
 			id,
+			lang,
 			maxlength,
 			minlength,
 			name,
@@ -29,7 +30,9 @@ import Input, { props as InputProps } from "@/mixins/input.js";
 import {
 	autocomplete,
 	autofocus,
+	dir,
 	font,
+	lang,
 	maxlength,
 	minlength,
 	pattern,
@@ -42,7 +45,9 @@ export const props = {
 		InputProps,
 		autocomplete,
 		autofocus,
+		dir,
 		font,
+		lang,
 		maxlength,
 		minlength,
 		pattern,

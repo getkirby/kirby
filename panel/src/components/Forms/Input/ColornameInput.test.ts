@@ -12,7 +12,6 @@ function mount(props = {}, attrs = {}, attachTo: HTMLElement = document.body) {
 		global: {
 			// registered globally in the Panel
 			components: { "k-string-input": StringInput },
-			directives: { direction: {} },
 			// passes blur, keydown and paste on to the input
 			mixins: [preserveListeners]
 		}

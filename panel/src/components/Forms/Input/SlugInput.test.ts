@@ -18,7 +18,6 @@ function mount(props = {}, $panel = panel()) {
 		global: {
 			// registered globally in the Panel
 			components: { "k-string-input": StringInput },
-			directives: { direction: {} },
 			mocks: { $panel }
 		}
 	});

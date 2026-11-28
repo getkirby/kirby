@@ -1,8 +1,10 @@
 <template>
 	<figcaption class="k-block-figure-caption">
 		<k-writer-input
+			:dir="dir"
 			:disabled="disabled"
 			:inline="true"
+			:lang="lang"
 			:marks="marks"
 			:spellcheck="false"
 			:value="value"
@@ -18,7 +20,17 @@
  */
 export default {
 	props: {
+		/**
+		 * Reading direction of the caption
+		 * @since 6.0.0
+		 */
+		dir: String,
 		disabled: Boolean,
+		/**
+		 * Language code of the caption
+		 * @since 6.0.0
+		 */
+		lang: String,
 		marks: [Array, Boolean],
 		value: String
 	},

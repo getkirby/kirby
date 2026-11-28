@@ -4,10 +4,7 @@ import DateInput from "./DateInput.vue";
 
 function mount(props: Record<string, unknown> = {}) {
 	return vueMount(DateInput, {
-		props: props as never,
-		global: {
-			directives: { direction: {} }
-		}
+		props: props as never
 	});
 }
 

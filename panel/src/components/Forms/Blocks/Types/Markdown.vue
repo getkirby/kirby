@@ -2,7 +2,9 @@
 	<k-input
 		ref="input"
 		:buttons="false"
+		:dir="textField.dir"
 		:disabled="disabled"
+		:lang="textField.lang"
 		:placeholder="placeholder"
 		:spellcheck="false"
 		:value="content.text"
@@ -26,7 +28,10 @@ export default {
 	extends: Block,
 	computed: {
 		placeholder() {
-			return this.field("text", {}).placeholder;
+			return this.textField.placeholder;
+		},
+		textField() {
+			return this.field("text", {});
 		}
 	},
 	methods: {

@@ -29,7 +29,9 @@
 		</ul>
 		<k-block-figure-caption
 			v-if="content.caption"
+			:dir="captionField.dir"
 			:disabled="disabled"
+			:lang="captionField.lang"
 			:marks="captionMarks"
 			:value="content.caption"
 			@input="$emit('update', { caption: $event })"
@@ -55,8 +57,11 @@ export default {
 		};
 	},
 	computed: {
+		captionField() {
+			return this.field("caption", { marks: true });
+		},
 		captionMarks() {
-			return this.field("caption", { marks: true }).marks;
+			return this.captionField.marks;
 		},
 		crop() {
 			return this.content.crop;

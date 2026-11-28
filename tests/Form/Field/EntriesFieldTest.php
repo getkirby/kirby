@@ -315,6 +315,8 @@ class EntriesFieldTest extends TestCase
 
 	public function testProps(): void
 	{
+		$this->app->impersonate('kirby');
+
 		$field = $this->field('entries');
 		$props = $field->props();
 
@@ -338,6 +340,7 @@ class EntriesFieldTest extends TestCase
 		$this->assertIsArray($fieldProps);
 		$this->assertFalse($fieldProps['autofocus']);
 		$this->assertTrue($fieldProps['counter']);
+		$this->assertSame('ltr', $fieldProps['dir']);
 		$this->assertFalse($fieldProps['disabled']);
 		$this->assertSame('sans-serif', $fieldProps['font']);
 		$this->assertFalse($fieldProps['hidden']);

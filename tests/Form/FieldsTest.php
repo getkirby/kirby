@@ -1298,6 +1298,7 @@ class FieldsTest extends TestCase
 				'translate'  => true,
 				'type'       => 'text',
 				'width'      => '1/1',
+				'dir'        => 'ltr',
 			],
 		], $fields->toProps());
 	}
@@ -1332,6 +1333,51 @@ class FieldsTest extends TestCase
 		$this->assertTrue($props['b']['translate']);
 	}
 
+	public function testToPropsLangAndDir(): void
+	{
+		$this->app = new App([
+			'languages' => [
+				['code' => 'en', 'default' => true],
+				['code' => 'ar', 'direction' => 'rtl']
+			],
+			'roots' => [
+				'index' => '/dev/null'
+			]
+		]);
+
+		$this->app->impersonate('kirby');
+
+		$fields = new Fields(
+			fields: [
+				'a' => [
+					'translate' => false,
+					'type'      => 'text'
+				],
+				'b' => [
+					'type' => 'text'
+				],
+				'c' => [
+					'type' => 'info'
+				]
+			],
+			model: $this->model,
+			language: $this->app->language('ar')
+		);
+
+		$props = $fields->toProps();
+
+		// non-translatable fields show the default language
+		$this->assertSame('en', $props['a']['lang']);
+		$this->assertSame('ltr', $props['a']['dir']);
+
+		$this->assertSame('ar', $props['b']['lang']);
+		$this->assertSame('rtl', $props['b']['dir']);
+
+		// fields without a value
+		$this->assertArrayNotHasKey('lang', $props['c']);
+		$this->assertArrayNotHasKey('dir', $props['c']);
+	}
+
 	public function testToPropsWithDefaults(): void
 	{
 		$this->setUpSingleLanguage();
@@ -1363,6 +1409,7 @@ class FieldsTest extends TestCase
 				'translate'  => true,
 				'type'       => 'text',
 				'width'      => '1/1',
+				'dir'        => 'ltr',
 				'default'    => 'Default A',
 			],
 		], $fields->toProps(defaults: true));

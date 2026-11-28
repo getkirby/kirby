@@ -2,8 +2,10 @@
 	<div class="k-block-type-quote-editor">
 		<k-writer-input
 			ref="text"
+			:dir="textField.dir"
 			:disabled="disabled"
 			:inline="textField.inline ?? false"
+			:lang="textField.lang"
 			:marks="textField.marks"
 			:nodes="textField.nodes"
 			:placeholder="textField.placeholder"
@@ -13,8 +15,10 @@
 		/>
 		<k-writer-input
 			ref="citation"
+			:dir="citationField.dir"
 			:disabled="disabled"
 			:inline="citationField.inline ?? true"
+			:lang="citationField.lang"
 			:marks="citationField.marks"
 			:nodes="citationField.nodes"
 			:placeholder="citationField.placeholder"
