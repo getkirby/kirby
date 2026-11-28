@@ -7,7 +7,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
-use Kirby\Image\Image;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
@@ -147,7 +146,7 @@ class FileCreateTest extends ModelTestCase
 
 		$this->assertFileExists($result->root());
 		$this->assertFileExists($parent->root() . '/test.jpg');
-		$this->assertInstanceOf(Image::class, $result->asset());
+		$this->assertNotNull($result->dimensions());
 	}
 
 	public function testCreateImageAndManipulate(): void

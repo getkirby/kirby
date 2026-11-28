@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
-use Kirby\Image\Image;
 use PHPUnit\Framework\Attributes\CoversClass;
 
 #[CoversClass(File::class)]
@@ -102,12 +101,12 @@ class FileReplaceTest extends ModelTestCase
 		]);
 
 		$this->assertSame(F::read($original), F::read($originalFile->root()));
-		$this->assertInstanceOf(Image::class, $originalFile->asset());
+		$this->assertNotNull($originalFile->dimensions());
 
 		$replacedFile = $originalFile->replace($replacement);
 
 		$this->assertSame(F::read($replacement), F::read($replacedFile->root()));
-		$this->assertInstanceOf(Image::class, $replacedFile->asset());
+		$this->assertNotNull($replacedFile->dimensions());
 	}
 
 	public function testReplaceManipulateNonImage(): void

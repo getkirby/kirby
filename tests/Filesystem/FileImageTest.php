@@ -1,22 +1,24 @@
 <?php
 
-namespace Kirby\Image;
+namespace Kirby\Filesystem;
 
-use Kirby\Cms\File;
+use Kirby\Cms\File as CmsFile;
 use Kirby\Cms\Page;
 use Kirby\Exception\Exception;
 use Kirby\Exception\LogicException;
+use Kirby\Image\Dimensions;
+use Kirby\Image\Exif;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(Image::class)]
-class ImageTest extends TestCase
+#[CoversClass(File::class)]
+class FileImageTest extends TestCase
 {
-	public const string FIXTURES = __DIR__ . '/fixtures';
+	public const string FIXTURES = __DIR__ . '/../Image/fixtures';
 
 	protected function _image($file = 'cat.jpg')
 	{
-		return new Image([
+		return new File([
 			'root' => static::FIXTURES . '/image/' . $file,
 			'url'  => 'https://foo.bar/' . $file
 		]);
@@ -45,31 +47,34 @@ class ImageTest extends TestCase
 
 		// non-image file
 		$file = $this->_image('blank.pdf');
-		$this->assertSame(0, $file->dimensions()->width());
-		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertNull($file->dimensions());
+		$this->assertNull($file->width());
+		$this->assertNull($file->height());
+		$this->assertFalse($file->isSquare());
 
 		// cached object
-		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
+		$file = $this->_image();
+		$this->assertSame($file->dimensions(), $file->dimensions());
 	}
 
 	public function testDimensionsDoesNotReadHeaderWithoutImageSignature(): void
 	{
-		foreach (['circle.svg' => 50, 'invalid.jpg' => 0] as $filename => $size) {
-			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends Image {
+		foreach (['circle.svg' => 50, 'invalid.jpg' => null] as $filename => $size) {
+			$file = new class (['root' => static::FIXTURES . '/image/' . $filename]) extends File {
 				public function imagesize(): array|false
 				{
 					throw new LogicException('imagesize() must not be called');
 				}
 			};
 
-			$this->assertSame($size, $file->dimensions()->width());
-			$this->assertSame($size, $file->dimensions()->height());
+			$this->assertSame($size, $file->dimensions()?->width());
+			$this->assertSame($size, $file->dimensions()?->height());
 		}
 	}
 
 	public function testDimensionsReadsTypeFromImageHeader(): void
 	{
-		$file = new class (['root' => static::FIXTURES . '/image/cat.jpg']) extends Image {
+		$file = new class (['root' => static::FIXTURES . '/image/cat.jpg']) extends File {
 			public int $mimeCalls = 0;
 
 			public function mime(): string|null
@@ -86,15 +91,14 @@ class ImageTest extends TestCase
 
 	public function testDimensionsUsesMimeForOtherTypes(): void
 	{
-		$file = new class (['root' => static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif']) extends Image {
+		$file = new class (['root' => static::FIXTURES . '/image/onigiri-adobe-rgb-gps.avif']) extends File {
 			public function mime(): string|null
 			{
 				return 'image/heif';
 			}
 		};
 
-		$this->assertSame(0, $file->dimensions()->width());
-		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertNull($file->dimensions());
 		$this->assertFalse($file->isResizable());
 	}
 
@@ -102,8 +106,7 @@ class ImageTest extends TestCase
 	{
 		$file = $this->_image('invalid.gif');
 
-		$this->assertSame(0, $file->dimensions()->width());
-		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertNull($file->dimensions());
 		$this->assertFalse($file->isResizable());
 	}
 
@@ -111,8 +114,7 @@ class ImageTest extends TestCase
 	{
 		$file = $this->_image('invalid-chunk.png');
 
-		$this->assertSame(0, $file->dimensions()->width());
-		$this->assertSame(0, $file->dimensions()->height());
+		$this->assertNull($file->dimensions());
 		$this->assertFalse($file->isResizable());
 	}
 
@@ -145,12 +147,12 @@ class ImageTest extends TestCase
 		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
 
 		$page = new Page(['slug' => 'test']);
-		$file = new File([
+		$file = new CmsFile([
 			'filename' => 'cat.jpg',
 			'parent'   => $page,
 			'content'  => ['alt' => 'Test text']
 		]);
-		$image = new Image([
+		$image = new File([
 			'root'  => static::FIXTURES . '/image/cat.jpg',
 			'url'   => 'https://foo.bar/cat.jpg',
 			'model' => $file
@@ -162,8 +164,8 @@ class ImageTest extends TestCase
 	public function testHtmlWithoutUrl(): void
 	{
 		$this->expectException(LogicException::class);
-		$this->expectExceptionMessageIs('Calling Image::html() requires that the URL property is not null');
-		$file = new Image(['root' => static::FIXTURES . '/image/cat.jpg']);
+		$this->expectExceptionMessageIs('Calling File::html() for an image requires that the URL property is not null');
+		$file = new File(['root' => static::FIXTURES . '/image/cat.jpg']);
 		$file->html();
 	}
 

@@ -11,6 +11,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
+use Kirby\Image\Dimensions;
+use Kirby\Image\Exif;
 use Kirby\TestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -168,11 +170,43 @@ class FileTest extends TestCase
 		$this->assertTrue($file->delete());
 	}
 
+	public function testDimensionMethodsWithoutDimensions(): void
+	{
+		$file = $this->_file('blank.pdf');
+		$this->assertNull($file->width());
+		$this->assertNull($file->height());
+		$this->assertNull($file->ratio());
+		$this->assertFalse($file->orientation());
+		$this->assertFalse($file->isLandscape());
+		$this->assertFalse($file->isPortrait());
+		$this->assertFalse($file->isSquare());
+	}
+
+	public function testDimensions(): void
+	{
+		$file = $this->_file('cat.jpg');
+		$this->assertInstanceOf(Dimensions::class, $file->dimensions());
+		$this->assertSame(500, $file->dimensions()->width());
+
+		// cached object
+		$this->assertSame($file->dimensions(), $file->dimensions());
+
+		// files without visual dimensions
+		$this->assertNull($this->_file('blank.pdf')->dimensions());
+		$this->assertNull($this->_file('test.js')->dimensions());
+	}
+
 	public function testDownload(): void
 	{
 		$file = $this->_file();
 		$this->assertIsString($file->download());
 		$this->assertIsString($file->download('meow.jpg'));
+	}
+
+	public function testExif(): void
+	{
+		$this->assertInstanceOf(Exif::class, $this->_file('cat.jpg')->exif());
+		$this->assertNull($this->_file('test.js')->exif());
 	}
 
 	public function testExists(): void
@@ -221,6 +255,16 @@ class FileTest extends TestCase
 			'url'  => 'https://foo.bar/blank.pdf'
 		]);
 		$this->assertSame('<a href="https://foo.bar/blank.pdf">foo.bar/blank.pdf</a>', $file->html());
+	}
+
+	public function testHtmlImage(): void
+	{
+		$file = new File([
+			'root' => static::TMP . '/cat.jpg',
+			'url'  => 'https://foo.bar/cat.jpg'
+		]);
+		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
+		$this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', (string)$file);
 	}
 
 	public function testInvalidModel(): void
@@ -305,6 +349,20 @@ class FileTest extends TestCase
 		];
 
 		$this->assertTrue($this->_file('cat.jpg')->match($rules));
+	}
+
+	public function testMatchDimensionRulesWithoutDimensions(): void
+	{
+		$file = $this->_file('blank.pdf');
+		$this->assertTrue($file->match([
+			'maxwidth'    => 100,
+			'minheight'   => 100,
+			'orientation' => 'portrait'
+		]));
+
+		$this->expectException(Exception::class);
+		$this->expectExceptionCode('error.file.maxwidth');
+		$this->_file('cat.jpg')->match(['maxwidth' => 100]);
 	}
 
 	public function testMatchExtensionException(): void
@@ -602,6 +660,17 @@ class FileTest extends TestCase
 		$this->assertSame('pdf', $file->toArray()['extension']);
 		$this->assertFalse($file->toArray()['isResizable']);
 		$this->assertSame($file->toArray(), $file->__debugInfo());
+	}
+
+	public function testToArrayImage(): void
+	{
+		$array = $this->_file('cat.jpg')->toArray();
+		$this->assertSame(500, $array['dimensions']['width']);
+		$this->assertIsArray($array['exif']);
+
+		$array = $this->_file('blank.pdf')->toArray();
+		$this->assertNull($array['dimensions']);
+		$this->assertNull($array['exif']);
 	}
 
 	public function testToJson(): void

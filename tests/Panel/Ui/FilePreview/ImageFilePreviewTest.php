@@ -58,6 +58,18 @@ class ImageFilePreviewTest extends TestCase
 		$this->assertSame('Dimensions', $detail['title']);
 	}
 
+	public function testDetailsWithoutDimensions(): void
+	{
+		// a `.jpg` without image content has no dimensions
+		$page = new Page(['slug' => 'test']);
+		F::write($page->root() . '/test.jpg', 'test');
+
+		$file    = new File(['filename' => 'test.jpg', 'parent' => $page]);
+		$preview = new ImageFilePreview($file);
+
+		$this->assertSame(new DefaultFilePreview($file)->details(), $preview->details());
+	}
+
 	public function testFactory(): void
 	{
 		$page    = new Page(['slug' => 'test']);

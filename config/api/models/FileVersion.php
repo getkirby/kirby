@@ -7,7 +7,7 @@ use Kirby\Cms\FileVersion;
  */
 return [
 	'fields' => [
-		'dimensions' => fn (FileVersion $file) => $file->dimensions()->toArray(),
+		'dimensions' => fn (FileVersion $file) => $file->dimensions()?->toArray(),
 		'exists'     => fn (FileVersion $file) => $file->exists(),
 		'extension'  => fn (FileVersion $file) => $file->extension(),
 		'filename'   => fn (FileVersion $file) => $file->filename(),

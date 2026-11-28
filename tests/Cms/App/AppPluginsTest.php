@@ -10,9 +10,9 @@ use Kirby\Cache\FileCache;
 use Kirby\Cms\Fixtures\DummyField;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
-use Kirby\Image\Image;
 use Kirby\Plugin\Plugin;
 use Kirby\Tests\MockTime;
 use Kirby\Toolkit\Collection;
@@ -560,34 +560,34 @@ class AppPluginsTest extends TestCase
 		$fileTypes = $kirby->extensions('fileTypes');
 		$this->assertSame($fileTypes['type'], F::$types);
 		$this->assertSame($fileTypes['mime'], Mime::$types);
-		$this->assertSame($fileTypes['resizable'], Image::$resizableTypes);
-		$this->assertSame($fileTypes['viewable'], Image::$viewableTypes);
+		$this->assertSame($fileTypes['resizable'], FilesystemFile::$resizableTypes);
+		$this->assertSame($fileTypes['viewable'], FilesystemFile::$viewableTypes);
 
 		$this->assertContains('m4p', F::$types['video']);
 		$this->assertArrayHasKey('m4p', Mime::$types);
 		$this->assertSame('video/m4p', Mime::$types['m4p']);
-		$this->assertNotContains('m4p', Image::$resizableTypes);
-		$this->assertNotContains('m4p', Image::$viewableTypes);
+		$this->assertNotContains('m4p', FilesystemFile::$resizableTypes);
+		$this->assertNotContains('m4p', FilesystemFile::$viewableTypes);
 
 		$this->assertContains('heif', F::$types['image']);
 		$this->assertArrayHasKey('heif', Mime::$types);
 		$this->assertSame(['image/heif', 'image/heic'], Mime::$types['heif']);
-		$this->assertContains('heif', Image::$resizableTypes);
-		$this->assertContains('heif', Image::$viewableTypes);
+		$this->assertContains('heif', FilesystemFile::$resizableTypes);
+		$this->assertContains('heif', FilesystemFile::$viewableTypes);
 
 		$this->assertContains('kql', F::$types['code']);
-		$this->assertNotContains('kql', Image::$resizableTypes);
-		$this->assertNotContains('kql', Image::$viewableTypes);
+		$this->assertNotContains('kql', FilesystemFile::$resizableTypes);
+		$this->assertNotContains('kql', FilesystemFile::$viewableTypes);
 
 		$this->assertArrayHasKey('midi', Mime::$types);
 		$this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
-		$this->assertNotContains('midi', Image::$resizableTypes);
-		$this->assertNotContains('midi', Image::$viewableTypes);
+		$this->assertNotContains('midi', FilesystemFile::$resizableTypes);
+		$this->assertNotContains('midi', FilesystemFile::$viewableTypes);
 
 		$this->assertArrayHasKey('font', F::$types);
 		$this->assertContains('ttf', F::$types['font']);
-		$this->assertNotContains('ttf', Image::$resizableTypes);
-		$this->assertNotContains('ttf', Image::$viewableTypes);
+		$this->assertNotContains('ttf', FilesystemFile::$resizableTypes);
+		$this->assertNotContains('ttf', FilesystemFile::$viewableTypes);
 	}
 
 	public function testKirbyTag(): void

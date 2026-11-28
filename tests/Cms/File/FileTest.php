@@ -6,6 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Http\Response;
+use Kirby\Image\Exif;
 use Kirby\Panel\File as PanelFile;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -20,6 +21,17 @@ class FileTest extends ModelTestCase
 
 		return new File([
 			'filename' => 'test.txt',
+			'parent'   => new Page(['slug' => 'test'])
+		]);
+	}
+
+	protected function image(): File
+	{
+		// 128x128 pixels
+		F::copy(__DIR__ . '/fixtures/files/test.jpg', static::TMP . '/content/test/test.jpg');
+
+		return new File([
+			'filename' => 'test.jpg',
 			'parent'   => new Page(['slug' => 'test'])
 		]);
 	}
@@ -110,9 +122,27 @@ class FileTest extends ModelTestCase
 		$this->assertSame('data:text/plain,test', $file->dataUri(false));
 	}
 
+	public function testDimensionsWithoutDimensions(): void
+	{
+		$file = new File([
+			'filename' => 'test.pdf',
+			'parent'   => new Page(['slug' => 'test']),
+			'content'  => ['width' => '300']
+		]);
+
+		$this->assertNull($file->dimensions());
+		$this->assertNull($file->width());
+		$this->assertSame('300', $file->content()->get('width')->value());
+	}
+
 	public function testDownload(): void
 	{
 		$this->assertSame('test', $this->file()->download());
+	}
+
+	public function testExif(): void
+	{
+		$this->assertInstanceOf(Exif::class, $this->image()->exif());
 	}
 
 	public function testFilename(): void
@@ -142,9 +172,35 @@ class FileTest extends ModelTestCase
 		$this->assertSame('text/plain', $response->type());
 	}
 
+	public function testImagesize(): void
+	{
+		$size = $this->image()->imagesize();
+		$this->assertSame([128, 128], [$size[0], $size[1]]);
+	}
+
+	public function testIsLandscape(): void
+	{
+		$this->assertFalse($this->image()->isLandscape());
+	}
+
+	public function testIsPortrait(): void
+	{
+		$this->assertFalse($this->image()->isPortrait());
+	}
+
+	public function testIsSquare(): void
+	{
+		$this->assertTrue($this->image()->isSquare());
+	}
+
 	public function testIsWritable(): void
 	{
 		$this->assertTrue($this->file()->isWritable());
+	}
+
+	public function testOrientation(): void
+	{
+		$this->assertSame('square', $this->image()->orientation());
 	}
 
 	public function testPage(): void
@@ -208,6 +264,11 @@ class FileTest extends ModelTestCase
 
 		$this->assertSame('test.pdf', $file->query('file.filename'));
 		$this->assertSame('test.pdf', $file->query('model.filename'));
+	}
+
+	public function testRatio(): void
+	{
+		$this->assertSame(1.0, $this->image()->ratio());
 	}
 
 	public function testRead(): void

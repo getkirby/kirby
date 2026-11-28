@@ -11,6 +11,8 @@ use Kirby\Filesystem\File as FilesystemFile;
 use Kirby\Filesystem\IsFile;
 use Kirby\Guards\FileGuards;
 use Kirby\Http\Response;
+use Kirby\Image\Dimensions;
+use Kirby\Image\Exif;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\BlockCollectionAccess;
 use Kirby\Toolkit\Str;
@@ -25,8 +27,7 @@ use Kirby\Uuid\FileUuid;
  * handles file meta data.
  *
  * The File class proxies the `Kirby\Filesystem\File`
- * or `Kirby\Image\Image` class, which
- * is used to handle all asset file methods.
+ * class, which is used to handle all asset file methods.
  * In addition the File class handles
  * meta data via `Kirby\Content\Content`.
  *
@@ -280,6 +281,15 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the dimensions of the file or
+	 * `null` if the file has no visual dimensions
+	 */
+	public function dimensions(): Dimensions|null
+	{
+		return $this->asset()->dimensions();
+	}
+
+	/**
 	 * Sends all needed headers for the file
 	 * to be downloaded and returns its content
 	 */
@@ -287,6 +297,14 @@ class File extends ModelWithContent
 	public function download(string|null $filename = null): string
 	{
 		return $this->asset()->download($filename);
+	}
+
+	/**
+	 * Returns the exif object for image files
+	 */
+	public function exif(): Exif|null
+	{
+		return $this->asset()->exif();
 	}
 
 	/**
@@ -349,6 +367,15 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the height of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function height(): int|null
+	{
+		return $this->asset()->height();
+	}
+
+	/**
 	 * Converts the file to html
 	 *
 	 * @param array<string, mixed> $attr
@@ -374,6 +401,14 @@ class File extends ModelWithContent
 		}
 
 		return $this->id ??= $this->filename();
+	}
+
+	/**
+	 * Returns the PHP imagesize array
+	 */
+	public function imagesize(): array|false
+	{
+		return $this->asset()->imagesize();
 	}
 
 	/**
@@ -420,6 +455,14 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Checks if the dimensions of the file are landscape
+	 */
+	public function isLandscape(): bool
+	{
+		return $this->asset()->isLandscape();
+	}
+
+	/**
 	 * Check if the file can be listable by the current user
 	 * This permission depends on the `read` option until v7
 	 */
@@ -432,6 +475,14 @@ class File extends ModelWithContent
 		}
 
 		return $this->guards()->isAvailable('list');
+	}
+
+	/**
+	 * Checks if the dimensions of the file are portrait
+	 */
+	public function isPortrait(): bool
+	{
+		return $this->asset()->isPortrait();
 	}
 
 	/**
@@ -450,6 +501,14 @@ class File extends ModelWithContent
 	public function isResizable(): bool
 	{
 		return $this->asset()->isResizable();
+	}
+
+	/**
+	 * Checks if the dimensions of the file are square
+	 */
+	public function isSquare(): bool
+	{
+		return $this->asset()->isSquare();
 	}
 
 	/**
@@ -592,6 +651,15 @@ class File extends ModelWithContent
 	}
 
 	/**
+	 * Returns the orientation as string
+	 * `landscape` | `portrait` | `square`
+	 */
+	public function orientation(): string|false
+	{
+		return $this->asset()->orientation();
+	}
+
+	/**
 	 * Returns the parent Page object
 	 */
 	public function page(): Page|null
@@ -710,6 +778,15 @@ class File extends ModelWithContent
 			default:
 				return $url;
 		}
+	}
+
+	/**
+	 * Returns the ratio of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function ratio(): float|null
+	{
+		return $this->asset()->ratio();
 	}
 
 	/**
@@ -832,5 +909,14 @@ class File extends ModelWithContent
 	public function url(): string
 	{
 		return $this->url ??= ($this->kirby()->component('file::url'))($this->kirby(), $this);
+	}
+
+	/**
+	 * Returns the width of the file or `null`
+	 * if the file has no visual dimensions
+	 */
+	public function width(): int|null
+	{
+		return $this->asset()->width();
 	}
 }
