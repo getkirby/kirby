@@ -20,11 +20,6 @@ describe("k-sort-handle", () => {
 			expect(wrapper.attributes("aria-hidden")).toBeUndefined();
 		});
 
-		it("names the arrow keys that move it", () => {
-			const wrapper = mount();
-			expect(wrapper.attributes("aria-keyshortcuts")).toBe("ArrowUp ArrowDown");
-		});
-
 		it("uses the sort icon", () => {
 			const wrapper = mount();
 			expect(wrapper.attributes("icon")).toBe("sort");

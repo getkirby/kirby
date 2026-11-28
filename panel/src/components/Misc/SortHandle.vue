@@ -1,7 +1,6 @@
 <template>
 	<k-button
 		:title="$t('sort.drag')"
-		aria-keyshortcuts="ArrowUp ArrowDown"
 		icon="sort"
 		class="k-sort-handle k-sort-button"
 	/>

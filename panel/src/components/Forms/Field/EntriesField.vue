@@ -56,7 +56,6 @@
 						v-if="isSortable"
 						:ref="'entry-' + index + '-sort-handle'"
 						:title="$t('sort.drag')"
-						aria-keyshortcuts="ArrowUp ArrowDown"
 						icon="sort"
 						class="k-sort-handle k-entries-field-item-sort-handle"
 						size="sm"

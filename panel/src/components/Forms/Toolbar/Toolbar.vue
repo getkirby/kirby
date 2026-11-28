@@ -10,7 +10,6 @@
 				:disabled="button.disabled"
 				:icon="button.icon"
 				:title="button.label ?? button.title"
-				:aria-keyshortcuts="button.keyshortcuts"
 				:class="['k-toolbar-button', button.class]"
 				tabindex="0"
 				@keydown="button.key?.($event)"
