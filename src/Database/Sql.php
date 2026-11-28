@@ -378,6 +378,8 @@ abstract class Sql
 	/**
 	 * Extends a given query and bindings
 	 * by reference
+	 *
+	 * @param array{query: mixed, bindings: array} $input
 	 */
 	public function extend(
 		array &$query,

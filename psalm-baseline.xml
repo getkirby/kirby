@@ -181,11 +181,6 @@
       <code><![CDATA[$bindings]]></code>
     </InvalidOperand>
   </file>
-  <file src="src/Database/Sql.php">
-    <InvalidOperand>
-      <code><![CDATA[$input['bindings']]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Exception/Exception.php">
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$this->code()]]></code>
