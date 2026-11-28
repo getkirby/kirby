@@ -28,9 +28,9 @@ class TestMethod extends Method
 		return parent::has2FA($user);
 	}
 
-	public function login(User $user, bool $long = false): User|Status
+	public function loginOrChallenge(User $user, bool $long = false): User|Status
 	{
-		return parent::login($user, $long);
+		return parent::loginOrChallenge($user, $long);
 	}
 }
 
@@ -96,7 +96,7 @@ class MethodTest extends TestCase
 		$this->assertSame('login.method.test.label', $this->method()->label());
 	}
 
-	public function testLogin(): void
+	public function testLoginOrChallenge(): void
 	{
 		$user = $this->createMock(User::class);
 		$user->expects($this->once())
@@ -106,10 +106,10 @@ class MethodTest extends TestCase
 		$auth = $this->createMock(Auth::class);
 		$auth->expects($this->never())->method('createChallenge');
 
-		$this->assertSame($user, $this->method(auth: $auth)->login($user, true));
+		$this->assertSame($user, $this->method(auth: $auth)->loginOrChallenge($user, true));
 	}
 
-	public function testLoginWith2FA(): void
+	public function testLoginOrChallengeWith2FA(): void
 	{
 		$user = $this->createMock(User::class);
 		$user->method('email')->willReturn('marge@simpsons.com');
@@ -127,7 +127,7 @@ class MethodTest extends TestCase
 			->with('marge@simpsons.com', true, '2fa')
 			->willReturn($status);
 
-		$this->assertSame($status, $this->method(auth: $auth)->login($user, true));
+		$this->assertSame($status, $this->method(auth: $auth)->loginOrChallenge($user, true));
 	}
 
 	public function testType(): void

@@ -43,7 +43,7 @@ class PasswordMethod extends Method
 
 		$user = $this->auth->validatePassword($email, $password);
 
-		return $this->login($user, $long);
+		return $this->loginOrChallenge($user, $long);
 	}
 
 	public function form(): Component

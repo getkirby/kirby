@@ -98,7 +98,7 @@ abstract class Method
 	 * or creates a challenge if the user needs a second factor
 	 * @since 6.1.0
 	 */
-	protected function login(User $user, bool $long = false): User|Status
+	protected function loginOrChallenge(User $user, bool $long = false): User|Status
 	{
 		if ($this->has2FA($user) === true) {
 			return $this->auth->createChallenge(
