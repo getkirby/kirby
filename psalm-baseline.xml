@@ -267,11 +267,6 @@
       <code><![CDATA[$this->data]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Toolkit/Dom.php">
-    <TypeDoesNotContainNull>
-      <code><![CDATA[$childNode->prefix === null]]></code>
-    </TypeDoesNotContainNull>
-  </file>
   <file src="src/Toolkit/Str.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>

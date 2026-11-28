@@ -1399,7 +1399,7 @@ class Dom
 			// copy the declaration to the child to suppress it
 			if (
 				$childNode instanceof DOMElement &&
-				($childNode->prefix === '' || $childNode->prefix === null) &&
+				$childNode->prefix === '' &&
 				is_string($childNode->namespaceURI) === true
 			) {
 				$childNode->setAttributeNS(
