@@ -219,14 +219,6 @@
       <code><![CDATA[$file instanceof File === false]]></code>
     </TypeDoesNotContainType>
   </file>
-  <file src="src/Guards/ModelGuards.php">
-    <InvalidArgument>
-      <code><![CDATA[new static(
-			model: $model,
-			user: $user
-		)]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>

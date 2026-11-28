@@ -33,7 +33,7 @@ abstract class ModelGuards
 	/**
 	 * Guards of each model, see `::for()`
 	 *
-	 * @var WeakMap<Model, ModelGuards>|null
+	 * @var WeakMap<Model, ModelGuards<Model, ModelAbilities, ModelPermissions, ModelValidators>>|null
 	 */
 	protected static WeakMap|null $cache = null;
 
