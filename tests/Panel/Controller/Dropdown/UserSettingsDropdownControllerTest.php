@@ -96,7 +96,7 @@ class UserSettingsDropdownControllerTest extends TestCase
 		$this->app->impersonate('editor@getkirby.com');
 
 		$option = fn (string $id) => A::find(
-			(new UserSettingsDropdownController($this->app->user($id)))->load(),
+			new UserSettingsDropdownController($this->app->user($id))->load(),
 			fn ($option) => ($option['dialog'] ?? null) === '/users/' . $id . '/changePassword'
 		);
 

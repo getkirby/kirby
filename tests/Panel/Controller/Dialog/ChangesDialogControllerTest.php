@@ -325,10 +325,10 @@ class ChangesDialogControllerTest extends TestCase
 		$this->app->site()->version('latest')->save([]);
 		$this->app->site()->version('changes')->save([]);
 
-		$this->assertNotNull((new ChangesDialogController())->site());
+		$this->assertNotNull(new ChangesDialogController()->site());
 
 		$this->app->impersonate('editor@getkirby.com');
-		$this->assertNull((new ChangesDialogController())->site());
+		$this->assertNull(new ChangesDialogController()->site());
 	}
 
 	public function testSiteWithoutChanges(): void
