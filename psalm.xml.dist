@@ -4,6 +4,7 @@
 	errorLevel="4"
 	findUnusedPsalmSuppress="true"
 	resolveFromConfigFile="true"
+	runTaintAnalysis="false"
 	strictBinaryOperands="false"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="https://getpsalm.org/schema/config"
@@ -76,6 +77,8 @@
 	<!-- Load Psalm's bundled stubs for optional extensions Kirby uses, so that analysis does not depend on which extensions the local PHP happens to have -->
 	<enableExtensions>
 		<extension name="apcu" />
+		<extension name="imagick" />
+		<extension name="memcached" />
 		<extension name="pdo" />
 		<extension name="redis" />
 	</enableExtensions>

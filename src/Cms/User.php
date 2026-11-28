@@ -27,7 +27,7 @@ use SensitiveParameter;
  * @license   https://getkirby.com/license
  *
  * @use HasSiblings<Users>
- * @method UserUuid uuid()
+ * @method UserUuid|null uuid()
  */
 class User extends ModelWithContent
 {
