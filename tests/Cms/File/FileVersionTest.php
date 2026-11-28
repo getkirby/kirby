@@ -104,6 +104,53 @@ class FileVersionTest extends ModelTestCase
 		$this->assertTrue($version->exists());
 	}
 
+	public function testHtml(): void
+	{
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$original = new File([
+			'filename' => 'test.jpg',
+			'parent'   => $page,
+			'content'  => ['alt' => 'Test text']
+		]);
+
+		$version = new FileVersion([
+			'original'      => $original,
+			'root'          => static::TMP . '/test-version.jpg',
+			'url'           => $url = 'https://example.com/test-version.jpg',
+			'modifications' => ['width' => 50]
+		]);
+
+		$this->assertSame('<img alt="Test text" src="' . $url . '">', $version->html());
+		$this->assertSame('<img alt="Test text" src="' . $url . '">', (string)$version);
+
+		// rendering the version does not generate it
+		$this->assertFalse($version->exists());
+	}
+
+	public function testRoot(): void
+	{
+		$page = new Page([
+			'root' => static::FIXTURES,
+			'slug' => 'files'
+		]);
+
+		$version = new FileVersion([
+			'original'      => new File(['filename' => 'test.jpg', 'parent' => $page]),
+			'root'          => $root = static::TMP . '/test-version.jpg',
+			'modifications' => ['width' => 50]
+		]);
+
+		$this->assertFalse($version->exists());
+
+		// accessing the root generates the version
+		$this->assertSame($root, $version->root());
+		$this->assertTrue($version->exists());
+	}
+
 	public function testSave(): void
 	{
 		$page = new Page([
@@ -116,14 +163,15 @@ class FileVersionTest extends ModelTestCase
 			'parent'   => $page
 		]);
 
+		// the root would make the version
 		$version = $original->thumb(['width' => 50]);
-		$job     = dirname($version->root()) . '/.jobs/' . basename($version->root()) . '.json';
+		$job     = $original->mediaDir() . '/.jobs/' . basename($version->url()) . '.json';
 
 		$this->assertFileExists($job);
 
 		$version->save();
 
-		$this->assertFileExists($version->root());
+		$this->assertTrue($version->exists());
 		$this->assertFileDoesNotExist($job);
 	}
 

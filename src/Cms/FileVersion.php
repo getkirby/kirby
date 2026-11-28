@@ -4,18 +4,18 @@ namespace Kirby\Cms;
 
 use Kirby\Filesystem\Asset;
 use Kirby\Filesystem\F;
-use Kirby\Filesystem\IsFile;
+use Kirby\Filesystem\File as FilesystemFile;
 
 /**
- * FileVersion
+ * A modified version of a file or asset
+ * (e.g. a thumb), which gets generated on
+ * first access to its content
  *
  * @copyright Bastian Allgeier
  * @license   https://getkirby.com/license
  */
-class FileVersion
+class FileVersion extends FilesystemFile
 {
-	use IsFile;
-
 	/**
 	 * @var array<string, mixed>
 	 */
@@ -27,38 +27,50 @@ class FileVersion
 	 */
 	public function __construct(array $props)
 	{
-		$this->root          = $props['root'] ?? null;
-		$this->url           = $props['url'] ?? null;
+		parent::__construct([
+			'root' => $props['root'] ?? null,
+			'url'  => $props['url'] ?? null
+		]);
+
 		$this->original      = $props['original'];
 		$this->modifications = $props['modifications'] ?? [];
 	}
 
 	/**
-	 * Proxy for public properties, asset methods
-	 * and content field getters
+	 * Proxy for content field getters of the original file
 	 */
 	public function __call(string $method, array $arguments = []): mixed
 	{
-		// public property access
-		if (isset($this->$method) === true) {
-			return $this->$method;
-		}
-
-		// asset method proxy
-		if (method_exists($this->asset(), $method) === true) {
-			if ($this->exists() === false) {
-				$this->save();
-			}
-
-			return $this->asset()->$method(...$arguments);
-		}
-
-		// content fields
 		if ($this->original() instanceof File) {
 			return $this->original()->content()->get($method);
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks if the version has already been generated
+	 */
+	public function exists(): bool
+	{
+		return $this->root !== null && file_exists($this->root) === true;
+	}
+
+	/**
+	 * Converts the version to html and infers
+	 * the alt text from the original's content
+	 */
+	public function html(array $attr = []): string
+	{
+		if ($this->original() instanceof File) {
+			$alt = $this->original()->content()->get('alt');
+
+			if ($alt->isNotEmpty() === true) {
+				$attr['alt'] ??= $alt->value();
+			}
+		}
+
+		return parent::html($attr);
 	}
 
 	/**
@@ -98,6 +110,19 @@ class FileVersion
 	}
 
 	/**
+	 * Returns the absolute path to the version
+	 * and generates the version if it doesn't exist yet
+	 */
+	public function root(): string|null
+	{
+		if ($this->root !== null && $this->exists() === false) {
+			$this->save();
+		}
+
+		return $this->root;
+	}
+
+	/**
 	 * Applies the stored modifications and
 	 * saves the file on disk
 	 *
@@ -107,12 +132,12 @@ class FileVersion
 	{
 		$this->kirby()->thumb(
 			$this->original()->root(),
-			$this->root(),
+			$this->root,
 			$this->modifications()
 		);
 
 		// like `Media::thumb()`, as the job is done
-		F::remove(dirname($this->root()) . '/.jobs/' . basename($this->root()) . '.json');
+		F::remove(dirname($this->root) . '/.jobs/' . basename($this->root) . '.json');
 
 		return $this;
 	}
@@ -125,12 +150,20 @@ class FileVersion
 	public function toArray(): array
 	{
 		$array = [
-			...$this->asset()->toArray(),
+			...parent::toArray(),
 			'modifications' => $this->modifications()
 		];
 
 		ksort($array);
 
 		return $array;
+	}
+
+	/**
+	 * Returns the file type without generating the version
+	 */
+	public function type(): string|null
+	{
+		return F::type($this->root ?? $this->url());
 	}
 }
