@@ -1,10 +1,5 @@
 <template>
-	<div
-		v-if="buttons.length"
-		class="k-toolbar"
-		:data-theme="theme"
-		role="toolbar"
-	>
+	<nav v-if="buttons.length" class="k-toolbar" :data-theme="theme">
 		<template v-for="(button, index) in buttons">
 			<hr v-if="button === '|'" :key="'separator-' + index" />
 
@@ -34,7 +29,7 @@
 				:theme="theme === 'dark' ? 'light' : 'dark'"
 			/>
 		</template>
-	</div>
+	</nav>
 </template>
 
 <script>

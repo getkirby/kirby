@@ -23,7 +23,7 @@ function mount(props = {}, attrs = {}) {
 describe("k-toolbar", () => {
 	// $el
 	describe("element", () => {
-		it.rendersAs(mount, "DIV", "k-toolbar");
+		it.rendersAs(mount, "NAV", "k-toolbar");
 		it.acceptsClass(mount);
 		it.acceptsStyle(mount);
 	});
