@@ -944,7 +944,7 @@ class App
 		return match ($code ?? 'current') {
 			'default' => $this->defaultLanguage(),
 			'current' => $this->currentLanguage(),
-			default   => $this->languages()->find($code)
+			default   => $this->languages()->findByKey($code)
 		};
 	}
 
