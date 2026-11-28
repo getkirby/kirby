@@ -176,12 +176,6 @@
       <code><![CDATA[$directory]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Data/YamlSpyc.php">
-    <InvalidArgument>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Database/Query.php">
     <InvalidOperand>
       <code><![CDATA[$bindings]]></code>

@@ -36,7 +36,6 @@ class YamlSpyc
 	 */
 	public static function encode($data): string
 	{
-		// $data, $indent, $wordwrap, $no_opening_dashes
-		return Spyc::YAMLDump($data, false, false, true);
+		return Spyc::YAMLDump($data, no_opening_dashes: true);
 	}
 }
