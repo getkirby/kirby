@@ -45,6 +45,10 @@ class FieldOptions
 		return new static($options, $safeMode);
 	}
 
+	/**
+	 * @param array{options?: array|string|null, ...<string, mixed>} $props
+	 * @return array{options?: array|null, ...<string, mixed>}
+	 */
 	public static function polyfill(array $props = []): array
 	{
 		if (is_string($props['options'] ?? null) === true) {

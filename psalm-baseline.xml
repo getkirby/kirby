@@ -193,11 +193,6 @@
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
   </file>
-  <file src="src/Form/Field/ColorField.php">
-    <InvalidOperand>
-      <code><![CDATA[$props['options'] ?? []]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Form/Field/TextareaField.php">
     <UndefinedMethod>
       <code><![CDATA[is]]></code>
