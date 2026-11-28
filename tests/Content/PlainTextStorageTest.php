@@ -762,6 +762,19 @@ class PlainTextStorageTest extends TestCase
 		$this->assertFileDoesNotExist($file->parent()->root() . '/image.jpg.txt');
 	}
 
+	public function testUpdateKeepsFileMode(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($file = $this->model->root() . '/article.txt', ['title' => 'Foo']);
+		chmod($file, 0o640);
+
+		$this->storage->update(VersionId::latest(), Language::single(), ['title' => 'Bar']);
+
+		$this->assertSame(['title' => 'Bar'], Data::read($file));
+		$this->assertSame(0o640, fileperms($file) & 0o777);
+	}
+
 	public function testUpdateLatestMultiLang(): void
 	{
 		$this->setUpMultiLanguage();
@@ -848,5 +861,33 @@ class PlainTextStorageTest extends TestCase
 			$this->assertDirectoryExists(static::TMP . '/content/3_b');
 			$this->assertFileDoesNotExist(static::TMP . '/content/2_b/article.txt');
 		}
+	}
+
+	public function testUpdateLeavesNoTemporaryFile(): void
+	{
+		$this->setUpSingleLanguage();
+
+		$this->storage->create(VersionId::latest(), Language::single(), ['title' => 'Foo']);
+		$this->storage->update(VersionId::latest(), Language::single(), ['title' => 'Bar']);
+
+		$this->assertSame(['article.txt'], Dir::read($this->model->root(), []));
+	}
+
+	public function testUpdateReplacesFileInOneStep(): void
+	{
+		$this->setUpSingleLanguage();
+
+		Data::write($file = $this->model->root() . '/article.txt', ['title' => 'Foo']);
+
+		// a reader that opened the file before the write
+		// never sees a truncated or half-written file
+		$handle = fopen($file, 'r');
+
+		$this->storage->update(VersionId::latest(), Language::single(), ['title' => 'Bar']);
+
+		$this->assertSame('Title: Foo', stream_get_contents($handle));
+		$this->assertSame(['title' => 'Bar'], Data::read($file));
+
+		fclose($handle);
 	}
 }
