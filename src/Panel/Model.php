@@ -372,7 +372,7 @@ abstract class Model
 	{
 		return [
 			'link'    => $this->url(true),
-			'title'   => $title = (string)$this->model->{$title}()
+			'title'   => (string)$this->model->{$title}()
 		];
 	}
 

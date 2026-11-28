@@ -110,8 +110,6 @@ class Find
 			$modelName = 'file';
 		}
 
-		$kirby = App::instance();
-
 		$model = match ($modelName) {
 			'site'    => static::site(),
 			'account' => static::user(),

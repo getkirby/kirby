@@ -27,7 +27,6 @@ class Docs
 	 */
 	public static function all(): array
 	{
-		$docs  = [];
 		$dist  = static::root();
 		$tmp   = static::root(true);
 		$files = Inventory::for($dist)['files'];
