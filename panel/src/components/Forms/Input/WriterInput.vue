@@ -12,6 +12,7 @@
 		<k-writer-toolbar
 			v-if="editor && !disabled"
 			ref="toolbar"
+			:aria-labelledby="id + '-label'"
 			v-bind="toolbarOptions"
 			@command="onCommand"
 		/>

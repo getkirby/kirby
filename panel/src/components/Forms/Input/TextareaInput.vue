@@ -9,6 +9,7 @@
 			<k-textarea-toolbar
 				v-if="buttons && !disabled"
 				ref="toolbar"
+				:aria-labelledby="id + '-label'"
 				:buttons="buttons"
 				:disabled="disabled"
 				:uploads="uploads"

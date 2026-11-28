@@ -138,3 +138,126 @@ describe("k-toolbar", () => {
 		});
 	});
 });
+
+const FocusableButton = {
+	name: "k-button",
+	props: ["current", "disabled", "icon", "title"],
+	methods: {
+		focus(this: { $el: HTMLElement }) {
+			this.$el.focus();
+		}
+	},
+	template: `<button :aria-disabled="disabled ? 'true' : null" :title="title" />`
+};
+
+function mountFocusable(buttons: unknown[], direction = "ltr") {
+	const root = document.createElement("div");
+	root.style.direction = direction;
+	document.body.append(root);
+	return vueMount(Toolbar, {
+		props: { buttons },
+		attachTo: root,
+		global: {
+			stubs: {
+				"k-button": FocusableButton,
+				"k-dropdown": true
+			}
+		}
+	});
+}
+
+const focusButtons = [
+	{ title: "a" },
+	"|",
+	{ title: "b", disabled: true },
+	{ title: "c", when: false },
+	{ title: "d" },
+	{ title: "e" }
+];
+
+function tabindexes(wrapper: ReturnType<typeof mountFocusable>) {
+	return Object.fromEntries(
+		wrapper
+			.findAll(".k-toolbar-button")
+			.map((button: ReturnType<typeof wrapper.find>) => [
+				button.attributes("title"),
+				button.attributes("tabindex")
+			])
+	);
+}
+
+describe("k-toolbar keyboard", () => {
+	describe("tab stop", () => {
+		it("makes only the first button reachable with Tab", () => {
+			const wrapper = mountFocusable(focusButtons);
+			expect(tabindexes(wrapper)).toStrictEqual({
+				a: "0",
+				b: "-1",
+				d: "-1",
+				e: "-1"
+			});
+			wrapper.unmount();
+		});
+
+		it("keeps a disabled first button reachable", () => {
+			const wrapper = mountFocusable([
+				{ title: "a", disabled: true },
+				{ title: "b" }
+			]);
+			expect(tabindexes(wrapper)).toStrictEqual({ a: "0", b: "-1" });
+			wrapper.unmount();
+		});
+
+		it("remembers the last focused button", async () => {
+			const wrapper = mountFocusable(focusButtons);
+			await wrapper.find("[title=d]").trigger("focus");
+			expect(tabindexes(wrapper).d).toBe("0");
+			expect(tabindexes(wrapper).a).toBe("-1");
+			wrapper.unmount();
+		});
+	});
+
+	describe("arrow keys", () => {
+		it("moves to the next button, disabled or not", async () => {
+			const wrapper = mountFocusable(focusButtons);
+			(wrapper.find("[title=a]").element as HTMLElement).focus();
+			await wrapper.find("[title=a]").trigger("keydown", { key: "ArrowRight" });
+			expect((document.activeElement as HTMLElement).title).toBe("b");
+			wrapper.unmount();
+		});
+
+		it("moves to the previous button", async () => {
+			const wrapper = mountFocusable(focusButtons);
+			(wrapper.find("[title=e]").element as HTMLElement).focus();
+			await wrapper.find("[title=e]").trigger("keydown", { key: "ArrowLeft" });
+			expect((document.activeElement as HTMLElement).title).toBe("d");
+			wrapper.unmount();
+		});
+
+		it("swaps the arrow keys in right-to-left languages", async () => {
+			const wrapper = mountFocusable(focusButtons, "rtl");
+			(wrapper.find("[title=d]").element as HTMLElement).focus();
+			await wrapper.find("[title=d]").trigger("keydown", { key: "ArrowRight" });
+			expect((document.activeElement as HTMLElement).title).toBe("b");
+			wrapper.unmount();
+		});
+
+		it("stays on the last button", async () => {
+			const wrapper = mountFocusable(focusButtons);
+			(wrapper.find("[title=e]").element as HTMLElement).focus();
+			await wrapper.find("[title=e]").trigger("keydown", { key: "ArrowRight" });
+			expect((document.activeElement as HTMLElement).title).toBe("e");
+			wrapper.unmount();
+		});
+
+		it("leaves keys a button handles itself", async () => {
+			const key = vi.fn((event) => event.preventDefault());
+			const wrapper = mountFocusable([{ title: "a", key }, { title: "b" }]);
+			(wrapper.find("[title=a]").element as HTMLElement).focus();
+			await wrapper.find("[title=a]").trigger("keydown", { key: "ArrowRight" });
+			expect(key).toHaveBeenCalled();
+			expect((document.activeElement as HTMLElement).title).toBe("a");
+			wrapper.unmount();
+		});
+	});
+});
