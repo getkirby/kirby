@@ -283,17 +283,10 @@
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
       <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
-      <code><![CDATA[string]]></code>
     </InvalidNullableReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[$string]]></code>
-      <code><![CDATA[$string]]></code>
-      <code><![CDATA[$string]]></code>
       <code><![CDATA[preg_replace('!(' . preg_quote($trim) . ')+$!', '', $string)]]></code>
       <code><![CDATA[preg_replace('!^(' . preg_quote($trim) . ')+!', '', $string)]]></code>
-      <code><![CDATA[preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string)]]></code>
       <code><![CDATA[preg_replace_callback(
 			'!' . $start . '(.*?)' . $end . '!',
 			function (array $match) use ($data, $fallback, $callback) {

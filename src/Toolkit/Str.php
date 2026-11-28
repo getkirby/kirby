@@ -246,7 +246,7 @@ class Str
 
 		$string = strtr($string, $strtr);
 
-		return preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string);
+		return preg_replace('/[^\x09\x0A\x0D\x20-\x7E]/', '', $string) ?? $string;
 	}
 
 	/**
@@ -521,7 +521,7 @@ class Str
 		}
 
 		$string = str_replace(PHP_EOL, ' ', trim($string));
-		$string = preg_replace('![ ]{2,}!', ' ', $string);
+		$string = preg_replace('![ ]{2,}!', ' ', $string) ?? $string;
 
 		if ($chars === 0) {
 			return $string;
@@ -1280,7 +1280,7 @@ class Str
 		$string = str_replace('/', $separator, $string);
 
 		// trim leading non-word-chars
-		$string = preg_replace('!^[^a-z0-9]+!', '', $string);
+		$string = preg_replace('!^[^a-z0-9]+!', '', $string) ?? $string;
 
 		// cut the string after the given maxlength
 		if ($maxlength !== false) {
@@ -1288,7 +1288,7 @@ class Str
 		}
 
 		// after the cut, so that it can't leave a trailing separator
-		$string = preg_replace('![^a-z0-9]+$!', '', $string);
+		$string = preg_replace('![^a-z0-9]+$!', '', $string) ?? $string;
 
 		return $string;
 	}
