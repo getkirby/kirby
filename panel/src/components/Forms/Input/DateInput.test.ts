@@ -526,6 +526,54 @@ describe("k-date-input", () => {
 			expect(input.validationMessage).toBe("");
 		});
 
+		it("compares a `min` with a time part by day", () => {
+			const wrapper = mount({
+				min: "2024-09-19 14:16:10",
+				value: "2024-09-19"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("");
+		});
+
+		it("compares a `max` with a time part by day", () => {
+			const wrapper = mount({
+				max: "2024-09-19 14:16:10",
+				value: "2024-09-19"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("");
+		});
+
+		it("flags a date before the day of a `min` with a time part", () => {
+			const wrapper = mount({
+				min: "2024-09-19 14:16:10",
+				value: "2024-09-18"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("error.validation.date.after");
+		});
+
+		it("flags a date after the day of a `max` with a time part", () => {
+			const wrapper = mount({
+				max: "2024-09-19 14:16:10",
+				value: "2024-09-20"
+			});
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("error.validation.date.before");
+		});
+
+		it("validates again when the boundaries change", async () => {
+			const wrapper = mount({ value: "2021-03-05" });
+			const input = wrapper.find("input").element as HTMLInputElement;
+			expect(input.validationMessage).toBe("");
+
+			await wrapper.setProps({ min: "2024-01-01" } as never);
+			expect(input.validationMessage).toBe("error.validation.date.after");
+
+			await wrapper.setProps({ min: undefined, max: "2020-01-01" } as never);
+			expect(input.validationMessage).toBe("error.validation.date.before");
+		});
+
 		it("validates a value set from outside", async () => {
 			const wrapper = mount({ display: "DD.MM.YYYY", min: "2024-01-01" });
 			await wrapper.setProps({ value: "2021-03-05" } as never);

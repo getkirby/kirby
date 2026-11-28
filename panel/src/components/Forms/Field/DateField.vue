@@ -39,6 +39,8 @@
 				ref="timeInput"
 				:disabled="disabled"
 				:display="time.display"
+				:max="timeBoundary(max)"
+				:min="timeBoundary(min)"
 				:required="required"
 				:step="time.step"
 				:value="iso.time"
@@ -214,6 +216,21 @@ export default {
 		onTimesInput(value) {
 			this.$refs.times?.close();
 			this.onTimeInput(value);
+		},
+		/**
+		 * Returns the time of a boundary, but only for its own day:
+		 * the date input already keeps the date within the boundaries
+		 * @param {string} boundary ISO string
+		 * @returns {string|undefined}
+		 */
+		timeBoundary(boundary) {
+			const dt = this.$library.dayjs.iso(boundary);
+
+			if (dt === null || dt.toISO("date") !== this.iso.date) {
+				return undefined;
+			}
+
+			return dt.toISO("time");
 		},
 		/**
 		 * Convert an ISO string into an object

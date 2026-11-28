@@ -15,7 +15,17 @@ const Dropdown = {
 };
 const Input = {
 	name: "k-input",
-	props: ["disabled", "display", "icon", "required", "step", "type", "value"],
+	props: [
+		"disabled",
+		"display",
+		"icon",
+		"max",
+		"min",
+		"required",
+		"step",
+		"type",
+		"value"
+	],
 	emits: ["input", "submit"],
 	methods: { focus: vi.fn() },
 	template: `<div :class="'input-' + type"><slot name="icon" /></div>`
@@ -137,6 +147,40 @@ describe("k-date-field", () => {
 		});
 	});
 
+	describe("min & max props", () => {
+		it("pass the time to the time input on the boundary day", () => {
+			const wrapper = mount({
+				max: "2024-09-19 18:00:00",
+				min: "2024-09-19 14:16:10",
+				value: "2024-09-19 15:00:00"
+			});
+			const time = inputs(wrapper)[1];
+			expect(time.props("min")).toBe("14:16:10");
+			expect(time.props("max")).toBe("18:00:00");
+		});
+
+		it("pass no time to the time input on another day", () => {
+			const wrapper = mount({
+				max: "2024-09-30 18:00:00",
+				min: "2024-09-19 14:16:10",
+				value: "2024-09-20 15:00:00"
+			});
+			const time = inputs(wrapper)[1];
+			expect(time.props("min")).toBeUndefined();
+			expect(time.props("max")).toBeUndefined();
+		});
+
+		it("pass the time once the date moves onto the boundary day", async () => {
+			const wrapper = mount({
+				min: "2024-09-19 14:16:10",
+				value: "2024-09-20 15:00:00"
+			});
+			inputs(wrapper)[0].vm.$emit("input", "2024-09-19");
+			await wrapper.vm.$nextTick();
+			expect(inputs(wrapper)[1].props("min")).toBe("14:16:10");
+		});
+	});
+
 	describe("value prop", () => {
 		it("passes the date and time parts to the inputs", () => {
 			const wrapper = mount({ value: "2022-03-04 05:06:07" });
@@ -238,6 +282,28 @@ describe("k-date-field", () => {
 			wrapper.vm.onTimesInput("09:30:00");
 			expect(Dropdown.methods.close).toHaveBeenCalledOnce();
 			expect(wrapper.emitted("input")).toStrictEqual([["2022-03-04 09:30:00"]]);
+		});
+	});
+
+	describe("timeBoundary()", () => {
+		it("returns the time of a boundary on the same day", () => {
+			const wrapper = mount({ value: "2024-09-19 15:00:00" });
+			expect(wrapper.vm.timeBoundary("2024-09-19 14:16:10")).toBe("14:16:10");
+		});
+
+		it("returns nothing for a boundary on another day", () => {
+			const wrapper = mount({ value: "2024-09-20 15:00:00" });
+			expect(wrapper.vm.timeBoundary("2024-09-19 14:16:10")).toBeUndefined();
+		});
+
+		it("returns nothing without a date", () => {
+			const wrapper = mount();
+			expect(wrapper.vm.timeBoundary("2024-09-19 14:16:10")).toBeUndefined();
+		});
+
+		it("returns nothing without a boundary", () => {
+			const wrapper = mount({ value: "2024-09-19 15:00:00" });
+			expect(wrapper.vm.timeBoundary(undefined)).toBeUndefined();
 		});
 	});
 
