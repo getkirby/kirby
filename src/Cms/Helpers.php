@@ -122,9 +122,6 @@ class Helpers
 			setlocale(LC_MESSAGES, 'C');
 		}
 
-		/**
-		 * @psalm-suppress UndefinedVariable
-		 */
 		$handler = set_error_handler(function () use (&$override, &$handler, $condition, $fallback) {
 			// check if suppress condition is met
 			$suppress = $condition(...func_get_args());
