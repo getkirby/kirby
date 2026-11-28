@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
+<files psalm-version="7.23.0@c966ac090b283e6650535cb0029ad62ece4535bb">
   <file src="src/Auth/Passwords.php">
     <InvalidReturnStatement>
       <code><![CDATA[I18n::translate($this->hint, $this->hint)]]></code>
@@ -57,7 +57,6 @@
   </file>
   <file src="src/Cms/Collection.php">
     <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->data]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
@@ -67,19 +66,21 @@
       <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
-  <file src="src/Cms/Fieldsets.php">
-    <InvalidOperand>
-      <code><![CDATA[$fieldsets]]></code>
-    </InvalidOperand>
-  </file>
   <file src="src/Cms/Files.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$file]]></code>
     </InvalidArgument>
     <InvalidPropertyAssignmentValue>
       <code><![CDATA[$collection->data]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="src/Cms/Layouts.php">
+    <InvalidArgument>
+      <code><![CDATA[$items]]></code>
+    </InvalidArgument>
   </file>
   <file src="src/Cms/LicenseStatus.php">
     <InvalidReturnStatement>
@@ -115,7 +116,32 @@
 		}]]></code>
     </NullableReturnStatement>
   </file>
+  <file src="src/Cms/ModelWithContent.php">
+    <InvalidArgument>
+      <code><![CDATA[[
+				'kirby'             => $this->kirby(),
+				'site'              => $this instanceof Site ? $this : $this->site(),
+				'model'             => $this,
+				static::CLASS_ALIAS => $this
+			]]]></code>
+      <code><![CDATA[[
+				static::CLASS_ALIAS => $this,
+				'values'            => $form->toFormValues(),
+				'strings'           => $form->toStoredValues(),
+				'languageCode'      => $languageCode
+			]]]></code>
+      <code><![CDATA[[
+			'kirby'             => $this->kirby(),
+			'site'              => $this instanceof Site ? $this : $this->site(),
+			'model'             => $this,
+			static::CLASS_ALIAS => $this,
+		]]]></code>
+    </InvalidArgument>
+  </file>
   <file src="src/Cms/Pages.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$args[0]]]></code>
       <code><![CDATA[$page]]></code>
@@ -128,8 +154,18 @@
       <code><![CDATA[$index->data]]></code>
       <code><![CDATA[$index->data]]></code>
       <code><![CDATA[[...$collection->data, ...$args[0]->data]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <code><![CDATA[$item]]></code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="src/Cms/Responder.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this
+			->header('Location', (string)$location)
+			->code($code ?? 302)]]></code>
+      <code><![CDATA[$this->type('application/json')]]></code>
+    </InvalidReturnStatement>
   </file>
   <file src="src/Cms/Site.php">
     <InvalidReturnStatement>
@@ -139,6 +175,9 @@
     </InvalidReturnStatement>
   </file>
   <file src="src/Cms/Users.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[$object]]></code>
+    </ImplementedParamTypeMismatch>
     <InvalidArgument>
       <code><![CDATA[$user]]></code>
     </InvalidArgument>
@@ -146,7 +185,6 @@
       <code><![CDATA[$files->data]]></code>
       <code><![CDATA[$this->data]]></code>
       <code><![CDATA[[...$this->data, ...$existing]]]></code>
-      <code><![CDATA[[...$this->data, ...$object->data]]]></code>
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/Content/FieldMethods.php">
@@ -204,6 +242,19 @@
       <code><![CDATA[is]]></code>
     </UndefinedMethod>
   </file>
+  <file src="src/Form/Mixin/Upload.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[$file instanceof File === false]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Guards/ModelGuards.php">
+    <InvalidArgument>
+      <code><![CDATA[new static(
+			model: $model,
+			user: $user
+		)]]></code>
+    </InvalidArgument>
+  </file>
   <file src="src/Http/Cookie.php">
     <InvalidArgument>
       <code><![CDATA[false]]></code>
@@ -219,6 +270,11 @@
       <code><![CDATA[$props['headers'] ?? []]]></code>
     </InvalidOperand>
   </file>
+  <file src="src/Image/Dimensions.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[$this->$method($width, $height)]]></code>
+    </InvalidReturnStatement>
+  </file>
   <file src="src/Panel/Area.php">
     <InvalidNullableReturnType>
       <code><![CDATA[string]]></code>
@@ -231,20 +287,20 @@
       <code><![CDATA[$this->i18n($this->title ?? $this->label())]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/Panel/Panel.php">
+  <file src="src/Panel/Controller/Request/PageTreeParentsRequestController.php">
     <RedundantCondition>
-      <code><![CDATA[$this->kirby->user()?->role()->permissions()->toArray()]]></code>
+      <code><![CDATA[$this->kirby->site()->uuid()?->toString()]]></code>
     </RedundantCondition>
     <TypeDoesNotContainNull>
-      <code><![CDATA[[]]]></code>
+      <code><![CDATA['/']]></code>
     </TypeDoesNotContainNull>
   </file>
-  <file src="src/Panel/State.php">
+  <file src="src/Panel/Controller/Request/PageTreeRequestController.php">
     <RedundantCondition>
-      <code><![CDATA[$this->user?->role()->permissions()->toArray()]]></code>
+      <code><![CDATA[$uuid]]></code>
     </RedundantCondition>
     <TypeDoesNotContainNull>
-      <code><![CDATA[[]]]></code>
+      <code><![CDATA[$id]]></code>
     </TypeDoesNotContainNull>
   </file>
   <file src="src/Panel/Ui/Button/ViewButton.php">
@@ -344,6 +400,9 @@
 			return '&nbsp;' . $matches[2];
 		}, $string)]]></code>
     </NullableReturnStatement>
+    <TypeDoesNotContainType>
+      <code><![CDATA[is_int($replacement['limit']) === false]]></code>
+    </TypeDoesNotContainType>
   </file>
   <file src="src/Uuid/FieldUuid.php">
     <InvalidNullableReturnType>
